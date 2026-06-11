@@ -16,7 +16,7 @@
 //                        sync with the layout (called on resize + count change)
 //   - getSlices()      : cached geometry the renderer + health HUD read
 //
-// See docs/split-screen.md.
+// See docs/multiplayer.md.
 
 import { TILE_SIZE } from "./constants.js";
 import { localPlayerCount } from "./coopMode.js";

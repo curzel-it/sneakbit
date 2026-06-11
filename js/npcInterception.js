@@ -14,7 +14,7 @@
 //
 // Scope: only locally-driven players are intercepted (offline solo, local
 // co-op, and a host's own avatar). A remote guest owns its own movement
-// (guest-authoritative-movement.md) so the host can't freeze it; the "!" still
+// (docs/multiplayer.md) so the host can't freeze it; the "!" still
 // renders for everyone. Creative / PvP / Tower-Defense are skipped.
 
 import { isWalkable } from "./zone.js";

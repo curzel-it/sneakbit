@@ -287,7 +287,7 @@ test("guest disconnect: host gets peer.ghosted, then peer.left after grace", asy
 
 test("slot reassignment: A drops, B joins slot 3, A reconnects keeps slot 2", async () => {
   // Sanity check the slot-allocation rule documented under "Slot
-  // reassignment on guest reconnect" in docs/online-coop.md:
+  // reassignment on guest reconnect" in docs/multiplayer.md:
   // a ghosted guest still owns their slot during the grace window, so
   // the next arrival takes the lowest *free* slot. When the original
   // returns within grace, addOrResumeGuest finds the existing entry by
@@ -715,7 +715,7 @@ test("input frame is whitelisted — extra fields stripped before fan-in", async
 });
 
 test("move frame is forwarded with from=playerId and whitelisted fields", async () => {
-  // guest-authoritative-movement.md: committed tile-steps fan in to the
+  // docs/multiplayer.md: committed tile-steps fan in to the
   // host the same way input does. Only op/from/seq/k (+ d, fx,fy,tx,ty,x,y)
   // cross the wire; attacker bloat is stripped.
   await withServer(async ({ host, port }) => {

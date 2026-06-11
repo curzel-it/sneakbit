@@ -2,7 +2,7 @@
 // Host frames (snapshot/delta/event) fan out to the session's guests; guest
 // frames (input) fan in to the session's host. Lifecycle frames
 // (peer.joined/left/ghosted, session.closed, host.ghosted/resumed) are
-// emitted by the relay itself. See docs/online-coop.md.
+// emitted by the relay itself. See docs/multiplayer.md.
 
 import {
   SessionStore,
@@ -43,7 +43,7 @@ export const CLOSE_CAPACITY = 4006;
 export const DEFAULT_MAX_CONNECTIONS = 500;
 export const DEFAULT_MAX_SESSIONS = 100;
 
-// Per-spec rate limits (docs/online-coop.md §Rate limits).
+// Per-spec rate limits (docs/multiplayer.md §Rate limits).
 // Burst-friendly: input + snapshot/delta can hit 30/s, everything else
 // caps at 10/s. Severe abuse (~1000 msgs in a sliding window) trips a
 // 4004 close. Numbers chosen to match the spec; not tunable per
@@ -291,7 +291,7 @@ export function createRelay({
   // onDisconnect's `session.guests.get(ctx.uuid)` early-returns and we
   // don't double-emit a peer.ghosted / delayed peer.left for the same
   // playerId. Close code 4005 tells the kicked guest's net.js not to
-  // auto-reconnect (docs/online-coop.md §Close codes).
+  // auto-reconnect (docs/multiplayer.md §Close codes).
   function onHostKick(ctx, msg) {
     if (ctx.role !== "host") return;
     if (typeof msg.playerId !== "string") return;
@@ -428,7 +428,7 @@ export function createRelay({
     if (typeof msg.dir === "string") out.dir = msg.dir;
     // Facing the action fires in — the host sets the avatar's direction
     // before dispatching so a shoot/melee/interact can't be re-timed
-    // against a separate face update (guest-authoritative-movement.md).
+    // against a separate face update (docs/multiplayer.md).
     if (typeof msg.d === "string") out.d = msg.d;
     if (typeof msg.t === "number") out.t = msg.t;
     session.hostConn.sendJSON(out);
@@ -513,7 +513,7 @@ export function createRelay({
   // never inspects the payload — it just routes host ↔ named-guest. Once
   // the data channel is open, the game traffic moves off the WS and the
   // relay stops seeing snapshots/inputs for that pair. See
-  // docs/online-coop.md §"WebRTC upgrade path".
+  // docs/multiplayer.md §"WebRTC upgrade path".
   function onWebrtcSignal(ctx, msg) {
     if (!ctx.role) return;
     const session = store.sessionsById.get(ctx.sessionId);

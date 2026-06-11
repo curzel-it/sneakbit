@@ -97,7 +97,7 @@ export function createPlayer(opts = {}) {
     // Guest-authoritative movement (host side only): the seq of the
     // currently in-flight network step (acked at its snap) and the queue
     // of committed steps that arrived while this avatar was mid-step
-    // (consumed one-per-snap). See guest-authoritative-movement.md.
+    // (consumed one-per-snap). See docs/multiplayer.md.
     netStepSeq: 0,
     netQueuedSteps: [],
   };
@@ -162,7 +162,7 @@ export function applyNetStep(player, dir, zone) {
 }
 
 // Host-side animation-only update for a guest avatar. The guest owns its
-// tile path (guest-authoritative-movement.md); the host never runs movement
+// tile path (docs/multiplayer.md); the host never runs movement
 // *decisions* for it — only advances an in-flight step's lerp, snaps at
 // completion, then acks the resolved seq and consumes the next queued
 // commit. No input poll, no rotate/hold/chain logic.

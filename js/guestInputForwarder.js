@@ -8,7 +8,7 @@
 //   * Committed tile-steps + facing — emitted by predictedSelf via
 //     forwardMove() as `{ op:"move", seq, k:"step"|"face", … }`. The guest
 //     owns its own tile path; the host validates + executes each step. See
-//     guest-authoritative-movement.md.
+//     docs/multiplayer.md.
 //
 // Movement is NOT watched here: local motion reaches predictedSelf through
 // input.js's slot-1 keyboard listeners and pollInput(1) (which folds in the

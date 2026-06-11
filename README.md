@@ -14,7 +14,7 @@ The game was initially written in Rust, but has now fully been ported to HTML5 a
 * Adventure-action gameplay with melee (sword) and ranged (kunai) combat
 * Pre-rendered dual-layer tiling system - biomes, constructions, animated objects
 * Tile-locked, Gameboy-style movement (see [Movement model](#movement-model))
-* **Online co-op and Pvp** - up to four players share one world over WebRTC ([docs/online-coop.md](docs/online-coop.md))
+* **Online co-op and Pvp** - up to four players share one world over WebRTC ([docs/multiplayer.md](docs/multiplayer.md))
 * **Local Split Screen** - up to four players on one machine, one controller each
 * Keyboard and gamepad/controller support
 

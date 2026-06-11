@@ -1,5 +1,5 @@
 // Predicted-self: local prediction, committed-step emission, and the exact
-// reconciliation contract (guest-authoritative-movement.md). The renderer
+// reconciliation contract (docs/multiplayer.md). The renderer
 // side is validated by the integration in main.js; here we check that local
 // input advances the avatar, that transitions stream as op:"move" commits,
 // and that deltas reconcile by comparing the host's tile to the result of

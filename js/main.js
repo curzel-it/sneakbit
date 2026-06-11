@@ -324,7 +324,7 @@ async function main() {
 
   // 4005 = "kicked by host". net.js already suppresses auto-reconnect on
   // this code; here we surface the UX side (toast + drop back to
-  // offline). Per docs/online-coop.md §Close codes.
+  // offline). Per docs/multiplayer.md §Close codes.
   onAnyClose(({ code }) => {
     if (code !== 4005) return;
     showToast("You were removed from the session", "longHint");
@@ -396,7 +396,7 @@ async function main() {
       if (!isPlayerDead(0)) updatePlayer(state.player, pvpGateInput(0, hostInput), dt, state.zone);
       // Network-guest avatars (playerId set) own their own tile path: the
       // host only animates committed steps via updateGuestAvatar — never
-      // runs movement decisions for them (guest-authoritative-movement.md).
+      // runs movement decisions for them (docs/multiplayer.md).
       // Local-coop slots (playerId null) still run the full input-driven
       // updatePlayer.
       if (state.player2) {

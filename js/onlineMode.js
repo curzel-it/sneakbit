@@ -10,7 +10,7 @@
 //     null; switchRole() drives transitions between offline / host /
 //     guest in-place (no page reload).
 //
-// URL contract (matches docs/online-coop.md):
+// URL contract (matches docs/multiplayer.md):
 //   no params      → offline (default)
 //   ?host=1        → host
 //   ?join=CODE     → guest

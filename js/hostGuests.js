@@ -231,7 +231,7 @@ function applyIntent(slot, intent, from, msg) {
 // Guest committed tile-step / face update. The host validates legality
 // (adjacency from-tile + canEnter via applyNetStep) and executes; it no
 // longer runs movement decisions for guest avatars. See
-// guest-authoritative-movement.md.
+// docs/multiplayer.md.
 function onMove(m) {
   if (!m || typeof m.k !== "string") return;
   const from = m.from;

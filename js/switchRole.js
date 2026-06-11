@@ -3,7 +3,7 @@
 // one and lets the rest of the app reset its world state via the
 // state-handler registry.
 //
-// Per docs/online-coop.md § Sessions and invites, a deep-link
+// Per docs/multiplayer.md § Sessions and invites, a deep-link
 // `?join=CODE` while already in a session auto-leaves the current
 // session before joining the new one — switchRole's idempotency check
 // special-cases that "same role, different code" path.

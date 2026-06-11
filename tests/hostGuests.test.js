@@ -2,7 +2,7 @@
 // spawns avatars, op:"move" commits are validated + executed against the
 // host's own zone, actions dispatch with facing, and lastSeq advances only
 // on resolved steps (accept→snap, reject→immediately). See
-// guest-authoritative-movement.md.
+// docs/multiplayer.md.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
