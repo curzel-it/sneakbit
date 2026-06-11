@@ -23,6 +23,11 @@ import { mountShowcase, showEntry, stopShowcase } from "./shopShowcase.js";
 import {
   isStackable, isEntryOwned, isSkinEntry, isSkillEntry, clampQty, maxAffordable, canBuy, buy,
 } from "./shopPurchase.js";
+import { isWebStoreEnabled } from "./buildTarget.js";
+import { fetchCatalog } from "./storeApi.js";
+import { getCurrency, setCurrency, format as formatPrice, SUPPORTED as CURRENCIES } from "./storeCurrency.js";
+import { startCheckout } from "./realMoneyShop.js";
+import { isSignedIn } from "./accountSession.js";
 
 let root = null;
 let listScreen = null;
@@ -41,6 +46,13 @@ let stock = [];
 let playerIndex = 0;
 let detailEntry = null; // the stock entry currently on the detail screen
 let qty = 1;
+
+// Real-money catalog (skin refId -> { sku, prices, … }), fetched once from the
+// server. Stays empty when the web store is disabled (native builds) or the
+// server has payments off (503) — in which case the shop renders coin-only.
+const catalogBySkin = new Map();
+let catalogLoaded = false;
+let currencySelect = null;
 
 export function isShopOpen() { return open; }
 
@@ -86,11 +98,23 @@ export function installShop() {
   });
   coinValEl = el("span", { class: "shop-coin-val", text: "0" });
 
+  // Currency picker for real-money goods. Only shown when the web store is
+  // enabled; changing it re-renders prices in the chosen currency.
+  currencySelect = el("select", {
+    class: "shop-currency",
+    style: { display: isWebStoreEnabled() ? "" : "none" },
+    on: { change: onCurrencyChange },
+  }, CURRENCIES.map((c) => el("option", { value: c, text: c.toUpperCase() })));
+  currencySelect.value = getCurrency();
+
   root = el("div", { id: "shop" }, [
     el("div", { class: "shop-card" }, [
       el("div", { class: "shop-head" }, [
         (titleEl = el("h1", { class: "shop-title", text: tr("shop.title") })),
-        el("div", { class: "shop-coins" }, [coinIcon, coinValEl]),
+        el("div", { class: "shop-head-right" }, [
+          currencySelect,
+          el("div", { class: "shop-coins" }, [coinIcon, coinValEl]),
+        ]),
       ]),
       listScreen,
       detailScreen,
@@ -129,7 +153,46 @@ export function openShop(stockList, playerIdx = 0) {
   showStorefront();
   root.style.display = "flex";
   refreshCoins();
+  loadCatalog();
   focusFirstIn(visibleScreen);
+}
+
+// Fetch the real-money catalog once and re-render so skins show their cash
+// price alongside coins. No-op when the web store is disabled; a 503/offline
+// just leaves the shop coin-only (catalogBySkin stays empty).
+async function loadCatalog() {
+  if (catalogLoaded || !isWebStoreEnabled()) return;
+  const r = await fetchCatalog();
+  if (r.ok && Array.isArray(r.data?.items)) {
+    for (const item of r.data.items) {
+      if (item?.kind === "skin" && typeof item.refId === "string") catalogBySkin.set(item.refId, item);
+    }
+    catalogLoaded = true;
+    if (open) {
+      renderList();
+      if (detailScreen.style.display !== "none" && detailEntry) renderDetail();
+    }
+  }
+}
+
+// The catalog entry for a skin stock entry, or null if it isn't a real-money
+// skin (or the web store is off / catalog not loaded). Drives every dual-price
+// branch below.
+function skinSku(entry) {
+  if (!isWebStoreEnabled() || !isSkinEntry(entry)) return null;
+  return catalogBySkin.get(entry.skin) || null;
+}
+
+function onCurrencyChange() {
+  setCurrency(currencySelect.value);
+  if (!open) return;
+  renderList();
+  if (detailScreen.style.display !== "none" && detailEntry) renderDetail();
+}
+
+// A small "€2.99" tag for a real-money skin, in the selected currency.
+function realMoneyTag(cat) {
+  return el("span", { class: "shop-row-realprice", text: formatPrice(cat.prices[getCurrency()], getCurrency()) });
 }
 
 export function closeShop() {
@@ -174,9 +237,13 @@ function rowFor(entry, i) {
 
   const icon = makeIcon(entry, "shop-row-icon", 32);
 
+  const cat = owned ? null : skinSku(entry);
   const tag = owned
     ? el("span", { class: "shop-row-tag is-owned", text: tr("shop.owned") })
-    : el("span", { class: "shop-row-price" }, [String(entry.price | 0), priceCoin()]);
+    : el("span", { class: "shop-row-prices" }, [
+        el("span", { class: "shop-row-price" }, [String(entry.price | 0), priceCoin()]),
+        ...(cat ? [realMoneyTag(cat)] : []),
+      ]);
 
   const row = el("button", {
     class: `shop-row${owned ? " is-owned" : ""}${!owned && !affordable ? " is-poor" : ""}`,
@@ -204,8 +271,10 @@ function setDesc(entry) {
   if (isEntryOwned(entry, playerIndex)) {
     showcasePriceEl.replaceChildren(el("span", { class: "shop-row-tag is-owned", text: tr("shop.owned") }));
   } else {
+    const cat = skinSku(entry);
     showcasePriceEl.replaceChildren(
       el("span", { class: "shop-row-price" }, [String(entry.price | 0), priceCoin()]),
+      ...(cat ? [realMoneyTag(cat)] : []),
     );
   }
 }
@@ -268,6 +337,25 @@ function renderDetail() {
 
   if (!verdict.ok && verdict.reason === "poor") {
     children.push(el("div", { class: "shop-warn", text: tr("shop.too_poor") }));
+  }
+
+  // Real-money option for a catalog skin: a separate row so the coin path stays
+  // visually primary. Logged out → routes to the account panel ("sign in to
+  // buy"); otherwise redirects to Stripe hosted Checkout.
+  const cat = skinSku(entry);
+  if (cat) {
+    const priceText = formatPrice(cat.prices[getCurrency()], getCurrency());
+    const label = isSignedIn()
+      ? tr("store.buy_for").replace("%s", priceText)
+      : tr("store.sign_in_to_buy");
+    children.push(el("div", { class: "shop-detail-real" }, [
+      el("div", { class: "shop-detail-real-or", text: tr("store.or_real_money") }),
+      el("button", {
+        class: "shop-btn shop-buy-real",
+        text: label,
+        on: { click: () => startCheckout(cat.sku) },
+      }),
+    ]));
   }
 
   detailScreen.append(...children);
@@ -467,7 +555,12 @@ function injectStyles() {
       background: linear-gradient(180deg, #2b3450 0%, #222a40 100%);
     }
     #shop .shop-title { margin: 0; font-size: 18px; letter-spacing: .5px; }
+    #shop .shop-head-right { display: flex; align-items: center; gap: 12px; }
     #shop .shop-coins { display: flex; align-items: center; gap: 6px; font-size: 15px; }
+    #shop .shop-currency {
+      background: #232a38; color: #eef2ff; border: 1px solid #4a5878;
+      border-radius: var(--sb-surface-radius); padding: 4px 8px; font-family: inherit; font-size: 13px; cursor: pointer;
+    }
     #shop .shop-screen { padding: 12px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
     /* On the storefront the showcase + Close stay pinned; only the rows scroll. */
     #shop .shop-screen[data-screen="list"] { overflow: hidden; min-height: 0; }
@@ -480,7 +573,9 @@ function injectStyles() {
     }
     #shop .shop-row:hover { background: #2c3650; }
     #shop .shop-row-name { flex: 1; }
+    #shop .shop-row-prices { display: flex; align-items: center; gap: 10px; }
     #shop .shop-row-price { display: flex; align-items: center; gap: 4px; color: #ffe08a; font-weight: 700; }
+    #shop .shop-row-realprice { color: #8fd0ff; font-weight: 700; font-size: 13px; }
     #shop .shop-row-tag.is-owned { color: #8fe39a; font-size: 13px; font-weight: 700; }
     #shop .shop-row.is-owned { opacity: .55; cursor: default; }
     #shop .shop-row.is-poor .shop-row-price { color: #d98a8a; }
@@ -527,6 +622,13 @@ function injectStyles() {
     #shop .shop-btn:disabled { opacity: .45; cursor: default; }
     #shop .shop-buy { background: #2e6b3e; border-color: #418a55; }
     #shop .shop-buy:hover:not(:disabled) { background: #357d49; }
+    #shop .shop-detail-real {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      margin-top: 10px; padding-top: 10px; border-top: 1px solid #2c3444; width: 100%;
+    }
+    #shop .shop-detail-real-or { font-size: 12px; color: #9fb0c8; letter-spacing: .3px; }
+    #shop .shop-buy-real { background: #2c4a6b; border-color: #3f6da0; }
+    #shop .shop-buy-real:hover:not(:disabled) { background: #34588a; }
     #shop .shop-qty-btn { min-width: 52px; font-size: 18px; }
     #shop .shop-close { align-self: center; margin-top: 4px; }
   `;

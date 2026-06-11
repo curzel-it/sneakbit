@@ -78,6 +78,16 @@ export function markOwned(skinId, index = 0) {
   fire(index | 0);
 }
 
+// Clear an ownership flag — used when a real-money entitlement is revoked
+// (refund/chargeback) so the skin reverts to not-owned. getSelected() then
+// auto-falls-back to default if the revoked skin was equipped. The default skin
+// is always owned and can't be cleared.
+export function markUnowned(skinId, index = 0) {
+  if (skinId === DEFAULT_SKIN_ID || !byId.has(skinId)) return;
+  setValue(ownedKey(skinId, ownedIndex(index)), null);
+  fire(index | 0);
+}
+
 // Selection is per RAW index (not folded). Falls back to default if the stored
 // skin is unknown or no longer owned (e.g. a wiped save mid-session).
 export function getSelected(index = 0) {
