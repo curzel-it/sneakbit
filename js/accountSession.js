@@ -86,6 +86,24 @@ export async function revalidate() {
   if (r.ok && r.data?.user) updateUser(r.data.user);
 }
 
+// — Wipe preservation ————————————————————————————————————————————————————
+// New game / Clear cache (menu.js) reset progress with a blunt
+// localStorage.clear(). That also drops our KEY, which would sign the player
+// out as a side effect — and once gems (account-bound, real money) exist, a
+// wipe that hides them reads as "my purchase vanished". A wipe should reset
+// progress, not identity. captureSession() returns the serialized session
+// (hydrating from storage first); restoreSession() writes it straight back
+// after the clear. It's a pure storage round-trip — the in-memory session is
+// irrelevant because the page reloads immediately afterward.
+export function captureSession() {
+  return load() ? JSON.stringify(session) : null;
+}
+
+export function restoreSession(raw) {
+  if (!raw) return;
+  try { localStorage.setItem(KEY, raw); } catch { /* no/blocked localStorage */ }
+}
+
 // Parse a `?reset=<token>` deep link (reset emails point here). Mirrors
 // onlineMode.resolveMode's URLSearchParams approach.
 export function resolveResetToken(search = typeof location !== "undefined" ? location.search : "") {

@@ -21,7 +21,7 @@ import { exportSave, importSave } from "./saveBackup.js";
 import { initCreativeZoneTools, saveZoneNow, exportZone, resetZone } from "./creativeZoneTools.js";
 import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
 import { openAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
-import { onAccountChange, getUser, getToken, isSignedIn } from "./accountSession.js";
+import { onAccountChange, getUser, getToken, isSignedIn, captureSession, restoreSession } from "./accountSession.js";
 import { markDirty as markCloudSaveDirty } from "./cloudSave.js";
 import { deleteCloudSave } from "./saveApi.js";
 import { isGameOverOpen } from "./gameOver.js";
@@ -417,6 +417,10 @@ function bindWidgets() {
       danger: true,
     });
     if (!ok) return;
+    // A wipe resets progress, not identity: preserve the signed-in account
+    // across the blunt localStorage.clear() below so the player stays logged
+    // in (and keeps their account-bound gems) on the fresh start.
+    const savedSession = captureSession();
     // A fresh start should be truly fresh: when signed in, delete the cloud
     // save too (keepalive so it survives the imminent reload), otherwise it
     // would just sync back down on the next sign-in. Best-effort — a failed
@@ -428,6 +432,7 @@ function bindWidgets() {
     // started.
     try { window.save?.suppressUnloadSave?.(); } catch {}
     try { localStorage.clear(); } catch {}
+    restoreSession(savedSession);
     clearProgress();
     // A `?zone=X` query overrides saved progress in main.js. After wiping
     // the save we also need to drop the URL override or the player would
@@ -435,8 +440,12 @@ function bindWidgets() {
     location.replace(location.pathname);
   });
   root.querySelector("#menu-clear-cache").addEventListener("click", () => {
+    // Same identity-preservation as New game: clearing cached state shouldn't
+    // sign the player out of their account.
+    const savedSession = captureSession();
     try { window.save?.suppressUnloadSave?.(); } catch {}
     try { localStorage.clear(); } catch {}
+    restoreSession(savedSession);
     location.replace(location.pathname);
   });
 
