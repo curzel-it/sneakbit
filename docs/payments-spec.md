@@ -12,9 +12,10 @@ is the single source of truth for the feature. It is grounded in the current cod
 | Payment processor | **Stripe**, hosted Checkout | Cards + Apple/Google Pay + Link + local methods, near-zero PCI burden (SAQ-A) |
 | Stripe integration | **Official `stripe` Node SDK, server-side only** | First runtime dependency in `server/`. The browser stays library-free (hosted Checkout = a redirect, no Stripe.js). |
 | Launch catalog | **Cosmetic skins only** | Durable, one-time, "owned forever" semantics are clean. Model is generic so weapons/skills/packs can be added later. |
-| Platforms | **Web only** (`sneakbit.curzel.it`) | Native iOS/Android/Steam builds require their own IAP per store policy — out of scope; real-money tiles are hidden there. |
+| Platforms | **Web only** (`sneakbit.curzel.it`) — for now | Native iOS/Android/Steam builds each mandate their own store IAP and come **much later down the line**; until then real-money tiles are hidden in those builds via `isWebStoreEnabled()`. |
 | Currencies | **USD, EUR, GBP, JPY** | Prices authored per currency in a server catalog. |
 | Currency selection | **Auto-detect from locale, with a manual override** | Picker in the shop; default from `navigator.language` / Stripe geo. |
+| Tax handling | **Tax-inclusive prices** (`tax_behavior: "inclusive"`) | The catalog number **is** the final total the player pays, in every region. Stripe Tax backs the VAT/JCT out of that fixed total rather than adding it on top — so the displayed price needs **no runtime Stripe call** and never drifts from the charge. Net revenue varies by region (the gross is pinned); that's the accepted cost of honest, round consumer prices. |
 | Eligibility | **Signed-in users only** | Entitlements are account-bound and server-authoritative. |
 | Lifetime | **Forever, except refunds/disputes** | Revocable on Stripe refund/chargeback webhooks. |
 
@@ -148,7 +149,9 @@ ON CONFLICT(user_id, sku) DO UPDATE SET status='active', granted_at=excluded.gra
 
 `server/storeCatalog.js` — the **only** place real-money prices and product identity live.
 Each entry maps a `sku` to its in-game effect and its Stripe `Price`. Prices are stored in
-the **smallest currency unit**, with zero-decimal currencies (JPY) handled explicitly.
+the **smallest currency unit**, with zero-decimal currencies (JPY) handled explicitly. Because
+pricing is **tax-inclusive** (locked decision), each amount is the **final gross total the player
+pays** — the same number the shop displays and the same number Stripe charges.
 
 ```js
 // Zero-decimal currencies: amount is the whole unit, not 1/100. (Stripe's list; we use JPY.)
@@ -161,7 +164,7 @@ export const CATALOG = [
     refId: "ninja_black",          // must exist in js/skins.js SKINS
     nameKey: "skins.name.ninja_black",
     stripePrice: "price_XXXX",     // a Stripe Price carrying currency_options for all 4
-    // smallest unit per currency; usd/eur/gbp are cents, jpy is whole yen
+    // final tax-inclusive gross, smallest unit per currency; usd/eur/gbp are cents, jpy is whole yen
     prices: { usd: 499, eur: 499, gbp: 449, jpy: 600 },
   },
   // ...one per real-money skin
@@ -174,13 +177,17 @@ Authoring rules:
 - `refId` must resolve in `js/skins.js`. A unit test asserts this.
 - A given skin is sold **either** for coins **or** for real money — never both. (Coin skins keep
   their `{ skin, price }` entry; real-money skins use `{ sku }` and do not appear as coin entries.)
-- The four `prices` are the **display** values; the actual charge comes from the Stripe `Price`
-  (`stripePrice`). Keep them in sync (the setup script can read them back from Stripe to verify).
+- The four `prices` are simultaneously the **displayed** price and the **charged** price — with
+  tax-inclusive Stripe Prices these are the same number by construction. The setup script reads the
+  `currency_options` back from Stripe and a unit test asserts **exact equality** with the catalog
+  (no fuzzy "keep in sync" — display gross *is* charged gross).
 
 **Stripe object setup (one-time, via dashboard or a `tools/stripeSetup.mjs` script):** create one
-**Product** per skin and one **Price** per product with `currency_options` for usd/eur/gbp/jpy.
-Store the returned `price_…` id in `stripePrice`. Using `currency_options` means a single Price
-serves all four currencies; the Checkout Session's `currency` selects which option is charged.
+**Product** per skin and one **Price** per product with `currency_options` for usd/eur/gbp/jpy, and
+set **`tax_behavior: "inclusive"`** on the Price (so the amounts above are the gross totals; Stripe
+extracts the tax from them rather than adding it). Store the returned `price_…` id in `stripePrice`.
+Using `currency_options` means a single Price serves all four currencies; the Checkout Session's
+`currency` selects which option is charged.
 
 ---
 
@@ -227,7 +234,7 @@ Server logic:
      customer_email: user.email,
      success_url: `${APP_BASE_URL}/?purchase=success&sku=${sku}`,
      cancel_url:  `${APP_BASE_URL}/?purchase=cancel`,
-     // automatic_tax: { enabled: true },        // see Tax & compliance
+     automatic_tax: { enabled: true },           // remits the tax embedded in the inclusive price
    })
    ```
 6. Return `{ "url": session.url }`.
@@ -363,9 +370,15 @@ Refund/chargeback in Stripe ──► charge.refunded / charge.dispute.created
 
 ## Tax & compliance (business setup, flagged — not legal advice)
 
+- **Tax-inclusive display, the easy way.** Prices are authored **tax-inclusive** (`tax_behavior:
+  "inclusive"` on each Stripe Price), so the catalog number is the final total a player pays in
+  every region — no runtime Stripe call to render it, and it satisfies the EU/UK expectation that
+  consumers see tax-inclusive prices up front. Stripe Tax still computes and remits the embedded
+  VAT/JCT; it just backs it out of the fixed total instead of adding to it. Net revenue therefore
+  varies by region (the gross is pinned) — the accepted cost of round, honest consumer prices.
 - **VAT / UK VAT / JP consumption tax** apply when selling digital goods to consumers in those
-  regions. Enable **Stripe Tax** (`automatic_tax: { enabled: true }` on the session) for
-  calculation + collection, and assess registration thresholds with an accountant.
+  regions. **Stripe Tax** (`automatic_tax: { enabled: true }` on the session) handles calculation +
+  collection; assess registration thresholds with an accountant.
 - Publish a **refund policy** and **terms of service**; link them from the shop. For EU digital
   goods, the 14-day withdrawal right can be waived with explicit consent at purchase — Stripe
   Checkout can surface the consent/terms.
@@ -379,7 +392,9 @@ Refund/chargeback in Stripe ──► charge.refunded / charge.dispute.created
 
 **Unit (`tests/*.test.js`, node runner, no deps):**
 - Catalog integrity: every `sku` has a valid `kind`/`refId` (skin `refId` exists in
-  `js/skins.js`), prices ≥ Stripe minimums, zero-decimal handling correct.
+  `js/skins.js`), prices ≥ Stripe minimums, zero-decimal handling correct, and each catalog
+  amount **exactly equals** the matching `currency_options` amount read back from Stripe (display
+  gross == charged gross; the Prices are `tax_behavior: "inclusive"`).
 - Currency formatting: `storeCurrency.format` — cents vs whole-yen, locale rendering.
 - Entitlement reconcile diff: grant adds ownership; revoke removes **only** entitlement-owned
   skins and reverts an equipped revoked skin to default; coin-owned skins untouched.
@@ -417,8 +432,9 @@ Refund/chargeback in Stripe ──► charge.refunded / charge.dispute.created
 
 ## Build order
 
-- **Phase 0 — Stripe setup.** Account, Products/Prices (with `currency_options`), test keys,
-  webhook endpoint, tax assessment, refund/ToS copy.
+- **Phase 0 — Stripe setup.** Account, Products/Prices (with `currency_options` and
+  `tax_behavior: "inclusive"`), Stripe Tax enabled, test keys, webhook endpoint, tax-registration
+  assessment, refund/ToS copy.
 - **Phase 1 — Server.** `db.js` tables + helpers; `stripe.js`; `storeCatalog.js`;
   `paymentsRoutes.js` (catalog / checkout / entitlements); `stripeWebhook.js` + `readRawBody`;
   env wiring + graceful 503 disable; unit tests. Ship behind the disabled state (no keys = inert).
@@ -436,8 +452,9 @@ Refund/chargeback in Stripe ──► charge.refunded / charge.dispute.created
 
 - **Consumables / a spendable gem balance for real money** — a balance consumed on use doesn't fit
   "owned forever". If wanted later, model it as a separate account-scoped balance, not an entitlement.
-- **Native IAP (iOS/Android/Steam)** — each store mandates its own purchase API; real-money tiles
-  are hidden in those builds via `isWebStoreEnabled()`.
+- **Native IAP (iOS/Android/Steam)** — coming **much later down the line**; each store mandates its
+  own purchase API, so real-money tiles stay hidden in those builds via `isWebStoreEnabled()` until
+  then. Web (`sneakbit.curzel.it`) is the only channel for this launch.
 - **Permanent unlocks (weapons/skills), supporter packs, gifting, coupons/sales, regional
   overrides beyond the four currencies** — all additive on the generic `kind`/`refId` entitlement
   model; not part of the first launch.
