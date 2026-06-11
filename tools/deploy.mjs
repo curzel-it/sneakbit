@@ -93,6 +93,13 @@ const SERVER_SYNC_PATHS = [
   "rateLimitHttp.js",
   "savesRoutes.js",
   "bearerAuth.js",
+  // Real-money store (Stripe). package-lock.json ships too so `npm ci` on the
+  // VPS installs the pinned `stripe` SDK (the server's first runtime dep).
+  "package-lock.json",
+  "stripe.js",
+  "storeCatalog.js",
+  "paymentsRoutes.js",
+  "stripeWebhook.js",
   // Creative-mode edited worlds (editor-only). The editing/ dir is created at
   // runtime under REMOTE_DIR and is NOT whitelisted here, so it survives
   // deploys the same way data.db does.
@@ -146,6 +153,11 @@ const SERVER_ENV_KEYS = [
   // default (editors.js) already includes federico; this lets the set grow
   // from the VPS .env without a code change.
   "EDITOR_EMAILS",
+  // Real-money store (Stripe). When unset the payments endpoints stay disabled
+  // (503) and the client hides the real-money tiles — same posture as JWT.
+  // Start with sk_test_… + the test webhook signing secret, then rotate to live.
+  "STRIPE_SECRET_KEY",
+  "STRIPE_WEBHOOK_SECRET",
 ];
 
 function renderSystemdUnit(gitSha) {
@@ -635,6 +647,14 @@ async function stepPushServer(env, conn) {
     }
     console.log(`  push> ${sent}/${existing.length} changed -> ${REMOTE_DIR}/`);
   }
+  await ssh(env, `chown -R ${APP_USER}:${APP_USER} ${REMOTE_DIR}`);
+  // The server now has a runtime dependency (`stripe`), so install node_modules
+  // on the VPS from the shipped package.json + lock. Previously the server was
+  // zero-dep and this step didn't exist. `npm ci` is reproducible from the
+  // lockfile; fall back to `npm install` if the lock is ever absent. --omit=dev
+  // keeps it to runtime deps only. Idempotent — a no-op when nothing changed.
+  console.log("[4a] install server dependencies (npm)");
+  await ssh(env, `cd ${REMOTE_DIR} && (npm ci --omit=dev || npm install --omit=dev)`);
   await ssh(env, `chown -R ${APP_USER}:${APP_USER} ${REMOTE_DIR}`);
 }
 
