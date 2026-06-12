@@ -43,7 +43,7 @@ test("local co-op spawns and independently drives 2, 3, and 4 players", async (t
   const errors = [];
   s.on("Runtime.exceptionThrown", (p) => errors.push(p.exceptionDetails?.exception?.description || p.exceptionDetails?.text));
 
-  await navigate(s, `${servers.appUrl}/index.html`);
+  await navigate(s, `${servers.appUrl}/play/`);
   await waitFor(s, "!!(window.coop && window.coop.positions().length >= 1)");
 
   for (const N of [2, 3, 4]) {

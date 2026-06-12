@@ -8,7 +8,10 @@
 import { app, BrowserWindow, Menu, protocol } from "electron";
 import { handleAppRequest } from "./appProtocol.js";
 
-const APP_URL = "app://sneakbit.curzel.it/index.html";
+// The game shell now lives at /play/ (root index.html is the marketing landing,
+// which the desktop build never shows). Load the shell file directly; its
+// <base href="/"> keeps asset/data loads resolving to the app:// root.
+const APP_URL = "app://sneakbit.curzel.it/play/index.html";
 
 // Must run before app is ready. `standard` makes Chromium parse the host (so
 // location.hostname === "sneakbit.curzel.it"); `secure` lets it run in a

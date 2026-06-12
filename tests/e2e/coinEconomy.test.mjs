@@ -36,7 +36,7 @@ test("coins: species loads, HUD mounts and tracks the wallet, no exceptions", as
     errors.push(p?.exceptionDetails?.exception?.description || p?.exceptionDetails?.text || "unknown");
   });
 
-  await navigate(s, `${servers.appUrl}/index.html`);
+  await navigate(s, `${servers.appUrl}/play/`);
 
   // — Boot: the coin HUD mounts in the normal game ————————————————————————
   await waitFor(s, "!!document.getElementById('coin-hud')");

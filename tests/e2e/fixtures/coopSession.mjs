@@ -87,7 +87,7 @@ export async function startCoopSession({
   // host URL (zone optional). Menu-mode doesn't apply on the host side —
   // it'd be redundant; the user's question was specifically about the
   // *guest* deep-link vs menu paths.
-  await navigate(host, `${appUrl}/`);
+  await navigate(host, `${appUrl}/play/`);
   await evalExpr(host, `localStorage.setItem("sneakbit.online.uuid", ${JSON.stringify(hostUuid)})`);
   // Seed the host's persistent KV (storage.js) before the host boot so
   // initOfflineState's buildZone hydrates with these flags already set —
@@ -100,8 +100,8 @@ export async function startCoopSession({
     }
   }
   const hostUrl = zone != null
-    ? `${appUrl}/?host=1&zone=${zone}&server=${encodeURIComponent(relayWs)}`
-    : `${appUrl}/?host=1&server=${encodeURIComponent(relayWs)}`;
+    ? `${appUrl}/play/?host=1&zone=${zone}&server=${encodeURIComponent(relayWs)}`
+    : `${appUrl}/play/?host=1&server=${encodeURIComponent(relayWs)}`;
   await navigate(host, hostUrl);
 
   // Pick up the host's invite code via the existing getter.
@@ -113,16 +113,16 @@ export async function startCoopSession({
   `, { timeoutMs: 30000 });
 
   // Guest navigation, deep-link or menu-driven.
-  await navigate(guest, `${appUrl}/`);
+  await navigate(guest, `${appUrl}/play/`);
   await evalExpr(guest, `localStorage.setItem("sneakbit.online.uuid", ${JSON.stringify(guestUuid)})`);
   if (entry === "deeplink") {
-    await navigate(guest, `${appUrl}/?join=${encodeURIComponent(inviteCode)}&server=${encodeURIComponent(relayWs)}`);
+    await navigate(guest, `${appUrl}/play/?join=${encodeURIComponent(inviteCode)}&server=${encodeURIComponent(relayWs)}`);
   } else if (entry === "menu") {
     // Boot offline, then drive a switchRole("guest", { code }) in-page —
     // the same call the party-panel "Join" button makes. This exercises
     // the menu code path (offline → guest at runtime) without having to
     // simulate clicks.
-    await navigate(guest, `${appUrl}/?server=${encodeURIComponent(relayWs)}`);
+    await navigate(guest, `${appUrl}/play/?server=${encodeURIComponent(relayWs)}`);
     await waitFor(guest, `(typeof window !== 'undefined' && !!document.querySelector('#game'))`, { timeoutMs: 10000 });
     await evalExpr(guest, `
       (async () => {

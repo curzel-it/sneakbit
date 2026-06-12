@@ -30,7 +30,7 @@ async function boot(t, { staticPort, relayPort, chromePort, dataDir }) {
   s.on("Runtime.exceptionThrown", (p) => {
     errors.push(p?.exceptionDetails?.exception?.description || p?.exceptionDetails?.text || "unknown");
   });
-  await navigate(s, `${servers.appUrl}/index.html`);
+  await navigate(s, `${servers.appUrl}/play/`);
   await waitFor(s, "!!document.getElementById('coin-hud')");
   return { s, errors };
 }

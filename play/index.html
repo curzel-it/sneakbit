@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- The game is served from /play/ but its assets, data, and JS bundle all
+         live at the site root. <base href="/"> makes the document-relative
+         loads in js/assets.js (./assets/…) and js/data.js (./data/…) — plus the
+         module/bundle script tag below — resolve to root regardless of the
+         path the page is served from. Absolute and location-derived URLs
+         (WebSocket, API base) are unaffected. -->
+    <base href="/" />
+    <title>SneakBit</title>
+    <!-- maximum-scale=1, user-scalable=no clamps iOS Safari's auto-zoom
+         (the one that fires when a dialog or focused input appears in
+         the lower half of the screen and shrinks/zooms the whole page
+         to "fit" the chrome). The game canvas is sized to the viewport
+         by js/zoom.js; allowing native pinch-zoom on top of that just
+         fights the per-frame integer-scale math. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        height: 100%;
+        overflow: hidden;
+        font-family: monospace;
+        color: #ccc;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+        /* Belt-and-braces against iOS Safari auto-resizing text on
+           orientation change / dialog open. The viewport meta clamps
+           page zoom; this clamps the per-element text inflation Safari
+           still applies on top of that. */
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        /* Page-wide gesture suppression: no pinch-zoom, no double-tap-
+           to-zoom. Individual interactive controls still set their own
+           touch-action where they need finer-grained behavior. */
+        touch-action: manipulation;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      canvas#game {
+        display: block;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+        background: #000;
+        /* touch-action is NOT inherited, so the body's `manipulation` doesn't
+           reach here — without this the full-screen canvas defaults to `auto`
+           and iOS Safari keeps double-tap-to-zoom alive over the whole game
+           surface. `none` kills every browser gesture on the canvas; input
+           comes from the control overlays, never from touching the canvas. */
+        touch-action: none;
+        /* No max-width/height: js/zoom.js sizes the canvas to be a hair
+           bigger than the viewport so integer-scaling doesn't leave a
+           thin black border on viewports whose width isn't a clean
+           multiple of (scale × TILE_SIZE). The overflow is clipped by
+           body { overflow: hidden }. */
+      }
+      #hud {
+        position: fixed;
+        top: 64px;
+        left: 12px;
+        font-size: 12px;
+        line-height: 1.4;
+        opacity: 0.75;
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        text-shadow: 0 1px 0 #000;
+      }
+      .hud-row { white-space: nowrap; }
+      /* On touch there's no keyboard, so the "WASD / arrows · Esc" hint is
+         noise — and it sits right where the mobile HUD panels stack, bleeding
+         through them. Drop the whole overlay on touch. */
+      body.touch-mode #hud { display: none; }
+    </style>
+  </head>
+  <body>
+    <canvas id="game" width="960" height="640"></canvas>
+    <div id="hud"></div>
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>

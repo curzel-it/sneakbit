@@ -1,84 +1,169 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>SneakBit</title>
-    <!-- maximum-scale=1, user-scalable=no clamps iOS Safari's auto-zoom
-         (the one that fires when a dialog or focused input appears in
-         the lower half of the screen and shrinks/zooms the whole page
-         to "fit" the chrome). The game canvas is sized to the viewport
-         by js/zoom.js; allowing native pinch-zoom on top of that just
-         fights the per-frame integer-scale math. -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SneakBit — a top-down pixel-art adventure</title>
+    <meta name="description"
+        content="SneakBit is a top-down pixel-art adventure: explore, fight, farm, and team up in co-op. Play free in your browser, or get it on Steam, iOS, and Android.">
+    <link rel="icon" href="/favicon.ico">
+
+    <!-- Open Graph / social cards -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="SneakBit">
+    <meta property="og:description"
+        content="A top-down pixel-art adventure. Explore, fight, farm, and team up in co-op.">
+    <meta property="og:image" content="/media/overworld.png">
+    <meta property="og:url" content="https://sneakbit.curzel.it/">
+    <meta name="twitter:card" content="summary_large_image">
+
     <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        background: #000;
-        height: 100%;
-        overflow: hidden;
-        font-family: monospace;
-        color: #ccc;
-        user-select: none;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        -webkit-tap-highlight-color: transparent;
-        /* Belt-and-braces against iOS Safari auto-resizing text on
-           orientation change / dialog open. The viewport meta clamps
-           page zoom; this clamps the per-element text inflation Safari
-           still applies on top of that. */
-        -webkit-text-size-adjust: 100%;
-        text-size-adjust: 100%;
-        /* Page-wide gesture suppression: no pinch-zoom, no double-tap-
-           to-zoom. Individual interactive controls still set their own
-           touch-action where they need finer-grained behavior. */
-        touch-action: manipulation;
-      }
-      body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      canvas#game {
-        display: block;
-        image-rendering: pixelated;
-        image-rendering: crisp-edges;
-        background: #000;
-        /* touch-action is NOT inherited, so the body's `manipulation` doesn't
-           reach here — without this the full-screen canvas defaults to `auto`
-           and iOS Safari keeps double-tap-to-zoom alive over the whole game
-           surface. `none` kills every browser gesture on the canvas; input
-           comes from the control overlays, never from touching the canvas. */
-        touch-action: none;
-        /* No max-width/height: js/zoom.js sizes the canvas to be a hair
-           bigger than the viewport so integer-scaling doesn't leave a
-           thin black border on viewports whose width isn't a clean
-           multiple of (scale × TILE_SIZE). The overflow is clipped by
-           body { overflow: hidden }. */
-      }
-      #hud {
-        position: fixed;
-        top: 64px;
-        left: 12px;
-        font-size: 12px;
-        line-height: 1.4;
-        opacity: 0.75;
-        pointer-events: none;
-        user-select: none;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        text-shadow: 0 1px 0 #000;
-      }
-      .hud-row { white-space: nowrap; }
-      /* On touch there's no keyboard, so the "WASD / arrows · Esc" hint is
-         noise — and it sits right where the mobile HUD panels stack, bleeding
-         through them. Drop the whole overlay on touch. */
-      body.touch-mode #hud { display: none; }
+        :root { color-scheme: dark; }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 0;
+            background: #0d0d0d; color: #ddd;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            line-height: 1.6; font-size: 15px;
+        }
+        a { color: #9ab1ff; }
+        a:hover { text-decoration: underline; }
+        img { image-rendering: pixelated; }
+
+        main { max-width: 880px; margin: 0 auto; padding: 0 20px 72px; }
+
+        /* Hero */
+        .hero { text-align: center; padding: 56px 0 8px; }
+        .hero h1 {
+            font-size: 40px; letter-spacing: 3px; margin: 0;
+            text-transform: uppercase;
+        }
+        .hero .tagline { color: #aaa; font-size: 16px; margin: 12px 0 28px; }
+        .hero-shot {
+            display: block; width: 100%; height: auto;
+            border: 1px solid #2a2a2a; border-radius: 6px;
+            margin: 0 auto;
+        }
+
+        /* Call-to-action buttons */
+        .cta { margin: 28px 0 8px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+        .btn {
+            display: inline-block; text-decoration: none;
+            padding: 12px 22px; border-radius: 6px;
+            border: 1px solid #3a3a3a; color: #ddd; background: #161616;
+            font-size: 15px; letter-spacing: 0.5px; white-space: nowrap;
+        }
+        .btn:hover { border-color: #6a7bd0; text-decoration: none; background: #1c1c1c; }
+        .btn.primary {
+            background: #9ab1ff; border-color: #9ab1ff; color: #0d0d0d; font-weight: 700;
+        }
+        .btn.primary:hover { background: #b3c4ff; border-color: #b3c4ff; }
+        .stores { margin-top: 6px; }
+
+        /* Sections */
+        section.block { margin-top: 56px; }
+        h2 {
+            font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+            color: #888; border-bottom: 1px solid #222; padding-bottom: 8px; margin: 0 0 18px;
+        }
+
+        /* Feature grid */
+        .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+        .feature { background: #131313; border: 1px solid #222; border-radius: 6px; padding: 16px 18px; }
+        .feature h3 { margin: 0 0 6px; font-size: 15px; color: #fff; }
+        .feature p { margin: 0; color: #aaa; font-size: 14px; }
+
+        /* Gallery */
+        .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        .gallery img { width: 100%; height: auto; border: 1px solid #2a2a2a; border-radius: 6px; }
+
+        /* Footer */
+        footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid #222; color: #888; font-size: 13px; }
+        footer p { margin: 6px 0; }
+
+        @media (max-width: 560px) {
+            .hero h1 { font-size: 30px; }
+            .features, .gallery { grid-template-columns: 1fr; }
+        }
     </style>
-  </head>
-  <body>
-    <canvas id="game" width="960" height="640"></canvas>
-    <div id="hud"></div>
-    <script type="module" src="./js/main.js"></script>
-  </body>
+</head>
+
+<body>
+    <main>
+        <header class="hero">
+            <h1>SneakBit</h1>
+            <p class="tagline">A top-down pixel-art adventure — explore, fight, farm, and team up in co-op.</p>
+            <img class="hero-shot" src="/media/overworld.png" width="960" height="640"
+                alt="SneakBit gameplay: a hero standing in a summoning circle beside a forest shop">
+
+            <div class="cta">
+                <a class="btn primary" href="/play">▶ Play in your browser</a>
+            </div>
+            <div class="cta stores">
+                <a class="btn" href="https://store.steampowered.com/app/3360860/SneakBit/" target="_blank" rel="noopener">Steam</a>
+                <a class="btn" href="https://apps.apple.com/app/sneakbit/id6737452377" target="_blank" rel="noopener">App Store</a>
+                <a class="btn" href="https://play.google.com/store/apps/details?id=it.curzel.bitscape" target="_blank" rel="noopener">Google Play</a>
+            </div>
+        </header>
+
+        <section class="block">
+            <h2>What is it</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>Explore a handcrafted world</h3>
+                    <p>Forests, farmland, dusk-woods and dungeons — a connected world built tile by tile.</p>
+                </div>
+                <div class="feature">
+                    <h3>Fight &amp; survive</h3>
+                    <p>Weapons, monsters, and a demon lord at the end of it. Real combat, not just walking around.</p>
+                </div>
+                <div class="feature">
+                    <h3>Farm &amp; build</h3>
+                    <p>Grow crops, gather, and make a place your own between the fights.</p>
+                </div>
+                <div class="feature">
+                    <h3>Play together</h3>
+                    <p>Drop-in co-op over the network — host a world and bring a friend along.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="block">
+            <h2>Screenshots</h2>
+            <div class="gallery">
+                <img src="/media/duskwood.png" width="960" height="640" alt="SneakBit duskwood biome with purple trees and ruins">
+                <img src="/media/farmland.png" width="960" height="640" alt="SneakBit farmland biome with crops and forest">
+            </div>
+        </section>
+
+        <section class="block">
+            <h2>Get it</h2>
+            <div class="cta" style="justify-content: flex-start;">
+                <a class="btn primary" href="/play">▶ Play free in browser</a>
+                <a class="btn" href="https://store.steampowered.com/app/3360860/SneakBit/" target="_blank" rel="noopener">Steam</a>
+                <a class="btn" href="https://apps.apple.com/app/sneakbit/id6737452377" target="_blank" rel="noopener">App Store</a>
+                <a class="btn" href="https://play.google.com/store/apps/details?id=it.curzel.bitscape" target="_blank" rel="noopener">Google Play</a>
+            </div>
+        </section>
+
+        <footer>
+            <p>
+                <strong>SneakBit</strong> · web port of the
+                <a href="https://github.com/curzel-it/sneakbit/tree/rust-core-tip" target="_blank" rel="noopener">original Rust build</a> ·
+                source on <a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener">GitHub</a>.
+            </p>
+            <p>
+                Music by <a href="https://www.filippovicarelli.com/8bit-game-background-music" target="_blank" rel="noopener">Filippo Vicarelli</a> ·
+                sound effects by <a href="https://opengameart.org/content/512-sound-effects-8-bit-style" target="_blank" rel="noopener">SubspaceAudio</a> ·
+                font by <a href="https://dl.dafont.com/dl/?f=pixel_operator" target="_blank" rel="noopener">HarvettFox96</a>.
+            </p>
+            <p>
+                <a href="/privacy.html">Privacy Policy</a> ·
+                <a href="/terms.html">Terms &amp; Conditions</a>
+            </p>
+        </footer>
+    </main>
+</body>
+
 </html>

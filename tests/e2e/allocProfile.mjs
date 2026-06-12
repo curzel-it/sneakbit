@@ -53,7 +53,7 @@ async function main() {
     s.on("Runtime.exceptionThrown", (p) =>
       console.error("[page error]", p.exceptionDetails?.exception?.description || p.exceptionDetails?.text));
 
-    await navigate(s, `${servers.appUrl}/index.html?zone=${ZONE}`);
+    await navigate(s, `${servers.appUrl}/play/?zone=${ZONE}`);
     await waitFor(s, "!!(window.coop && window.coop.positions().length >= 1)");
     // Let the zone settle (cache bake, first frames) before measuring.
     await sleep(1500);

@@ -61,7 +61,7 @@ test("per-frame heap allocation stays low (idle + moving)", async (t) => {
   const errors = [];
   s.on("Runtime.exceptionThrown", (p) => errors.push(p.exceptionDetails?.exception?.description || p.exceptionDetails?.text));
 
-  await navigate(s, `${servers.appUrl}/index.html`);
+  await navigate(s, `${servers.appUrl}/play/`);
   await waitFor(s, "!!(window.coop && window.coop.positions().length >= 1)");
   await sleep(1500); // let the zone cache bake + first frames settle
 

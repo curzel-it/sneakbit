@@ -68,7 +68,7 @@ async function openDevice(port, dataDir, t) {
 
 test("two devices on one account: progress syncs across them", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const url = `${servers.appUrl}/index.html?api=http://127.0.0.1:${RELAY_PORT}`;
+  const url = `${servers.appUrl}/play/?api=http://127.0.0.1:${RELAY_PORT}`;
 
   // — Device A: register, make progress, push to cloud —————————————————
   const a = await openDevice(CHROME_A, "/tmp/sb-e2e-cloud-a", t);
@@ -114,7 +114,7 @@ test("two devices on one account: progress syncs across them", async (t) => {
 
 test("first sign-in with genuine offline progress prompts; 'Keep this device' pushes local over the account", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const url = `${servers.appUrl}/index.html?api=http://127.0.0.1:${RELAY_PORT}`;
+  const url = `${servers.appUrl}/play/?api=http://127.0.0.1:${RELAY_PORT}`;
 
   // — Device C: register an account and seed it with 'piercing' ————————————
   const c = await openDevice(CHROME_C, "/tmp/sb-e2e-cloud-c", t);

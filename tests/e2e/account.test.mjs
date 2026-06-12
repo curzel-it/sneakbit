@@ -56,7 +56,7 @@ test("register, persist across reload, sign out, sign in, and stay playable offl
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
 
-  const liveUrl = `${servers.appUrl}/index.html?api=http://127.0.0.1:${RELAY_PORT}`;
+  const liveUrl = `${servers.appUrl}/play/?api=http://127.0.0.1:${RELAY_PORT}`;
 
   // — Boot, then register —————————————————————————————————————————————
   await navigate(s, liveUrl);
@@ -94,7 +94,7 @@ test("register, persist across reload, sign out, sign in, and stay playable offl
   // Point the API at a dead port. The game must still boot and play, and a
   // sign-in attempt must surface a friendly offline message (not hang or
   // throw). The cached session is preserved across the failed revalidate.
-  await navigate(s, `${servers.appUrl}/index.html?api=http://127.0.0.1:9`);
+  await navigate(s, `${servers.appUrl}/play/?api=http://127.0.0.1:9`);
   await waitFor(s, "!!window.coop");
   const positions = await evalExpr(s, "window.coop.positions()");
   assert.ok(Array.isArray(positions) && positions.length >= 1, "game world is live with the auth server down");
@@ -121,7 +121,7 @@ test("change display name through the editName sub-view", async (t) => {
   t.after(() => s.close());
 
   const email = "e2e-name@sneakbit.test";
-  const liveUrl = `${servers.appUrl}/index.html?api=http://127.0.0.1:${RELAY_PORT}`;
+  const liveUrl = `${servers.appUrl}/play/?api=http://127.0.0.1:${RELAY_PORT}`;
   const clickText = (scope, text) =>
     evalExpr(s, `(()=>{const el=[...document.querySelectorAll(${q(scope)})].find(e=>e.textContent.trim()===${q(text)});if(!el)return false;el.click();return true;})()`);
   const shown = (view) =>
@@ -159,7 +159,7 @@ test("delete account removes it server-side and signs the user out", async (t) =
   t.after(() => s.close());
 
   const email = "e2e-del@sneakbit.test";
-  const liveUrl = `${servers.appUrl}/index.html?api=http://127.0.0.1:${RELAY_PORT}`;
+  const liveUrl = `${servers.appUrl}/play/?api=http://127.0.0.1:${RELAY_PORT}`;
   const clickText = (scope, text) =>
     evalExpr(s, `(()=>{const el=[...document.querySelectorAll(${q(scope)})].find(e=>e.textContent.trim()===${q(text)});if(!el)return false;el.click();return true;})()`);
 

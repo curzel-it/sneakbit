@@ -62,7 +62,7 @@ test("split-screen layout adapts to window size and player count", async (t) => 
   const errors = [];
   s.on("Runtime.exceptionThrown", (p) => errors.push(p.exceptionDetails?.exception?.description || p.exceptionDetails?.text));
 
-  await navigate(s, `${servers.appUrl}/index.html`);
+  await navigate(s, `${servers.appUrl}/play/`);
   await waitFor(s, "!!(window.coop && window.coop.positions().length >= 1)");
 
   // 1 player → single full-canvas slice.

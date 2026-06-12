@@ -33,7 +33,7 @@ test("local realtime PvP: arena, corners, simultaneous input, scavenge, win/lose
   const errors = [];
   s.on("Runtime.exceptionThrown", (p) => errors.push(p.exceptionDetails?.exception?.description || p.exceptionDetails?.text));
 
-  await navigate(s, `${servers.appUrl}/index.html`);
+  await navigate(s, `${servers.appUrl}/play/`);
   await waitFor(s, "!!(window.pvp && window.coop)");
 
   // Start a 2-player match and wait for the arena + PvP mode + 1000 HP.

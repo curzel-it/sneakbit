@@ -756,9 +756,15 @@ async function stepHealth(env) {
     `systemctl is-active ${APP_NAME} && ` +
     `curl -fsS -o /dev/null -w 'local:%{http_code}\\n' http://${APP_BIND}/ && ` +
     `curl -fsS -o /dev/null -w 'local-health:%{http_code}\\n' http://${APP_BIND}/health && ` +
-    `home=$(curl -fsSk https://${SERVER_NAME}/) && ` +
-    `echo "$home" | grep -q 'canvas id=' && ` +
-    `echo "$home" | grep -q 'app-' && ` +
+    // `/` is the marketing landing (links to /play); the game shell lives at
+    // /play/ and carries the canvas + hashed bundle. Probe both so a regression
+    // in either the landing or the game-move is caught.
+    `landing=$(curl -fsSk https://${SERVER_NAME}/) && ` +
+    `echo "$landing" | grep -q 'href="/play"' && ` +
+    `echo 'landing:ok' && ` +
+    `game=$(curl -fsSk https://${SERVER_NAME}/play/) && ` +
+    `echo "$game" | grep -q 'canvas id=' && ` +
+    `echo "$game" | grep -q 'app-' && ` +
     `echo 'client:ok' && ` +
     versionCheck +
     `curl -fsSk https://${SERVER_NAME}/metrics | ` +

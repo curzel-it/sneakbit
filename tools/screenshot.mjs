@@ -45,7 +45,7 @@ async function waitForPort(port, timeoutMs = 5000) {
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
     try {
-      const r = await fetch(`http://127.0.0.1:${port}/index.html`, { signal: AbortSignal.timeout(300) });
+      const r = await fetch(`http://127.0.0.1:${port}/play/`, { signal: AbortSignal.timeout(300) });
       if (r.ok) return true;
     } catch { /* not up yet */ }
     await sleep(100);
@@ -88,7 +88,7 @@ async function captureShot(s, shot) {
   // Seed before boot, navigate, then drop the injected script so it can't
   // leak into the next shot.
   const { identifier } = await s.send("Page.addScriptToEvaluateOnNewDocument", { source: seedScript(shot) });
-  await navigate(s, `http://127.0.0.1:${STATIC_PORT}/index.html`);
+  await navigate(s, `http://127.0.0.1:${STATIC_PORT}/play/`);
   await s.send("Page.removeScriptToEvaluateOnNewDocument", { identifier });
 
   // Confirm the seeded spawn landed (proves the zone built and the player

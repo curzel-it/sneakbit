@@ -24,7 +24,7 @@ test("localization loads English by default and Italian when selected; fullscree
   t.after(() => s.close());
 
   // Default load: tr() resolves a known key to its English value.
-  await navigate(s, `${servers.appUrl}/index.html`);
+  await navigate(s, `${servers.appUrl}/play/`);
   await waitFor(s, "!!window.__menuNav");
   const enWeapons = await evalExpr(s, `import('./js/strings.js').then(m => m.tr('weapons_selection.title'))`);
   assert.equal(enWeapons, "Weapons", "English string table is active by default");
@@ -43,7 +43,7 @@ test("localization loads English by default and Italian when selected; fullscree
     cur.language = 'it';
     localStorage.setItem('sneakbit.settings.v1', JSON.stringify(cur));
   })()`);
-  await navigate(s, `${servers.appUrl}/index.html`);
+  await navigate(s, `${servers.appUrl}/play/`);
   await waitFor(s, "!!window.__menuNav");
   const itWeapons = await evalExpr(s, `import('./js/strings.js').then(m => m.tr('weapons_selection.title'))`);
   assert.equal(itWeapons, "Armi", "Italian string table is active after selecting 'it'");

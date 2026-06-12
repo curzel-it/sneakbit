@@ -44,7 +44,7 @@ test("skins: buy a skin in the shop, then equip it from the inventory", async (t
     errors.push(p?.exceptionDetails?.exception?.description || p?.exceptionDetails?.text || "unknown");
   });
 
-  await navigate(s, `${servers.appUrl}/index.html`);
+  await navigate(s, `${servers.appUrl}/play/`);
   await waitFor(s, "!!document.getElementById('coin-hud')");
 
   // Give the hero enough coins to afford a premium skin.

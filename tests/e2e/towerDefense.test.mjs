@@ -34,7 +34,7 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
     errors.push(p?.exceptionDetails?.exception?.description || p?.exceptionDetails?.text || "unknown");
   });
 
-  await navigate(s, `${servers.appUrl}/index.html?mode=td`);
+  await navigate(s, `${servers.appUrl}/play/?mode=td`);
 
   // — Boot: TD installed + a build phase with a 2-hero squad ————————————
   await waitFor(s, "!!window.td");

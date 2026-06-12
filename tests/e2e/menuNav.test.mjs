@@ -31,7 +31,7 @@ test("keyboard + controller navigate the pause menu", async (t) => {
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
 
-  await navigate(s, `${servers.appUrl}/index.html`);
+  await navigate(s, `${servers.appUrl}/play/`);
   await waitFor(s, "!!window.__menuNav");
 
   // Open the pause menu; the first item should be highlighted.
@@ -74,7 +74,7 @@ test("navigation carries into a second surface (party panel)", async (t) => {
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
 
-  await navigate(s, `${servers.appUrl}/index.html`);
+  await navigate(s, `${servers.appUrl}/play/`);
   await waitFor(s, "!!window.__menuNav");
 
   // Open the pause menu, navigate to "Multiplayer", activate it.

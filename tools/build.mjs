@@ -12,8 +12,9 @@
 //
 // Runtime asset/data loads (./data/*.json, assets/*) are fetched against the
 // document base, not bundled — so they're copied verbatim into _site/
-// alongside the rewritten index.html. The only devDependency is esbuild;
-// everything else is node: built-ins.
+// alongside the static landing page (root index.html) and the rewritten game
+// shell (play/index.html). The only devDependency is esbuild; everything else
+// is node: built-ins.
 
 import * as esbuild from "esbuild";
 import { rmSync, cpSync, readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -70,18 +71,22 @@ async function build() {
   if (!entry) throw new Error("build: could not locate entry output in metafile");
   const bundleName = entry[0].split("/").pop(); // e.g. app-AB12CD34.js
 
-  // Copy every shippable top-level entry into _site/ verbatim.
+  // Copy every shippable top-level entry into _site/ verbatim — including the
+  // landing page (root index.html) and the game shell (play/index.html). The
+  // game shell is rewritten in place below; the landing ships as-is.
   const { readdirSync } = await import("node:fs");
   for (const name of readdirSync(REPO_ROOT)) {
-    if (isDenied(name) || name === "index.html") continue;
+    if (isDenied(name)) continue;
     cpSync(join(REPO_ROOT, name), join(OUT_DIR, name), { recursive: true });
   }
 
-  // Rewrite index.html to point at the hashed bundle instead of raw modules.
-  const srcHtml = readFileSync(join(REPO_ROOT, "index.html"), "utf8");
+  // Rewrite the game shell (served at /play/) to load the hashed bundle instead
+  // of the raw module entry. <base href="/"> in the shell resolves `./<bundle>`
+  // to the root, where esbuild wrote it.
+  const srcHtml = readFileSync(join(REPO_ROOT, "play", "index.html"), "utf8");
   const outHtml = srcHtml.replace("./js/main.js", `./${bundleName}`);
-  if (outHtml === srcHtml) throw new Error("build: index.html script tag not rewritten (entry path changed?)");
-  writeFileSync(join(OUT_DIR, "index.html"), outHtml);
+  if (outHtml === srcHtml) throw new Error("build: play/index.html script tag not rewritten (entry path changed?)");
+  writeFileSync(join(OUT_DIR, "play", "index.html"), outHtml);
 
   console.log(`\nbuilt _site/ — entry ${bundleName}`);
 }

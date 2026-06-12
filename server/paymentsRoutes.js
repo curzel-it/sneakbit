@@ -78,8 +78,10 @@ export function createPaymentsHandler({ db, env = process.env, stripe } = {}) {
       client_reference_id: user.id,        // pinned from the token, not the body
       metadata: { userId: user.id, sku: item.sku },
       customer_email: user.email,
-      success_url: `${base}/?purchase=success&sku=${encodeURIComponent(sku)}`,
-      cancel_url: `${base}/?purchase=cancel`,
+      // Return into the game shell (/play/), not the marketing landing at /,
+      // so storeBoot.js sees the ?purchase param and confirms the purchase.
+      success_url: `${base}/play/?purchase=success&sku=${encodeURIComponent(sku)}`,
+      cancel_url: `${base}/play/?purchase=cancel`,
       automatic_tax: { enabled: true },    // remits the tax embedded in the inclusive price
     });
     return json(res, 200, { url: session.url });
