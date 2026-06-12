@@ -20,12 +20,18 @@ import {
 } from "./accountApi.js";
 import { el, showOnly } from "./dom.js";
 import { guardTextInput } from "./textInputGuard.js";
+import { fetchEntitlements } from "./storeApi.js";
+import { cachedEntitledRefIds } from "./entitlements.js";
+import { getSkin, defaultColumn } from "./skins.js";
+import { tr } from "./strings.js";
+import { paintHeroPreview, PREVIEW_W, PREVIEW_H } from "./heroPreview.js";
 
 let overlay = null;
 let card = null;
 let installed = false;
 let lastFocusedView = null;
-let currentView = null; // "signin" | "register" | "forgot" | "reset" | "account"
+let currentView = null; // "signin" | "register" | "forgot" | "reset" | "account" | "editName" | "editPassword"
+let purchasesReqId = 0; // guards stale entitlement fetches from clobbering a newer render
 let resetToken = null;  // captured from ?reset=… for the reset view
 
 // View subtrees, built once and toggled by display.
@@ -101,6 +107,8 @@ function buildOverlay() {
   views.forgot = buildForgotView();
   views.reset = buildResetView();
   views.account = buildAccountView();
+  views.editName = buildEditNameView();
+  views.editPassword = buildEditPasswordView();
   card = el("div", { class: "account-card" }, [...Object.values(views), buildCloseRow()]);
   overlay = el("div", {
     id: "account-overlay",
@@ -213,15 +221,18 @@ function buildAccountView() {
   w.accountEmail = el("p", { class: "account-email" });
   root.appendChild(w.accountEmail);
 
-  root.appendChild(el("p", { class: "account-hint", text: "Display name" }));
-  w.accountName = field(root, { type: "text", placeholder: "Display name", autocomplete: "nickname" });
+  // Display name and password are edited in their own focused sub-views; the
+  // account page itself just surfaces the entry points and the error line that
+  // the danger-zone (delete) flow writes to.
+  root.appendChild(el("button", { class: "account-action", text: "Change display name", on: { click: () => showView("editName") } }));
+  root.appendChild(el("button", { class: "account-action", text: "Change password", on: { click: () => showView("editPassword") } }));
   w.accountError = errorEl(root);
-  w.accountSaveBtn = primaryButton(root, "Save display name", onSaveProfile);
 
-  root.appendChild(el("p", { class: "account-hint", text: "Change password" }));
-  w.accountCurrentPw = field(root, { type: "password", placeholder: "Current password", autocomplete: "current-password" });
-  w.accountNewPw = field(root, { type: "password", placeholder: "New password (min 8 characters)", autocomplete: "new-password", onEnter: onChangePassword });
-  w.accountChangePwBtn = primaryButton(root, "Change password", onChangePassword);
+  // Purchased items — real-money entitlements (currently skins), each shown
+  // with its hero portrait and localized name. Populated by renderPurchases().
+  root.appendChild(el("p", { class: "account-hint", text: "Purchased items" }));
+  w.accountPurchases = el("div", { class: "account-purchases" });
+  root.appendChild(w.accountPurchases);
 
   root.appendChild(el("button", { class: "account-danger", text: "Sign out", on: { click: onSignOut } }));
 
@@ -257,6 +268,25 @@ function buildAccountView() {
   return root;
 }
 
+function buildEditNameView() {
+  const root = viewRoot("editName", "Change display name");
+  w.editName = field(root, { type: "text", placeholder: "Display name", autocomplete: "nickname", onEnter: onSaveProfile });
+  w.editNameError = errorEl(root);
+  w.editNameSaveBtn = primaryButton(root, "Save", onSaveProfile);
+  linkRow(root, [{ label: "Back", view: "account" }]);
+  return root;
+}
+
+function buildEditPasswordView() {
+  const root = viewRoot("editPassword", "Change password");
+  w.editCurrentPw = field(root, { type: "password", placeholder: "Current password", autocomplete: "current-password" });
+  w.editNewPw = field(root, { type: "password", placeholder: "New password (min 8 characters)", autocomplete: "new-password", onEnter: onChangePassword });
+  w.editPasswordError = errorEl(root);
+  w.editPasswordSaveBtn = primaryButton(root, "Change password", onChangePassword);
+  linkRow(root, [{ label: "Back", view: "account" }]);
+  return root;
+}
+
 function showDeleteConfirm(on) {
   if (!w.accountDeleteConfirm) return;
   w.accountDeleteConfirm.style.display = on ? "block" : "none";
@@ -278,6 +308,8 @@ function showView(name) {
   showOnly(views, name);
   clearErrors();
   if (name === "account") renderAccountView();
+  else if (name === "editName") renderEditNameView();
+  else if (name === "editPassword") renderEditPasswordView();
   const v = views[name];
   if (v && isAccountPanelOpen() && v !== lastFocusedView) {
     lastFocusedView = v;
@@ -289,8 +321,71 @@ function renderAccountView() {
   const user = getUser();
   if (!user) { showView("signin"); return; }
   w.accountEmail.textContent = user.email;
-  w.accountName.value = user.displayName || "";
   showDeleteConfirm(false);
+  renderPurchases();
+}
+
+function renderEditNameView() {
+  w.editName.value = getUser()?.displayName || "";
+}
+
+function renderEditPasswordView() {
+  w.editCurrentPw.value = "";
+  w.editNewPw.value = "";
+}
+
+// Fetch the signed-in user's entitlements (real-money purchases) and list
+// them. Live fetch is authoritative; offline we fall back to the local
+// entitled-set cache. A request id guards against a slow fetch overwriting a
+// newer render (e.g. account switched, or the view was reopened).
+async function renderPurchases() {
+  const host = w.accountPurchases;
+  if (!host) return;
+  const reqId = ++purchasesReqId;
+  host.textContent = "";
+  host.appendChild(el("p", { class: "account-purchases-empty", text: "Loading…" }));
+
+  let refIds = null;
+  const r = await fetchEntitlements(getTokenOrNull()).catch(() => null);
+  if (reqId !== purchasesReqId) return; // superseded by a newer render
+  if (r && r.ok && Array.isArray(r.data?.entitlements)) {
+    refIds = r.data.entitlements
+      .filter((e) => e && e.kind === "skin" && typeof e.refId === "string")
+      .map((e) => e.refId);
+  } else {
+    refIds = cachedEntitledRefIds(); // offline / error: best-effort from cache
+  }
+  paintPurchaseList(host, refIds);
+}
+
+function paintPurchaseList(host, refIds) {
+  host.textContent = "";
+  const owned = [...new Set(refIds)].map(getSkin).filter(Boolean);
+  if (!owned.length) {
+    host.appendChild(el("p", { class: "account-purchases-empty", text: "No purchases yet." }));
+    return;
+  }
+  const list = el("ul", { class: "account-purchases-list" });
+  for (const skin of owned) {
+    const canvas = el("canvas", {
+      class: "account-purchase-icon", width: PREVIEW_W, height: PREVIEW_H,
+    });
+    list.appendChild(el("li", { class: "account-purchase-row" }, [
+      canvas,
+      el("span", { class: "account-purchase-name", text: tr(skin.nameKey) || skin.id }),
+    ]));
+    paintWhenReady(canvas, skin.column == null ? defaultColumn(0) : skin.column);
+  }
+  host.appendChild(list);
+}
+
+// paintHeroPreview returns false until the heroes sheet has loaded. The panel
+// opens mid-game so the sheet is usually ready, but retry on the next frame a
+// few times to cover a cold open (e.g. a ?reset deep link before assets land).
+function paintWhenReady(canvas, column, tries = 5) {
+  if (paintHeroPreview(canvas, column)) return;
+  if (tries <= 0 || typeof requestAnimationFrame !== "function") return;
+  requestAnimationFrame(() => paintWhenReady(canvas, column, tries - 1));
 }
 
 // — Handlers ————————————————————————————————————————————————————————————
@@ -347,35 +442,37 @@ async function onReset() {
 }
 
 async function onSaveProfile() {
-  const displayName = w.accountName.value.trim();
-  await withBusy(w.accountSaveBtn, async () => {
+  const displayName = w.editName.value.trim();
+  await withBusy(w.editNameSaveBtn, async () => {
     const r = await updateMe(getTokenOrNull(), { displayName });
-    if (r.offline) { setError(w.accountError, OFFLINE_MSG); return; }
+    if (r.offline) { setError(w.editNameError, OFFLINE_MSG); return; }
     if (r.status === 401) { handleExpired(); return; }
-    if (!r.ok) { setError(w.accountError, messageFor(r.error, "Couldn't save.")); return; }
+    if (!r.ok) { setError(w.editNameError, messageFor(r.error, "Couldn't save.")); return; }
     updateUser(r.data.user);
     showToast("Display name saved", "hint");
+    showView("account");
   });
 }
 
 async function onChangePassword() {
-  const currentPassword = w.accountCurrentPw.value;
-  const password = w.accountNewPw.value;
-  if (!currentPassword || !password) { setError(w.accountError, "Enter your current and new password."); return; }
-  if (password.length < 8) { setError(w.accountError, "New password must be at least 8 characters."); return; }
-  await withBusy(w.accountChangePwBtn, async () => {
+  const currentPassword = w.editCurrentPw.value;
+  const password = w.editNewPw.value;
+  if (!currentPassword || !password) { setError(w.editPasswordError, "Enter your current and new password."); return; }
+  if (password.length < 8) { setError(w.editPasswordError, "New password must be at least 8 characters."); return; }
+  await withBusy(w.editPasswordSaveBtn, async () => {
     const r = await updateMe(getTokenOrNull(), { currentPassword, password });
-    if (r.offline) { setError(w.accountError, OFFLINE_MSG); return; }
+    if (r.offline) { setError(w.editPasswordError, OFFLINE_MSG); return; }
     if (r.status === 401) { handleExpired(); return; }
-    if (!r.ok) { setError(w.accountError, messageFor(r.error, "Couldn't change the password.")); return; }
+    if (!r.ok) { setError(w.editPasswordError, messageFor(r.error, "Couldn't change the password.")); return; }
     // The server retires every token issued before the change (including the
     // one we just used) and hands back a fresh one — adopt it so this session
     // keeps working. Other devices' tokens are now invalid, as intended.
     if (r.data.token) setSession(r.data.token, r.data.user);
     else updateUser(r.data.user);
-    w.accountCurrentPw.value = "";
-    w.accountNewPw.value = "";
+    w.editCurrentPw.value = "";
+    w.editNewPw.value = "";
     showToast("Password changed", "hint");
+    showView("account");
   });
 }
 
@@ -452,14 +549,14 @@ function setError(el, msg) {
 }
 
 function clearErrors() {
-  for (const key of ["signinError", "regError", "forgotError", "resetError", "accountError"]) {
+  for (const key of ["signinError", "regError", "forgotError", "resetError", "accountError", "editNameError", "editPasswordError"]) {
     if (w[key]) { w[key].textContent = ""; w[key].style.display = "none"; }
   }
 }
 
 function clearInputs() {
   for (const key of ["signinEmail", "signinPassword", "regEmail", "regName", "regPassword",
-    "forgotEmail", "resetPassword", "accountCurrentPw", "accountNewPw"]) {
+    "forgotEmail", "resetPassword", "editCurrentPw", "editNewPw"]) {
     if (w[key]) w[key].value = "";
   }
 }
@@ -517,11 +614,26 @@ function injectStyles() {
       background: #2a3a55; border-color: #4a5a88; color: #fff; text-align: center;
     }
     .account-card button.account-primary:hover:not(:disabled) { background: #34466a; }
+    .account-card button.account-action {
+      display: flex; width: 100%; margin: 8px 0 0;
+      align-items: center; justify-content: space-between; text-align: left;
+    }
+    .account-card button.account-action::after { content: "\\203A"; opacity: 0.6; }
     .account-card button.account-danger {
       display: block; width: 100%; margin: 18px 0 0;
       background: var(--sb-accent-danger-bg); border-color: var(--sb-accent-danger-border);
     }
     .account-card button.account-danger:hover { background: #4a2828; }
+    .account-purchases { margin: 4px 0 0; }
+    .account-purchases-empty { color: var(--sb-text-dim); font-size: 12px; margin: 4px 0 0; }
+    .account-purchases-list { list-style: none; margin: 4px 0 0; padding: 0; }
+    .account-purchase-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 4px 0; font-size: 13px;
+    }
+    .account-purchase-icon {
+      width: 24px; height: 48px; image-rendering: pixelated; flex: 0 0 auto;
+    }
     .account-links { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0 0; }
     .account-card button.account-link {
       background: none; border: none; padding: 0; color: #9ab1ff;

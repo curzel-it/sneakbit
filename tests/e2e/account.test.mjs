@@ -111,6 +111,44 @@ test("register, persist across reload, sign out, sign in, and stay playable offl
   assert.match(errText, /offline/i);
 });
 
+test("change display name through the editName sub-view", async (t) => {
+  if (!skipIfNoChrome(t)) return;
+  const chrome = await launchChrome({ port: 9268, dataDir: "/tmp/sb-e2e-account-name" });
+  t.after(() => chrome.kill());
+  const targets = await getTargets(9268);
+  const page = targets.find((x) => x.type === "page");
+  const s = await connectSession(page.webSocketDebuggerUrl);
+  t.after(() => s.close());
+
+  const email = "e2e-name@sneakbit.test";
+  const liveUrl = `${servers.appUrl}/index.html?api=http://127.0.0.1:${RELAY_PORT}`;
+  const clickText = (scope, text) =>
+    evalExpr(s, `(()=>{const el=[...document.querySelectorAll(${q(scope)})].find(e=>e.textContent.trim()===${q(text)});if(!el)return false;el.click();return true;})()`);
+  const shown = (view) =>
+    `(()=>{const v=document.querySelector('[data-view="${view}"]');return !!v&&v.style.display!=='none';})()`;
+
+  await navigate(s, liveUrl);
+  await waitFor(s, "!!window.account && !!window.coop");
+
+  // Register with no display name, then set one via the dedicated sub-view.
+  await evalExpr(s, "window.account.open('register')");
+  await setVal(s, '[data-view="register"] input[type="email"]', email);
+  await setVal(s, '[data-view="register"] input[type="password"]', PASS);
+  await clickSel(s, '[data-view="register"] button.account-primary');
+  await waitFor(s, "window.account.isSignedIn()");
+
+  // Account view → "Change display name" button opens the editName sub-view.
+  await evalExpr(s, "window.account.open('account')");
+  await clickText('[data-view="account"] button.account-action', "Change display name");
+  await waitFor(s, shown("editName"));
+  await setVal(s, '[data-view="editName"] input[type="text"]', NEWNAME);
+  await clickSel(s, '[data-view="editName"] button.account-primary');
+
+  // On success it saves and returns to the account view.
+  await waitFor(s, `window.account.user().displayName === ${q(NEWNAME)}`);
+  await waitFor(s, shown("account"));
+});
+
 test("delete account removes it server-side and signs the user out", async (t) => {
   if (!skipIfNoChrome(t)) return;
   const chrome = await launchChrome({ port: 9266, dataDir: "/tmp/sb-e2e-account-del" });

@@ -61,6 +61,13 @@ export async function reconcile(token) {
   return { ok: true, granted: toGrant, revoked: toRevoke };
 }
 
+// The refIds we currently own via entitlement (real-money purchases), read
+// from the local cache. Used by the account page to list purchases offline,
+// when a live fetch of /store/entitlements isn't possible.
+export function cachedEntitledRefIds() {
+  return readCache();
+}
+
 // Test seam — clear the local entitled-set cache.
 export function _clearEntitledCacheForTesting() {
   try { localStorage.removeItem(CACHE_KEY); } catch { /* ignore */ }
