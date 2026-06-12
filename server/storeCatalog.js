@@ -19,26 +19,27 @@ export const ZERO_DECIMAL = new Set(["jpy"]);
 // The four currencies we author prices in (locked decision).
 export const CURRENCIES = ["usd", "eur", "gbp", "jpy"];
 
-// One entry per non-default skin in js/skins.js SKINS. `stripePrice` is a
-// placeholder until the one-time Stripe setup (tools/stripeSetup.mjs) mints the
-// real price_… ids; with no STRIPE_SECRET_KEY the routes are 503 anyway.
+// One entry per non-default skin in js/skins.js SKINS. `stripePrice` is the
+// live Stripe Price id minted by the one-time setup (tools/stripeSetup.mjs);
+// re-run it after any catalog change and paste the new ids here. Each Price
+// carries currency_options for all four CURRENCIES (tax_behavior:"inclusive").
 export const CATALOG = [
-  skin("outfit_red"),
-  skin("outfit_yellow"),
-  skin("outfit_blue"),
-  skin("tracksuit_black"),
-  skin("ninja_black"),
+  skin("outfit_red", "price_1ThOqCPhPE2cXR2cMqhYVs4j"),
+  skin("outfit_yellow", "price_1ThOqDPhPE2cXR2cy2MErSWw"),
+  skin("outfit_blue", "price_1ThOqEPhPE2cXR2cZ60cbmf4"),
+  skin("tracksuit_black", "price_1ThOqFPhPE2cXR2cOMhbsaiw"),
+  skin("ninja_black", "price_1ThOqGPhPE2cXR2coDKWczYV"),
 ];
 
 // All five launch SKUs share the same flat real-money price (2.99 USD/EUR/GBP;
 // JPY ≈ ¥450, a round whole-yen equivalent). Adjust per-skin if that changes.
-function skin(refId) {
+function skin(refId, stripePrice) {
   return {
     sku: `skin.${refId}`,
     kind: "skin",
     refId,
     nameKey: `skins.name.${refId}`,
-    stripePrice: "price_XXXX",
+    stripePrice,
     prices: { usd: 299, eur: 299, gbp: 299, jpy: 450 },
   };
 }
