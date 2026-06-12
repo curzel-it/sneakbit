@@ -296,20 +296,105 @@ function bfsZoneOrder(graph, startId) {
 // graph path, solving and executing each teleporter hop from the live
 // position. Returns true on arrival, false if some hop can't be solved
 // right now (the target is skipped this sweep and retried next one).
+//
+// The first hop must depart from where the player actually STANDS — a
+// story event can wall the player into a pocket whose only way out is
+// one specific teleporter (e.g. 1011's priestess antechamber: the quest
+// spawns her across the corridor and the stairs down are the exit). So
+// shortest paths whose first edge is walk-reachable right now are
+// preferred; if none exists, fall back to any path and let the full
+// solver try the first hop (it may need pushes).
 function travelTo(sim, targetZone) {
   if (sim.zoneId === targetZone) return true;
-  const path = graphPath(sim.graph, sim.zoneId, targetZone);
-  if (!path) return false;
-  for (const edge of path) {
+  const model = sim.graph.models.get(sim.zoneId);
+  const rt = runtimeFor(sim, sim.zoneId);
+  const region = reachableTiles(model, sim.tile, { pushableStarts: rt.pushables });
+  const firstHopOk = (e) => e.tiles.some((t) => region.has(tileKey(t.x, t.y)));
+  const path = graphPath(sim.graph, sim.zoneId, targetZone, firstHopOk)
+    ?? graphPath(sim.graph, sim.zoneId, targetZone, null);
+  if (path) {
+    let ok = true;
+    for (const edge of path) {
+      if (!traverseEdge(sim, edge)) { ok = false; break; }
+    }
+    if (ok) return true;
+    if (sim.zoneId === targetZone) return true;
+  }
+  // The zone-granular path failed mid-journey — usually because some hop
+  // ARRIVES in a pocket the next hop can't leave (1011's stairs loop back
+  // into the priestess antechamber). Re-plan over (zone, arrival tile)
+  // nodes so the path only uses hops that are walkable from where each
+  // teleport actually lands.
+  return travelToByArrival(sim, targetZone);
+}
+
+// Position-aware travel: BFS over (zone, tile) nodes where a hop is taken
+// only if its teleporter is walk-reachable from the node's tile, and the
+// next node is the hop's RESOLVED arrival. Slower than the zone BFS (one
+// flood per node) — used only as its fallback.
+function travelToByArrival(sim, targetZone) {
+  const graph = sim.graph;
+  const nodeKey = (zone, tile) => `${zone}|${tile.x},${tile.y}`;
+  const start = nodeKey(sim.zoneId, sim.tile);
+  const prev = new Map([[start, null]]); // nodeKey -> { fromKey, edge }
+  let frontier = [{ zone: sim.zoneId, tile: sim.tile, key: start }];
+  let goalKey = null;
+  while (frontier.length && !goalKey) {
+    const next = [];
+    for (const node of frontier) {
+      const model = graph.models.get(node.zone);
+      const rt = runtimeFor(sim, node.zone);
+      const pushables = node.zone === sim.zoneId && rt.pushables
+        ? rt.pushables
+        : new Map(model.pushables.map((p) => [p.entityId, { ...p.start }]));
+      const region = reachableTiles(model, node.tile, { pushableStarts: pushables });
+      for (const e of graph.edges) {
+        if (e.from !== node.zone || !edgeTraversable(e)) continue;
+        if (!e.tiles.some((t) => region.has(tileKey(t.x, t.y)))) continue;
+        const arrival = resolveArrival(graph, e);
+        if (!arrival) continue;
+        const key = nodeKey(e.to, arrival);
+        if (prev.has(key)) continue;
+        prev.set(key, { fromKey: node.key, edge: e });
+        if (e.to === targetZone) { goalKey = key; break; }
+        next.push({ zone: e.to, tile: arrival, key });
+      }
+      if (goalKey) break;
+    }
+    frontier = next;
+  }
+  if (!goalKey) return false;
+  const hops = [];
+  for (let k = goalKey; ; ) {
+    const rec = prev.get(k);
+    if (!rec) break;
+    hops.unshift(rec.edge);
+    k = rec.fromKey;
+  }
+  for (const edge of hops) {
     if (!traverseEdge(sim, edge)) return false;
   }
   return true;
 }
 
 // Shortest sequence of traversable edges from `fromZone` to `toZone`.
-function graphPath(graph, fromZone, toZone) {
-  const prev = new Map([[fromZone, null]]);
-  const queue = [fromZone];
+// `firstHopOk` (optional) filters which edges may leave the start zone as
+// the FIRST hop. The start zone itself stays revisitable — escaping a
+// pocket can mean leaving through one teleporter and re-entering the same
+// zone elsewhere — so the search is seeded with the allowed first edges
+// rather than with the start zone.
+function graphPath(graph, fromZone, toZone, firstHopOk) {
+  const prev = new Map(); // zoneId -> edge taken to reach it
+  const seeds = new Set();
+  const queue = [];
+  for (const e of graph.edges) {
+    if (e.from !== fromZone || !edgeTraversable(e)) continue;
+    if (firstHopOk && !firstHopOk(e)) continue;
+    if (prev.has(e.to)) continue;
+    prev.set(e.to, e);
+    seeds.add(e);
+    queue.push(e.to);
+  }
   while (queue.length) {
     const id = queue.shift();
     if (id === toZone) break;
@@ -321,8 +406,10 @@ function graphPath(graph, fromZone, toZone) {
   }
   if (!prev.has(toZone)) return null;
   const path = [];
-  for (let cur = toZone; cur !== fromZone; cur = path[0].from) {
-    path.unshift(prev.get(cur));
+  for (let cur = toZone; ; cur = path[0].from) {
+    const e = prev.get(cur);
+    path.unshift(e);
+    if (seeds.has(e)) break;
   }
   return path;
 }
@@ -332,7 +419,12 @@ function traverseEdge(sim, edge) {
   const model = sim.graph.models.get(edge.from);
   const rt = runtimeFor(sim, edge.from);
   const solve = solveToTiles(model, sim.tile, edge.tiles, { pushableStarts: rt.pushables });
-  if (!solve.reachable) return false;
+  if (!solve.reachable) {
+    if (globalThis.process?.env?.ROUTE_DEBUG) {
+      console.error(`HOP FAIL ${edge.from}->${edge.to} from ${sim.tile.x},${sim.tile.y}: ${solve.reason} (${solve.statesExplored})`);
+    }
+    return false;
+  }
   executeSolve(sim, model, rt, solve);
   const arrival = resolveArrival(sim.graph, edge);
   sim.steps.push({ kind: "travel", from: edge.from, to: edge.to });
