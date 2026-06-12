@@ -44,14 +44,35 @@ const RELAY_RESTART_SEC = { twitch: 10, youtube: 3, "youtube-backup": 3 };
 const args = new Set(process.argv.slice(2));
 const FORCE_RESTART = args.has("--restart");
 const KEYS_ONLY = args.has("--keys");
-
-main().catch((e) => { console.error(e.message || e); process.exit(1); });
+// Push everything but start nothing — lets you verify (below) before any
+// relay goes live to a public platform.
+const NO_START = args.has("--no-start");
+// Run a short local-FLV capture on the VPS (debug mode, no RTMP, no
+// watchdog) and ffprobe it, to confirm video + game audio before going live.
+const VERIFY = args.has("--verify");
+// Report remote service state + recent journals (no changes).
+const STATUS = args.has("--status");
 
 async function main() {
   const env = loadEnv(join(ROOT, ".env"));
   await connect(env);
-  console.log(`[stream] deploying to ${env.IP_ADDRESS}`);
 
+  if (args.has("--diag-pulse")) {
+    console.log("[diag] starting PulseAudio as the service user, with logging:");
+    await ssh(env,
+      `sudo -u ${USER} env HOME=/home/${USER} XDG_RUNTIME_DIR=/tmp/sneakbit-stream-pulse ` +
+      `bash -lc 'mkdir -p $XDG_RUNTIME_DIR; chmod 700 $XDG_RUNTIME_DIR; ` +
+      `pulseaudio -D --exit-idle-time=-1 --log-target=stderr 2>&1 | head -30; sleep 1; ` +
+      `pactl info 2>&1 | head -8; ` +
+      `pactl load-module module-null-sink sink_name=sneakbit_game 2>&1; ` +
+      `pactl list short sinks 2>&1; pulseaudio --kill 2>/dev/null'`,
+      { check: false });
+    end(); return;
+  }
+  if (STATUS) { await stepStatus(env); end(); return; }
+  if (VERIFY) { await stepVerify(env); end(); return; }
+
+  console.log(`[stream] deploying to ${env.IP_ADDRESS}`);
   if (!KEYS_ONLY) {
     await stepDeps(env);
     await stepUser(env);
@@ -59,9 +80,52 @@ async function main() {
   }
   await stepEnvFile(env);
   await stepUnits(env);
-  await stepActivate(env);
+  if (NO_START) {
+    console.log("[stream] --no-start: units installed but not started. " +
+      "Run `node tools/stream/deploy.mjs --verify`, then deploy again without --no-start to go live.");
+  } else {
+    await stepActivate(env);
+  }
   printVerify(env);
   end();
+}
+
+async function stepStatus(env) {
+  for (const u of [APP, `${APP}-youtube`, `${APP}-youtube-backup`, `${APP}-twitch`]) {
+    const { stdout } = await ssh(env, `systemctl is-active ${u}.service || true`, { check: false });
+    console.log(`[status] ${u}: ${stdout.trim()}`);
+  }
+  console.log("\n[status] master journal (last 20):");
+  await ssh(env, `journalctl -u ${APP}.service -n 20 --no-pager | sed 's/\\(key\\|live2\\/\\)[A-Za-z0-9_-]\\{8,\\}/\\1<redacted>/g'`, { check: false });
+  console.log("\n[status] youtube relay journal (last 20):");
+  await ssh(env, `journalctl -u ${APP}-youtube.service -n 20 --no-pager | sed 's/live2\\/[A-Za-z0-9_-]\\{8,\\}/live2\\/<redacted>/g'`, { check: false });
+}
+
+// Drive run_streamer.sh in debug mode (writes /tmp FLV, no RTMP, no freeze
+// watchdog) for a few seconds as the service user, then ffprobe the result.
+async function stepVerify(env) {
+  console.log("[verify] short debug capture on the VPS (no RTMP) ...");
+  const out = `/tmp/sneakbit-stream-debug.flv`;
+  await ssh(env, `rm -f ${out}`, { check: false });
+  // ~14s: Chrome needs ~3s to render before x11grab starts; timeout SIGTERMs
+  // ffmpeg, the script's trap cleans up Xvfb/Chrome/Pulse. Non-zero exit from
+  // the timeout kill is expected, so check:false.
+  await ssh(env,
+    `sudo -u ${USER} env HOME=/home/${USER} timeout 14 ` +
+    `bash ${REMOTE_DIR}/run_streamer.sh debug; true`, { check: false });
+  console.log("[verify] ffprobe streams:");
+  const { stdout } = await ssh(env,
+    `ffprobe -v error -show_entries stream=codec_type,codec_name ` +
+    `-of default=noprint_wrappers=1 ${out} 2>&1 || echo "FFPROBE_FAILED"`, { check: false });
+  const hasVideo = /codec_type=video/.test(stdout);
+  const hasAudio = /codec_type=audio/.test(stdout);
+  console.log(`[verify] video stream: ${hasVideo ? "YES" : "NO"} | audio stream: ${hasAudio ? "YES" : "NO"}`);
+  if (hasVideo && hasAudio) {
+    console.log("[verify] OK — capture + audio working. Deploy without --no-start to go live.");
+  } else {
+    console.log("[verify] INCOMPLETE — check `journalctl` and the ffprobe output above. " +
+      "(No audio likely means PulseAudio didn't start as the service user; video should still work via the silent fallback.)");
+  }
 }
 
 async function stepDeps(env) {
@@ -314,23 +378,25 @@ function ssh(env, cmd, { check = true } = {}) {
   }));
 }
 
-// Write a remote file via `cat > path` over stdin (no SFTP needed for a
-// handful of small files), then chmod. Content is fed on the exec stream.
+// Write a remote file over SFTP, then chmod. SFTP (not `cat >` over an exec
+// channel) because a large payload on an exec stream can leave the channel's
+// close event unfired — the promise then hangs and Node exits 0 mid-deploy.
 function writeRemoteFile(env, path, content, mode = null) {
   console.log(`  write> ${path}`);
   return connect(env).then((conn) => new Promise((res, rej) => {
-    conn.exec(`cat > ${path}` + (mode ? ` && chmod ${mode} ${path}` : ""), (err, stream) => {
+    conn.sftp((err, sftp) => {
       if (err) return rej(err);
-      let errOut = "";
-      stream.stderr.on("data", (d) => { errOut += d; });
-      stream.on("close", (code) => {
-        if (code !== 0) return rej(new Error(`write ${path} failed (exit ${code}): ${errOut}`));
-        res();
+      sftp.writeFile(path, content, (werr) => {
+        if (werr) return rej(new Error(`write ${path} failed: ${werr.message}`));
+        if (!mode) return res();
+        sftp.chmod(path, parseInt(mode, 8), (cerr) =>
+          cerr ? rej(new Error(`chmod ${path} failed: ${cerr.message}`)) : res());
       });
-      stream.end(content);
     });
   }));
 }
 
 function end() { if (_conn) { _conn.end(); _conn = null; } }
 function die(msg) { console.error(msg); process.exit(1); }
+
+main().catch((e) => { console.error(e.message || e); process.exit(1); });

@@ -65,11 +65,15 @@ start_pulse() {
     mkdir -p "$PULSE_RUNTIME"; chmod 700 "$PULSE_RUNTIME"
     export XDG_RUNTIME_DIR="$PULSE_RUNTIME"
     export PULSE_SERVER="unix:${PULSE_RUNTIME}/pulse/native"
-    # --exit-idle-time=-1 keeps it alive with no clients; --disallow-exit so a
-    # transient client disconnect can't kill it. Root needs the allow flag.
+    # `-D` (daemonize directly), NOT `--start`: the latter relies on autospawn
+    # / D-Bus session machinery that isn't present for a headless systemd
+    # service user, so it silently fails. --exit-idle-time=-1 keeps it alive
+    # with no clients. Root needs the allow flag.
     PULSE_ALLOW=""
-    [ "$(id -u)" = "0" ] && PULSE_ALLOW="--system=false" && export PULSEAUDIO_ALLOW_ROOT=1
-    pulseaudio --start --exit-idle-time=-1 --disallow-exit $PULSE_ALLOW >/dev/null 2>&1 || { echo ""; return; }
+    [ "$(id -u)" = "0" ] && export PULSEAUDIO_ALLOW_ROOT=1
+    pulseaudio --kill >/dev/null 2>&1 || true  # clear any stale daemon from a prior run
+    sleep 0.3
+    pulseaudio -D --exit-idle-time=-1 $PULSE_ALLOW >/dev/null 2>&1 || { echo ""; return; }
     sleep 1
     pactl load-module module-null-sink \
         sink_name="$PULSE_SINK" \
