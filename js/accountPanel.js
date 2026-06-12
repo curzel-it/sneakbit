@@ -19,6 +19,7 @@ import {
   registerAccount, loginAccount, updateMe, forgotPassword, resetPassword, deleteAccount,
 } from "./accountApi.js";
 import { el, showOnly } from "./dom.js";
+import { guardTextInput } from "./textInputGuard.js";
 
 let overlay = null;
 let card = null;
@@ -128,7 +129,7 @@ function field(root, { type = "text", placeholder, autocomplete, onEnter }) {
       : undefined,
   });
   root.appendChild(input);
-  return input;
+  return guardTextInput(input);
 }
 
 function errorEl(root) {
@@ -234,11 +235,11 @@ function buildAccountView() {
   });
   root.appendChild(w.accountDeleteBtn);
 
-  w.accountDeletePw = el("input", {
+  w.accountDeletePw = guardTextInput(el("input", {
     class: "account-input", type: "password",
     placeholder: "Enter your password to confirm", autocomplete: "current-password",
     on: { keydown: (e) => { if (e.key === "Enter") { e.preventDefault(); onDeleteAccount(); } } },
-  });
+  }));
   w.accountDeleteConfirmBtn = el("button", {
     class: "account-danger", text: "Permanently delete",
     on: { click: onDeleteAccount },

@@ -47,6 +47,7 @@ import { startPvpMatch, exitPvp } from "./pvpController.js";
 import { startTowerDefense } from "./towerDefense.js";
 import { isPvp, isPvpHostSetup, setPvpHostSetup } from "./gameMode.js";
 import { el, showOnly } from "./dom.js";
+import { guardTextInput } from "./textInputGuard.js";
 import { makeConfirmControl } from "./confirmControl.js";
 import { canNativeShare, buildShareUrl, promptCopy } from "./clipboard.js";
 
@@ -207,13 +208,13 @@ function partyConfirm(label, onConfirm) {
 
 // — Single-player view ————————————————————————————————————————————————————
 function buildSingleView() {
-  spJoinInput = el("input", {
+  spJoinInput = guardTextInput(el("input", {
     id: "party-join-code",
     maxLength: 5,
     placeholder: "ABC12",
     class: "party-code-input",
     on: { keydown: (e) => { if (e.key === "Enter") { e.preventDefault(); onJoinClick(); } } },
-  });
+  }));
   spErrorEl = el("p", { class: "party-error", style: { display: "none" } });
 
   const onlineCoop = hostButton("party-online-coop", "Online co-op", () => onHostOnlineClick("coop"));
