@@ -137,6 +137,34 @@ export function keyMatches(key, expectedValue) {
   return false;
 }
 
+// Snapshot the entire kv namespace into a plain object. Used by the
+// autoplay bot to dry-run the route planner (which writes flags as it
+// simulates) against a COPY of the live save without mutating it. Pairs
+// with restoreStorage.
+export function snapshotStorage() {
+  hydrate();
+  const snap = {};
+  for (const [k, v] of cache) snap[k] = v;
+  return snap;
+}
+
+// Restore the kv namespace to a prior snapshotStorage() result, in both
+// the in-memory cache and the localStorage backing store, so a dry-run
+// that wrote flags leaves no trace on the real save. Keys present now but
+// absent from the snapshot are cleared; changed keys are rewritten. Goes
+// through setValue so localStorage stays in lockstep and change
+// subscribers (cloudSave) see the restored final state.
+export function restoreStorage(snap) {
+  hydrate();
+  const keys = new Set([...cache.keys(), ...Object.keys(snap || {})]);
+  for (const k of keys) {
+    const want = snap && Object.prototype.hasOwnProperty.call(snap, k) ? snap[k] : null;
+    const have = cache.has(k) ? cache.get(k) : null;
+    if (want === have) continue;
+    setValue(k, want);
+  }
+}
+
 // Test-only: wipe in-memory cache without touching localStorage.
 export function _resetStorageForTesting() {
   cache.clear();

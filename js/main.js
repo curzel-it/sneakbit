@@ -503,6 +503,18 @@ async function main() {
     updateAmmoHud();
     updateCoinHud();
   });
+
+  // Autoplay bot (opt-in via ?autoplay): the in-page AI that plays the game
+  // for the 24/7 stream. Loaded via a COMPUTED dynamic import so esbuild
+  // can't statically resolve it — the bot stays out of the shipped bundle
+  // and the loose js/autoplay/*.js files are fetched at runtime only when
+  // the param is present (no effect on normal players). Offline role only.
+  if (new URLSearchParams(location.search).has("autoplay") && getRuntimeRole() === "offline") {
+    const botModule = "./autoplay/" + "bot.js";
+    import(new URL(botModule, import.meta.url))
+      .then((m) => m.startBot({ getState: () => state }))
+      .catch((err) => console.error("[autoplay] failed to start bot", err));
+  }
 }
 
 let mirrorDeathHandled = false;
