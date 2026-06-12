@@ -68,6 +68,15 @@ export function planRoute(world, opts = {}) {
     }
   }
 
+  // Mop-up: the per-pass sweep enters each zone from whichever teleporter
+  // the zone-BFS reaches first, so an objective sitting in a single-entrance
+  // pocket — reachable only from ONE of a zone's several arrival tiles (e.g.
+  // 1011's ancient book at 13,34, only reachable from the 29,14 entrance;
+  // 1014's kunai bundle) — can be skipped though it's reachable in principle.
+  // For each zone that still has objectives, route to an entrance from which
+  // they ARE reachable and drain there.
+  mopUpPockets(sim, order);
+
   for (const [zoneId, model] of graph.models) {
     const rt = runtimeFor(sim, zoneId);
     for (const o of mergedObjectives(model, rt)) {
@@ -139,6 +148,15 @@ function mergedObjectives(model, rt) {
   const out = liveObjectives(model);
   for (const e of rt.extraTalkables) {
     if (getValue(`item_collected.${e.id}`) === 1) continue;
+    // Evict extraTalkables whose dialogue is exhausted. A spawned story
+    // entity with `after_dialogue: "Nothing"` (e.g. the post-finale credits
+    // entity 11974933) never writes `item_collected.<id>`, so the
+    // item_collected check above can never retire it — once its line is read
+    // it would be re-added as an `auto` objective every iteration and
+    // drainZone's while(true) would never exit (Defect A, the post-finale
+    // hang). Mirror liveObjectives' talk check: the entity is done when no
+    // unread dialogue line resolves for it.
+    if (extraTalkableExhausted(e)) continue;
     const live = out.find((o) => o.entityId === e.id);
     if (!live) {
       out.push({ kind: "talk", zone: model.id, entityId: e.id ?? null, tiles: [], ref: { entity: e }, auto: true });
@@ -146,6 +164,21 @@ function mergedObjectives(model, rt) {
   }
   return out;
 }
+
+// True when talking to this spawned entity again would read nothing new —
+// either no dialogue currently resolves, or the resolved line's
+// `dialogue.answer.<text>` flag is already set (handleReward set it on the
+// first read). Same ground truth liveObjectives uses for in-zone talkables.
+function extraTalkableExhausted(entity) {
+  const d = resolveEntityDialogue(entity);
+  if (!d) return true;
+  return getValue(`dialogue.answer.${d.text}`) === 1;
+}
+
+// Test-only: the eviction predicate that retires post-cutscene story
+// entities (Defect A). Exposed so a fast unit can guard it without running
+// the full 43s route.
+export { extraTalkableExhausted as _extraTalkableExhausted };
 
 // Work through this zone's objectives until none is solvable from the
 // current state. Returns true if anything was accomplished.
@@ -333,8 +366,23 @@ function travelTo(sim, targetZone) {
 // next node is the hop's RESOLVED arrival. Slower than the zone BFS (one
 // flood per node) — used only as its fallback.
 function travelToByArrival(sim, targetZone) {
+  const hops = bfsTravel(sim, (zone) => zone === targetZone);
+  if (!hops) return false;
+  for (const edge of hops) {
+    if (!traverseEdge(sim, edge)) return false;
+  }
+  return true;
+}
+
+// Generic (zone, tile) travel BFS. `isGoalNode(zone, tile)` decides when a
+// reached node satisfies the caller. Returns the ordered hop list to the
+// first goal node (empty array if the start already satisfies it), or null
+// if no goal is reachable. One walk-region flood per popped node — the
+// reason this is a fallback, not the default planner.
+function bfsTravel(sim, isGoalNode) {
   const graph = sim.graph;
   const nodeKey = (zone, tile) => `${zone}|${tile.x},${tile.y}`;
+  if (isGoalNode(sim.zoneId, sim.tile)) return [];
   const start = nodeKey(sim.zoneId, sim.tile);
   const prev = new Map([[start, null]]); // nodeKey -> { fromKey, edge }
   let frontier = [{ zone: sim.zoneId, tile: sim.tile, key: start }];
@@ -356,14 +404,14 @@ function travelToByArrival(sim, targetZone) {
         const key = nodeKey(e.to, arrival);
         if (prev.has(key)) continue;
         prev.set(key, { fromKey: node.key, edge: e });
-        if (e.to === targetZone) { goalKey = key; break; }
+        if (isGoalNode(e.to, arrival)) { goalKey = key; break; }
         next.push({ zone: e.to, tile: arrival, key });
       }
       if (goalKey) break;
     }
     frontier = next;
   }
-  if (!goalKey) return false;
+  if (!goalKey) return null;
   const hops = [];
   for (let k = goalKey; ; ) {
     const rec = prev.get(k);
@@ -371,6 +419,44 @@ function travelToByArrival(sim, targetZone) {
     hops.unshift(rec.edge);
     k = rec.fromKey;
   }
+  return hops;
+}
+
+// After the main sweep, drain any zone whose remaining objectives sit in a
+// pocket reachable only from a specific entrance. Loops to a fixed point
+// (flags only accumulate, so it terminates).
+function mopUpPockets(sim, order) {
+  let progressed = true;
+  while (progressed) {
+    progressed = false;
+    for (const zoneId of order) {
+      const model = sim.graph.models.get(zoneId);
+      const rt = runtimeFor(sim, zoneId);
+      const tiles = mergedObjectives(model, rt).flatMap((o) => o.tiles ?? []);
+      if (tiles.length === 0) continue;
+      if (!travelToReach(sim, zoneId, tiles)) continue;
+      if (drainZone(sim)) progressed = true;
+    }
+  }
+}
+
+// Route to a (targetZone, entrance) node from which at least one of
+// `goalTiles` is reachable on foot, then leave drainZone to collect it.
+function travelToReach(sim, targetZone, goalTiles) {
+  const goalSet = new Set(goalTiles.map((t) => tileKey(t.x, t.y)));
+  const isGoal = (zone, tile) => {
+    if (zone !== targetZone) return false;
+    const model = sim.graph.models.get(zone);
+    const rt = runtimeFor(sim, zone);
+    const pushables = zone === sim.zoneId && rt.pushables
+      ? rt.pushables
+      : new Map(model.pushables.map((p) => [p.entityId, { ...p.start }]));
+    const region = reachableTiles(model, tile, { pushableStarts: pushables });
+    for (const k of goalSet) if (region.has(k)) return true;
+    return false;
+  };
+  const hops = bfsTravel(sim, isGoal);
+  if (!hops) return false;
   for (const edge of hops) {
     if (!traverseEdge(sim, edge)) return false;
   }
