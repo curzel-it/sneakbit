@@ -22,6 +22,7 @@ import {
   LOCK_PERMANENT,
 } from "../locks.js";
 import { shouldBeVisible, entityHittableFrame } from "../entityVisibility.js";
+import { isExplosive } from "../explosives.js";
 
 const TELEPORTER_SPECIES_ID = 1019;
 
@@ -59,6 +60,7 @@ export function buildZoneModel(raw) {
     enterableTeleporterTiles: new Set(),
     lockedTeleporterTiles: new Set(),
     rigidStaticTiles: new Set(),
+    destructibleTiles: new Set(),
     conditionalRigid: [],
     teleporters: [],
     gates: [],
@@ -193,6 +195,10 @@ function classifyEntity(model, e, sp) {
   if (!hit) return;
   const tiles = rectTiles(hit, model.cols, model.rows).map((p) => tileKey(p.x, p.y));
   if (tiles.length === 0) return;
+  // Explosive barrels block like any rigid prop (kept in the rigid sets so
+  // blockedTiles stays engine-exact), but they die to bullets/melee
+  // (combat.js) — the solver treats them as smashable obstacles.
+  if (isExplosive(e.species_id)) for (const k of tiles) model.destructibleTiles.add(k);
   const conditional = (e.display_conditions?.length ?? 0) > 0
     || (e.id != null && REMOVABLE_TYPES.has(type));
   if (conditional) {

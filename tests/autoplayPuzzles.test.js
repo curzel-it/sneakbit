@@ -18,7 +18,8 @@ import {
   edgeTraversable,
   resolveArrival,
 } from "../js/autoplay/zoneGraph.js";
-import { solveToTiles } from "../js/autoplay/puzzleSolver.js";
+import { solveToTiles, reachableTiles } from "../js/autoplay/puzzleSolver.js";
+import { gateLock, tileKey } from "../js/autoplay/worldModel.js";
 import { _resetStorageForTesting } from "../js/storage.js";
 import { STARTING_ZONE_ID, STARTING_SPAWN } from "../js/constants.js";
 
@@ -26,11 +27,6 @@ const SKIP = process.env.AUTOPLAY_WIP === "1" ? false : "WIP: pending puzzle-sol
 _resetStorageForTesting();
 const world = discoverWorld(loadWorldFromDisk().loadRawZone);
 const graph = buildZoneGraph(world);
-
-// Gates are plate-controlled only; keys are pure collectibles. ALL_KEYS is
-// retained as a no-op opts placeholder for when the solver gains optional
-// key awareness — today it's ignored.
-const ALL_KEYS = { Yellow: 1, Red: 1, Green: 1, Blue: 1, Silver: 1 };
 
 // Where can a player be standing when they enter this zone?
 function entryTiles(zoneId) {
@@ -53,6 +49,40 @@ function entryTiles(zoneId) {
 
 const KEY_SPECIES = new Set([2000, 2001, 2002, 2003, 2004, 2005]);
 
+// Author-verified unreachable content (checked in-game, 2026-06-12):
+// - 1012 kunai bundle 11105518 at (8,2): pocket sealed by terrain and
+//   non-destructible power towers; no mechanic reaches it.
+const UNREACHABLE_PICKUPS = new Set([11105518]);
+
+// Is `tiles` reachable from at least one entry? Walk-only floods across
+// ALL entries first — a full Sokoban search that state-caps from a bad
+// entry costs a minute, and most targets are walkable from SOME entry.
+function anyEntryReaches(model, entries, tiles) {
+  for (const entry of entries) {
+    const region = reachableTiles(model, entry);
+    if (tiles.some((t) => region.has(tileKey(t.x, t.y)))) return true;
+  }
+  return entries.some((entry) => solveToTiles(model, entry, tiles).reachable);
+}
+
+// Puzzles are zone-local by design (author-confirmed): every colored gate
+// has a plate of its color in the SAME zone. The solver builds on this —
+// it has no cross-zone plate fallback — so the invariant must hold in data.
+test("every colored gate has a same-zone plate of its color", () => {
+  const failures = [];
+  for (const [zoneId, model] of graph.models) {
+    const plateColors = new Set(model.plates.map((p) => p.color));
+    for (const g of model.gates) {
+      const lock = gateLock(g);
+      if (lock === "None" || lock === "Permanent") continue;
+      if (!plateColors.has(lock)) {
+        failures.push(`zone ${zoneId}: ${g.kind} ${lock} has no local plate`);
+      }
+    }
+  }
+  assert.deepEqual(failures, []);
+});
+
 test("every pickup is reachable from at least one entry of its zone", { skip: SKIP }, () => {
   _resetStorageForTesting();
   const failures = [];
@@ -60,10 +90,10 @@ test("every pickup is reachable from at least one entry of its zone", { skip: SK
     const entries = entryTiles(zoneId);
     if (entries.length === 0) continue;
     for (const p of model.pickups) {
+      if (UNREACHABLE_PICKUPS.has(p.entityId)) continue;
       // Dungeons drop you in entrance-specific sub-regions: a pickup need
       // only be reachable from AT LEAST ONE entry, not every one.
-      const reachable = entries.some((entry) =>
-        solveToTiles(model, entry, p.tiles, { keysAvailable: ALL_KEYS }).reachable);
+      const reachable = anyEntryReaches(model, entries, p.tiles);
       if (!reachable) {
         failures.push(`zone ${zoneId}: pickup ${p.entityId} (species ${p.speciesId}) unreachable from any entry`);
       }
@@ -81,8 +111,7 @@ test("all six dungeon keys are reachable", { skip: SKIP }, () => {
       found.push(p.speciesId);
       const entries = entryTiles(zoneId);
       assert.ok(entries.length > 0, `key zone ${zoneId} has no entry`);
-      const reachable = entries.some((entry) =>
-        solveToTiles(model, entry, p.tiles, { keysAvailable: ALL_KEYS }).reachable);
+      const reachable = anyEntryReaches(model, entries, p.tiles);
       assert.ok(reachable, `key ${p.speciesId} in zone ${zoneId} unreachable from any entry`);
     }
   }
@@ -96,8 +125,7 @@ test("every unlocked exit is reachable from at least one entry of its zone", { s
     const entries = entryTiles(zoneId);
     if (entries.length === 0) continue;
     for (const exitT of model.teleporters.filter((t) => t.lock === "None" && t.dest)) {
-      const reachable = entries.some((entry) =>
-        solveToTiles(model, entry, exitT.tiles, { keysAvailable: ALL_KEYS }).reachable);
+      const reachable = anyEntryReaches(model, entries, exitT.tiles);
       if (!reachable) {
         failures.push(`zone ${zoneId}: exit to ${exitT.dest.zone} unreachable from any entry`);
       }

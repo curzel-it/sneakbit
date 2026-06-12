@@ -21,6 +21,9 @@ const world = discoverWorld(loadWorldFromDisk().loadRawZone);
 // every entry needs a reviewed reason.
 const UNREACHABLE_OBJECTIVE_WHITELIST = new Set([
   // format: "kind:zone:entityId-or-key"
+  // Author-verified in-game (2026-06-12): pocket sealed by terrain and
+  // non-destructible power towers. See autoplayPuzzles.test.js.
+  "pickup:1012:11105518",
 ]);
 
 const started = process.hrtime.bigint();

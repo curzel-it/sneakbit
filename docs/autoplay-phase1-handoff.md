@@ -8,23 +8,46 @@ model (agrees with the engine's walkability tile-for-tile), zone graph
 exhaustion all pass. `npm run test:unit` = 990 pass / 0 fail / 14 skipped,
 ~3.3 s.
 
-Two corrections landed vs the original design:
+Corrections landed vs the original design (author-confirmed mechanics —
+see also the `puzzle-mechanics-ground-truth` memory):
 - **Keys are pure collectibles**, NOT a puzzle resource. Gates are
-  controlled SOLELY by pressure plates (a pushable on the matching color
-  plate). The engine's `gateUnlock.js` key-consumption path is not used by
-  the level design — the solver has no key logic.
-- **No player self-weight** in the solver: a plate is held down only by a
-  pushable. Modelling the player's transient weight made reachability
-  asymmetric (walk into a pocket you can't walk out of).
+  controlled SOLELY by pressure plates. The engine's `gateUnlock.js`
+  key-consumption path is not used by the level design — the solver has
+  no key logic.
+- **Player self-weight IS real** (puzzles.js updatePlates: player OR
+  pushable). The earlier "no self-weight" correction was an
+  over-correction — zone 1005 has 3 plate colors but only 2 boxes, so it
+  is unsolvable without it. Self-weight is transient, so it's modelled
+  per-EDGE, not as persistent state: it counts at push time (the engine
+  validates a push while the player still stands on the behind tile) and
+  for walking exactly one tile from a plate into an adjacent gate
+  (canEnter checks gate._open at step-commit time). The region flood is
+  therefore directed.
+- **Share-tile box mechanics** (player.js canEnter/startStep): the player
+  walks ONTO a pinned box and shares its tile; from there, pressing a
+  direction the box can slide moves the box (push origin = the box tile
+  itself, any direction), otherwise the player steps off — so pinned
+  boxes are walk-through-able, and a box parked on a closed gate tile is
+  a bridge through it. The solver models all of this.
+- **Puzzles are strictly zone-local**: every gate color has a same-zone
+  plate (data-invariant test in autoplayPuzzles.test.js). The solver's
+  cross-zone global-plate-flag fallback was removed.
+- **Explosive barrels** (explosives.js species 1038/1039/1073/1074) die
+  to bullets/melee — the solver treats their tiles as smashable, i.e.
+  passable (`model.destructibleTiles`; they stay in the rigid sets so
+  blockedTiles stays engine-exact). 1005's green key sits behind one —
+  it was never a search-strength problem.
+- **Macro-state = (pushable layout, player region)**: keying the seen-set
+  on layout alone (an earlier bug) silently pruned reachable branches.
+  Search is greedy best-first steered by the closed boundary gate nearest
+  the goal (goalField + gateStar in puzzleSolver.js); the seen-set dedup
+  keeps it complete, so exhaustion still proves unreachability.
 
-**Still WIP (skipped tests, run with `AUTOPLAY_WIP=1`):** the region-based
-puzzle solver (`puzzleSolver.js`) handles most zones in ms but the hardest
-multi-box Sokoban dungeons (e.g. 1005's green key needs several plates
-down at once) exceed its current search — it needs deadlock detection /
-A* / box-line macros. The route planner (`routePlanner.js`) consequently
-reaches ~32/62 zones before stalling on those dungeons. All puzzles ARE
-solvable (per the author) — the solver just needs strengthening. That is
-the next task.
+**Author-verified unreachable content:** zone 1012's kunai bundle (entity
+11105518, species 7001, tile 8,2) sits in a pocket sealed by terrain +
+non-destructible power-tower props. The author checked in-game
+(2026-06-12): it is NOT reachable. Whitelisted in autoplayPuzzles.test.js
+(UNREACHABLE_PICKUPS).
 
 Everything below is the original pre-execution handoff, kept for the
 design rationale and engine-semantics references.
