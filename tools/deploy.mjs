@@ -213,7 +213,10 @@ server {
     }
 
     # Relay backend: WS upgrade + JSON endpoints. Regex beats the \`/\` prefix.
-    location ~ ^/(ws|health|version|metrics|turn-credentials|auth/|saves) {
+    # \`store\` is the real-money store API; \`webhooks/stripe\` is Stripe's
+    # server-to-server callback (source of truth for entitlements) — both MUST
+    # reach Node, never the static \`location /\` fallback.
+    location ~ ^/(ws|health|version|metrics|turn-credentials|auth/|saves|store|webhooks/stripe) {
         proxy_pass http://${APP_BIND};
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -761,6 +764,13 @@ async function stepHealth(env) {
     `curl -fsSk https://${SERVER_NAME}/metrics | ` +
     `  grep -q '"connections"' && ` +
     `  echo 'metrics:ok' && ` +
+    // Prove /store reaches Node, not the static `location /` fallback. The body
+    // differs by config (items when enabled; payments_disabled/auth_unavailable
+    // when not) but all three are JSON from the backend — index.html never is.
+    `catalog=$(curl -sk https://${SERVER_NAME}/store/catalog) && ` +
+    `echo "store:$catalog" && ` +
+    `echo "$catalog" | grep -qE '"items"|payments_disabled|auth_unavailable' && ` +
+    `echo 'store:routed' && ` +
     `ws=$(curl -sk -i --http1.1 --max-time 3 ` +
     `  -H 'Connection: Upgrade' -H 'Upgrade: websocket' ` +
     `  -H 'Sec-WebSocket-Version: 13' ` +
