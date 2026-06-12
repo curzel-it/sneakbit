@@ -663,7 +663,7 @@ async function stepPushServer(env, conn) {
 
 async function stepPushClient(env, conn) {
   // Ship the built _site/ into WEBROOT. The bundle filename is content-hashed,
-  // so sync with delete to mirror the tree exactly — that drops stale app-*.js
+  // so sync with delete to mirror the tree exactly — that drops stale main-*.js
   // on every deploy without re-uploading the unchanged assets/ and data/.
   console.log(`[*] push client -> ${WEBROOT}`);
   const out = join(ROOT, "_site");
@@ -764,7 +764,7 @@ async function stepHealth(env) {
     `echo 'landing:ok' && ` +
     `game=$(curl -fsSk https://${SERVER_NAME}/play/) && ` +
     `echo "$game" | grep -q 'canvas id=' && ` +
-    `echo "$game" | grep -q 'app-' && ` +
+    `echo "$game" | grep -qE 'main-[A-Za-z0-9]+\\.js' && ` +
     `echo 'client:ok' && ` +
     versionCheck +
     `curl -fsSk https://${SERVER_NAME}/metrics | ` +
