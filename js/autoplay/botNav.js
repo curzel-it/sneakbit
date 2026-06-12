@@ -12,6 +12,7 @@
 // routes around them (botPush handles pushables in M2).
 
 import { isWalkable, isEntityBlocked, hasEnterableTeleporter } from "../zone.js";
+import { walkPath } from "./puzzleSolver.js";
 
 const DIR_DELTA = {
   up: [0, -1],
@@ -82,6 +83,57 @@ function reconstruct(prev, end) {
     path.unshift(cur);
   }
   return path;
+}
+
+// Stateful navigator for PUZZLE movement, following an engine-true walk path
+// from the solver (puzzleSolver.walkPath) so it can thread self-weight gates,
+// box bridges and pinned-box climbs that a plain live-collision BFS misses.
+// tick() takes the live box layout (a Map<entityId,{x,y}>) since gate state
+// depends on where the boxes currently sit. Recomputes only on stall / leaving
+// the path, so the (cheap) flood runs rarely.
+export function makePuzzleNav(model) {
+  let goalTiles = null;
+  let path = null;
+  let lastTileKey = null;
+  let stallTicks = 0;
+  let recomputes = 0;
+
+  function setGoal(tiles) {
+    goalTiles = tiles.map((t) => ({ x: t.x, y: t.y }));
+    path = null;
+    lastTileKey = null;
+    stallTicks = 0;
+    recomputes = 0;
+  }
+
+  function tick(player, boxLayout) {
+    if (!goalTiles || goalTiles.length === 0) return { status: "blocked", dir: null };
+    if (goalTiles.some((t) => t.x === player.tileX && t.y === player.tileY)) {
+      return { status: "arrived", dir: null };
+    }
+    const tk = `${player.tileX},${player.tileY}`;
+    if (tk !== lastTileKey) { lastTileKey = tk; stallTicks = 0; recomputes = 0; }
+    else if (!player.step) stallTicks++;
+
+    const needRecompute = !path
+      || !path.some((t) => t.x === player.tileX && t.y === player.tileY)
+      || stallTicks >= STALL_TICKS;
+    if (needRecompute) {
+      if (stallTicks >= STALL_TICKS) {
+        recomputes++;
+        stallTicks = 0;
+        if (recomputes > MAX_RECOMPUTES) return { status: "blocked", dir: null };
+      }
+      path = walkPath(model, { x: player.tileX, y: player.tileY }, goalTiles, { pushableStarts: boxLayout, barrelsBlock: true });
+      if (!path) return { status: "blocked", dir: null };
+    }
+    const idx = path.findIndex((t) => t.x === player.tileX && t.y === player.tileY);
+    const next = path[idx + 1];
+    if (!next) return { status: "arrived", dir: null };
+    return { status: "moving", dir: stepDirection({ x: player.tileX, y: player.tileY }, next) };
+  }
+
+  return { setGoal, tick };
 }
 
 // Stateful navigator toward a set of goal tiles. Each tick it returns the

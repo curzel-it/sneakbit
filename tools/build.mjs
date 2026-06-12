@@ -17,7 +17,7 @@
 // is node: built-ins.
 
 import * as esbuild from "esbuild";
-import { rmSync, cpSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { rmSync, cpSync, readFileSync, writeFileSync, existsSync, renameSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -63,11 +63,19 @@ async function build() {
   rmSync(OUT_DIR, { recursive: true, force: true });
 
   const result = await esbuild.build({
-    // Two entries: the game shell (js/main.js, loaded by /play/) and the
-    // marketing-site account UI (js/siteAccount.js, loaded by / and /account/).
-    // Both must be bundled because js/ is denylisted from _site/ — raw module
-    // loads would 404 in production.
-    entryPoints: [join(REPO_ROOT, "js/main.js"), join(REPO_ROOT, "js/siteAccount.js")],
+    // Entries: the game shell (js/main.js, loaded by /play/), the marketing-
+    // site account UI (js/siteAccount.js, loaded by / and /account/), and the
+    // autoplay solver Web Worker. All must be bundled because js/ is denylisted
+    // from _site/ — raw module loads would 404 in production. The worker is a
+    // separate entry because esbuild doesn't auto-bundle `new Worker(new URL
+    // (...))`; it's renamed to a stable /solverWorker.js below so the runtime
+    // `new URL("./solverWorker.js", import.meta.url)` resolves from the bot
+    // chunk (which, like the worker, sits at the site root in prod).
+    entryPoints: [
+      join(REPO_ROOT, "js/main.js"),
+      join(REPO_ROOT, "js/siteAccount.js"),
+      join(REPO_ROOT, "js/autoplay/solverWorker.js"),
+    ],
     bundle: true,
     format: "esm",
     minify: true,
@@ -113,6 +121,15 @@ async function build() {
   }
   const botChunk = outputs.find(([, o]) => Object.keys(o.inputs || {}).some((i) => i.endsWith("js/autoplay/bot.js")));
   if (!botChunk) throw new Error("build: autoplay bot chunk missing — the dynamic import() was dropped");
+
+  // Rename the hashed solver-worker entry to the stable /solverWorker.js the
+  // runtime asks for. Its own imports are by their hashed chunk names and it
+  // stays at the site root, so only the entry file's name changes.
+  const workerHashed = bundleFor("js/autoplay/solverWorker.js");
+  renameSync(join(OUT_DIR, workerHashed), join(OUT_DIR, "solverWorker.js"));
+  if (existsSync(join(OUT_DIR, `${workerHashed}.map`))) {
+    renameSync(join(OUT_DIR, `${workerHashed}.map`), join(OUT_DIR, "solverWorker.js.map"));
+  }
 
   // Copy every shippable top-level entry into _site/ verbatim — including the
   // landing page (root index.html) and the game shell (play/index.html). The

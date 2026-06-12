@@ -459,6 +459,60 @@ function gateOpen(world, gate, plateDown) {
   return lock === LOCK_NONE || !plateDown(lock);
 }
 
+// Engine-true tile-by-tile walk path from `startTile` to the nearest goal,
+// over the EXACT same edges as flood() — directed self-weight (step from a
+// plate into its adjacent gate), box bridges (a box on a closed gate), and
+// share-tile climbs of pinned boxes. The in-page bot replays this for its
+// puzzle navigation; a plain BFS over live collision can't see those edges,
+// so it gives up at gates the engine would actually open. Returns an array of
+// {x,y} (inclusive of both ends) or null. Pushables frozen at `opts.
+// pushableStarts` (their live tiles) — walking never moves a box.
+export function walkPath(model, startTile, goalTiles, opts = {}) {
+  const world = prepare(model, opts);
+  const goals = new Set(
+    (Array.isArray(goalTiles) ? goalTiles : [goalTiles]).map((t) => tileKey(t.x, t.y)),
+  );
+  const startKey = tileKey(startTile.x | 0, startTile.y | 0);
+  if (goals.has(startKey)) return [tileOf(startKey)];
+  const boxes = world.pushableStart;
+  const pushDown = new Set();
+  for (const [color, tiles] of world.plateTilesByColor) {
+    for (const k of boxes.keys()) { if (tiles.has(k)) { pushDown.add(color); break; } }
+  }
+  const plateDown = makePlateDown(world, pushDown);
+  const prev = new Map([[startKey, null]]);
+  const q = [startKey];
+  let head = 0;
+  while (head < q.length) {
+    const cur = q[head++];
+    const [x, y] = parseTile(cur);
+    const onBox = boxes.has(cur);
+    for (const dir of DIRS) {
+      const nx = x + dir.dx;
+      const ny = y + dir.dy;
+      if (nx < 0 || ny < 0 || nx >= world.model.cols || ny >= world.model.rows) continue;
+      const nk = tileKey(nx, ny);
+      if (prev.has(nk)) continue;
+      if (onBox && boxCanSlide(world, boxes, cur, dir, cur, plateDown)) continue;
+      if (world.baseBlocked.has(nk)) continue;
+      if (boxes.has(nk)) {
+        if (boxCanSlide(world, boxes, nk, dir, cur, plateDown)) continue;
+      } else {
+        const g = world.gateAt.get(nk);
+        if (g && !gateOpen(world, g, withSelfWeight(world, plateDown, cur))) continue;
+      }
+      prev.set(nk, cur);
+      if (goals.has(nk)) {
+        const path = [];
+        for (let k = nk; k; k = prev.get(k)) path.unshift(tileOf(k));
+        return path;
+      }
+      q.push(nk);
+    }
+  }
+  return null;
+}
+
 // Tiles the player can stand on by plain walking from `startTile`, given
 // the current pushable layout and plate-controlled gates. No pushes — the
 // cheap question the route planner asks every drain iteration. Returns a
@@ -495,11 +549,15 @@ function prepare(model, opts) {
   // tiles.
   for (const k of model.enterableTeleporterTiles) baseBlocked.delete(k);
   // Explosive barrels die to bullets/melee (combat.js) — passable for the
-  // solver, for boxes too: the player clears the barrel before shoving a
-  // box through.
-  for (const k of model.destructibleTiles) {
-    baseBlocked.delete(k);
-    boxBlocked.delete(k);
+  // solver by default (the player clears the barrel before walking/pushing
+  // through). The in-page bot has no practical way to destroy a 100-HP barrel
+  // (a kunai chips ~1, and it starts swordless), so it passes barrelsBlock to
+  // treat them as solid walls and route around them instead.
+  if (!opts.barrelsBlock) {
+    for (const k of model.destructibleTiles) {
+      baseBlocked.delete(k);
+      boxBlocked.delete(k);
+    }
   }
 
   const gateAt = new Map();

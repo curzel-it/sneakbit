@@ -6,12 +6,12 @@
 // Mode stack, highest priority first, evaluated every tick:
 //   1. OverlayJanitor  — a modal is open → advance/dismiss it (sim frozen).
 //   2. Survive         — hurt + monster on us → break away (botCombat).
-//   3. ExecuteAction   — drive the current plan step via botNav.
-//   4. Plan            — no action → pick the next objective, else travel.
+//   3. ExecuteAction   — drive the current plan step (nav / push / solve).
+//   4. Plan            — no action → objective, else puzzle, else travel.
 //
-// Scope: talks, pickups, hints, and zone travel on WALKABLE routes, with
-// monster-avoidant navigation + survival. Push-puzzle objectives aren't
-// walk-reachable (findPath skips them), so they're left for botPush (M2).
+// Scope: talks, pickups, hints, zone travel, monster-avoidant nav +
+// survival, AND Sokoban puzzles — a loot/key behind boxes triggers an
+// off-thread solve (botSolver → Web Worker) whose push plan botPush replays.
 
 import { pushInputPress, clearInputHeld } from "../input.js";
 import { tryInteractForSlot } from "../interact.js";
@@ -20,7 +20,9 @@ import { isPlayerDead, getPlayerHp, getPlayerMaxHp } from "../playerHealth.js";
 import { liveObjectives } from "./objectiveCatalog.js";
 import { edgeTraversable } from "./zoneGraph.js";
 import { loadBotWorld } from "./botWorld.js";
-import { makeNavigator, findPath, isNavWalkable } from "./botNav.js";
+import { makeNavigator, makePuzzleNav, findPath, isNavWalkable } from "./botNav.js";
+import { makePusher, liveBoxTile } from "./botPush.js";
+import { makeSolver } from "./botSolver.js";
 import { tickJanitor } from "./botDialogue.js";
 import { decideCombat, monsterHalo } from "./botCombat.js";
 import { installOverlay, updateOverlay } from "./botOverlay.js";
@@ -47,6 +49,14 @@ const ZONE_TIME_BUDGET_MS = 60000;
 const SLOT = 1;               // bot drives player 1
 const KEY_SPECIES = [2000, 2001, 2002, 2003, 2004, 2005];
 
+// Solver budget: caps the off-thread Sokoban search so the bot never idles
+// too long on one puzzle (every known-solvable puzzle but the hardest needs
+// well under this; the hardest is fixed by the Defect B perf work). And a
+// wall-clock deadline in case the worker hangs.
+const PUZZLE_MAX_STATES = 12000;
+const SOLVE_DEADLINE_MS = 30000;
+const MAX_RESOLVES = 2; // re-solves before giving up a puzzle this entry
+
 export function startBot(ctx) {
   const bot = new Bot(ctx);
   bot.start();
@@ -62,6 +72,10 @@ class Bot {
     this.ready = false;
     this.timer = null;
     this.nav = makeNavigator();
+    this.pusher = null;   // makePusher(model), built when a puzzle plan starts
+    this.pzNav = null;    // makePuzzleNav(model), for puzzle walk segments
+    this.solver = makeSolver();
+    this.solving = null;       // in-flight worker solve { key, done, result, error }
     this.action = null;
     this.lastZoneId = null;
     this.cameFrom = null;
@@ -93,6 +107,7 @@ class Bot {
   stop() {
     if (this.timer) clearInterval(this.timer);
     this.timer = null;
+    this.solver.dispose();
     this.idle();
   }
 
@@ -178,8 +193,48 @@ class Bot {
     if (model && !overBudget) {
       const objAction = this.pickObjective(state, model, now);
       if (objAction) return objAction;
+      const puzzleAction = this.pickPuzzle(state, model, now);
+      if (puzzleAction) return puzzleAction;
     }
     return this.planTravel(state, now);
+  }
+
+  // A loot/key objective that isn't walk-reachable but the Sokoban solver can
+  // reach by pushing boxes onto plates. Kicks off an OFF-THREAD solve (the bot
+  // idles meanwhile) and returns a puzzle action; runPuzzle picks it up when
+  // the worker answers.
+  pickPuzzle(state, model, now) {
+    if (!model.pushables.length) return null;
+    for (const o of liveObjectives(model)) {
+      // Only spend a (potentially slow) Sokoban solve on the six dungeon keys
+      // — the completionist prize behind these puzzles. Random gated ammo
+      // isn't worth stalling the tour for, and keeping non-key zones (e.g.
+      // 1001's lone box) out of the puzzle path keeps the sweep flowing.
+      if (o.kind !== "pickup" || !KEY_SPECIES.includes(o.speciesId)) continue;
+      const key = `puzzle:${objectiveKey(o)}`;
+      if (this.blockedThisZone.has(key) || this.blockedThisZone.has(objectiveKey(o))) continue;
+      if (!o.tiles?.length) continue;
+      logEvent("puzzle", `solving for ${describeObjective(o)} in ${state.zone.id}`);
+      this.startSolve(state, model, o, key);
+      return { type: "puzzle", objective: o, key, phase: "solving", resolves: 0, deadline: now + SOLVE_DEADLINE_MS };
+    }
+    return null;
+  }
+
+  startSolve(state, model, o, key) {
+    this.solving = { key, done: false, result: null, error: null };
+    const my = this.solving;
+    this.solver
+      .solve({
+        raw: model.raw,
+        startTile: { x: state.player.tileX, y: state.player.tileY },
+        goalTiles: o.tiles.map((t) => ({ x: t.x, y: t.y })),
+        pushableStarts: livePushables(state.zone, model),
+        maxStates: PUZZLE_MAX_STATES,
+        barrelsBlock: true, // the bot can't destroy 100-HP barrels — go around
+      })
+      .then((solve) => { my.result = solve; my.done = true; })
+      .catch((err) => { my.error = err; my.done = true; });
   }
 
   // Nearest walk-reachable objective in the current zone, skipping ones we
@@ -265,7 +320,87 @@ class Bot {
     }
     if (this.action.type === "travel") return this.runTravel(state, now);
     if (this.action.type === "talk") return this.runTalk(state, now);
+    if (this.action.type === "puzzle") return this.runPuzzle(state, now);
     return this.runReach(state, now); // pickup / hint / cutscene
+  }
+
+  // Drive a puzzle: wait for the off-thread solve, then replay its waypoint
+  // plan — { walkTo } via botNav, { push } via botPush. The final walkTo lands
+  // on the pickup tile and the engine collects it (objective goes un-live).
+  runPuzzle(state, now) {
+    const a = this.action;
+    const model = this.world.modelFor(state.zone.id);
+
+    if (a.phase === "solving") {
+      this.idle();
+      if (!this.solving || !this.solving.done) return; // deadline handled by executeAction
+      const solve = this.solving.result;
+      this.solving = null;
+      if (!solve || !solve.reachable) {
+        logEvent("puzzle", `unsolvable: ${describeObjective(a.objective)} (${solve?.reason ?? "error"})`);
+        this.blockedThisZone.add(a.key);
+        this.failAction();
+        return;
+      }
+      a.plan = solve.actions;
+      a.index = 0;
+      a.stepSet = false;
+      a.phase = "exec";
+      this.pusher = makePusher(model);
+      this.pzNav = makePuzzleNav(model);
+      const pushes = a.plan.filter((x) => x.push != null).length;
+      logEvent("puzzle", `solved ${describeObjective(a.objective)} — ${pushes} pushes`);
+      // Deadline for the (potentially long) execution, capped so a wedged
+      // puzzle can't hold a zone hostage — it gets retried on the next lap.
+      a.deadline = now + Math.min(90000, Math.max(MAX_ACTION_MS, a.plan.length * 8000));
+    }
+
+    if (a.phase !== "exec") return;
+    if (!objectiveLive(model, a.objective)) { this.completeAction(state, now); return; }
+
+    const act = a.plan[a.index];
+    if (!act) { // plan exhausted but not collected — give up
+      logEvent("replan", `puzzle plan exhausted, ${describeObjective(a.objective)} not collected`);
+      return this.resolveOrFail(state, model, a);
+    }
+    const boxLayout = liveBoxLayout(state.zone, model);
+
+    if (act.walkTo) {
+      // The final walkTo lands on the pickup — target the objective's WHOLE
+      // tile set (a 1×2 item is collectible from either tile, and the solver's
+      // single waypoint may sit behind a gate the other tile sidesteps).
+      const goal = a.index === a.plan.length - 1 ? a.objective.tiles : [act.walkTo];
+      if (!a.stepSet) { this.pzNav.setGoal(goal); a.stepSet = true; }
+      const r = this.pzNav.tick(state.player, boxLayout);
+      if (r.status === "blocked") return this.resolveOrFail(state, model, a);
+      if (r.status === "arrived") { a.index++; a.stepSet = false; return; }
+      this.step(state.player, r.dir);
+      return;
+    }
+
+    // a push action
+    if (!a.stepSet) { this.pusher.setPush(act); a.stepSet = true; }
+    const r = this.pusher.tick(state.player, state.zone, boxLayout);
+    if (r.status === "done") { a.index++; a.stepSet = false; return; }
+    if (r.status === "blocked") return this.resolveOrFail(state, model, a);
+    this.step(state.player, r.dir);
+  }
+
+  // A puzzle step wedged (monster bump, model/engine drift) — re-solve from the
+  // live state a couple of times, then give the objective up for this entry.
+  resolveOrFail(state, model, a) {
+    if (a.resolves >= MAX_RESOLVES) {
+      logEvent("puzzle", `giving up ${describeObjective(a.objective)} after ${a.resolves} re-solves`);
+      this.blockedThisZone.add(a.key);
+      this.failAction();
+      return;
+    }
+    a.resolves++;
+    a.phase = "solving";
+    a.stepSet = false;
+    a.deadline = Date.now() + SOLVE_DEADLINE_MS;
+    logEvent("puzzle", `re-solving ${describeObjective(a.objective)} (${a.resolves})`);
+    this.startSolve(state, model, a.objective, a.key);
   }
 
   // Walk-and-done: pickups, hints and cutscenes complete the moment we reach
@@ -454,7 +589,33 @@ function describeAction(a) {
   if (a.type === "pickup") return `Fetching item #${a.objective.entityId}`;
   if (a.type === "hint") return `Reading a hint`;
   if (a.type === "cutscene") return `Triggering ${a.objective.key}`;
+  if (a.type === "puzzle") {
+    return a.phase === "solving"
+      ? `Solving a puzzle for item #${a.objective.entityId}…`
+      : `Pushing blocks for item #${a.objective.entityId}`;
+  }
   return a.type;
+}
+
+// Live tiles of a model's pushables, by entity id, for seeding a worker solve
+// (array form, structured-clone friendly).
+function livePushables(zone, model) {
+  const out = [];
+  for (const p of model.pushables) {
+    const t = liveBoxTile(zone, p.entityId);
+    if (t) out.push({ id: p.entityId, x: t.x, y: t.y });
+  }
+  return out;
+}
+
+// Live pushable layout as a Map<entityId,{x,y}> for main-thread walkPath.
+function liveBoxLayout(zone, model) {
+  const m = new Map();
+  for (const p of model.pushables) {
+    const t = liveBoxTile(zone, p.entityId);
+    if (t) m.set(p.entityId, { x: t.x, y: t.y });
+  }
+  return m;
 }
 
 // The facing direction for the talk tile the player is standing on.
