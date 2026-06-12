@@ -158,8 +158,17 @@ class Bot {
     // 2. Combat — a monster in engage range preempts everything: line up
     // and shoot it (or re-equip / kite / flee, per the intent). Monsters
     // beyond engage range are routed AROUND via the avoid halo below.
-    const intent = decideCombat(state);
+    // Combat time is NOT the plan's fault: in spawn-dense dungeons waves of
+    // chasers used to eat an action's wall-clock deadline and the per-zone
+    // budget, blowing objectives the bot never got to walk — so both clocks
+    // are pushed forward by every combat tick. `steady` keeps combat from
+    // displacing the player mid-Sokoban (a moved player breaks the push
+    // plan and forces a re-solve).
+    const steady = this.action?.type === "puzzle" && this.action.phase === "exec";
+    const intent = decideCombat(state, { steady });
     if (intent) {
+      if (this.action) this.action.deadline += TICK_MS;
+      this.zoneEnteredTs += TICK_MS;
       this.handleCombat(state, intent);
       this.maybeRefreshOverlay(state, now);
       return;

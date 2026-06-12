@@ -72,7 +72,12 @@ const OPPOSITE = { up: "down", down: "up", left: "right", right: "left" };
 //   { move: dir }            — sidestep to align / kite back from a survivor
 //   { flee: dir }            — unarmed and hurt; break contact
 //   { hold: true }           — cornered; brace and hope for regen
-export function decideCombat(state) {
+//
+// opts.steady suppresses the { move } intents (align sidesteps, kiting):
+// mid-Sokoban a displaced player breaks the push plan and forces a
+// re-solve, so during puzzle execution the bot only shoots what crosses
+// its firing line (chasers do, on their own) and never repositions.
+export function decideCombat(state, opts = {}) {
   const player = state.player;
   const zone = state.zone;
   if (!player || !zone) return null;
@@ -85,7 +90,7 @@ export function decideCombat(state) {
   const armed = rangedReady(idx);
   if (armed?.equip != null) return { equip: armed.equip };
   if (armed?.ready) {
-    const engage = engagePlan(zone, player, monsters);
+    const engage = engagePlan(zone, player, monsters, opts.steady === true);
     if (engage) return engage;
   }
 
@@ -102,13 +107,13 @@ export function decideCombat(state) {
 }
 
 // The shoot/face/move decision against the nearest workable target.
-function engagePlan(zone, player, monsters) {
+function engagePlan(zone, player, monsters, steady) {
   for (const m of monsters) {
     // Overlapping us — a bullet spawns one tile ahead and would fly right
     // past it. Step off first; it chases and re-aligns itself.
     if (m.dist === 0) {
       const away = fleeDir(zone, player, [m]);
-      if (away) return { move: away };
+      if (away && !steady) return { move: away };
       continue;
     }
     const dir = alignedDir(player, m.tile);
@@ -116,14 +121,14 @@ function engagePlan(zone, player, monsters) {
       if (player.direction !== dir) return { face: dir };
       // Adjacent bullet-sponge: kite a step back along the firing line so
       // its contact damage can't out-trade our dps.
-      if (m.dist <= 1 && monsterHp(m.entity) > KITE_HP) {
+      if (!steady && m.dist <= 1 && monsterHp(m.entity) > KITE_HP) {
         const back = OPPOSITE[dir];
         const [bx, by] = DIR_DELTA[back];
         if (isNavWalkable(zone, player.tileX + bx, player.tileY + by)) return { move: back };
       }
       return { shoot: true, target: m.entity.id };
     }
-    if (m.dist <= ALIGN_RANGE) {
+    if (!steady && m.dist <= ALIGN_RANGE) {
       const move = alignStep(zone, player, m);
       if (move) return { move };
     }

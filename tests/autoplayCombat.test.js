@@ -72,6 +72,17 @@ test("armed + close diagonal → sidestep onto the firing line", () => {
   assert.equal(intent.move, "right");
 });
 
+test("steady (mid-puzzle): still shoots what crosses the line, never repositions", () => {
+  fullReset();
+  addAmmo(KUNAI, 5, 0);
+  // Aligned + facing → shoot even when steady.
+  const aligned = { player: playerAt(5, 5, "down"), zone: zoneWithMonster(5, 8) };
+  assert.ok(decideCombat(aligned, { steady: true })?.shoot);
+  // Close diagonal would normally sidestep to align — steady suppresses it.
+  const diagonal = { player: playerAt(5, 5, "down"), zone: zoneWithMonster(6, 7) };
+  assert.equal(decideCombat(diagonal, { steady: true }), null);
+});
+
 test("armed but a wall blocks the line → no shot, no panic while healthy", () => {
   fullReset();
   addAmmo(KUNAI, 5, 0);
