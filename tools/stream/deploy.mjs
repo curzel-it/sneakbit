@@ -69,6 +69,7 @@ async function main() {
       { check: false });
     end(); return;
   }
+  if (args.has("--stop")) { await stepStop(env); end(); return; }
   if (STATUS) { await stepStatus(env); end(); return; }
   if (VERIFY) { await stepVerify(env); end(); return; }
 
@@ -88,6 +89,18 @@ async function main() {
   }
   printVerify(env);
   end();
+}
+
+// Stop + disable every streamer unit (idle until the bot ships). Bring it
+// back with a plain `npm run stream:deploy`.
+async function stepStop(env) {
+  const units = [APP, ...RELAYS.map((r) => `${APP}-${r}`)].map((u) => `${u}.service`);
+  units.push(`${APP}-recycle.timer`);
+  for (const u of units) {
+    await ssh(env, `systemctl disable --now ${u}`, { check: false });
+    await ssh(env, `systemctl reset-failed ${u}`, { check: false }); // clear mid-run kill state
+  }
+  console.log("[stop] all streamer units stopped + disabled.");
 }
 
 async function stepStatus(env) {
