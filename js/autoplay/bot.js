@@ -15,7 +15,7 @@
 
 import { pushInputPress, clearInputHeld } from "../input.js";
 import { tryInteractForSlot } from "../interact.js";
-import { getValue } from "../storage.js";
+import { getAmmo } from "../inventory.js";
 import { isPlayerDead, getPlayerHp, getPlayerMaxHp } from "../playerHealth.js";
 import { liveObjectives } from "./objectiveCatalog.js";
 import { edgeTraversable } from "./zoneGraph.js";
@@ -360,7 +360,16 @@ class Bot {
     }
 
     if (a.phase !== "exec") return;
-    if (!objectiveLive(model, a.objective)) { this.completeAction(state, now); return; }
+    // Dungeon zones are ephemeral_state — checkPickup collects the key (entity
+    // removed, key added to inventory) but never writes item_collected, so the
+    // flag-based objectiveLive never flips. Detect success by the live key
+    // entity being GONE instead.
+    const collected = !state.zone.entities.some((e) => e.id === a.objective.entityId);
+    if (collected || !objectiveLive(model, a.objective)) {
+      if (collected) logEvent("puzzle", `collected key #${a.objective.entityId} in ${state.zone.id}!`);
+      this.completeAction(state, now);
+      return;
+    }
 
     const act = a.plan[a.index];
     if (!act) { // plan exhausted but not collected — give up
@@ -556,14 +565,12 @@ class Bot {
     });
   }
 
+  // Distinct dungeon keys held. They live in inventory, not item_collected:
+  // every key zone is ephemeral_state, so collecting one never writes a
+  // collected flag — it just drops the key species into the inventory bucket.
   countKeys() {
     let n = 0;
-    for (const model of this.world.graph.models.values()) {
-      for (const p of model.pickups) {
-        if (!KEY_SPECIES.includes(p.speciesId)) continue;
-        if (p.entityId != null && getValue(`item_collected.${p.entityId}`) === 1) n++;
-      }
-    }
+    for (const sp of KEY_SPECIES) if (getAmmo(sp, 0) > 0) n++;
     return n;
   }
 }
