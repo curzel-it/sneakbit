@@ -49,27 +49,45 @@ function isDenied(name) {
   return false;
 }
 
+// Rewrite a `from` substring to `to` in an already-copied _site/ HTML file, in
+// place. Throws if the marker isn't found (entry path drifted) so a silent
+// no-op can't ship a page pointing at a non-existent raw module.
+function rewriteScript(htmlPath, from, to) {
+  const src = readFileSync(htmlPath, "utf8");
+  const out = src.replace(from, to);
+  if (out === src) throw new Error(`build: '${from}' not found in ${htmlPath} (script tag changed?)`);
+  writeFileSync(htmlPath, out);
+}
+
 async function build() {
   rmSync(OUT_DIR, { recursive: true, force: true });
 
   const result = await esbuild.build({
-    entryPoints: [join(REPO_ROOT, "js/main.js")],
+    // Two entries: the game shell (js/main.js, loaded by /play/) and the
+    // marketing-site account UI (js/siteAccount.js, loaded by / and /account/).
+    // Both must be bundled because js/ is denylisted from _site/ — raw module
+    // loads would 404 in production.
+    entryPoints: [join(REPO_ROOT, "js/main.js"), join(REPO_ROOT, "js/siteAccount.js")],
     bundle: true,
     format: "esm",
     minify: true,
     sourcemap: true,
     target: "es2022",
-    entryNames: "app-[hash]",
+    entryNames: "[name]-[hash]",
     outdir: OUT_DIR,
     metafile: true,
     logLevel: "info",
   });
 
-  // Find the hashed entry output (the .js, not its .map) from the metafile.
-  const entry = Object.entries(result.metafile.outputs)
-    .find(([, o]) => o.entryPoint === "js/main.js");
-  if (!entry) throw new Error("build: could not locate entry output in metafile");
-  const bundleName = entry[0].split("/").pop(); // e.g. app-AB12CD34.js
+  // Find each hashed entry output (the .js, not its .map) from the metafile.
+  const bundleFor = (entryPoint) => {
+    const entry = Object.entries(result.metafile.outputs)
+      .find(([, o]) => o.entryPoint === entryPoint);
+    if (!entry) throw new Error(`build: could not locate ${entryPoint} output in metafile`);
+    return entry[0].split("/").pop(); // e.g. main-AB12CD34.js
+  };
+  const bundleName = bundleFor("js/main.js");
+  const siteBundle = bundleFor("js/siteAccount.js");
 
   // Copy every shippable top-level entry into _site/ verbatim — including the
   // landing page (root index.html) and the game shell (play/index.html). The
@@ -80,15 +98,14 @@ async function build() {
     cpSync(join(REPO_ROOT, name), join(OUT_DIR, name), { recursive: true });
   }
 
-  // Rewrite the game shell (served at /play/) to load the hashed bundle instead
-  // of the raw module entry. <base href="/"> in the shell resolves `./<bundle>`
-  // to the root, where esbuild wrote it.
-  const srcHtml = readFileSync(join(REPO_ROOT, "play", "index.html"), "utf8");
-  const outHtml = srcHtml.replace("./js/main.js", `./${bundleName}`);
-  if (outHtml === srcHtml) throw new Error("build: play/index.html script tag not rewritten (entry path changed?)");
-  writeFileSync(join(OUT_DIR, "play", "index.html"), outHtml);
+  // Rewrite each page's raw module <script src> to its hashed bundle. The game
+  // shell and the account page carry <base href="/">, so `./<bundle>` resolves
+  // to root where esbuild wrote it; the landing is served at root already.
+  rewriteScript(join(OUT_DIR, "play", "index.html"), "./js/main.js", `./${bundleName}`);
+  rewriteScript(join(OUT_DIR, "index.html"), "./js/siteAccount.js", `./${siteBundle}`);
+  rewriteScript(join(OUT_DIR, "account", "index.html"), "./js/siteAccount.js", `./${siteBundle}`);
 
-  console.log(`\nbuilt _site/ — entry ${bundleName}`);
+  console.log(`\nbuilt _site/ — game ${bundleName}, site ${siteBundle}`);
 }
 
 build().catch((err) => {

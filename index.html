@@ -18,21 +18,8 @@
     <meta property="og:url" content="https://sneakbit.curzel.it/">
     <meta name="twitter:card" content="summary_large_image">
 
+    <link rel="stylesheet" href="/site.css">
     <style>
-        :root { color-scheme: dark; }
-        * { box-sizing: border-box; }
-        body {
-            margin: 0; padding: 0;
-            background: #0d0d0d; color: #ddd;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            line-height: 1.6; font-size: 15px;
-        }
-        a { color: #9ab1ff; }
-        a:hover { text-decoration: underline; }
-        img { image-rendering: pixelated; }
-
-        main { max-width: 880px; margin: 0 auto; padding: 0 20px 72px; }
-
         /* Hero */
         .hero { text-align: center; padding: 56px 0 8px; }
         .hero h1 {
@@ -45,20 +32,6 @@
             border: 1px solid #2a2a2a; border-radius: 6px;
             margin: 0 auto;
         }
-
-        /* Call-to-action buttons */
-        .cta { margin: 28px 0 8px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
-        .btn {
-            display: inline-block; text-decoration: none;
-            padding: 12px 22px; border-radius: 6px;
-            border: 1px solid #3a3a3a; color: #ddd; background: #161616;
-            font-size: 15px; letter-spacing: 0.5px; white-space: nowrap;
-        }
-        .btn:hover { border-color: #6a7bd0; text-decoration: none; background: #1c1c1c; }
-        .btn.primary {
-            background: #9ab1ff; border-color: #9ab1ff; color: #0d0d0d; font-weight: 700;
-        }
-        .btn.primary:hover { background: #b3c4ff; border-color: #b3c4ff; }
         .stores { margin-top: 6px; }
 
         /* Sections */
@@ -90,6 +63,10 @@
 </head>
 
 <body>
+    <nav class="site-nav">
+        <a class="brand" href="/">SneakBit</a>
+        <span id="account-link"></span>
+    </nav>
     <main>
         <header class="hero">
             <h1>SneakBit</h1>
@@ -164,6 +141,7 @@
             </p>
         </footer>
     </main>
+    <script type="module" src="./js/siteAccount.js"></script>
 </body>
 
 </html>

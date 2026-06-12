@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SneakBit — Account</title>
+    <meta name="description" content="Sign in to your SneakBit account, manage your profile, and view your purchases.">
+    <link rel="icon" href="/favicon.ico">
+    <!-- Served from /account/, but the bundle, stylesheet, and the auth chip's
+         /account/ link all reference root-absolute paths, so <base href="/">
+         keeps the build-rewritten "./<bundle>" script src resolving to root
+         (same trick as /play/index.html). -->
+    <base href="/">
+    <link rel="stylesheet" href="/site.css">
+    <style>
+        .account-intro { text-align: center; padding: 8px 0 0; color: #888; font-size: 13px; }
+    </style>
+</head>
+
+<body>
+    <nav class="site-nav">
+        <a class="brand" href="/">SneakBit</a>
+        <span id="account-link"></span>
+    </nav>
+    <main>
+        <p class="account-intro">Your account works across the website and the game.</p>
+        <div id="account-app"></div>
+    </main>
+    <script type="module" src="./js/siteAccount.js"></script>
+</body>
+
+</html>

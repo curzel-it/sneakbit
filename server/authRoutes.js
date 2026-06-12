@@ -165,7 +165,9 @@ export function createAuthHandler({ db, env = process.env } = {}) {
         createPasswordReset(db, {
           tokenHash, userId: user.id, expiresAt: Date.now() + RESET_TTL_MS,
         });
-        const link = `${baseUrl()}/?reset=${token}`;
+        // The account page (/account/) handles the ?reset=<token> deep link.
+        // (The bare site root is the marketing landing — it would silently no-op.)
+        const link = `${baseUrl()}/account/?reset=${token}`;
         // Fire-and-forget: awaiting the email's network round-trip made the
         // user-exists path measurably slower than the unknown-email path,
         // which is an account-enumeration oracle that defeats the always-200

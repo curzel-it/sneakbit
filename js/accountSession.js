@@ -73,6 +73,28 @@ export function onAccountChange(fn) {
   return () => subscribers.delete(fn);
 }
 
+// — Cross-tab sync ————————————————————————————————————————————————————————
+// Same origin + same KEY means the game (/play/) and the website (/ , /account/)
+// share one localStorage. A sign-in/out in one tab fires a `storage` event in
+// every OTHER same-origin tab — re-read from storage and notify so the in-game
+// menu and the site header update live, not just on the next page load. (load()
+// memoizes after the first read, so a long-lived tab would otherwise never see
+// the other tab's change.) Exported because the node test runner has no
+// `window` to dispatch a real event against.
+export function reloadSessionFromStorage() {
+  session = undefined; // force load() to re-read from localStorage
+  load();
+  notify();
+}
+
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("storage", (e) => {
+    // key === null when another tab calls localStorage.clear(); otherwise only
+    // react to our own key changing.
+    if (e.key === null || e.key === KEY) reloadSessionFromStorage();
+  });
+}
+
 // Best-effort token check against /auth/me. Offline or a 5xx keeps the
 // cached session untouched; only a 401 (token expired/invalid) signs out.
 // Safe to call fire-and-forget — it swallows everything.
