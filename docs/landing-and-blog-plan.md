@@ -219,17 +219,15 @@ returning players, that's a product call, not a technical one.)
 
 - [ ] Phase 0 — confirm remaining open questions (blog: Markdown approach + URL
       style + hero asset). Not blocking Phase 1.
-- [ ] Phase 1 (game move, no new content):
-  - [ ] `git mv index.html play/index.html`; add `<base href="/">`.
-  - [ ] Update `build.mjs` to rewrite `play/index.html`, copy a new root
-        `index.html` verbatim.
-  - [ ] Stand up a minimal placeholder landing at `/` ("SneakBit — Play").
-  - [ ] Update all e2e `/index.html` → `/play/` refs.
-  - [ ] `npm run test:unit && npm run test:e2e` green; `npm run build` produces
-        `_site/play/index.html` + `_site/index.html`.
-  - [ ] Deploy to staging-ish / verify `/play` boots and assets load (the
-        `<base>` fix), `/` shows the placeholder.
-- [ ] Phase 2 (real landing): hero, badges, copy, footer.
+- [x] Phase 1 (game move + real landing) — **shipped 2026-06-12, commit `9bfbe8ce`**:
+  - [x] `git mv index.html play/index.html`; add `<base href="/">`.
+  - [x] `build.mjs` rewrites `play/index.html`, ships root `index.html` verbatim.
+  - [x] Real landing at `/` (hero, badges, gallery, credits) — folded Phase 2 in
+        since store links were ready and an existing screenshot served as hero.
+  - [x] Repointed game-at-root assumers: e2e tests + coop fixture, screenshot
+        tool, Electron `APP_URL`, Stripe success/cancel URLs, deploy health gate.
+  - [x] Unit 970/970, e2e 29/29 green; prod health gate + TLS smoke green.
+- [x] Phase 2 (real landing) — done as part of Phase 1.
 - [ ] Phase 3 (blog): `tools/buildBlog.mjs`, template, first post; decide URL style.
 - [ ] Phase 4 (optional): clean blog URLs via nginx `location /blog/`.
 
