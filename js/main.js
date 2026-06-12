@@ -505,13 +505,15 @@ async function main() {
   });
 
   // Autoplay bot (opt-in via ?autoplay): the in-page AI that plays the game
-  // for the 24/7 stream. Loaded via a COMPUTED dynamic import so esbuild
-  // can't statically resolve it — the bot stays out of the shipped bundle
-  // and the loose js/autoplay/*.js files are fetched at runtime only when
-  // the param is present (no effect on normal players). Offline role only.
+  // for the 24/7 stream. A lazy dynamic import — esbuild code-splitting
+  // (tools/build.mjs) puts the bot + its autoplay-only modules in a separate
+  // chunk that's fetched ONLY when the param is present, so normal players
+  // never download it. Crucially it stays in the SAME module graph as the
+  // engine, so the bot drives the very same input/storage/state singletons
+  // the game reads (a separately-bundled bot would get dead copies). Offline
+  // role only.
   if (new URLSearchParams(location.search).has("autoplay") && getRuntimeRole() === "offline") {
-    const botModule = "./autoplay/" + "bot.js";
-    import(new URL(botModule, import.meta.url))
+    import("./autoplay/bot.js")
       .then((m) => m.startBot({ getState: () => state }))
       .catch((err) => console.error("[autoplay] failed to start bot", err));
   }
