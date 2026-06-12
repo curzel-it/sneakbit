@@ -23,7 +23,7 @@ import { gateLock, tileKey } from "../js/autoplay/worldModel.js";
 import { _resetStorageForTesting } from "../js/storage.js";
 import { STARTING_ZONE_ID, STARTING_SPAWN } from "../js/constants.js";
 
-const SKIP = process.env.AUTOPLAY_WIP === "1" ? false : "WIP: pending puzzle-solver improvements";
+const SKIP = process.env.AUTOPLAY_WIP === "1" ? false : "slow suite (~15-35s): run with AUTOPLAY_WIP=1";
 _resetStorageForTesting();
 const world = discoverWorld(loadWorldFromDisk().loadRawZone);
 const graph = buildZoneGraph(world);

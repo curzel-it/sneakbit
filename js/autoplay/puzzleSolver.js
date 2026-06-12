@@ -29,9 +29,14 @@
 // tile bridges it, and a climbed box can be pushed off in any direction
 // it can slide. See flood()/successors() for the exact edge rules.
 //
-// Per the perf rule, nothing in the inner loop scans zone.entities: the
-// static blocked set, gate-by-tile and plate-by-color maps are built once
-// per solve.
+// Perf (the plan's Defect B): a solve floods the region once per explored
+// state, so the flood is the hot loop. Tiles are int-packed (y*cols+x)
+// the moment prepare() ingests the model — the search never touches an
+// "x,y" string — and the flood marks visits in a generation-stamped
+// Int32Array scratch shared across the solve (no per-flood Set, no
+// clearing). Nothing in the inner loop scans zone.entities either: the
+// static blocked mask, gate-by-tile and plate-by-color maps are built
+// once per solve.
 
 import { tileKey, gateLock } from "./worldModel.js";
 import { shouldBeVisible } from "../entityVisibility.js";
@@ -46,8 +51,8 @@ const DIRS = [
 
 // With share-tile mechanics the macro space of a 4-box dungeon is far too
 // large to exhaust — the cap is the real terminator for unreachable
-// goals, so it must be affordable: ~30k states ≈ a minute in the biggest
-// zone, while every known-solvable puzzle needs well under 5k.
+// goals, so it must be affordable: every known-solvable puzzle (including
+// 1013's far-corner key, the worst case) needs well under this.
 const DEFAULT_MAX_STATES = 30000;
 
 // opts:
@@ -62,33 +67,32 @@ const DEFAULT_MAX_STATES = 30000;
 // intentionally omitted — phase 2's in-page bot paths between waypoints
 // with a plain BFS.
 export function solveToTiles(model, startTile, goalTiles, opts = {}) {
+  const world = prepare(model, opts);
   const goals = new Set(
-    (Array.isArray(goalTiles) ? goalTiles : [goalTiles]).map((t) => tileKey(t.x, t.y)),
+    (Array.isArray(goalTiles) ? goalTiles : [goalTiles])
+      .map((t) => world.idx(t.x, t.y))
+      .filter((i) => i >= 0),
   );
   if (goals.size === 0) return fail("no goals", 0);
 
-  const world = prepare(model, opts);
+  world.goalSet = goals;
   world.goalD = goalField(world, goals);
-  const startKey = tileKey(startTile.x | 0, startTile.y | 0);
+  const start = world.idx(startTile.x | 0, startTile.y | 0);
+  if (start < 0) return fail("start out of bounds", 0);
   const maxStates = opts.maxStates ?? DEFAULT_MAX_STATES;
-  const startState = { pushables: world.pushableStart, player: startKey };
+  const startState = { pushables: world.pushableStart, player: start };
 
   // Phase A: plain walking (pushables frozen). Most objectives are simply
   // reachable on foot; only fall back to the expensive Sokoban search when
   // they aren't and the zone actually has blocks to push.
-  const a = search(world, startState, goals, maxStates, false);
+  const a = search(world, startState, maxStates, false);
   if (a.reachable || world.pushableStart.size === 0) return a;
-  return search(world, startState, goals, maxStates, true);
+  return search(world, startState, maxStates, true);
 }
 
-function search(world, startState, goals, maxStates, allowPush) {
-  const goalInRegion = (region) => {
-    for (const g of goals) if (region.tiles.has(g)) return g;
-    return null;
-  };
+function search(world, startState, maxStates, allowPush) {
   const startRegion = reachableRegion(world, startState);
-  const firstHit = goalInRegion(startRegion);
-  if (firstHit) return done(world, [], tileOf(firstHit), firstHit);
+  if (startRegion.goalHit >= 0) return done(world, [], world.tileOf(startRegion.goalHit));
 
   // Macro-state = pushable layout + the player's connected component
   // (its canonical tile). The same layout with the player walled into a
@@ -109,8 +113,10 @@ function search(world, startState, goals, maxStates, allowPush) {
   while (heap.length) {
     const { state, key } = heapPop(heap);
     // Regions are recomputed on pop rather than carried in the heap — a
-    // flooded region is a Set of thousands of tile keys, and retaining one
-    // per queued state OOMs the hard dungeons.
+    // flooded region covers thousands of tiles, and retaining one per
+    // queued state OOMs the hard dungeons. NOTE: the popped region's
+    // stamp-backed has() is only valid until the next flood, so all
+    // successors are generated before any of them is flooded.
     const region = reachableRegion(world, state);
     for (const succ of successors(world, state, region, allowPush)) {
       const region2 = reachableRegion(world, succ.state);
@@ -118,8 +124,7 @@ function search(world, startState, goals, maxStates, allowPush) {
       if (seen.has(key2)) continue;
       seen.set(key2, { prev: key, move: succ.move });
       explored++;
-      const hit = goalInRegion(region2);
-      if (hit) return done(world, reconstruct(seen, key2), tileOf(hit), hit);
+      if (region2.goalHit >= 0) return done(world, reconstruct(seen, key2), world.tileOf(region2.goalHit));
       if (explored >= maxStates) return fail("state cap", explored);
       heapPush(heap, score(world, succ.state, region2), { state: succ.state, key: key2 });
     }
@@ -130,13 +135,14 @@ function search(world, startState, goals, maxStates, allowPush) {
 // All-gates-open BFS distance field from the goal tiles, ignoring boxes.
 // A lower bound on the player's remaining walk, defined on both sides of
 // every gate — the flood reads it to find which closed gate stands
-// between the current region and the goal.
+// between the current region and the goal. Int32Array over tiles, -1 =
+// unreached.
 function goalField(world, goals) {
-  const d = new Map();
+  const d = new Int32Array(world.n).fill(-1);
   let frontier = [];
   for (const g of goals) {
-    if (world.baseBlocked.has(g)) continue;
-    d.set(g, 0);
+    if (world.baseBlocked[g]) continue;
+    d[g] = 0;
     frontier.push(g);
   }
   let dist = 0;
@@ -144,14 +150,9 @@ function goalField(world, goals) {
     dist++;
     const next = [];
     for (const cur of frontier) {
-      const [x, y] = parseTile(cur);
-      for (const dir of DIRS) {
-        const nx = x + dir.dx;
-        const ny = y + dir.dy;
-        if (nx < 0 || ny < 0 || nx >= world.model.cols || ny >= world.model.rows) continue;
-        const nk = tileKey(nx, ny);
-        if (d.has(nk) || world.baseBlocked.has(nk)) continue;
-        d.set(nk, dist);
+      for (const nk of world.neighbors(cur)) {
+        if (nk < 0 || d[nk] >= 0 || world.baseBlocked[nk]) continue;
+        d[nk] = dist;
         next.push(nk);
       }
     }
@@ -180,8 +181,8 @@ function score(world, state, region) {
         // it flattens the gradient for the box actually en route.
         const parkedOn = world.plateColorAt.get(bk);
         if (parkedOn != null && parkedOn !== region.gateStar.color) continue;
-        const d = field.get(bk);
-        if (d != null && d < best) best = d;
+        const d = field[bk];
+        if (d >= 0 && d < best) best = d;
       }
       h += best;
     } else {
@@ -198,32 +199,28 @@ function score(world, state, region) {
 // the score instead of looking like noise.
 const UNHELD_GATE_COST = 50;
 
-// Box-path distance field to `color`'s plate over box-traversable tiles.
-// Gates cost 1 to cross when their color is held, UNHELD_GATE_COST + 1
-// when not. Memoized per (color, held-set) — at most 2^colors variants.
+// Box-path distance field to `color`'s plate over box-traversable tiles
+// (Int32Array, -1 = unreachable). Gates cost 1 to cross when their color
+// is held, UNHELD_GATE_COST + 1 when not. Memoized per (color, held-set)
+// — at most 2^colors variants.
 function plateField(world, color, pushDown) {
   const held = [...world.plateTilesByColor.keys()].filter((c) => pushDown.has(c)).sort().join(",");
   const cacheKey = `${color}|${held}`;
   let field = world.plateFields.get(cacheKey);
   if (field) return field;
-  field = new Map();
+  field = new Int32Array(world.n).fill(-1);
   const heap = makeHeap();
   const tiles = world.plateTilesByColor.get(color);
-  if (tiles) for (const k of tiles) { field.set(k, 0); heapPush(heap, 0, k); }
+  if (tiles) for (const k of tiles) { field[k] = 0; heapPush(heap, 0, k); }
   while (heap.length) {
     const cur = heapPop(heap);
-    const base = field.get(cur);
-    const [x, y] = parseTile(cur);
-    for (const dir of DIRS) {
-      const nx = x + dir.dx;
-      const ny = y + dir.dy;
-      if (nx < 0 || ny < 0 || nx >= world.model.cols || ny >= world.model.rows) continue;
-      const nk = tileKey(nx, ny);
-      if (world.boxBlocked.has(nk)) continue;
+    const base = field[cur];
+    for (const nk of world.neighbors(cur)) {
+      if (nk < 0 || world.boxBlocked[nk]) continue;
       const g = world.gateAt.get(nk);
       const cost = base + 1 + (g && !pushDown.has(gateLock(g)) && gateLock(g) !== LOCK_NONE ? UNHELD_GATE_COST : 0);
-      if ((field.get(nk) ?? Infinity) <= cost) continue;
-      field.set(nk, cost);
+      if (field[nk] >= 0 && field[nk] <= cost) continue;
+      field[nk] = cost;
       heapPush(heap, cost, nk);
     }
   }
@@ -286,8 +283,7 @@ function successors(world, state, region, allowPush) {
   const out = [];
   if (!allowPush) return out;
   for (const [pos, id] of state.pushables) {
-    const [px, py] = parseTile(pos);
-    const onBox = region.tiles.has(pos);
+    const onBox = region.has(pos);
     // Plate colors held by the OTHER boxes — the moving box's own
     // contribution is re-derived per step from its current tile.
     const others = new Set();
@@ -297,12 +293,13 @@ function successors(world, state, region, allowPush) {
       if (c != null) others.add(c);
     }
     for (const dir of DIRS) {
-      const behind = tileKey(px - dir.dx, py - dir.dy);
+      const behind = world.step(pos, -dir.dx, -dir.dy);
       let cur = pos;
-      let playerTile = region.tiles.has(behind) ? behind : pos;
+      let playerTile = behind >= 0 && region.has(behind) ? behind : pos;
       if (playerTile === pos && !onBox) continue;
       for (;;) {
-        const pd = (color) => others.has(color) || world.plateColorAt.get(cur) === color;
+        const curTile = cur;
+        const pd = (color) => others.has(color) || world.plateColorAt.get(curTile) === color;
         let ok = boxCanSlide(world, state.pushables, cur, dir, playerTile, pd);
         // First step may be possible from the other origin (gate state
         // differs when the origin tile is a plate).
@@ -311,14 +308,13 @@ function successors(world, state, region, allowPush) {
           ok = boxCanSlide(world, state.pushables, cur, dir, pos, pd);
         }
         if (!ok) break;
-        const [cx, cy] = parseTile(cur);
-        const next = tileKey(cx + dir.dx, cy + dir.dy);
+        const next = world.step(cur, dir.dx, dir.dy);
         const pushables = new Map(state.pushables);
         pushables.delete(pos);
         pushables.set(next, id);
         out.push({
           state: { pushables, player: cur },
-          move: { push: id, dir: dir.name, blockTo: tileOf(next), playerTo: tileOf(cur) },
+          move: { push: id, dir: dir.name, blockTo: world.tileOf(next), playerTo: world.tileOf(cur) },
         });
         playerTile = cur;
         cur = next;
@@ -328,18 +324,15 @@ function successors(world, state, region, allowPush) {
   return out;
 }
 
-// Can the box at `fromKey` slide one tile along `dir` while the player
+// Can the box at `from` slide one tile along `dir` while the player
 // stands on `playerTile`? Mirrors pushOneTile: terrain-walkable (boxes
 // don't get the player's teleporter override), no rigid entity, no other
 // box, and any gate on the target read with the player's weight applied
 // (the engine validates the slide while the player still stands there).
-function boxCanSlide(world, boxes, fromKey, dir, playerTile, plateDown) {
-  const [px, py] = parseTile(fromKey);
-  const tx = px + dir.dx;
-  const ty = py + dir.dy;
-  if (tx < 0 || ty < 0 || tx >= world.model.cols || ty >= world.model.rows) return false;
-  const target = tileKey(tx, ty);
-  if (world.boxBlocked.has(target)) return false;
+function boxCanSlide(world, boxes, from, dir, playerTile, plateDown) {
+  const target = world.step(from, dir.dx, dir.dy);
+  if (target < 0) return false;
+  if (world.boxBlocked[target]) return false;
   if (boxes.has(target)) return false;
   const g = world.gateAt.get(target);
   if (g && !gateOpen(world, g, withSelfWeight(world, plateDown, playerTile))) return false;
@@ -356,7 +349,9 @@ function withSelfWeight(world, plateDown, tile) {
 }
 
 // Flood the tiles the player can stand on in this macro-state. Returns
-// { tiles, rep, plateDown, pushDown, goalD, gateStar }.
+// { tiles, has, rep, plateDown, pushDown, goalD, gateStar, goalHit }.
+// has() reads the shared stamp scratch and is only valid until the NEXT
+// flood of this solve — see the note in search().
 function reachableRegion(world, state) {
   // Colors held down by a pushable resting on a plate of that color.
   const pushDown = new Set();
@@ -366,12 +361,13 @@ function reachableRegion(world, state) {
     }
   }
   const plateDown = makePlateDown(world, pushDown);
-  const { tiles, goalD, gateStar } = flood(world, state.player, state.pushables, plateDown);
+  const { tiles, stamp, goalD, gateStar, goalHit } = flood(world, state.player, state.pushables, plateDown);
   // Directed reach: same min tile can front different reachable sets, so
   // the canonical key carries the size too.
   let rep = state.player;
   for (const k of tiles) if (k < rep) rep = k;
-  return { tiles, rep: `${rep}#${tiles.size}`, plateDown, pushDown, goalD, gateStar };
+  const has = (i) => world.seenStamp[i] === stamp;
+  return { tiles, has, rep: `${rep}#${tiles.length}`, plateDown, pushDown, goalD, gateStar, goalHit };
 }
 
 // plateDown(color): down if a pushable holds the plate. Puzzles are
@@ -397,23 +393,24 @@ function makePlateDown(world, pushDown) {
 //     the engine only checks destinations.
 function flood(world, seed, boxes, plateDown) {
   const goalD = world.goalD;
-  let bestD = goalD ? (goalD.get(seed) ?? Infinity) : Infinity;
+  const goalSet = world.goalSet;
+  let bestD = goalD ? (goalD[seed] >= 0 ? goalD[seed] : Infinity) : Infinity;
+  let goalHit = goalSet?.has(seed) ? seed : -1;
   let gateStar = null;
   let gateStarD = Infinity;
-  const seen = new Set([seed]);
-  const q = [seed];
-  while (q.length) {
-    const cur = q.pop();
-    const [x, y] = parseTile(cur);
+  const stamp = ++world.stamp;
+  const seen = world.seenStamp;
+  seen[seed] = stamp;
+  const tiles = [seed]; // doubles as the work queue (head pointer below)
+  let head = 0;
+  while (head < tiles.length) {
+    const cur = tiles[head++];
     const onBox = boxes.has(cur);
     for (const dir of DIRS) {
-      const nx = x + dir.dx;
-      const ny = y + dir.dy;
-      if (nx < 0 || ny < 0 || nx >= world.model.cols || ny >= world.model.rows) continue;
-      const nk = tileKey(nx, ny);
-      if (seen.has(nk)) continue;
+      const nk = world.step(cur, dir.dx, dir.dy);
+      if (nk < 0 || seen[nk] === stamp) continue;
       if (onBox && boxCanSlide(world, boxes, cur, dir, cur, plateDown)) continue;
-      if (world.baseBlocked.has(nk)) continue;
+      if (world.baseBlocked[nk]) continue;
       if (boxes.has(nk)) {
         if (boxCanSlide(world, boxes, nk, dir, cur, plateDown)) continue;
       } else {
@@ -421,33 +418,33 @@ function flood(world, seed, boxes, plateDown) {
         if (g && !gateOpen(world, g, withSelfWeight(world, plateDown, cur))) continue;
       }
       if (goalD) {
-        const d = goalD.get(nk);
-        if (d != null && d < bestD) bestD = d;
+        const d = goalD[nk];
+        if (d >= 0 && d < bestD) bestD = d;
       }
-      seen.add(nk);
-      q.push(nk);
+      if (goalHit < 0 && goalSet?.has(nk)) goalHit = nk;
+      seen[nk] = stamp;
+      tiles.push(nk);
     }
   }
   // Closed boundary gate nearest the goal — re-walk the region rim. Done
   // as a second pass so a gate first probed from a far tile but also
   // adjacent to a near one isn't mis-ranked.
   if (goalD) {
-    for (const cur of seen) {
-      const [x, y] = parseTile(cur);
+    for (const cur of tiles) {
       for (const dir of DIRS) {
-        const nk = tileKey(x + dir.dx, y + dir.dy);
-        if (seen.has(nk) || boxes.has(nk)) continue;
+        const nk = world.step(cur, dir.dx, dir.dy);
+        if (nk < 0 || seen[nk] === stamp || boxes.has(nk)) continue;
         const g = world.gateAt.get(nk);
         if (!g || gateOpen(world, g, withSelfWeight(world, plateDown, cur))) continue;
-        const d = goalD.get(nk);
-        if (d != null && d < gateStarD) {
+        const d = goalD[nk];
+        if (d >= 0 && d < gateStarD) {
           gateStarD = d;
           gateStar = { color: gateLock(g), kind: g.kind };
         }
       }
     }
   }
-  return { tiles: seen, goalD: bestD, gateStar };
+  return { tiles, stamp, goalD: bestD, gateStar, goalHit };
 }
 
 // A Gate is open while its color plate is down; an InverseGate while it's
@@ -470,41 +467,44 @@ function gateOpen(world, gate, plateDown) {
 export function walkPath(model, startTile, goalTiles, opts = {}) {
   const world = prepare(model, opts);
   const goals = new Set(
-    (Array.isArray(goalTiles) ? goalTiles : [goalTiles]).map((t) => tileKey(t.x, t.y)),
+    (Array.isArray(goalTiles) ? goalTiles : [goalTiles])
+      .map((t) => world.idx(t.x, t.y))
+      .filter((i) => i >= 0),
   );
-  const startKey = tileKey(startTile.x | 0, startTile.y | 0);
-  if (goals.has(startKey)) return [tileOf(startKey)];
+  const start = world.idx(startTile.x | 0, startTile.y | 0);
+  if (start < 0 || goals.size === 0) return null;
+  if (goals.has(start)) return [world.tileOf(start)];
   const boxes = world.pushableStart;
   const pushDown = new Set();
   for (const [color, tiles] of world.plateTilesByColor) {
     for (const k of boxes.keys()) { if (tiles.has(k)) { pushDown.add(color); break; } }
   }
   const plateDown = makePlateDown(world, pushDown);
-  const prev = new Map([[startKey, null]]);
-  const q = [startKey];
+  const prev = new Int32Array(world.n).fill(-1);
+  prev[start] = start; // self-parent marks "visited" for the seed
+  const q = [start];
   let head = 0;
   while (head < q.length) {
     const cur = q[head++];
-    const [x, y] = parseTile(cur);
     const onBox = boxes.has(cur);
     for (const dir of DIRS) {
-      const nx = x + dir.dx;
-      const ny = y + dir.dy;
-      if (nx < 0 || ny < 0 || nx >= world.model.cols || ny >= world.model.rows) continue;
-      const nk = tileKey(nx, ny);
-      if (prev.has(nk)) continue;
+      const nk = world.step(cur, dir.dx, dir.dy);
+      if (nk < 0 || prev[nk] >= 0) continue;
       if (onBox && boxCanSlide(world, boxes, cur, dir, cur, plateDown)) continue;
-      if (world.baseBlocked.has(nk)) continue;
+      if (world.baseBlocked[nk]) continue;
       if (boxes.has(nk)) {
         if (boxCanSlide(world, boxes, nk, dir, cur, plateDown)) continue;
       } else {
         const g = world.gateAt.get(nk);
         if (g && !gateOpen(world, g, withSelfWeight(world, plateDown, cur))) continue;
       }
-      prev.set(nk, cur);
+      prev[nk] = cur;
       if (goals.has(nk)) {
         const path = [];
-        for (let k = nk; k; k = prev.get(k)) path.unshift(tileOf(k));
+        for (let k = nk; ; k = prev[k]) {
+          path.unshift(world.tileOf(k));
+          if (prev[k] === k || prev[k] < 0) break;
+        }
         return path;
       }
       q.push(nk);
@@ -519,41 +519,55 @@ export function walkPath(model, startTile, goalTiles, opts = {}) {
 // Set of "x,y".
 export function reachableTiles(model, startTile, opts = {}) {
   const world = prepare(model, opts);
-  const state = {
-    pushables: world.pushableStart,
-    player: tileKey(startTile.x | 0, startTile.y | 0),
-  };
-  return reachableRegion(world, state).tiles;
+  const start = world.idx(startTile.x | 0, startTile.y | 0);
+  if (start < 0) return new Set();
+  const state = { pushables: world.pushableStart, player: start };
+  const region = reachableRegion(world, state);
+  const out = new Set();
+  for (const i of region.tiles) out.add(tileKey(i % world.cols, (i / world.cols) | 0));
+  return out;
 }
 
 // --- setup + helpers -----------------------------------------------------
 
+// Builds the int-packed solve world from a (string-keyed) zone model.
+// Tile int = y*cols+x; step()/idx() return -1 for out-of-bounds so callers
+// have a single guard.
 function prepare(model, opts) {
-  const baseBlocked = new Set(model.staticBlocked);
+  const cols = model.cols;
+  const rows = model.rows;
+  const n = cols * rows;
+  const parse = (k) => {
+    const i = k.indexOf(",");
+    const x = parseInt(k.slice(0, i), 10);
+    const y = parseInt(k.slice(i + 1), 10);
+    return y * cols + x;
+  };
+
+  const baseBlocked = new Uint8Array(n);
+  for (const k of model.staticBlocked) baseBlocked[parse(k)] = 1;
+  for (const k of model.lockedTeleporterTiles) baseBlocked[parse(k)] = 1;
   const entityBlocked = [];
-  for (const k of model.rigidStaticTiles) entityBlocked.push(k);
-  for (const k of model.lockedTeleporterTiles) baseBlocked.add(k);
+  for (const k of model.rigidStaticTiles) entityBlocked.push(parse(k));
   for (const c of model.conditionalRigid) {
     if (!shouldBeVisible(c.entity)) continue;
-    for (const k of c.tiles) entityBlocked.push(k);
+    for (const k of c.tiles) entityBlocked.push(parse(k));
   }
-  for (const k of entityBlocked) {
-    if (!model.enterableTeleporterTiles.has(k)) baseBlocked.add(k);
+  const enterableTeleporters = [...model.enterableTeleporterTiles].map(parse);
+  const enterableSet = new Set(enterableTeleporters);
+  for (const i of entityBlocked) {
+    if (!enterableSet.has(i)) baseBlocked[i] = 1;
   }
   // Boxes obey raw terrain + entity collision (pushOneTile: isWalkable +
   // isEntityBlocked) — no teleporter override, so interior exit doors on
   // unwalkable tiles stay box-proof.
-  const boxBlocked = new Set(baseBlocked);
+  const boxBlocked = Uint8Array.from(baseBlocked);
   // Enterable teleporters override terrain AND entity collision for the
   // PLAYER (player.js::canEnter) — interior exit doors sit on unwalkable
   // tiles. The in-page bot passes avoidTeleporters so its puzzle solves/walks
   // never step onto one (which would warp it out of the zone mid-puzzle); the
   // route planner leaves them walkable (default) since travel IS its goal.
-  if (opts.avoidTeleporters) {
-    for (const k of model.enterableTeleporterTiles) baseBlocked.add(k);
-  } else {
-    for (const k of model.enterableTeleporterTiles) baseBlocked.delete(k);
-  }
+  for (const i of enterableTeleporters) baseBlocked[i] = opts.avoidTeleporters ? 1 : 0;
   // Explosive barrels die to bullets/melee (combat.js) — passable for the
   // solver by default (the player clears the barrel before walking/pushing
   // through). The in-page bot has no practical way to destroy a 100-HP barrel
@@ -561,13 +575,14 @@ function prepare(model, opts) {
   // treat them as solid walls and route around them instead.
   if (!opts.barrelsBlock) {
     for (const k of model.destructibleTiles) {
-      baseBlocked.delete(k);
-      boxBlocked.delete(k);
+      const i = parse(k);
+      baseBlocked[i] = 0;
+      boxBlocked[i] = 0;
     }
   }
 
   const gateAt = new Map();
-  for (const g of model.gates) for (const k of g.tiles) gateAt.set(k, g);
+  for (const g of model.gates) for (const k of g.tiles) gateAt.set(parse(k), g);
 
   const plateTilesByColor = new Map();
   const plateColorAt = new Map();
@@ -575,20 +590,25 @@ function prepare(model, opts) {
     if (!plateTilesByColor.has(p.color)) plateTilesByColor.set(p.color, new Set());
     const set = plateTilesByColor.get(p.color);
     for (const k of p.tiles) {
-      set.add(k);
-      plateColorAt.set(k, p.color);
+      const i = parse(k);
+      set.add(i);
+      plateColorAt.set(i, p.color);
     }
   }
 
+  const idx = (x, y) => (x < 0 || y < 0 || x >= cols || y >= rows ? -1 : y * cols + x);
   const pushableStart = new Map();
   if (opts.pushableStarts) {
-    for (const [id, t] of opts.pushableStarts) pushableStart.set(tileKey(t.x, t.y), id);
+    for (const [id, t] of opts.pushableStarts) pushableStart.set(idx(t.x, t.y), id);
   } else {
-    for (const p of model.pushables) pushableStart.set(tileKey(p.start.x, p.start.y), p.entityId);
+    for (const p of model.pushables) pushableStart.set(idx(p.start.x, p.start.y), p.entityId);
   }
 
   return {
     model,
+    cols,
+    rows,
+    n,
     baseBlocked,
     boxBlocked,
     gateAt,
@@ -596,11 +616,35 @@ function prepare(model, opts) {
     plateColorAt,
     pushableStart,
     plateFields: new Map(),
+    seenStamp: new Int32Array(n),
+    stamp: 0,
+    goalD: null,
+    goalSet: null,
+    idx,
+    tileOf: (i) => ({ x: i % cols, y: (i / cols) | 0 }),
+    // One tile over (dx,dy), or -1 when that walks off the grid.
+    step: (i, dx, dy) => {
+      const x = (i % cols) + dx;
+      const y = ((i / cols) | 0) + dy;
+      return x < 0 || y < 0 || x >= cols || y >= rows ? -1 : y * cols + x;
+    },
+    // Cardinal neighbors (array with -1 for off-grid) — used by the field
+    // builders; the flood inlines step() per direction instead.
+    neighbors: (i) => {
+      const x = i % cols;
+      const y = (i / cols) | 0;
+      return [
+        y > 0 ? i - cols : -1,
+        y < rows - 1 ? i + cols : -1,
+        x > 0 ? i - 1 : -1,
+        x < cols - 1 ? i + 1 : -1,
+      ];
+    },
   };
 }
 
 function macroKey(state, region) {
-  return [...state.pushables.keys()].sort().join(";") + "|" + region.rep;
+  return [...state.pushables.keys()].sort((a, b) => a - b).join(";") + "|" + region.rep;
 }
 
 function reconstruct(seen, endKey) {
@@ -616,7 +660,7 @@ function reconstruct(seen, endKey) {
   return moves;
 }
 
-function done(world, moves, goalTile, goalKey) {
+function done(world, moves, goalTile) {
   const actions = [...moves, { walkTo: goalTile }];
   // platesLeftDown: colors a pushable rests on in the final layout.
   const finalPushables = finalLayout(world, moves);
@@ -631,7 +675,7 @@ function done(world, moves, goalTile, goalKey) {
 
 // Replay pushes over the start layout to get the final pushable tiles.
 function finalLayout(world, moves) {
-  const layout = new Map(world.pushableStart); // tileKey -> id
+  const layout = new Map(world.pushableStart); // tile int -> id
   for (const m of moves) {
     if (m.push == null) continue;
     // find current tile of this id
@@ -639,22 +683,11 @@ function finalLayout(world, moves) {
     for (const [k, id] of layout) if (id === m.push) { from = k; break; }
     if (from == null) continue;
     layout.delete(from);
-    layout.set(tileKey(m.blockTo.x, m.blockTo.y), m.push);
+    layout.set(world.idx(m.blockTo.x, m.blockTo.y), m.push);
   }
   return new Set(layout.keys());
 }
 
-
 function fail(reason, explored) {
   return { reachable: false, reason, statesExplored: explored };
-}
-
-function parseTile(k) {
-  const i = k.indexOf(",");
-  return [parseInt(k.slice(0, i), 10), parseInt(k.slice(i + 1), 10)];
-}
-
-function tileOf(k) {
-  const [x, y] = parseTile(k);
-  return { x, y };
 }
