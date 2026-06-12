@@ -15,6 +15,7 @@
     "sprites": "node tools/exportSpriteSheets.mjs",
     "build": "node tools/build.mjs",
     "deploy": "node tools/deploy.mjs",
+    "stream:deploy": "node tools/stream/deploy.mjs",
     "serve": "node tools/serve.mjs",
     "dev": "node tools/serve.mjs",
     "electron": "npm run build && electron .",
