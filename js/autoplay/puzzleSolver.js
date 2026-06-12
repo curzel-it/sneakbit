@@ -546,8 +546,14 @@ function prepare(model, opts) {
   const boxBlocked = new Set(baseBlocked);
   // Enterable teleporters override terrain AND entity collision for the
   // PLAYER (player.js::canEnter) — interior exit doors sit on unwalkable
-  // tiles.
-  for (const k of model.enterableTeleporterTiles) baseBlocked.delete(k);
+  // tiles. The in-page bot passes avoidTeleporters so its puzzle solves/walks
+  // never step onto one (which would warp it out of the zone mid-puzzle); the
+  // route planner leaves them walkable (default) since travel IS its goal.
+  if (opts.avoidTeleporters) {
+    for (const k of model.enterableTeleporterTiles) baseBlocked.add(k);
+  } else {
+    for (const k of model.enterableTeleporterTiles) baseBlocked.delete(k);
+  }
   // Explosive barrels die to bullets/melee (combat.js) — passable for the
   // solver by default (the player clears the barrel before walking/pushing
   // through). The in-page bot has no practical way to destroy a 100-HP barrel

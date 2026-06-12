@@ -124,7 +124,7 @@ export function makePuzzleNav(model) {
         stallTicks = 0;
         if (recomputes > MAX_RECOMPUTES) return { status: "blocked", dir: null };
       }
-      path = walkPath(model, { x: player.tileX, y: player.tileY }, goalTiles, { pushableStarts: boxLayout, barrelsBlock: true });
+      path = walkPath(model, { x: player.tileX, y: player.tileY }, goalTiles, { pushableStarts: boxLayout, barrelsBlock: true, avoidTeleporters: true });
       if (!path) return { status: "blocked", dir: null };
     }
     const idx = path.findIndex((t) => t.x === player.tileX && t.y === player.tileY);

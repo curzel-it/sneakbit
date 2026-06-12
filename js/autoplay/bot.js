@@ -231,7 +231,8 @@ class Bot {
         goalTiles: o.tiles.map((t) => ({ x: t.x, y: t.y })),
         pushableStarts: livePushables(state.zone, model),
         maxStates: PUZZLE_MAX_STATES,
-        barrelsBlock: true, // the bot can't destroy 100-HP barrels — go around
+        barrelsBlock: true,      // the bot can't destroy 100-HP barrels — go around
+        avoidTeleporters: true,  // never step onto a teleporter mid-puzzle
       })
       .then((solve) => { my.result = solve; my.done = true; })
       .catch((err) => { my.error = err; my.done = true; });
@@ -350,9 +351,12 @@ class Bot {
       this.pzNav = makePuzzleNav(model);
       const pushes = a.plan.filter((x) => x.push != null).length;
       logEvent("puzzle", `solved ${describeObjective(a.objective)} — ${pushes} pushes`);
-      // Deadline for the (potentially long) execution, capped so a wedged
-      // puzzle can't hold a zone hostage — it gets retried on the next lap.
-      a.deadline = now + Math.min(90000, Math.max(MAX_ACTION_MS, a.plan.length * 8000));
+      // Deadline scaled to the ZONE SIZE, not the action count: a 2-action
+      // plan can still mean a box pushed + a hike clear across a 100×80 dungeon
+      // to a key in the far corner (~140 tiles). The walk provably converges
+      // (monotonic), so this only needs to be generous; it's capped so a
+      // genuinely wedged puzzle still yields the zone and retries next lap.
+      a.deadline = now + Math.min(300000, 60000 + (model.cols + model.rows) * 1000);
     }
 
     if (a.phase !== "exec") return;

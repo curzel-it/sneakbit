@@ -13,7 +13,7 @@ import { restoreStorage } from "../storage.js";
 let speciesLoaded = false;
 
 self.onmessage = (e) => {
-  const { id, raw, species, snapshot, startTile, goalTiles, pushableStarts, maxStates, barrelsBlock } = e.data || {};
+  const { id, raw, species, snapshot, startTile, goalTiles, pushableStarts, maxStates, barrelsBlock, avoidTeleporters } = e.data || {};
   try {
     if (species && !speciesLoaded) { loadSpeciesData(species); speciesLoaded = true; }
     // Seed the worker's storage cache so shouldBeVisible (collected pickups,
@@ -23,7 +23,7 @@ self.onmessage = (e) => {
     const starts = Array.isArray(pushableStarts)
       ? new Map(pushableStarts.map((p) => [p.id, { x: p.x, y: p.y }]))
       : undefined;
-    const solve = solveToTiles(model, startTile, goalTiles, { pushableStarts: starts, maxStates, barrelsBlock });
+    const solve = solveToTiles(model, startTile, goalTiles, { pushableStarts: starts, maxStates, barrelsBlock, avoidTeleporters });
     self.postMessage({ id, ok: true, solve });
   } catch (err) {
     self.postMessage({ id, ok: false, error: String(err?.message || err) });
