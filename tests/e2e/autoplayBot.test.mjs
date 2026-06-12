@@ -60,10 +60,13 @@ test("autoplay: the bot navigates, collects, talks, and travels", async (t) => {
     });
   })()`;
 
+  // Generous budget: the starting zone is monster-dense and the bot may die
+  // and respawn a few times before it threads out to a second zone (combat is
+  // survival-by-avoidance — these monsters are unkillable bullet-sponges).
   await waitFor(
     s,
     `(() => { const m = JSON.parse(${metricsExpr}); return m.moved && m.collected >= 1 && m.dialogues >= 1 && m.visited >= 2; })()`,
-    { timeoutMs: 90000, pollMs: 1000 },
+    { timeoutMs: 150000, pollMs: 1000 },
   );
 
   const m = JSON.parse(await evalExpr(s, metricsExpr));

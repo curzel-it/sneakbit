@@ -58,10 +58,12 @@ export function updateOverlay(snap) {
   els.objective.textContent = snap.objective ?? "—";
   const bits = [];
   if (snap.zoneId != null) bits.push(`Zone ${snap.zoneId}`);
+  if (snap.hp != null && snap.maxHp != null) bits.push(`HP ${Math.ceil(snap.hp)}/${snap.maxHp}`);
   if (snap.keys != null) bits.push(`Keys ${snap.keys}/6`);
   if (snap.zonesVisited != null && snap.zoneCount != null) {
     bits.push(`Zones ${snap.zonesVisited}/${snap.zoneCount}`);
   }
+  if (snap.deaths) bits.push(`Deaths ${snap.deaths}`);
   els.stats.textContent = bits.join("   ");
   els.ticker.textContent = (snap.recent ?? []).join("\n");
 }

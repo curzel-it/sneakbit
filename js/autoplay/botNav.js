@@ -50,8 +50,10 @@ export function stepDirection(from, to) {
 // (a Set of "x,y" keys), inclusive of both endpoints. Returns an array of
 // {x,y} or null if no goal is reachable. The start tile is always seeded
 // even if it currently reads unwalkable (the player may stand on a special
-// tile); every OTHER tile must pass isNavWalkable.
-export function findPath(zone, start, goalSet) {
+// tile); every OTHER tile must pass isNavWalkable. `avoid` (optional Set of
+// "x,y") is treated as blocked EXCEPT for goal tiles — used to route around
+// monster halos; the caller retries without it when avoidance dead-ends.
+export function findPath(zone, start, goalSet, avoid = null) {
   const startKey = `${start.x},${start.y}`;
   if (goalSet.has(startKey)) return [{ x: start.x, y: start.y }];
   const prev = new Map([[startKey, null]]);
@@ -65,7 +67,7 @@ export function findPath(zone, start, goalSet) {
       const key = `${nx},${ny}`;
       if (prev.has(key)) continue;
       const isGoal = goalSet.has(key);
-      if (!isGoal && !isNavWalkable(zone, nx, ny)) continue;
+      if (!isGoal && (!isNavWalkable(zone, nx, ny) || (avoid && avoid.has(key)))) continue;
       prev.set(key, cur);
       if (isGoal) return reconstruct(prev, { x: nx, y: ny });
       queue.push({ x: nx, y: ny });
@@ -100,8 +102,11 @@ export function makeNavigator() {
     recomputes = 0;
   }
 
-  // Returns { status: "moving"|"arrived"|"blocked", dir }.
-  function tick(player, zone) {
+  // Returns { status: "moving"|"arrived"|"blocked", dir }. `avoid` (optional
+  // Set of "x,y") routes the path around monster halos; if avoidance leaves
+  // no path we fall back to the un-avoided route (push through — the hero
+  // out-runs and out-heals the chip damage rather than wedging).
+  function tick(player, zone, avoid = null) {
     if (!goalSet || goalSet.size === 0) return { status: "blocked", dir: null };
     const tileKey = `${player.tileX},${player.tileY}`;
     if (goalSet.has(tileKey)) return { status: "arrived", dir: null };
@@ -126,7 +131,9 @@ export function makeNavigator() {
         stallTicks = 0;
         if (recomputes > MAX_RECOMPUTES) return { status: "blocked", dir: null };
       }
-      path = findPath(zone, { x: player.tileX, y: player.tileY }, goalSet);
+      const start = { x: player.tileX, y: player.tileY };
+      path = findPath(zone, start, goalSet, avoid)
+        ?? findPath(zone, start, goalSet, null);
       if (!path) return { status: "blocked", dir: null };
     }
 

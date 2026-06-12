@@ -5,22 +5,24 @@
 //
 // Mode stack, highest priority first, evaluated every tick:
 //   1. OverlayJanitor  — a modal is open → advance/dismiss it (sim frozen).
-//   2. ExecuteAction   — drive the current plan step via botNav.
-//   3. Plan            — no action → pick the next objective, else travel.
+//   2. Survive         — hurt + monster on us → break away (botCombat).
+//   3. ExecuteAction   — drive the current plan step via botNav.
+//   4. Plan            — no action → pick the next objective, else travel.
 //
-// M1 scope: talks, pickups, hints, and zone travel on WALKABLE routes.
-// Push-puzzles and combat are filtered out (objectives that need a solve
-// aren't walk-reachable, so findPath skips them) and land in later
-// milestones (botPush, botCombat).
+// Scope: talks, pickups, hints, and zone travel on WALKABLE routes, with
+// monster-avoidant navigation + survival. Push-puzzle objectives aren't
+// walk-reachable (findPath skips them), so they're left for botPush (M2).
 
 import { pushInputPress, clearInputHeld } from "../input.js";
 import { tryInteractForSlot } from "../interact.js";
 import { getValue } from "../storage.js";
+import { isPlayerDead, getPlayerHp, getPlayerMaxHp } from "../playerHealth.js";
 import { liveObjectives } from "./objectiveCatalog.js";
 import { edgeTraversable } from "./zoneGraph.js";
 import { loadBotWorld } from "./botWorld.js";
 import { makeNavigator, findPath, isNavWalkable } from "./botNav.js";
 import { tickJanitor } from "./botDialogue.js";
+import { decideCombat, monsterHalo } from "./botCombat.js";
 import { installOverlay, updateOverlay } from "./botOverlay.js";
 import { logEvent, recentEvents } from "./botLog.js";
 
@@ -68,6 +70,9 @@ class Bot {
     this.waitUntil = 0;
     this.lastOverlayTs = 0;
     this.zoneEnteredTs = 0;
+    this.wasDead = false;
+    this.deaths = 0;
+    this.avoid = null;
   }
 
   async start() {
@@ -113,19 +118,41 @@ class Bot {
     const state = this.ctx.getState();
     if (!this.ready || !state || !state.player || !state.zone) return;
 
+    // Death watcher: the game-over overlay is dismissed by the janitor above
+    // (Continue → respawn at the zone's spawn point); when we come back alive,
+    // drop the stale action so we replan from wherever we respawned.
+    const dead = isPlayerDead(0);
+    if (dead && !this.wasDead) { logEvent("death", `died in zone ${state.zone.id}`); this.deaths++; }
+    if (!dead && this.wasDead) { this.action = null; this.idle(); }
+    this.wasDead = dead;
+    if (dead) { this.idle(); return; }
+
     // Commit a zone change (travel arrival, or a cutscene relocation).
     if (state.zone.id !== this.lastZoneId) this.onZoneChange(state);
 
     if (now < this.waitUntil) { this.idle(); return; }
 
-    // 2. ExecuteAction.
+    // 2. Survive — an imminent monster while we're hurt preempts everything
+    // (break away to regen). Otherwise navigation routes AROUND monsters via
+    // the avoid halo below, so healthy travel just flows past them.
+    const intent = decideCombat(state);
+    if (intent) {
+      if (intent.flee) this.step(state.player, intent.flee);
+      else this.idle();
+      this.maybeRefreshOverlay(state, now);
+      return;
+    }
+    // Monster-avoid halo for this tick's pathing (used on nav recompute).
+    this.avoid = monsterHalo(state.zone, state.player);
+
+    // 3. ExecuteAction.
     if (this.action) {
       this.executeAction(state, now);
       this.maybeRefreshOverlay(state, now);
       return;
     }
 
-    // 3. Plan.
+    // 4. Plan.
     this.action = this.planNext(state, now);
     this.maybeRefreshOverlay(state, now);
   }
@@ -248,7 +275,7 @@ class Bot {
       this.completeAction(state, now);
       return;
     }
-    const r = this.nav.tick(state.player, state.zone);
+    const r = this.nav.tick(state.player, state.zone, this.avoid);
     if (r.status === "blocked") { this.failAction(); return; }
     if (r.status === "arrived") {
       // Arrived but flag not yet cleared — give the sim a couple ticks, then
@@ -270,7 +297,7 @@ class Bot {
     const model = this.world.modelFor(state.zone.id);
     if (!objectiveLive(model, this.action.objective)) { this.completeAction(state, now); return; }
     if (this.action.phase === "nav") {
-      const r = this.nav.tick(state.player, state.zone);
+      const r = this.nav.tick(state.player, state.zone, this.avoid);
       if (r.status === "blocked") { this.failAction(); return; }
       if (r.status === "arrived") {
         this.action.phase = "face";
@@ -308,7 +335,7 @@ class Bot {
       // Zone flipped (onZoneChange handles the rest); nothing to do here.
       return;
     }
-    const r = this.nav.tick(state.player, state.zone);
+    const r = this.nav.tick(state.player, state.zone, this.avoid);
     if (r.status === "blocked") { this.failAction(); return; }
     if (r.status === "arrived") {
       // Standing on the teleporter tile. The step onto it should already have
@@ -383,6 +410,9 @@ class Bot {
       keys: this.world ? this.countKeys() : null,
       zonesVisited: this.visited.size || null,
       zoneCount: this.world?.zoneCount ?? null,
+      hp: state ? getPlayerHp(0) : null,
+      maxHp: state ? getPlayerMaxHp(0) : null,
+      deaths: this.deaths,
       recent: recentEvents(5).map((e) => `${e.kind}: ${e.detail}`),
     });
   }
