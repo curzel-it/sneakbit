@@ -60,9 +60,9 @@ test("autoplay: the bot navigates, collects, talks, and travels", async (t) => {
     });
   })()`;
 
-  // Generous budget: the starting zone is monster-dense and the bot may die
-  // and respawn a few times before it threads out to a second zone (combat is
-  // survival-by-avoidance — these monsters are unkillable bullet-sponges).
+  // Generous budget: the starting zone is monster-dense; the bot shoots its
+  // way through (kunai one-shot the local blackberries) but a death or two
+  // plus dialogue pacing can still stretch the run on a slow CI box.
   await waitFor(
     s,
     `(() => { const m = JSON.parse(${metricsExpr}); return m.moved && m.collected >= 1 && m.dialogues >= 1 && m.visited >= 2; })()`,

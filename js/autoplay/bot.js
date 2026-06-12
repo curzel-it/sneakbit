@@ -5,16 +5,19 @@
 //
 // Mode stack, highest priority first, evaluated every tick:
 //   1. OverlayJanitor  — a modal is open → advance/dismiss it (sim frozen).
-//   2. Survive         — hurt + monster on us → break away (botCombat).
+//   2. Combat          — monster in range → shoot/kite it (botCombat);
+//                        flee instead only when out of ammo and hurt.
 //   3. ExecuteAction   — drive the current plan step (nav / push / solve).
 //   4. Plan            — no action → objective, else puzzle, else travel.
 //
-// Scope: talks, pickups, hints, zone travel, monster-avoidant nav +
-// survival, AND Sokoban puzzles — a loot/key behind boxes triggers an
-// off-thread solve (botSolver → Web Worker) whose push plan botPush replays.
+// Scope: talks, pickups, hints, zone travel, ranged combat + survival,
+// AND Sokoban puzzles — a loot/key behind boxes triggers an off-thread
+// solve (botSolver → Web Worker) whose push plan botPush replays.
 
 import { pushInputPress, clearInputHeld } from "../input.js";
 import { tryInteractForSlot } from "../interact.js";
+import { tryShoot } from "../shooting.js";
+import { setEquipped, SLOT_RANGED } from "../equipment.js";
 import { getAmmo } from "../inventory.js";
 import { isPlayerDead, getPlayerHp, getPlayerMaxHp } from "../playerHealth.js";
 import { liveObjectives } from "./objectiveCatalog.js";
@@ -43,7 +46,11 @@ const PACING = {
 // get retried on the next lap).
 const WALK_MS_PER_TILE = 1200;
 const MIN_ACTION_MS = 4000;
-const MAX_ACTION_MS = 15000;
+// Tap-per-tile walking does ~0.3 s/tile and big zones have 60+-tile hauls
+// (1001's far-east kunai is one) — a tight cap made those blow their
+// deadline mid-walk every time. Stall detection catches true wedges in
+// seconds, so the cap only needs to bound the pathological case.
+const MAX_ACTION_MS = 60000;
 const ZONE_TIME_BUDGET_MS = 60000;
 
 const SLOT = 1;               // bot drives player 1
@@ -87,6 +94,7 @@ class Bot {
     this.wasDead = false;
     this.deaths = 0;
     this.avoid = null;
+    this.engagedId = null; // last monster we logged an engage for
   }
 
   async start() {
@@ -147,13 +155,12 @@ class Bot {
 
     if (now < this.waitUntil) { this.idle(); return; }
 
-    // 2. Survive — an imminent monster while we're hurt preempts everything
-    // (break away to regen). Otherwise navigation routes AROUND monsters via
-    // the avoid halo below, so healthy travel just flows past them.
+    // 2. Combat — a monster in engage range preempts everything: line up
+    // and shoot it (or re-equip / kite / flee, per the intent). Monsters
+    // beyond engage range are routed AROUND via the avoid halo below.
     const intent = decideCombat(state);
     if (intent) {
-      if (intent.flee) this.step(state.player, intent.flee);
-      else this.idle();
+      this.handleCombat(state, intent);
       this.maybeRefreshOverlay(state, now);
       return;
     }
@@ -309,6 +316,33 @@ class Bot {
       phase: "nav",
       deadline: now + Math.min(180000, Math.max(MIN_ACTION_MS, pick.len * WALK_MS_PER_TILE * 2)),
     };
+  }
+
+  // --- combat ----------------------------------------------------------------
+
+  // Acts on a botCombat intent. Shooting taps tryShoot() every tick while
+  // facing the target — shoot() gates itself on the weapon cooldown, so this
+  // fires exactly at the weapon's rate.
+  handleCombat(state, intent) {
+    if (intent.equip != null) {
+      setEquipped(SLOT_RANGED, intent.equip, 0);
+      logEvent("combat", `re-equipped ranged weapon ${intent.equip} (equipped one had no ammo)`);
+      return;
+    }
+    if (intent.shoot) {
+      this.idle();
+      if (intent.target !== this.engagedId) {
+        this.engagedId = intent.target;
+        logEvent("combat", `engaging monster #${intent.target} in ${state.zone.id}`);
+      }
+      tryShoot();
+      return;
+    }
+    if (intent.face || intent.move || intent.flee) {
+      this.step(state.player, intent.face || intent.move || intent.flee);
+      return;
+    }
+    this.idle(); // hold — cornered
   }
 
   // --- execution -----------------------------------------------------------
@@ -506,6 +540,11 @@ class Bot {
     this.idle();
     this.waitUntil = now + PACING.postActionMs;
     this.action = null;
+    // Progress restarts the per-zone clock: the budget exists to stop
+    // PROGRESS-FREE farming of one zone, not to yank the bot out of a big
+    // dungeon (1013's key run takes several objectives + a solve, well over
+    // one flat budget) while it's still completing objectives.
+    this.zoneEnteredTs = now;
   }
 
   failAction(opts = {}) {

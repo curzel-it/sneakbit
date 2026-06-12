@@ -1,9 +1,11 @@
 // Tile-level navigation for the autoplay bot. Plain breadth-first search
-// over the LIVE engine zone (ground truth — no analysis-model overlay, no
-// monster-avoid halo: the discarded prototype's avoid-halos oscillated
-// routes forever, so combat preempts nav instead, never nav avoiding
-// combat). Converts the next path tile into a held-direction input and
-// detects stalls so the orchestrator can replan.
+// over the LIVE engine zone (ground truth — no analysis-model overlay).
+// The caller may pass a monster-halo avoid set; it's advisory, with a
+// fall-through to the un-avoided path when the halo seals a corridor, so
+// it can't reproduce the discarded prototype's avoid-halo oscillation
+// (and botCombat engages anything that close regardless). Converts the
+// next path tile into a held-direction input and detects stalls so the
+// orchestrator can replan.
 //
 // Walkability mirrors player.js::canEnter for the no-push / no-key case:
 // an enterable teleporter overrides everything; otherwise a tile must be
@@ -189,8 +191,22 @@ export function makeNavigator() {
       if (!path) return { status: "blocked", dir: null };
     }
 
-    const idx = path.findIndex((t) => t.x === player.tileX && t.y === player.tileY);
-    const next = path[idx + 1];
+    let idx = path.findIndex((t) => t.x === player.tileX && t.y === player.tileY);
+    let next = path[idx + 1];
+    // A monster may have drifted onto the cached path since it was computed
+    // — stepping into the live halo is how the bot used to walk straight
+    // into roamers. Recompute around the current halo before committing the
+    // step; if the halo seals the corridor, keep the un-avoided step (the
+    // combat layer engages anything that close anyway).
+    if (next && avoid && avoid.has(`${next.x},${next.y}`) && !goalSet.has(`${next.x},${next.y}`)) {
+      const start = { x: player.tileX, y: player.tileY };
+      const detour = findPath(zone, start, goalSet, avoid);
+      if (detour) {
+        path = detour;
+        idx = 0;
+        next = path[1];
+      }
+    }
     if (!next) return { status: "arrived", dir: null };
     return { status: "moving", dir: stepDirection({ x: player.tileX, y: player.tileY }, next) };
   }
