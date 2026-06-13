@@ -49,6 +49,7 @@ import { initBoard, getHeroSpawns, getGoal, recomputeField } from "./tdBoard.js"
 import {
   generateMap, installMap, resetMaze, paintPath, monsterGrid,
   revealNextObstacles, revealAll, mazeProgress, obstacleBatch,
+  pathTilesFlat, revealedObstaclesFlat,
 } from "./tdMaze.js";
 import {
   setTdEnemyHooks, resetTdEnemies, tickTdEnemies, aliveEnemyCount,
@@ -210,6 +211,7 @@ async function loadMap(idx) {
   recomputeField(zone, monsterGrid(zone)); // horde locked to the path
   mapIndex = idx;
   relocateSquad(state);                  // no-op before the squad exists (boot)
+  broadcastTdMap();                      // online: paint the new track on guests
 }
 
 // Spawn the starting squad. Online host: the host owns hero 0, each connected
@@ -295,6 +297,7 @@ function setupGuestHero(state, slot, playerId) {
   }
   resetPlayerHealth(index);
   setOwnership(slot, index);
+  broadcastTdMap();   // get the new joiner the current track + obstacles at once
 }
 
 // On a map change: drop each living hero onto the new path's start tiles and
@@ -382,6 +385,7 @@ function clearWave() {
   } else if (state?.zone) {
     // Same map, next wave: pop a batch of off-path obstacles to crowd the squad.
     revealNextObstacles(state.zone, obstacleBatch(mapIndex));
+    broadcastTdMap();                    // online: reveal the same obstacles on guests
   }
   enterBuild();
 }
@@ -520,13 +524,27 @@ export function tickTowerDefense(dt, frame) {
 // already ride the 20 Hz snapshot stream, so this is the only TD-specific wire.
 let tdBroadcastTimer = 0;
 let tdBroadcastPhase = "";
+let tdMapResendTimer = 0;
 function maybeBroadcastTdState(state, dt) {
   if (getNetRole() !== "host") return;
   tdBroadcastTimer += dt;
-  if (phase === tdBroadcastPhase && tdBroadcastTimer < 0.2) return;
-  tdBroadcastPhase = phase;
-  tdBroadcastTimer = 0;
-  broadcastHostEvent("tdState", { model: buildModel(state) });
+  if (phase !== tdBroadcastPhase || tdBroadcastTimer >= 0.2) {
+    tdBroadcastPhase = phase;
+    tdBroadcastTimer = 0;
+    broadcastHostEvent("tdState", { model: buildModel(state) });
+  }
+  // Resend the map a couple times a second. It's static per map and idempotent
+  // on the guest, so this just guarantees a late joiner (or one whose mirror
+  // zone hadn't loaded when the map first broadcast) eventually paints the path.
+  tdMapResendTimer += dt;
+  if (tdMapResendTimer >= 2) { tdMapResendTimer = 0; broadcastTdMap(); }
+}
+
+// The sand path + revealed obstacles don't ride the snapshot stream, so the
+// host ships them as flat tile arrays for the guest to paint onto its mirror.
+function broadcastTdMap() {
+  if (getNetRole() !== "host") return;
+  broadcastHostEvent("tdMap", { path: pathTilesFlat(), obstacles: revealedObstaclesFlat() });
 }
 
 // Point each camera at the hero its slot drives. Split-screen: per-slice camera

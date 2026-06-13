@@ -69,3 +69,46 @@ Additional info
 1. all players share teh same gold pool and everyone can spend it (there's no shop for now)
 2. players can join layer and immedaitely take control of any free hero. if no free hero, then one is created n the fly
 3. High score out of scope
+
+====
+
+Implementation status (shipped)
+
+Phase 1 — DONE. heroSwitch.js is now an input-slot↔hero-index ownership map
+(ownedHeroFor / ownerSlotOf / freeHeroes / switchHeroForSlot / cameraTargetFor +
+setOwnership/releaseSlot for the network path). simulate() routes input by owner.
+Solo is bit-for-bit. Unit: tests/heroSwitch.test.js.
+
+Phase 2 — DONE. startTowerDefense honors localPlayerCount(); spawnSquad spawns
+one distinct-archetype hero per local player; split-screen renders one follow-
+self slice per player (each camera follows its slot's owned hero); per-slot
+shoot/melee + per-slot switch (each slot's interact key, plus Tab/Q for P1). The
+party panel's local-game view has a "Tower Defense (co-op)" button. E2E:
+tests/e2e/towerDefenseCoop.test.mjs. NOTE: solo now starts with ONE hero (was
+two) — recruits fill indices beyond the player count.
+
+Phase 3 — DONE (host-authoritative). The host runs the whole sim; guests render
+the mirror and drive their own hero. spawnSquadHost + reconcileGuestHeroes give
+the host hero 0 and each guest hero slot-1, kept in lockstep as guests join
+(adopt avatar or create on the fly) / leave (slot released). simulate() animates
+guest heroes via updateGuestAvatar (guest shoot/melee/move already route through
+guestInputForwarder → hostGuests unchanged). Host broadcasts `tdState` (HUD model,
+~5 Hz + on phase change + on game over) and `tdMap` (sand-path + revealed-obstacle
+tiles, on map load / obstacle reveal / guest join / 2 s resend); guestEvents shows
+a read-only TD HUD and paints the mirror board (tdMaze.applyMirrorMap). Mode +
+enemies ride the existing snapshot stream. E2E: tests/e2e/towerDefenseOnline.test.mjs.
+
+Phase 4 — DONE (with deferrals). Map/obstacle visual sync landed (above). Join/
+leave/all-guests-leave handled by reconcileGuestHeroes.
+
+Known v1 limitations / deferred:
+- Guest-initiated economy. The gold pool IS shared (one arcadeCurrency wallet),
+  but only the host's HUD buttons spend it — recruit/revive/start-wave/switch are
+  host-driven. The relay only forwards guest→host `input`/`move` ops, so wiring a
+  guest spend-intent means piggybacking on the input channel (couples hostGuests
+  to TD economy); left for a follow-up. Additional-info #1's "everyone can spend"
+  is met as a shared pool, not as guest-clickable buttons yet.
+- The guest's normal HUD (ammo/coin chips, HP bar) still shows alongside the TD
+  HUD. Cosmetic; the TD HUD is the authoritative one.
+- Guest switch (Tab/Q → free hero) is local-only; an online guest's switch is not
+  forwarded to the host (same guest→host channel constraint as economy).

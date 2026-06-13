@@ -16,6 +16,16 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const tdHudVisible = `(() => { const e = document.getElementById('td-hud');
   return !!e && getComputedStyle(e).display !== 'none'; })()`;
 
+// The host's sand path (DESERT biome = 1) reaches the guest via tdMap, painted
+// onto the mirror zone — proof the board, not just the entities, syncs.
+const mirrorHasSandPath = `(async () => {
+  const m = await import('./js/mirrorWorld.js');
+  const z = m.getMirrorZone();
+  if (!z || !z.biome) return null;
+  let n = 0; for (const row of z.biome) for (const b of row) if (b === 1) n++;
+  return n > 0 || null;
+})()`;
+
 // A TD enemy is a zone entity with a fusion-chain species id (4003..4007).
 const mirrorHasEnemy = `(async () => {
   const m = await import('./js/mirrorWorld.js');
@@ -68,6 +78,9 @@ test("online co-op TD: guest mirrors the run and the host drives its hero", asyn
     await evalExpr(guest, "(() => { const b = document.querySelector('#td-dock .td-start'); return !b || getComputedStyle(b).display === 'none'; })()"),
     true, "guest TD dock is read-only (no Start button)",
   );
+
+  // — The sand path reaches the guest's mirror board ———————————————————————
+  await waitFor(guest, mirrorHasSandPath, { timeoutMs: 15000 });
 
   // — A wave's horde reaches the guest's mirror as synced entities ——————————
   await evalExpr(host, "window.td.startWave()");

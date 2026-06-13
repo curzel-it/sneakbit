@@ -96,6 +96,52 @@ export function mazeProgress() {
   return { revealed: cursor, total: fillOrder.length };
 }
 
+// — Online co-op: ship the painted map to guests ———————————————————————————
+// The biome (sand path) and construction (obstacles) grids don't ride the
+// snapshot stream, so the host sends them as flat [x0,y0,x1,y1,…] int arrays
+// and the guest paints them onto its mirror zone. Path tiles and revealed
+// obstacles only — everything else the guest already has from the base zone.
+const BASE_BIOME = BIOME.GRASS;          // what path tiles sit on before painting
+const BASE_CONSTRUCTION = CONSTRUCTION.NOTHING; // what obstacle tiles sit on
+
+export function pathTilesFlat() {
+  const out = [];
+  for (const k of path) { const [x, y] = k.split(","); out.push(x | 0, y | 0); }
+  return out;
+}
+
+export function revealedObstaclesFlat() {
+  const out = [];
+  for (let i = 0; i < cursor && i < fillOrder.length; i++) out.push(fillOrder[i].x | 0, fillOrder[i].y | 0);
+  return out;
+}
+
+// Guest side: apply the host's broadcast map to the mirror zone. Clears the
+// tiles painted by the previous broadcast (so a map change reverts the old
+// track to grass) then paints the new path + obstacles, re-baking once. Skips
+// the work when nothing changed so a periodic resend doesn't thrash the cache.
+let mirrorPath = [];
+let mirrorObstacles = [];
+export function applyMirrorMap(zone, pathFlat = [], obstaclesFlat = []) {
+  if (!zone) return;
+  if (sameFlat(pathFlat, mirrorPath) && sameFlat(obstaclesFlat, mirrorObstacles)) return;
+  for (let i = 0; i + 1 < mirrorPath.length; i += 2) setBiomeTile(zone, mirrorPath[i], mirrorPath[i + 1], BASE_BIOME);
+  for (let i = 0; i + 1 < mirrorObstacles.length; i += 2) setConstructionTile(zone, mirrorObstacles[i], mirrorObstacles[i + 1], BASE_CONSTRUCTION);
+  for (let i = 0; i + 1 < pathFlat.length; i += 2) setBiomeTile(zone, pathFlat[i], pathFlat[i + 1], PATH_BIOME);
+  for (let i = 0; i + 1 < obstaclesFlat.length; i += 2) setConstructionTile(zone, obstaclesFlat[i], obstaclesFlat[i + 1], WALL_TYPE);
+  mirrorPath = pathFlat.slice();
+  mirrorObstacles = obstaclesFlat.slice();
+  evictZoneCache(zone);
+}
+
+export function resetMirrorMap() { mirrorPath = []; mirrorObstacles = []; }
+
+function sameFlat(a, b) {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
+
 // Off-path tiles to reveal per wave — denser on later maps.
 export function obstacleBatch(mapIndex) {
   return OBSTACLES_BASE + Math.max(0, mapIndex | 0) * OBSTACLES_PER_MAP;

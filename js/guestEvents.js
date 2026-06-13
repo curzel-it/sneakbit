@@ -22,6 +22,8 @@ import { startCutsceneByKey, endCutsceneByKey } from "./cutscenes.js";
 import { getMirrorZone } from "./mirrorWorld.js";
 import { setHostPausedRemote } from "./guestHostPause.js";
 import { showTdHud, hideTdHud, updateTdHud, showTdGameOver } from "./tdHud.js";
+import { applyMirrorMap, resetMirrorMap } from "./tdMaze.js";
+import { TD_ZONE_ID } from "./constants.js";
 
 let installed = false;
 let unsub = null;
@@ -60,8 +62,10 @@ export function uninstallGuestEvents() {
   customHandlers.clear();
   seenPickupEids.clear();
   // A guest that leaves mid-TD-run must drop the TD HUD so a later normal
-  // session doesn't show a stale dock.
+  // session doesn't show a stale dock, and forget the painted map so a rejoin
+  // repaints from scratch.
   hideTdHud();
+  resetMirrorMap();
   // Drop the cached host-pause flag so a future re-join doesn't show
   // a stale "Host paused" overlay before the new host has sent its
   // first hostPause event.
@@ -135,9 +139,21 @@ export function dispatch(msg) {
     case "tdState":
       handleTdState(msg);
       return;
+    case "tdMap":
+      handleTdMap(msg);
+      return;
     default:
       return;
   }
+}
+
+// Paint the host's TD sand-path + obstacles onto the mirror zone. Guarded on
+// the mirror actually being the TD zone, so a tdMap that races ahead of the
+// guest's zone reload doesn't paint the overworld.
+function handleTdMap(msg) {
+  const zone = getMirrorZone();
+  if (!zone || zone.id !== TD_ZONE_ID) return;
+  applyMirrorMap(zone, msg?.path || [], msg?.obstacles || []);
 }
 
 // Host is running a Tower Defense co-op run. The mode itself rides the snapshot
