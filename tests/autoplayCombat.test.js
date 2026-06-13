@@ -8,7 +8,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadWorldFromDisk } from "../tools/autoplayWorld.mjs";
-import { decideCombat, monsterHalo } from "../js/autoplay/botCombat.js";
+import { decideCombat, combatActions, monsterHalo } from "../js/autoplay/botCombat.js";
 import { setPlayerHp, getPlayerMaxHp, resetPlayerHealth } from "../js/playerHealth.js";
 import { addAmmo, removeAmmo, getAmmo } from "../js/inventory.js";
 import { setEquipped, SLOT_RANGED, DEFAULT_RANGED_WEAPON_ID } from "../js/equipment.js";
@@ -123,6 +123,46 @@ test("unarmed + hurt but the monster is far → no reaction", () => {
   setPlayerHp(Math.floor(max * 0.2), 0);
   const state = { player: playerAt(1, 1, "down"), zone: zoneWithMonster(10, 10) };
   assert.equal(decideCombat(state), null);
+});
+
+// combatActions: the low-HP retreat is a LATCHED state with hysteresis, so the
+// bot doesn't flee one step then march the plan back into the monster.
+test("combatActions: enters recovery at low HP with a monster close", () => {
+  fullReset();
+  setPlayerHp(Math.floor(max * 0.2), 0);
+  const state = { player: playerAt(5, 5, "down"), zone: zoneWithMonster(5, 7) };
+  const ca = combatActions(state, { recovering: false });
+  assert.equal(ca.recovering, true, "20% HP + monster at dist 2 → recovering");
+  assert.ok(ca.flee, "recovery should produce a flee step");
+  assert.notEqual(ca.flee, "down", "should not flee toward the monster (below)");
+});
+
+test("combatActions: stays in recovery between the two HP thresholds (hysteresis)", () => {
+  fullReset();
+  // 40% HP: above the 25% enter threshold but below the 55% exit threshold.
+  setPlayerHp(Math.floor(max * 0.4), 0);
+  const state = { player: playerAt(5, 5, "down"), zone: zoneWithMonster(5, 8) };
+  // Fresh (not already recovering) → does NOT enter at 40%.
+  assert.equal(combatActions(state, { recovering: false }).recovering, false);
+  // Already recovering → STAYS recovering at 40% (no flip-flop).
+  assert.equal(combatActions(state, { recovering: true }).recovering, true);
+});
+
+test("combatActions: leaves recovery only once healed AND the monster is clear", () => {
+  fullReset();
+  setPlayerHp(Math.floor(max * 0.6), 0); // back above the 55% exit threshold
+  // Monster still within the safe range (dist 4) → keep recovering.
+  const close = { player: playerAt(5, 5, "down"), zone: zoneWithMonster(5, 9) };
+  assert.equal(combatActions(close, { recovering: true }).recovering, true);
+  // Monster beyond RECOVER_SAFE_RANGE (dist 7, still scanned) → exit recovery.
+  const clear = { player: playerAt(1, 1, "down"), zone: zoneWithMonster(1, 8) };
+  assert.equal(combatActions(clear, { recovering: true }).recovering, false);
+});
+
+test("combatActions: healthy never enters recovery even point-blank", () => {
+  fullReset();
+  const state = { player: playerAt(5, 5, "down"), zone: zoneWithMonster(5, 6) };
+  assert.equal(combatActions(state, { recovering: false }).recovering, false);
 });
 
 test("monsterHalo blocks the monster tile and its neighbors", () => {

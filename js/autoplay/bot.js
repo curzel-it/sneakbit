@@ -95,6 +95,7 @@ class Bot {
     this.wasDead = false;
     this.deaths = 0;
     this.avoid = null;
+    this.recovering = false; // latched low-HP retreat (combatActions hysteresis)
   }
 
   async start() {
@@ -164,8 +165,9 @@ class Bot {
     // clocks forward so combat isn't charged against the plan. `steady`
     // (mid-Sokoban) suppresses turning/fleeing so a push isn't displaced.
     const steady = this.action?.type === "puzzle" && this.action.phase === "exec";
-    const ca = combatActions(state, { steady });
+    const ca = combatActions(state, { steady, recovering: this.recovering });
     if (ca.monstersNear) {
+      this.recovering = ca.recovering === true;
       for (const [slot, id] of ca.equip) setEquipped(slot, id, 0);
       if (ca.swing) tryMeleeForSlot(SLOT);
       if (this.action) this.action.deadline += TICK_MS;
@@ -184,6 +186,16 @@ class Bot {
           return;
         }
       }
+      // Recovering but cornered (no improving flee step): brace and heal — do
+      // NOT fall through to navigation, which would march the plan back into
+      // the monster and restart the flee/return flip-flop.
+      if (this.recovering && !steady) {
+        this.idle();
+        this.maybeRefreshOverlay(state, now);
+        return;
+      }
+    } else {
+      this.recovering = false;
     }
     // Monster-avoid halo for this tick's pathing (used on nav recompute).
     this.avoid = monsterHalo(state.zone, state.player);

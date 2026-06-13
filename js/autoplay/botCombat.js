@@ -158,19 +158,32 @@ const KUNAI_RANGE = 8;
 const SWORD_NEAR = 2;
 // Below this HP fraction the hero breaks off and recovers instead of pursuing.
 const RECOVER_HP_FRACTION = 0.25;
+// Hysteresis exit: once recovering, KEEP recovering until HP climbs back to
+// this fraction AND the nearest monster is past RECOVER_SAFE_RANGE. A single
+// threshold made the bot flip-flop — flee disengaged the instant HP ticked
+// over 25% or the monster slipped past CLUSTER_RANGE, and goal-navigation
+// immediately dragged the hero back into the monster (the flee/return dance).
+const RECOVER_EXIT_FRACTION = 0.55;
+// While recovering we flee monsters out to here (wider than CLUSTER_RANGE) and
+// only leave recovery once the nearest is beyond it — so we don't re-engage the
+// goal while a chaser is still one step from re-closing.
+const RECOVER_SAFE_RANGE = 6;
 // Keep a small reserve — only spend the kunai when we have more than this.
 const MIN_SHOOT_AMMO = 10;
 
 // Combat directives for bot.js. Does NOT preempt navigation by default —
 // returns what to FIRE / how to aim this tick while the bot keeps moving, so
 // the hero out-paces the 1-2 chasers. The logic (author's spec):
-//   - HP < 25%  → flee and recover (don't pursue until HP comes back).
+//   - HP < 25% with a monster close → enter "recovering": flee and don't
+//     pursue until HP is back to 55% and the nearest monster is well clear
+//     (hysteresis — see RECOVER_* constants). The caller passes the prior
+//     `recovering` back in and suppresses goal-nav while it holds.
 //   - a monster sits on a cardinal line of sight within kunai range (and we
 //     have ammo to spare) → fire the kunai down that line (turn to it if
 //     needed). Prefers the current facing so we usually fire without turning.
 //   - a monster is right on us (≤ SWORD_NEAR) → swing the sword while moving;
 //     its all-directions hit chips the follower down over a few steps.
-// Returns { monstersNear, equip, flee, shootDir, swing }.
+// Returns { monstersNear, equip, flee, shootDir, swing, recovering }.
 export function combatActions(state, opts = {}) {
   const player = state.player;
   const zone = state.zone;
@@ -187,12 +200,27 @@ export function combatActions(state, opts = {}) {
 
   const nearest = monsters[0];
 
-  // Low HP → break off and recover (flee the nearest mob, keep swinging).
+  // Low HP → break off and recover. This is a latched state, not a per-tick
+  // reaction: we enter at RECOVER_HP_FRACTION with a monster close, and stay in
+  // it (fleeing the cluster, keeping the sword swinging) until HP is back to
+  // RECOVER_EXIT_FRACTION and the nearest monster is past RECOVER_SAFE_RANGE.
+  // The orchestrator suppresses goal-navigation for as long as `recovering` is
+  // set, so the hero actually backs off and heals instead of fleeing one step
+  // then marching the plan straight back into the monster.
+  let recovering = opts.recovering === true;
   let flee = null;
-  if (!opts.steady && nearest.dist <= CLUSTER_RANGE) {
+  if (!opts.steady) {
     const hp = getPlayerHp(idx);
-    if (hp < getPlayerMaxHp(idx) * RECOVER_HP_FRACTION) {
-      flee = fleeDir(zone, player, monsters.filter((m) => m.dist <= CLUSTER_RANGE));
+    const maxHp = getPlayerMaxHp(idx);
+    if (recovering) {
+      if (hp >= maxHp * RECOVER_EXIT_FRACTION && nearest.dist > RECOVER_SAFE_RANGE) {
+        recovering = false;
+      }
+    } else if (nearest.dist <= CLUSTER_RANGE && hp < maxHp * RECOVER_HP_FRACTION) {
+      recovering = true;
+    }
+    if (recovering) {
+      flee = fleeDir(zone, player, monsters.filter((m) => m.dist <= RECOVER_SAFE_RANGE));
     }
   }
 
@@ -204,7 +232,7 @@ export function combatActions(state, opts = {}) {
   // Sword: swing while moving when something's right on us.
   const swing = !!melee?.ready && nearest.dist <= SWORD_NEAR;
 
-  return { monstersNear: true, equip, flee, shootDir, swing };
+  return { monstersNear: true, equip, flee, shootDir, swing, recovering };
 }
 
 // The direction to fire the kunai: a cardinal line from the hero with a monster
