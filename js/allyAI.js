@@ -38,7 +38,7 @@ const SHOOTER_RANGE = 12;        // tiles a shooter reaches out to pick a target
 const MELEE_REACH = 1;           // Manhattan tiles counted as "adjacent"
 const LUNGE_RANGE = 2;           // a charger steps in on a target this close
 const SAFE_GAP = 2;              // a shooter keeps the nearest enemy this far off
-const LOW_HP_FRAC = 0.3;         // ≤30% max HP → the charger takes cover
+const LOW_HP_FRAC = 0.35;        // ≤35% max HP → the charger takes cover
 
 const DELTA = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 const STEP_DIRS = [["up", 0, -1], ["down", 0, 1], ["left", -1, 0], ["right", 1, 0]];
@@ -178,10 +178,17 @@ function exitDistOf(e, field, goal) {
 // One step from (fromX, fromY) toward `target`, routing around walls AND placed
 // barrels — a BFS field rooted at the target over the same blocked grid the
 // horde's flow field uses. Returns a cardinal name, or null if the target is
-// unreachable from here.
-export function pathStepToward(zone, fromX, fromY, target) {
+// unreachable from here. `blocked` optionally marks extra impassable tiles
+// (e.g. the squad's other heroes) so the route doesn't dead-end against a tile
+// updatePlayer will refuse to step onto.
+export function pathStepToward(zone, fromX, fromY, target, blocked) {
   if (!zone || !target) return null;
-  const field = computeFlowField(navGrid(zone), { x: target.x | 0, y: target.y | 0 });
+  const grid = navGrid(zone);
+  const isBlocked = blocked
+    ? (x, y) => grid.isBlocked(x, y) || blocked(x, y)
+    : grid.isBlocked;
+  const field = computeFlowField({ cols: grid.cols, rows: grid.rows, isBlocked },
+    { x: target.x | 0, y: target.y | 0 });
   return fieldDirection(field, fromX | 0, fromY | 0);
 }
 

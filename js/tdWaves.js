@@ -1,18 +1,19 @@
 // Tower Defense wave director: how many enemies a wave spawns, of which tier,
-// at what cadence, and from which spawn tile. The difficulty ramp rides the
-// base game's monster fusion curve (small → blueberry → strawberry →
-// gooseberry) — later waves start at higher tiers, and packing in the corridor
-// fuses them up further for free. The wave-table math is pure (no zone/DOM) so
-// it's unit-testable; only tickWaves touches the world.
+// at what cadence, and from which spawn tile. Difficulty rides the berry HP
+// ladder — later waves start at a higher tier, stepping through every rung so
+// the climb stays smooth. The wave-table math is pure (no zone/DOM) so it's
+// unit-testable; only tickWaves touches the world.
 
 import { spawnEnemy } from "./tdEnemies.js";
 import { getSpawns } from "./tdBoard.js";
 
-// Fusion tiers, ascending. Index 0 is the weakest (chokeberry, 80 hp); the
-// director picks a base tier per wave and the fusion system escalates from
-// there. (4004 "blackberry" is an alternate tier-0; we ramp through the
-// fusion chain 4003→4005→4006→4007 instead for a clean monotonic curve.)
-const TIERS = [4003, 4005, 4006, 4007];
+// The berry tiers in ascending strength — every rung included so the base tier
+// climbs one step at a time (HP: chokeberry 80 → blackberry 200 → blueberry
+// 500 → strawberry 900 → gooseberry 1100). Skipping a rung — as an earlier cut
+// did with blackberry — turned wave 3 into a ~6× HP cliff (80 → 500). Enemies
+// do NOT fuse in TD (towerDefense disables it), so a spawn's tier is exactly
+// what this table emits.
+const TIERS = [4003, 4004, 4005, 4006, 4007];
 
 // How many enemies a wave releases. Grows linearly so each wave is a step up.
 export function waveCount(wave) {

@@ -18,7 +18,7 @@ test("spawn interval tightens and is floored", () => {
 });
 
 test("buildWaveSpecies returns waveCount ids, all valid fusion tiers", () => {
-  const valid = new Set([4003, 4005, 4006, 4007]);
+  const valid = new Set([4003, 4004, 4005, 4006, 4007]);
   for (const w of [1, 3, 6, 12]) {
     const list = buildWaveSpecies(w);
     assert.equal(list.length, waveCount(w));
@@ -30,6 +30,19 @@ test("later waves start at strictly tougher base tiers", () => {
   const baseOf = (w) => Math.min(...buildWaveSpecies(w));
   assert.ok(baseOf(5) > baseOf(1));
   assert.ok(baseOf(7) >= baseOf(5));
+});
+
+test("the base tier never skips a rung between consecutive waves (no difficulty cliff)", () => {
+  // Every berry rung is represented, so the base tier climbs at most one step
+  // per wave — guards against the old 4003→4005 jump (chokeberry → blueberry).
+  const LADDER = [4003, 4004, 4005, 4006, 4007];
+  const baseRung = (w) => LADDER.indexOf(Math.min(...buildWaveSpecies(w)));
+  for (let w = 2; w <= 12; w++) {
+    const step = baseRung(w) - baseRung(w - 1);
+    assert.ok(step === 0 || step === 1, `wave ${w} jumps ${step} rungs`);
+  }
+  // The specific cliff that was reported: wave 3's base is blackberry, not blueberry.
+  assert.equal(Math.min(...buildWaveSpecies(3)), 4004, "wave 3 steps up to blackberry");
 });
 
 test("from wave 3 on, mini-elites (one tier up) appear", () => {

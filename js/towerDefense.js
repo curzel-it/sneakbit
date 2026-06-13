@@ -40,12 +40,14 @@ import { playTrack } from "./music.js";
 import { getValue, setValue } from "./storage.js";
 
 import { initBoard, getHeroSpawns, getGoal, recomputeField } from "./tdBoard.js";
+import { withRandomObstacles } from "./tdObstacles.js";
 import {
   setTdEnemyHooks, resetTdEnemies, tickTdEnemies, aliveEnemyCount,
 } from "./tdEnemies.js";
 import { getEnemies } from "./tdEnemies.js";
 import { startWave, tickWaves, isWaveSpawningDone, totalThisWave, resetWaves } from "./tdWaves.js";
-import { driveAlly } from "./allyAI.js";
+import { driveAlly, resetAllyAI } from "./allyAI.js";
+import { driveBuilder, resetAllyBuilder } from "./allyBuilder.js";
 import {
   resetHeroSwitch, getActiveHeroIndex, isActiveHero, squadPlayers,
   cycleActiveHero, ensureLiveActive, followActiveHero, activeHero,
@@ -135,7 +137,9 @@ export async function startTowerDefense() {
   try {
     setGameMode(GAME_MODE.td);
     setLocalPlayerCount(1);            // one human; the rest of the squad is AI
-    const rawZone = await loadZone(TD_ZONE_ID);
+    // Boot from a fresh copy seeded with random lone trees, so every run's
+    // arena is laid out differently (the cached base zone stays pristine).
+    const rawZone = withRandomObstacles(await loadZone(TD_ZONE_ID));
     const zone = buildZone(rawZone);
     state.rawZone = rawZone;
     state.zone = zone;
@@ -145,6 +149,7 @@ export async function startTowerDefense() {
     resetTdEnemies();
     resetWaves();
     resetStones();
+    resetAllyAI();
     setTdEnemyHooks({ onKill, onLeak });
     resetGold(START_GOLD);
     resetHeroSwitch(0);
@@ -230,6 +235,9 @@ function freeHeroTile(state, preferred, exclude) {
 function enterBuild() {
   phase = "build";
   buildTimer = BUILD_TIME;
+  // Fresh build phase: drop every ally's stone claim so the squad redistributes
+  // across whatever stones are on the board now (including the new wave's drop).
+  resetAllyBuilder();
 }
 
 function startNextWave({ early = false } = {}) {
@@ -391,14 +399,26 @@ function simulate(state, dt) {
   for (const hero of living) {
     const active = isActiveHero(hero.index | 0);
     if (active) {
+      // Snapshot stone tiles around the human's step so any stone they shove is
+      // flagged player-placed — the ally builders then leave it be (it's part of
+      // the player's deliberate maze, not loose material to herd).
+      const before = snapshotStoneTiles(state.zone);
       updatePlayer(hero, humanInput, dt, state.zone);
+      flagPlayerPlacedStones(state.zone, before);
       continue;
     }
-    // Allies are AI-driven: they never shove stones (only the human shapes the
-    // maze) and never step onto another hero's tile (no stacking).
-    const input = driveAlly(state, hero, { enemies, goal });
+    // Allies are AI-driven and never step onto another hero's tile (no
+    // stacking). Between waves they help build — herding stones toward the exit
+    // (canPush on); during a wave they fight and leave the maze to the human
+    // (canPush off, so a stone reads as a wall to them).
+    const building = phase === "build";
+    const input = building
+      ? driveBuilder(state, hero, { goal, otherHeroTile: (tx, ty) => heroOnTile(living, hero, tx, ty) })
+      : driveAlly(state, hero, { enemies, goal });
     updatePlayer(hero, input, dt, state.zone, {
-      canPush: false,
+      // Only the builder's deliberate goal-ward shove may push a stone (input.push);
+      // navigating/idle frames treat stones as walls. During a wave nobody pushes.
+      canPush: building && !!input.push,
       blockedTile: (tx, ty) => heroOnTile(living, hero, tx, ty),
     });
   }
@@ -428,6 +448,27 @@ function simulate(state, dt) {
   // Wave clear.
   if (phase === "wave" && isWaveSpawningDone() && aliveEnemyCount(state.zone) === 0) {
     clearWave();
+  }
+}
+
+// Map of stone id → tile, taken just before the human's step so a shove can be
+// attributed to them (and only them — allies move later in the loop).
+function snapshotStoneTiles(zone) {
+  const m = new Map();
+  for (const e of zone.entities) {
+    if (e.species_id === STONE_SPECIES && !e._dying) m.set(e.id, { x: e.frame.x | 0, y: e.frame.y | 0 });
+  }
+  return m;
+}
+
+// Any stone that changed tile since the snapshot was moved by the human — flag
+// it player-placed so the ally builders stop targeting it (allyBuilder skips
+// these; they still block as obstacles via stoneBlocksTile).
+function flagPlayerPlacedStones(zone, before) {
+  for (const e of zone.entities) {
+    if (e._dying || e.species_id !== STONE_SPECIES) continue;
+    const prev = before.get(e.id);
+    if (prev && (prev.x !== (e.frame.x | 0) || prev.y !== (e.frame.y | 0))) e._playerPlaced = true;
   }
 }
 
@@ -553,6 +594,7 @@ function installDebugHook() {
         .map((e) => ({ x: e.frame.x | 0, y: e.frame.y | 0 }));
     },
     stones: () => { const s = getState(); return s?.zone ? stoneCount(s.zone) : 0; },
+    goal: () => getGoal(),
     recruit: () => recruitHero(),
     killAll: () => {
       const state = getState();

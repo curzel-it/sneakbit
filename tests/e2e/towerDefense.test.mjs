@@ -39,11 +39,29 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   // — Boot: TD installed + a build phase with a 2-hero squad ————————————
   await waitFor(s, "!!window.td");
   await waitFor(s, "window.td.state().phase === 'build'");
+
+  // Snapshot the stone→goal spread the instant build opens — before the squad
+  // has reached the seeded stones — so the herding check below has a high
+  // baseline to beat. (Sampled here, asserted after the rest of the boot checks,
+  // which double as the herding window.)
+  const stoneSpread = `(() => {
+    const g = window.td.goal();
+    return window.td.stoneTiles().reduce((s, t) => s + Math.abs(t.x - g.x) + Math.abs(t.y - g.y), 0);
+  })()`;
+  const spread0 = await evalExpr(s, stoneSpread);
+
   assert.equal(await evalExpr(s, "window.td.squad()"), 2, "Ninja + Barbarian present");
   assert.ok(await evalExpr(s, "window.td.state().gold > 0"), "starting gold granted");
   assert.ok(await evalExpr(s, "!!document.getElementById('td-hud') && getComputedStyle(document.getElementById('td-hud')).display !== 'none'"), "HUD visible");
   assert.ok(await evalExpr(s, "window.td.state().lives > 0"), "village starts with lives, not instant-loss");
   assert.equal(await evalExpr(s, "window.td.stones()"), 2, "opening build seeds a couple of stones");
+
+  // — Build phase: idle allies herd the stones toward the exit ————————————
+  // No human input is fed during build, so any stone that moves was shoved by
+  // an ally builder — and the squad pushes along the flow field, so the total
+  // stone→goal distance drops as they herd the boulders toward the goal.
+  const spreadLater = await waitFor(s, `(() => { const d = ${stoneSpread}; return d < ${spread0} ? d : null; })()`, { timeoutMs: 12000 });
+  assert.ok(spreadLater < spread0, "allies herded stones closer to the exit during build");
 
   // — Recruiting grows the squad with a real third hero ————————————————————
   await evalExpr(s, "window.td.gold(500)");
