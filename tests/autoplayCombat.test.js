@@ -139,7 +139,7 @@ test("combatActions: enters recovery at low HP with a monster close", () => {
 
 test("combatActions: stays in recovery between the two HP thresholds (hysteresis)", () => {
   fullReset();
-  // 40% HP: above the 25% enter threshold but below the 55% exit threshold.
+  // 40% HP: above the 35% enter threshold but below the 55% exit threshold.
   setPlayerHp(Math.floor(max * 0.4), 0);
   const state = { player: playerAt(5, 5, "down"), zone: zoneWithMonster(5, 8) };
   // Fresh (not already recovering) → does NOT enter at 40%.

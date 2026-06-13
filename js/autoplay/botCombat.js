@@ -157,11 +157,11 @@ const KUNAI_RANGE = 8;
 // we move so the chip damage finishes it without our having to stop.
 const SWORD_NEAR = 2;
 // Below this HP fraction the hero breaks off and recovers instead of pursuing.
-const RECOVER_HP_FRACTION = 0.25;
+const RECOVER_HP_FRACTION = 0.35;
 // Hysteresis exit: once recovering, KEEP recovering until HP climbs back to
 // this fraction AND the nearest monster is past RECOVER_SAFE_RANGE. A single
 // threshold made the bot flip-flop — flee disengaged the instant HP ticked
-// over 25% or the monster slipped past CLUSTER_RANGE, and goal-navigation
+// over the entry fraction or the monster slipped past CLUSTER_RANGE, and goal-navigation
 // immediately dragged the hero back into the monster (the flee/return dance).
 const RECOVER_EXIT_FRACTION = 0.55;
 // While recovering we flee monsters out to here (wider than CLUSTER_RANGE) and
@@ -174,7 +174,7 @@ const MIN_SHOOT_AMMO = 10;
 // Combat directives for bot.js. Does NOT preempt navigation by default —
 // returns what to FIRE / how to aim this tick while the bot keeps moving, so
 // the hero out-paces the 1-2 chasers. The logic (author's spec):
-//   - HP < 25% with a monster close → enter "recovering": flee and don't
+//   - HP < 35% with a monster close → enter "recovering": flee and don't
 //     pursue until HP is back to 55% and the nearest monster is well clear
 //     (hysteresis — see RECOVER_* constants). The caller passes the prior
 //     `recovering` back in and suppresses goal-nav while it holds.
