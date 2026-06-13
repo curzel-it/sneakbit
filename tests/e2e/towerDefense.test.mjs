@@ -37,11 +37,11 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
 
   await navigate(s, `${servers.appUrl}/play/?mode=td`);
 
-  // — Boot: TD installed + a build phase with a 2-hero squad ————————————
+  // — Boot: TD installed + a build phase with a solo 1-hero squad ————————
   await waitFor(s, "!!window.td");
   await waitFor(s, "window.td.state().phase === 'build'");
 
-  assert.equal(await evalExpr(s, "window.td.squad()"), 2, "Ninja + Barbarian present");
+  assert.equal(await evalExpr(s, "window.td.squad()"), 1, "solo starts with one hero (the Ninja)");
   assert.ok(await evalExpr(s, "window.td.state().gold > 0"), "starting gold granted");
   assert.ok(await evalExpr(s, "!!document.getElementById('td-hud') && getComputedStyle(document.getElementById('td-hud')).display !== 'none'"), "HUD visible");
   assert.ok(await evalExpr(s, "window.td.state().lives > 0"), "village starts with lives, not instant-loss");
@@ -51,10 +51,10 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   assert.equal(await evalExpr(s, "window.td.maze().revealed"), 0, "no obstacles before the first wave clears");
   assert.equal(await evalExpr(s, "window.td.state().mapIndex"), 0, "run starts on map 0");
 
-  // — Recruiting grows the squad with a real third hero ————————————————————
+  // — Recruiting grows the squad with a real second hero ———————————————————
   await evalExpr(s, "window.td.gold(500)");
   await evalExpr(s, "window.td.recruit()");
-  assert.equal(await evalExpr(s, "window.td.squad()"), 3, "recruited a third hero");
+  assert.equal(await evalExpr(s, "window.td.squad()"), 2, "recruited a second hero");
 
   // — Wave: enemies spawn and the horde populates ————————————————————————
   await evalExpr(s, "window.td.startWave()");

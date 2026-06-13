@@ -16,12 +16,15 @@ import { buildZone, isWalkable } from "./zone.js";
 import { createPlayer, updatePlayer } from "./player.js";
 import { pollInput } from "./input.js";
 import { setGameMode, GAME_MODE, isTowerDefenseMode } from "./gameMode.js";
-import { setLocalPlayerCount } from "./coopMode.js";
+import { localPlayerCount, setLocalPlayerCount } from "./coopMode.js";
+import { updateCamera } from "./camera.js";
+import { sliceCount, getSlices } from "./splitScreen.js";
+import { reapplyAutoZoom } from "./zoom.js";
 import { resetPlayerHealth, isPlayerDead } from "./playerHealth.js";
 import { matchesAction } from "./keyBindings.js";
 import { getSettings } from "./settings.js";
 
-import { render } from "./renderer.js";
+import { render, renderViewports } from "./renderer.js";
 import { updateHud } from "./hud.js";
 import { tickBiomeAnimation } from "./biomeAnimation.js";
 import { tickEntities } from "./entities.js";
@@ -53,6 +56,7 @@ import { driveAlly, resetAllyAI, seekVisibleArea } from "./allyAI.js";
 import {
   resetHeroSwitch, getActiveHeroIndex, ownerSlotOf, squadPlayers,
   switchHeroForSlot, ensureLiveOwner, ownerSlots, followActiveHero, activeHero,
+  ownedHeroPlayer, cameraTargetFor,
 } from "./heroSwitch.js";
 import { resetGold, getGold, addGold, spendGold, canAfford } from "./arcadeCurrency.js";
 import { refreshTouchActions } from "./touch.js";
@@ -137,14 +141,15 @@ export async function startTowerDefense() {
   booting = true;
   try {
     setGameMode(GAME_MODE.td);
-    setLocalPlayerCount(1);            // one human; the rest of the squad is AI
+    // Honor the current local player count: each local human owns one starting
+    // hero, every extra/recruited hero is free (AI). Solo (count 1) = one human.
 
     resetTdEnemies();
     resetWaves();
     resetAllyAI();
     setTdEnemyHooks({ onKill, onLeak });
     resetGold(START_GOLD);
-    resetHeroSwitch(1);
+    resetHeroSwitch(localPlayerCount());
     recruitedCount = 0;
     mapIndex = 0;
     waveInMap = 0;
@@ -159,7 +164,11 @@ export async function startTowerDefense() {
     // squad onto its track.
     await loadMap(0);
     spawnSquad(state);
-    followActiveHero(state);
+    // Re-derive the split-screen slices + per-slice cameras for the squad size
+    // (reapplyAutoZoom's onApply calls recomputeSlices). Single-player stays a
+    // single camera; co-op gets one follow-self slice per local hero.
+    reapplyAutoZoom();
+    followSquadCameras(state);
     if (state.zone?.soundtrack) playTrack(state.zone.soundtrack);
     enterBuild();
     showTdHud();
@@ -200,15 +209,34 @@ async function loadMap(idx) {
   relocateSquad(state);                  // no-op before the squad exists (boot)
 }
 
+// Spawn the starting squad: one hero per local player (indices 0..count-1),
+// each a distinct archetype, full HP, on the hero-spawn tiles. Generalizes the
+// old hardcoded 2-hero spawn — solo gets one hero, co-op gets one per player.
 function spawnSquad(state) {
   const spawns = getHeroSpawns();
+  const count = localPlayerCount();
   state.players = [];
-  state.player = placeHero(createPlayer({ index: 0 }), spawns[0]);
-  state.player2 = placeHero(createPlayer({ index: 1 }), freeHeroTile(state, spawns[1] || spawns[0]));
-  state.lastTile = { x: state.player.tileX, y: state.player.tileY };
-  state.lastTile2 = { x: state.player2.tileX, y: state.player2.tileY };
-  resetPlayerHealth(0);
-  resetPlayerHealth(1);
+  state.player2 = null;
+  state.lastTile2 = null;
+  for (let i = 0; i < count; i++) {
+    const pref = spawns[i % spawns.length] || spawns[0];
+    // Hero 0 takes its spawn tile verbatim; later heroes spiral out so they
+    // never stack on an already-placed teammate.
+    const tile = i === 0 ? { x: pref.x | 0, y: pref.y | 0 } : freeHeroTile(state, pref);
+    attachHero(state, placeHero(createPlayer({ index: i }), tile), i);
+    resetPlayerHealth(i);
+  }
+}
+
+// Slot a hero player object into the canonical co-op state shape by its index:
+// hero 0 → state.player, hero 1 → state.player2, the rest → state.players[]
+// (the same array online guests use). playerId stays null — these are local
+// heroes; the host attaches a guest's playerId in Phase 3.
+function attachHero(state, p, index) {
+  const lt = { x: p.tileX, y: p.tileY };
+  if (index === 0) { state.player = p; state.lastTile = lt; }
+  else if (index === 1) { state.player2 = p; state.lastTile2 = lt; }
+  else state.players.push({ player: p, slot: index + 1, playerId: null, lastTile: lt });
 }
 
 // On a map change: drop each living hero onto the new path's start tiles and
@@ -346,7 +374,7 @@ function canRecruit(state) {
 
 function nextRecruitIndex(state) {
   const taken = new Set(squadPlayers(state).map((p) => p.index | 0));
-  for (const i of [2, 3]) if (!taken.has(i)) return i;
+  for (const i of [0, 1, 2, 3]) if (!taken.has(i)) return i;
   return null;
 }
 
@@ -358,8 +386,7 @@ function recruitHero() {
   if (!spendGold(recruitCost())) { showToast("Not enough gold", "hint"); return; }
   const spawns = getHeroSpawns();
   const tile = freeHeroTile(state, spawns[index % spawns.length] || spawns[0]);
-  const p = placeHero(createPlayer({ index }), tile);
-  state.players.push({ player: p, slot: index + 1, playerId: null, lastTile: { x: p.tileX, y: p.tileY } });
+  attachHero(state, placeHero(createPlayer({ index }), tile), index);
   resetPlayerHealth(index);
   recruitedCount += 1;
 }
@@ -388,7 +415,7 @@ function switchHero(slot = 1) {
   const state = getState();
   if (!state || phase === "gameover") return;
   switchHeroForSlot(state, slot, isPlayerDead);
-  followActiveHero(state);
+  followSquadCameras(state);
 }
 
 // — Per-frame driver ——————————————————————————————————————————————————————
@@ -402,20 +429,51 @@ export function tickTowerDefense(dt, frame) {
   if (!paused && phase !== "gameover") {
     simulate(state, dt);
   }
-  // The camera follows the active hero — the one the player drives to
-  // reposition along the track during build and to fight during a wave.
-  followActiveHero(state);
+  // Each player's camera follows the hero they drive (during build to
+  // reposition along the track, during a wave to fight). Solo / online-host =
+  // one shared camera; local co-op = one follow-self slice per player.
+  followSquadCameras(state);
   tickBiomeAnimation(frame.biomeAnim, dt);
   tickEntities(dt);
   const heroes = livingHeroes(state);
-  // TD simulates the whole board, not just what's on camera: the camera follows
-  // one hero, but off-screen enemies must still take fire and deal damage, and
+  // TD simulates the whole board, not just what's on camera: the cameras follow
+  // the heroes, but off-screen enemies must still take fire and deal damage, and
   // off-screen allies must still fight. Rendering culls independently, so this
   // is sim-only and never draws an off-screen prop.
   updateVisibleEntities(state.zone, state.camera, { all: true });
-  render(frame.renderer, state.zone, state.camera, heroes, frame.biomeAnim.frame);
+  if (sliceCount() > 1) {
+    renderViewports(frame.renderer, state.zone, squadViewports(state), heroes, frame.biomeAnim.frame);
+  } else {
+    render(frame.renderer, state.zone, state.camera, heroes, frame.biomeAnim.frame, {
+      focusPlayer: cameraTargetFor(state, 1) || state.player,
+    });
+  }
   updateHud(frame.hud, { zoneId: state.zone.id, fps: 1 / dt, showFps: getSettings().showFps });
   updateTdHud(buildModel(state));
+}
+
+// Point each camera at the hero its slot drives. Split-screen: per-slice camera
+// follows slot i+1's owned hero. Single slice: the shared camera follows slot 1.
+function followSquadCameras(state) {
+  if (sliceCount() > 1 && Array.isArray(state.cameras)) {
+    for (let i = 0; i < state.cameras.length; i++) {
+      const hero = cameraTargetFor(state, i + 1) || state.player;
+      if (hero) updateCamera(state.cameras[i], hero, state.zone);
+    }
+    return;
+  }
+  followActiveHero(state);
+}
+
+// Per-slice draw descriptors: each slice's rect + camera follow slot i+1's
+// hero, and its darkness cone tracks that hero. The full living-hero list is
+// drawn into every slice so teammates appear in each other's view.
+function squadViewports(state) {
+  return getSlices().map((s, i) => ({
+    rectPx: s.rectPx,
+    camera: state.cameras[i] ?? state.camera,
+    focusPlayer: cameraTargetFor(state, i + 1) || state.player,
+  }));
 }
 
 function simulate(state, dt) {
@@ -538,31 +596,49 @@ function phaseLabel() {
 }
 
 // — Input ————————————————————————————————————————————————————————————————
+// TD owns every action key (shooting.js / melee.js early-return in TD mode), so
+// this routes shoot / melee / switch per local player. Each local slot drives
+// its owned hero: P1 keeps its rebindable keys (+ Tab/Q to switch), P2..P4 use
+// their co-op keymaps, and each slot's interact key cycles it to a free hero.
 function onKey(e) {
   if (!isTowerDefenseMode()) return;
   if (e.repeat) return;
   if (phase === "gameover" || isOverlayOpen()) return;
   const code = e.code;
-  // Switch possession: Tab or Q.
+  const state = getState();
+  if (!state) return;
+  const count = localPlayerCount();
+  // Switch possession: Tab/Q cycles P1; each slot's interact key cycles itself.
   if (code === "Tab" || code === "KeyQ") {
     e.preventDefault();
-    switchHero();
+    switchHero(1);
     return;
   }
-  const state = getState();
-  const hero = activeHero(state);
-  if (!hero) return;
+  for (let slot = 1; slot <= count; slot++) {
+    if (matchesAction("interact", code, slot - 1)) {
+      e.preventDefault();
+      switchHero(slot);
+      return;
+    }
+  }
   // Build phase: there's nothing to fire at — movement (read via pollInput in
-  // simulate) just repositions the active hero along the track. The action keys
-  // are inert; starting the wave is the dock button only.
+  // simulate) just repositions heroes along the track. The action keys are
+  // inert; starting the wave is the dock button only.
   if (phase === "build") return;
-  // Wave phase: the action keys fight.
-  if (matchesAction("shoot", code, 0)) {
-    e.preventDefault();
-    tryShootForPlayer(hero);
-  } else if (matchesAction("melee", code, 0)) {
-    e.preventDefault();
-    performMeleeSwing(state, { swinger: hero });
+  // Wave phase: the action keys fight, routed to each slot's owned hero.
+  for (let slot = 1; slot <= count; slot++) {
+    const hero = ownedHeroPlayer(state, slot);
+    if (!hero) continue;
+    if (matchesAction("shoot", code, slot - 1)) {
+      e.preventDefault();
+      tryShootForPlayer(hero);
+      return;
+    }
+    if (matchesAction("melee", code, slot - 1)) {
+      e.preventDefault();
+      performMeleeSwing(state, { swinger: hero });
+      return;
+    }
   }
 }
 
@@ -581,6 +657,10 @@ function installDebugHook() {
   if (typeof window === "undefined") return;
   window.td = {
     start: () => startTowerDefense(),
+    startCoop: (n) => { setLocalPlayerCount(n | 0); return startTowerDefense(); },
+    players: () => localPlayerCount(),
+    slices: () => sliceCount(),
+    ownerSlot: (i) => ownerSlotOf(i | 0),
     startWave: () => startNextWave(),
     state: () => ({ phase, wave, mapIndex, waveInMap, score, highScore, lives, gold: getGold(), combo }),
     gold: (n) => addGold(n | 0),

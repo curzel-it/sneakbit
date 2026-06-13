@@ -91,6 +91,7 @@ let peerEmptyRow = null;
 // Hosting-offline widgets.
 let offDescEl = null;
 let offToggleBtns = null; // [2,3,4] segmented buttons
+let offTdBtn = null;      // "Tower Defense (co-op)" — co-op only
 let offEndControl = null;
 
 // Guest widgets.
@@ -362,6 +363,9 @@ function buildHostingOfflineView() {
   // Player-count toggle: 2 | 3 | 4 on this device.
   offToggleBtns = [2, 3, 4].map((n) =>
     el("button", { dataset: { count: String(n) }, text: String(n), on: { click: () => onCountToggle(n) } }));
+  // Co-op only: launch a Tower Defense run with one hero per local player.
+  // Hidden in local PvP (renderHostingOfflineView toggles it).
+  offTdBtn = hostButton("party-td-coop", "Tower Defense (co-op)", onTowerDefenseClick);
   offEndControl = partyConfirm("End session (back to single player)", endOfflineSession);
 
   return el("div", { class: "party-view", dataset: { view: "hostingOffline" } }, [
@@ -369,6 +373,7 @@ function buildHostingOfflineView() {
     offDescEl,
     el("div", { class: "party-toggle" }, offToggleBtns),
     el("p", { class: "party-hint", text: "P2 uses IJKL + B/N/M. P3/P4 start with no keys — bind them in Settings → Key Bindings, or give each a controller (pads map by connection order)." }),
+    offTdBtn,
     offEndControl.root,
   ]);
 }
@@ -382,6 +387,8 @@ function renderHostingOfflineView() {
   for (const btn of offToggleBtns) {
     btn.classList.toggle("active", parseInt(btn.dataset.count, 10) === count);
   }
+  // Tower Defense is a co-op flavor only — no PvP TD.
+  if (offTdBtn) offTdBtn.style.display = pvp ? "none" : "";
 }
 
 function onCountToggle(n) {
@@ -787,6 +794,7 @@ export function _resetPartyPanelForTesting() {
   hoEndControl = null;
   offDescEl = null;
   offToggleBtns = null;
+  offTdBtn = null;
   offEndControl = null;
   guestDescEl = null;
   guestLeaveControl = null;
