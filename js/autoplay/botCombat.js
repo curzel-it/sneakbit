@@ -28,7 +28,7 @@ import { isDying } from "../deathAnimation.js";
 import { getPlayerHp, getPlayerMaxHp } from "../playerHealth.js";
 import { getAmmo } from "../inventory.js";
 import { weaponsInSlot } from "../weaponSlots.js";
-import { getEquipped, SLOT_RANGED } from "../equipment.js";
+import { getEquipped, SLOT_RANGED, SLOT_MELEE } from "../equipment.js";
 import { isWalkable } from "../zone.js";
 import { isNavWalkable } from "./botNav.js";
 
@@ -66,40 +66,84 @@ const OPPOSITE = { up: "down", down: "up", left: "right", right: "left" };
 
 // Returns null when nothing needs handling (orchestrator keeps navigating),
 // or a combat intent for bot.js:
-//   { equip: weaponId }      — swap to a ranged weapon that has ammo
-//   { shoot: true, target }  — facing an aligned monster; fire
-//   { face: dir }            — rotate toward an aligned monster
-//   { move: dir }            — sidestep to align / kite back from a survivor
-//   { flee: dir }            — unarmed and hurt; break contact
-//   { hold: true }           — cornered; brace and hope for regen
+//   { equipMelee: weaponId }  — equip an owned melee weapon (sword)
+//   { melee: true, target }   — swing at an adjacent monster (no ammo, no move)
+//   { equip: weaponId }       — swap to a ranged weapon that has ammo
+//   { shoot: true, target }   — facing an aligned monster; fire
+//   { face: dir }             — rotate toward an aligned monster
+//   { move: dir }             — sidestep to align / kite / close to melee range
+//   { flee: dir }             — weaponless and hurt; break contact
+//   { hold: true }            — cornered; brace and hope for regen
 //
-// opts.steady suppresses the { move } intents (align sidesteps, kiting):
-// mid-Sokoban a displaced player breaks the push plan and forces a
-// re-solve, so during puzzle execution the bot only shoots what crosses
-// its firing line (chasers do, on their own) and never repositions.
+// Melee is the workhorse when the hero owns a sword: the swing hits a cross
+// (own tile + 4 neighbors), so an adjacent monster dies without aiming, costs
+// no ammo, and — crucially — never moves the hero, so it stays safe mid-Sokoban
+// (a monster that wanders onto the push line gets cut down instead of wedging
+// the plan). Ranged stays the tool for monsters still at distance; the old
+// avoid/flee survival is the last resort only when no weapon is usable.
+//
+// opts.steady suppresses the { move } intents (align sidesteps, kiting, closing
+// to melee): mid-Sokoban a displaced player breaks the push plan and forces a
+// re-solve, so during puzzle execution the bot only swings/shoots what comes to
+// it (chasers do, on their own) and never repositions.
 export function decideCombat(state, opts = {}) {
   const player = state.player;
   const zone = state.zone;
   if (!player || !zone) return null;
   const idx = player.index | 0;
+  const steady = opts.steady === true;
 
   const monsters = nearbyMonsters(zone, player, SHOOT_RANGE);
   const threat = monsters[0]; // nearest, if any
   if (!threat) return null;
 
+  // Make sure the blade / a loaded gun is in hand before deciding to fight.
+  const melee = meleeReady(idx);
+  if (melee?.equip != null) return { equipMelee: melee.equip };
   const armed = rangedReady(idx);
   if (armed?.equip != null) return { equip: armed.equip };
+
+  // Mid-Sokoban (steady): the hero can't reposition without breaking the push
+  // plan, so clear an adjacent monster (a push-line blocker) with a swing — it
+  // doesn't move us — or shoot one that lines up. This is what lets a puzzle
+  // finish in a monster-dense dungeon.
+  if (steady) {
+    if (melee?.ready) {
+      const hit = monsters.find((m) => m.dist <= 1);
+      if (hit) return { melee: true, target: hit.entity.id };
+    }
+    if (armed?.ready) return engagePlan(zone, player, monsters, true);
+    return null;
+  }
+
+  // Free movement: shoot whatever lines up (chasers walk into the firing line),
+  // as before. A shot needs alignment, so most ticks fall through to
+  // navigation — this clears monsters WITHOUT pinning the hero.
   if (armed?.ready) {
-    const engage = engagePlan(zone, player, monsters, opts.steady === true);
+    const engage = engagePlan(zone, player, monsters, false);
     if (engage) return engage;
   }
 
-  // Unarmed (or no shot available): original survival behavior — ignore
-  // while healthy, break away when hurt with a monster right on us.
+  // Whether to actively fight now turns on health. While healthy we let
+  // navigation carry us past monsters (the avoid-halo routes around them and
+  // chip damage regenerates) — turning to melee EVERY adjacent monster here
+  // would pin the hero in a spawn cluster and stall the whole tour. Only when
+  // HURT do we stand and fight: swing at anything adjacent, march onto the
+  // nearest chaser to bring the blade to bear, else flee if weaponless.
   if (threat.dist > DANGER_RANGE) return null;
   const hp = getPlayerHp(idx);
   const maxHp = getPlayerMaxHp(idx);
   if (hp > maxHp * LOW_HP_FRACTION) return null;
+
+  if (melee?.ready) {
+    const hit = monsters.find((m) => m.dist <= 1);
+    if (hit) return { melee: true, target: hit.entity.id };
+    const near = monsters.find((m) => m.dist <= ALIGN_RANGE);
+    if (near) {
+      const step = stepToward(zone, player, near.tile);
+      if (step) return { move: step };
+    }
+  }
 
   const away = fleeDir(zone, player, monsters.filter((m) => m.dist <= CLUSTER_RANGE));
   if (away) return { flee: away };
@@ -134,6 +178,32 @@ function engagePlan(zone, player, monsters, steady) {
     }
   }
   return null; // nothing workable — keep navigating, chasers will line up
+}
+
+// A melee weapon ready to swing ({ ready: true }) — a sword is equipped;
+// otherwise an owned-but-unequipped one to switch to ({ equip: id }); null
+// when the hero owns no blade. Melee has no default weapon (unlike ranged),
+// so an empty SLOT_MELEE just means we never picked one up.
+function meleeReady(idx) {
+  const equipped = getEquipped(SLOT_MELEE, idx);
+  if (equipped != null && getSpecies(equipped)?.entity_type === "WeaponMelee") return { ready: true };
+  const owned = weaponsInSlot(SLOT_MELEE, idx).find((w) => w.species?.entity_type === "WeaponMelee");
+  return owned ? { equip: owned.id } : null;
+}
+
+// One walkable step that closes the larger gap to a tile first — used to
+// march into melee range of a chaser when out of ammo.
+function stepToward(zone, player, t) {
+  const dx = t.x - player.tileX;
+  const dy = t.y - player.tileY;
+  const xStep = dx > 0 ? "right" : "left";
+  const yStep = dy > 0 ? "down" : "up";
+  const order = Math.abs(dx) >= Math.abs(dy) ? [xStep, yStep] : [yStep, xStep];
+  for (const name of order) {
+    const [sx, sy] = DIR_DELTA[name];
+    if (isNavWalkable(zone, player.tileX + sx, player.tileY + sy)) return name;
+  }
+  return null;
 }
 
 // The equipped ranged weapon if it has ammo ({ ready: true }); otherwise

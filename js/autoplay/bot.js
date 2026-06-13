@@ -17,10 +17,11 @@
 import { pushInputPress, clearInputHeld } from "../input.js";
 import { tryInteractForSlot } from "../interact.js";
 import { tryShoot } from "../shooting.js";
-import { setEquipped, SLOT_RANGED } from "../equipment.js";
+import { tryMeleeForSlot } from "../melee.js";
+import { setEquipped, SLOT_RANGED, SLOT_MELEE } from "../equipment.js";
 import { getAmmo } from "../inventory.js";
 import { isPlayerDead, getPlayerHp, getPlayerMaxHp } from "../playerHealth.js";
-import { liveObjectives } from "./objectiveCatalog.js";
+import { liveObjectives, isShopZone } from "./objectiveCatalog.js";
 import { edgeTraversable } from "./zoneGraph.js";
 import { loadBotWorld } from "./botWorld.js";
 import { makeNavigator, makePuzzleNav, findPath, isNavWalkable } from "./botNav.js";
@@ -300,6 +301,7 @@ class Bot {
     for (const e of this.world.graph.edges) {
       if (e.from !== fromZone || !edgeTraversable(e)) continue;
       if (this.blockedThisZone.has(`edge:${e.teleporterEntityId}`)) continue;
+      if (isShopZone(this.world.modelFor(e.to))) continue; // never enter a shop
       const goalTiles = e.tiles.map((t) => ({ x: t.x, y: t.y }));
       const path = nearestPath(state.zone, state.player, goalTiles);
       if (!path) { this.blockedThisZone.add(`edge:${e.teleporterEntityId}`); continue; }
@@ -333,6 +335,20 @@ class Bot {
   // facing the target — shoot() gates itself on the weapon cooldown, so this
   // fires exactly at the weapon's rate.
   handleCombat(state, intent) {
+    if (intent.equipMelee != null) {
+      setEquipped(SLOT_MELEE, intent.equipMelee, 0);
+      logEvent("combat", `equipped melee weapon ${intent.equipMelee}`);
+      return;
+    }
+    if (intent.melee) {
+      this.idle();
+      if (intent.target !== this.engagedId) {
+        this.engagedId = intent.target;
+        logEvent("combat", `meleeing monster #${intent.target} in ${state.zone.id}`);
+      }
+      tryMeleeForSlot(SLOT);
+      return;
+    }
     if (intent.equip != null) {
       setEquipped(SLOT_RANGED, intent.equip, 0);
       logEvent("combat", `re-equipped ranged weapon ${intent.equip} (equipped one had no ammo)`);

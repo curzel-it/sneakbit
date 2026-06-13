@@ -48,6 +48,7 @@ export function liveObjectives(model) {
   }
   for (const t of model.talkables) {
     if (!shouldBeVisible(t.entity)) continue;
+    if (isShopClerk(t.entity)) continue; // never talk to clerks — see isShopClerk
     const d = resolveEntityDialogue(t.entity);
     if (!d) continue;
     if (getValue(`dialogue.answer.${d.text}`) === 1) continue; // exhausted
@@ -58,6 +59,25 @@ export function liveObjectives(model) {
     out.push({ kind: "cutscene", zone: model.id, key: c.key, tiles: [c.triggerTile], ref: c });
   }
   return out;
+}
+
+// A shop clerk: talking to one opens the buy modal (interact.js), which the
+// autoplay bot can't use and would loop on forever (the "always" greeting
+// re-opens the shop on every interact). So the bot never treats a clerk as a
+// talk objective, and never travels into a shop zone (planTravel). Clerks are
+// species 3008 (SPECIES_NPC_SHOP_CLERK in prefabs.js); hand-authored shops
+// also carry a shop_stock array. Either marks a clerk.
+export const SHOP_CLERK_SPECIES = 3008;
+
+export function isShopClerk(entity) {
+  return entity?.species_id === SHOP_CLERK_SPECIES
+    || (Array.isArray(entity?.shop_stock) && entity.shop_stock.length > 0);
+}
+
+// True when a zone is a shop interior (holds a clerk) — the bot avoids
+// traveling in (nothing there it can use; just the buy modal it can't).
+export function isShopZone(model) {
+  return (model?.raw?.entities ?? []).some(isShopClerk);
 }
 
 // Persistent hints suppress repeats under `hint.read.<localized text>`
