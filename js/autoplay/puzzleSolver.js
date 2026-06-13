@@ -87,6 +87,14 @@ export function solveToTiles(model, startTile, goalTiles, opts = {}) {
   // they aren't and the zone actually has blocks to push.
   const a = search(world, startState, maxStates, false);
   if (a.reachable || world.pushableStart.size === 0) return a;
+
+  // Phase A.5: sub-goal decomposition (see decompose). Solves the 4+ box
+  // dungeons the joint search can't. Strict fallback below — never regresses.
+  const decomp = decompose(world, startState, maxStates);
+  if (decomp) {
+    const fr = reachableRegion(world, decomp.state);
+    if (fr.goalHit >= 0) return done(world, decomp.moves, world.tileOf(fr.goalHit));
+  }
   return search(world, startState, maxStates, true);
 }
 
@@ -130,6 +138,187 @@ function search(world, startState, maxStates, allowPush) {
     }
   }
   return fail("exhausted", explored);
+}
+
+// --- sub-goal decomposition ------------------------------------------------
+//
+// The joint search (above) drowns in the free-floor box-shuffle space once a
+// dungeon has 4+ boxes (zones 1013, 1021): it explores hundreds of thousands
+// of macro-states without converging. But these puzzles have structure — to
+// reach the goal you open the colored gates between you and it, and a gate
+// opens when SOME box sits on its color's plate. So instead of one giant joint
+// search, solve it as a sequence of single-box sub-solves: look at the gate
+// currently blocking the goal (the flood already names it — region.gateStar),
+// fully solve "get a box onto that color's plate", commit the pushes, and
+// repeat. Each sub-solve moves exactly ONE box (others frozen, still holding
+// their plates), so its search is tiny. Greedily fixing the goal-nearest
+// blocking gate first naturally discovers the dependency order
+// (yellow→blue→red→green in 1013). If any step can't be made — no gateStar, a
+// sub-solve fails, or no progress — we bail to the joint search, so a dungeon
+// this can't crack behaves exactly as it does today (no regression).
+
+// Drive the decomposition. Returns { moves, state } where `moves` is the full
+// push list from world.pushableStart (so done()/finalLayout replay correctly)
+// and `state` is the final layout that reaches the goal — or null to fall back.
+//
+// At each step every plate is a candidate sub-goal: fill it if empty, clear it
+// if a box already weighs it. We try them (goal-relevant colors first) and
+// commit the first whose single-box sub-solve makes real progress — the goal
+// is reached/closer, OR the reachable region simply GREW. That last signal is
+// the key: the prerequisite move in 1013 is filling the yellow plate, which
+// doesn't shorten the goal distance but opens the yellow gate you walk through
+// to reach the blue box — pure region growth. Greedily taking whatever grows
+// the region discovers the yellow→blue→red→green order on its own. If nothing
+// helps we bail to the joint search, so un-decomposable zones never regress.
+function decompose(world, startState, maxStates) {
+  let state = { pushables: new Map(startState.pushables), player: startState.player };
+  const allMoves = [];
+  const budget = { left: maxStates };
+  const cap = (world.pushableStart.size + 2) * 2;
+  for (let iter = 0; iter < cap; iter++) {
+    const region = reachableRegion(world, state);
+    if (region.goalHit >= 0) return { moves: allMoves, state };
+    const beforeD = region.goalD;
+    const beforeN = region.tiles.length;
+    let advanced = null;
+    for (const cand of plateCandidates(world, region)) {
+      const sub = subSolveBox(world, state, region, cand.color, cand.want, budget);
+      if (budget.left <= 0) return null;
+      if (!sub) continue;
+      const after = reachableRegion(world, sub.state);
+      if (after.goalHit >= 0 || after.goalD < beforeD || after.tiles.length > beforeN) {
+        advanced = sub;
+        break;
+      }
+    }
+    if (!advanced) return null; // no plate toggle helped — joint search
+    allMoves.push(...advanced.moves);
+    state = advanced.state;
+  }
+  return null; // too many sub-goals — let the joint search try
+}
+
+// Plate sub-goals to try this step, best first: fill the empty plates (most
+// puzzles open gates by weighting plates), then clear the held ones (for
+// InverseGates / freeing a box), each ordered by how near that color's gates
+// sit to the goal. `want` is "on" (box onto a plate of the color) or "off".
+function plateCandidates(world, region) {
+  const out = [];
+  for (const color of world.plateTilesByColor.keys()) {
+    out.push({ color, want: region.pushDown.has(color) ? "off" : "on", d: colorGoalD(world, color) });
+  }
+  out.sort((a, b) => (a.want === b.want ? a.d - b.d : a.want === "on" ? -1 : 1));
+  return out;
+}
+
+// Nearest-to-goal distance among a color's gate tiles (all-gates-open field),
+// for ordering candidates. Infinity if the color has no goal-reachable gate.
+function colorGoalD(world, color) {
+  let best = Infinity;
+  if (!world.goalD) return best;
+  for (const [tile, g] of world.gateAt) {
+    if (gateLock(g) !== color) continue;
+    const d = world.goalD[tile];
+    if (d >= 0 && d < best) best = d;
+  }
+  return best;
+}
+
+// Solve one sub-goal: get SOME box onto ("on") / off ("off") a `color` plate,
+// moving a single box at a time. Tries candidate boxes in order, first win.
+function subSolveBox(world, state, region, color, want, budget) {
+  const plateTiles = world.plateTilesByColor.get(color);
+  if (!plateTiles) return null;
+  for (const id of chooseCandidates(world, state, region, color, want, plateTiles)) {
+    const res = oneBoxSearch(world, state, id, color, plateTiles, want, budget);
+    if (res) return res;
+  }
+  return null;
+}
+
+// Which boxes to try, best first. "on": any box not already parked on ANOTHER
+// color's plate (lifting it would re-close a gate we may still need), nearest
+// to this color's plate first. "off": the box currently on the plate.
+function chooseCandidates(world, state, region, color, want, plateTiles) {
+  if (want === "off") {
+    const out = [];
+    for (const [k, id] of state.pushables) if (plateTiles.has(k)) out.push(id);
+    return out;
+  }
+  const field = plateField(world, color, region.pushDown);
+  const cand = [];
+  for (const [k, id] of state.pushables) {
+    if (plateTiles.has(k)) continue; // already on this color's plate
+    const parked = world.plateColorAt.get(k);
+    if (parked != null && parked !== color) continue;
+    cand.push({ id, d: field[k] >= 0 ? field[k] : Infinity });
+  }
+  cand.sort((a, b) => a.d - b.d);
+  return cand.map((c) => c.id);
+}
+
+// Cap on states explored per single-box sub-solve. A legit single-box push
+// converges in a few hundred states (the line-macro makes long slides one
+// pop); a box that simply can't reach the plate yet would otherwise flood its
+// whole single-box space before failing. Capping it keeps the driver from
+// burning the shared budget on doomed candidates (5-box 1021 went 9s → ~1s).
+const SUBSOLVE_MAX_STATES = 1500;
+
+// Single-box greedy best-first: mirror search() but push only `id` and stop
+// when the sub-goal is hit. Bounded by a per-call cap AND the shared `budget`
+// (so the whole decomposition can never exceed the caller's state cap).
+// Returns { moves, state } or null.
+function oneBoxSearch(world, startState, id, color, plateTiles, want, budget) {
+  if (subGoalHit(startState, id, plateTiles, want)) {
+    return { moves: [], state: startState };
+  }
+  const startRegion = reachableRegion(world, startState);
+  const startKey = macroKey(startState, startRegion);
+  const seen = new Map([[startKey, null]]);
+  const heap = makeHeap();
+  heapPush(heap, subScore(world, startState, id, color, want), { state: startState, key: startKey });
+  let local = 0;
+
+  while (heap.length) {
+    const { state, key } = heapPop(heap);
+    const region = reachableRegion(world, state);
+    for (const succ of successors(world, state, region, true, id)) {
+      const region2 = reachableRegion(world, succ.state);
+      const key2 = macroKey(succ.state, region2);
+      if (seen.has(key2)) continue;
+      seen.set(key2, { prev: key, move: succ.move });
+      if (subGoalHit(succ.state, id, plateTiles, want)) {
+        return { moves: reconstruct(seen, key2), state: succ.state };
+      }
+      if (--budget.left <= 0 || ++local >= SUBSOLVE_MAX_STATES) return null;
+      heapPush(heap, subScore(world, succ.state, id, color, want), { state: succ.state, key: key2 });
+    }
+  }
+  return null;
+}
+
+// Sub-goal reached? The moving box is on ("on") / off ("off") a color plate.
+function subGoalHit(state, id, plateTiles, want) {
+  for (const [k, bid] of state.pushables) {
+    if (bid !== id) continue;
+    return want === "on" ? plateTiles.has(k) : !plateTiles.has(k);
+  }
+  return false;
+}
+
+// Priority for the single-box search: the box's box-path distance to its
+// plate (toward it for "on"; away for "off", where any step off wins).
+function subScore(world, state, id, color, want) {
+  let boxTile = -1;
+  for (const [k, bid] of state.pushables) if (bid === id) { boxTile = k; break; }
+  if (boxTile < 0) return 1e9;
+  const pushDown = new Set();
+  for (const [c, tiles] of world.plateTilesByColor) {
+    for (const k of state.pushables.keys()) { if (tiles.has(k)) { pushDown.add(c); break; } }
+  }
+  const d = plateField(world, color, pushDown)[boxTile];
+  if (want === "on") return d >= 0 ? d : 1e9;
+  return d >= 0 ? -d : 0;
 }
 
 // All-gates-open BFS distance field from the goal tiles, ignoring boxes.
@@ -279,10 +468,11 @@ function heapPop(h) {
 // instead of one pop (plus full sibling fan-out) per tile. Gate states
 // are re-read per step: the moving box holds each plate it crosses, and
 // the player's self-weight tile is the box's previous tile.
-function successors(world, state, region, allowPush) {
+function successors(world, state, region, allowPush, onlyId = null) {
   const out = [];
   if (!allowPush) return out;
   for (const [pos, id] of state.pushables) {
+    if (onlyId != null && id !== onlyId) continue; // single-box sub-solve
     const onBox = region.has(pos);
     // Plate colors held by the OTHER boxes — the moving box's own
     // contribution is re-derived per step from its current tile.

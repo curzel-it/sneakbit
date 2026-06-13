@@ -3,11 +3,13 @@
 // reachable by walking or pushing blocks onto pressure plates. This is the
 // "no softlocked content" guarantee the route planner builds on.
 //
-// WIP: the region-based solver handles most zones in milliseconds but the
-// hardest multi-box Sokoban dungeons (which need several plates held down
-// at once) exceed its current search — those are being strengthened. These
-// tests are skipped by default so `npm run test:unit` stays green and
-// fast; run them with AUTOPLAY_WIP=1 to track solver progress.
+// The region-based solver clears every zone — most in milliseconds; the
+// hardest multi-box Sokoban dungeons (1013, 1021, which need several plates
+// held at once) now solve via sub-goal decomposition (puzzleSolver.js), the
+// 4-box case in well under a second. This suite re-checks the whole world
+// from every entrance, so it runs ~25s — skipped by default to keep
+// `npm run test:unit` fast; run with AUTOPLAY_WIP=1. (The fast always-on
+// guard for the decomposition itself lives in autoplayDecompose.test.js.)
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
