@@ -1,9 +1,10 @@
 // End-to-end Tower Defense run through the real module graph + DOM HUD,
 // driven via the ?mode=td deep link. Asserts the whole loop wires up: the
-// board + squad boot, the build→wave→clear cycle runs, enemies spawn and
-// march, kills score + bank gold, pushable stones drop after a wave clears,
-// hero switching cycles, and a leak ends the run — all with zero uncaught
-// page exceptions. Self-skips when Chrome isn't installed.
+// board + squad boot with a visible sand path, the build→wave→clear cycle
+// runs, enemies spawn and march, kills score + bank gold, off-path obstacles
+// pop up after a wave clears, clearing the map's wave quota advances to a
+// fresh harder map, hero switching cycles, and a leak ends the run — all with
+// zero uncaught page exceptions. Self-skips when Chrome isn't installed.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -40,28 +41,15 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   await waitFor(s, "!!window.td");
   await waitFor(s, "window.td.state().phase === 'build'");
 
-  // Snapshot the stone→goal spread the instant build opens — before the squad
-  // has reached the seeded stones — so the herding check below has a high
-  // baseline to beat. (Sampled here, asserted after the rest of the boot checks,
-  // which double as the herding window.)
-  const stoneSpread = `(() => {
-    const g = window.td.goal();
-    return window.td.stoneTiles().reduce((s, t) => s + Math.abs(t.x - g.x) + Math.abs(t.y - g.y), 0);
-  })()`;
-  const spread0 = await evalExpr(s, stoneSpread);
-
   assert.equal(await evalExpr(s, "window.td.squad()"), 2, "Ninja + Barbarian present");
   assert.ok(await evalExpr(s, "window.td.state().gold > 0"), "starting gold granted");
   assert.ok(await evalExpr(s, "!!document.getElementById('td-hud') && getComputedStyle(document.getElementById('td-hud')).display !== 'none'"), "HUD visible");
   assert.ok(await evalExpr(s, "window.td.state().lives > 0"), "village starts with lives, not instant-loss");
-  assert.equal(await evalExpr(s, "window.td.stones()"), 2, "opening build seeds a couple of stones");
 
-  // — Build phase: idle allies herd the stones toward the exit ————————————
-  // No human input is fed during build, so any stone that moves was shoved by
-  // an ally builder — and the squad pushes along the flow field, so the total
-  // stone→goal distance drops as they herd the boulders toward the goal.
-  const spreadLater = await waitFor(s, `(() => { const d = ${stoneSpread}; return d < ${spread0} ? d : null; })()`, { timeoutMs: 12000 });
-  assert.ok(spreadLater < spread0, "allies herded stones closer to the exit during build");
+  // — The sand path is visible from the start, with no obstacles yet ————————
+  assert.ok(await evalExpr(s, "window.td.sandCount() > 0"), "a sand path is painted at boot");
+  assert.equal(await evalExpr(s, "window.td.maze().revealed"), 0, "no obstacles before the first wave clears");
+  assert.equal(await evalExpr(s, "window.td.state().mapIndex"), 0, "run starts on map 0");
 
   // — Recruiting grows the squad with a real third hero ————————————————————
   await evalExpr(s, "window.td.gold(500)");
@@ -84,10 +72,15 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   assert.ok(after.gold >= before.gold, "kills + stipend banked gold");
   assert.ok(after.wave >= 1, "survived a wave");
 
-  // — Stones drop after the wave clears, for the next build phase ——————————
-  // (FOV placement + horde-blocking are unit-tested in tests/tdStones.test.js.)
-  // Two seeded the opening build; four more drop on clear → six in all.
-  assert.equal(await evalExpr(s, "window.td.stones()"), 6, "two opening stones + four dropped after the wave");
+  // — Off-path obstacles pop up after the wave clears ——————————————————————
+  // (Path-locking + solvability are unit-tested in tests/tdMaze.test.js.)
+  assert.equal(after.waveInMap, 1, "one wave cleared on this map");
+  assert.ok(await evalExpr(s, "window.td.maze().revealed > 0"), "obstacles revealed after the wave");
+
+  // — Clearing the map's wave quota advances to a fresh, harder map ————————
+  await evalExpr(s, "window.td.win(); window.td.win();"); // reach WAVES_PER_MAP clears
+  await waitFor(s, "window.td.state().mapIndex === 1", { timeoutMs: 8000 });
+  assert.ok(await evalExpr(s, "window.td.sandCount() > 0"), "the new map paints a fresh sand path");
 
   // — Hero switching cycles the active slot ——————————————————————————————
   const a0 = await evalExpr(s, "window.td.activeIndex()");

@@ -10,7 +10,6 @@
 
 import { isWalkable } from "./zone.js";
 import { computeFlowField } from "./flowField.js";
-import { stoneBlocksTile } from "./tdStones.js";
 import { TD_ZONE_ID } from "./constants.js";
 
 let goal = null;          // { x, y }
@@ -18,16 +17,14 @@ let spawns = [];          // [{ x, y }] — enemy entry tiles
 let heroSpawns = [];      // [{ x, y }] — where the squad starts
 let field = null;         // cached flow field; rebuilt on barricade changes
 
-// Adapt a runtime zone into the flow-field's tiny grid abstraction. Authored
-// walls land on the construction layer (zone.collision via isWalkable); the
-// stones the player shoves around are pushable entities, so we also fold in
-// stoneBlocksTile. Either way the field automatically routes the horde around
-// what the player built.
+// Adapt a runtime zone into the flow-field's tiny grid abstraction. The maze
+// walls live on the construction layer (zone.collision via isWalkable), so the
+// field automatically routes the horde around whatever forest has grown in.
 function gridFor(zone) {
   return {
     cols: zone.cols,
     rows: zone.rows,
-    isBlocked: (x, y) => !isWalkable(zone, x, y) || stoneBlocksTile(zone, x, y),
+    isBlocked: (x, y) => !isWalkable(zone, x, y),
   };
 }
 
@@ -54,9 +51,13 @@ function defaultSpawns(zone) {
   return out;
 }
 
-export function recomputeField(zone) {
+// Recompute the horde's flow field toward the goal. Callers may pass a custom
+// grid — Tower Defense passes a path-only grid (tdMaze.pathGrid) so the field
+// keeps the horde locked to the sand track; with no grid we fall back to the
+// plain walkable grid.
+export function recomputeField(zone, grid) {
   if (!goal) return null;
-  field = computeFlowField(gridFor(zone), goal);
+  field = computeFlowField(grid || gridFor(zone), goal);
   return field;
 }
 

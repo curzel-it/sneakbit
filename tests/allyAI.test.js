@@ -10,23 +10,16 @@ import {
   selectTarget, marchTarget, resetAllyAI, pathStepToward,
   alignStep, laneDirToward, seekVisibleArea,
 } from "../js/allyAI.js";
-import { STONE_SPECIES } from "../js/tdStones.js";
-import { loadSpeciesData } from "../js/species.js";
-
-// stoneBlocksTile (via allyAI's navGrid) looks the stone up by species, so the
-// pushable boulder species must be registered.
-loadSpeciesData([{ id: STONE_SPECIES, entity_type: "PushableObject", sprite_sheet_id: 1010 }]);
 
 const enemy = (id, x, y, extra = {}) => ({ id, frame: { x, y, w: 1, h: 1 }, ...extra });
 const hero = (tileX, tileY, index = 1) => ({ tileX, tileY, index });
 
-function tdZone(cols, rows, { walls = [], stones = [] } = {}) {
+// Ally pathing reads the walkable grid only (the maze obstacles live on the
+// construction layer, folded into collision), so walls are all the test needs.
+function tdZone(cols, rows, { walls = [] } = {}) {
   const collision = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false));
   for (const [x, y] of walls) collision[y][x] = true;
-  const entities = stones.map(([x, y], i) => ({
-    id: -100 - i, species_id: STONE_SPECIES, frame: { x, y, w: 1, h: 1 },
-  }));
-  return { cols, rows, collision, entities };
+  return { cols, rows, collision, entities: [] };
 }
 
 const heldDir = (input) => [...(input.held || [])][0] ?? null;
@@ -132,14 +125,15 @@ test("seekVisibleArea steps toward the camera centre, and holds once centred", (
   assert.deepEqual([...centred.held], []);
 });
 
-// — pathStepToward: route around the stone maze —————————————————————————————
+// — pathStepToward: route around the maze obstacles —————————————————————————
 
 test("pathStepToward steps straight at a target with a clear lane", () => {
   assert.equal(pathStepToward(tdZone(5, 5), 0, 2, { x: 4, y: 2 }), "right");
 });
 
-test("pathStepToward routes around a stone blocking the direct lane", () => {
-  const zone = tdZone(3, 3, { walls: [[1, 0]], stones: [[1, 1]] });
+test("pathStepToward routes around an obstacle blocking the direct lane", () => {
+  // (1,0) walled off above and (1,1) walled on the direct lane → detour down.
+  const zone = tdZone(3, 3, { walls: [[1, 0], [1, 1]] });
   assert.equal(pathStepToward(tdZone(3, 3), 0, 1, { x: 2, y: 1 }), "right");
   assert.equal(pathStepToward(zone, 0, 1, { x: 2, y: 1 }), "down");
 });

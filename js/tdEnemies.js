@@ -13,8 +13,7 @@
 import { getSpecies } from "./species.js";
 import { isWalkable } from "./zone.js";
 import { getField, getGoal } from "./tdBoard.js";
-import { stoneBlocksTile } from "./tdStones.js";
-import { fieldDirection, dirDelta } from "./flowField.js";
+import { fieldDirection, isReachable, dirDelta } from "./flowField.js";
 
 const TILE_RATE_PER_BASE_SPEED = 1.6; // mirrors mobs.js straight-movement math
 const FALLBACK_BASE_SPEED = 1.4;
@@ -126,13 +125,22 @@ function decideStep(e, zone, field, goal, dt) {
   if (goal && feet.x === goal.x && feet.y === goal.y) { leak(e, zone); return; }
 
   const duration = stepDurationFor(e);
-  // Primary: follow the flow-field arrow on this tile.
-  let dir = fieldDirection(field, feet.x, feet.y);
-  if (dir && tryStartStep(e, dir, zone, duration)) return;
-  // Fallback: field stale/unreachable (e.g. a barricade just changed the
-  // grid) — greedily step toward the goal tile so the horde keeps advancing.
-  for (const d of greedyToward(feet, goal)) {
-    if (tryStartStep(e, d, zone, duration)) return;
+  // Candidate directions: the flow-field arrow first, then a greedy nudge toward
+  // the goal as a backstop if the arrow is missing.
+  const dirs = [];
+  const fd = fieldDirection(field, feet.x, feet.y);
+  if (fd) dirs.push(fd);
+  for (const d of greedyToward(feet, goal)) if (!dirs.includes(d)) dirs.push(d);
+  // Monsters are confined to the sand path: a step is only legal onto a tile the
+  // path-only field can reach (or the goal itself). The off-path grass is
+  // walkable — the heroes roam it — so without this the greedy backstop would
+  // send the horde straight across the open field instead of along the track.
+  for (const dir of dirs) {
+    const [dx, dy] = DIR_DELTA[dir];
+    const fx = e._ai.tileX + dx;
+    const fy = e._ai.tileY + dy + e._ai.h - 1;
+    if (!isReachable(field, fx, fy) && !(goal && fx === goal.x && fy === goal.y)) continue;
+    if (tryStartStep(e, dir, zone, duration)) return;
   }
   e._ai.decideTimer = WANDER_PAUSE;
 }
@@ -154,11 +162,10 @@ function tryStartStep(e, dir, zone, duration) {
   const toX = e._ai.tileX + dx;
   const toY = e._ai.tileY + dy;
   const feetY = toY + e._ai.h - 1;
-  // Enemies don't block each other (they pack into corridors and fuse) — only
-  // the static walkable grid (authored walls) and the stones the player has
-  // shoved into the way stop them.
+  // Enemies don't block each other (they pack into corridors and fuse). The
+  // path-only flow field already keeps them on the sand track; this guards
+  // against ever stepping onto a non-walkable tile.
   if (!isWalkable(zone, toX, feetY)) return false;
-  if (stoneBlocksTile(zone, toX, feetY)) return false;
   e.direction = capitalize(dir);
   e._ai.step = { fromX: e._ai.tileX, fromY: e._ai.tileY, toX, toY, progress: 0, duration };
   return true;

@@ -10,6 +10,7 @@
 // board, its own HUD).
 
 import { TD_ZONE_ID } from "./constants.js";
+import { BIOME } from "./biomes.js";
 import { loadZone } from "./data.js";
 import { buildZone, isWalkable } from "./zone.js";
 import { createPlayer, updatePlayer } from "./player.js";
@@ -29,7 +30,6 @@ import { tickShooting, tryShootForPlayer } from "./shooting.js";
 import { tickMelee, performMeleeSwing } from "./melee.js";
 import { tickCombat } from "./combat.js";
 import { tickPlayerHealth } from "./playerHealth.js";
-import { tickPushables } from "./pushables.js";
 
 import { isMenuOpen } from "./menu.js";
 import { isDialogueOpen } from "./dialogue.js";
@@ -40,30 +40,29 @@ import { playTrack } from "./music.js";
 import { getValue, setValue } from "./storage.js";
 
 import { initBoard, getHeroSpawns, getGoal, recomputeField } from "./tdBoard.js";
-import { withRandomObstacles } from "./tdObstacles.js";
+import {
+  generateMap, installMap, resetMaze, paintPath, monsterGrid,
+  revealNextObstacles, revealAll, mazeProgress, obstacleBatch,
+} from "./tdMaze.js";
 import {
   setTdEnemyHooks, resetTdEnemies, tickTdEnemies, aliveEnemyCount,
 } from "./tdEnemies.js";
 import { getEnemies } from "./tdEnemies.js";
 import { startWave, tickWaves, isWaveSpawningDone, totalThisWave, resetWaves } from "./tdWaves.js";
-import { driveAlly, resetAllyAI } from "./allyAI.js";
-import { driveBuilder, resetAllyBuilder } from "./allyBuilder.js";
+import { driveAlly, resetAllyAI, seekVisibleArea } from "./allyAI.js";
 import {
-  resetHeroSwitch, getActiveHeroIndex, isActiveHero, squadPlayers,
-  cycleActiveHero, ensureLiveActive, followActiveHero, activeHero,
+  resetHeroSwitch, getActiveHeroIndex, ownerSlotOf, squadPlayers,
+  switchHeroForSlot, ensureLiveOwner, ownerSlots, followActiveHero, activeHero,
 } from "./heroSwitch.js";
 import { resetGold, getGold, addGold, spendGold, canAfford } from "./arcadeCurrency.js";
-import {
-  resetStones, spawnStonesInView, reconcileStones, stoneCount, stoneBlocksTile, STONE_SPECIES,
-} from "./tdStones.js";
 import { refreshTouchActions } from "./touch.js";
 import {
   installTdHud, showTdHud, hideTdHud, updateTdHud, showTdGameOver,
 } from "./tdHud.js";
 
 // — Tuning ————————————————————————————————————————————————————————————————
-const START_GOLD = 150;           // enough to recruit a third hero turn 1 if you skip walls
-const INITIAL_STONES = 2;         // a couple of stones to start shaping before wave 1
+const START_GOLD = 150;           // enough to recruit a third hero turn 1
+const WAVES_PER_MAP = 3;          // waves cleared on a map before it changes
 const BUILD_TIME = 30;            // seconds of build phase before auto-start
 const EARLY_BONUS_PER_SEC = 2;    // gold for calling the wave early, per second saved
 const STIPEND_BASE = 40;          // per-wave starting income
@@ -89,7 +88,9 @@ const HERO_NAMES = ["Ninja", "Barbarian", "Bombardier", "Knight"];
 // — State ————————————————————————————————————————————————————————————————
 let getState = () => null;
 let phase = "idle";               // idle | build | wave | gameover
-let wave = 0;
+let wave = 0;                     // cumulative across maps — drives the tier ramp
+let mapIndex = 0;                 // current map (0-based); harder each step
+let waveInMap = 0;                // waves cleared on the current map
 let buildTimer = 0;
 let score = 0;
 let highScore = 0;
@@ -137,24 +138,16 @@ export async function startTowerDefense() {
   try {
     setGameMode(GAME_MODE.td);
     setLocalPlayerCount(1);            // one human; the rest of the squad is AI
-    // Boot from a fresh copy seeded with random lone trees, so every run's
-    // arena is laid out differently (the cached base zone stays pristine).
-    const rawZone = withRandomObstacles(await loadZone(TD_ZONE_ID));
-    const zone = buildZone(rawZone);
-    state.rawZone = rawZone;
-    state.zone = zone;
-    initBoard(rawZone, zone);
-    recomputeField(zone);
 
     resetTdEnemies();
     resetWaves();
-    resetStones();
     resetAllyAI();
     setTdEnemyHooks({ onKill, onLeak });
     resetGold(START_GOLD);
-    resetHeroSwitch(0);
-    spawnSquad(state);
+    resetHeroSwitch(1);
     recruitedCount = 0;
+    mapIndex = 0;
+    waveInMap = 0;
     wave = 0;
     score = 0;
     combo = 0;
@@ -162,16 +155,13 @@ export async function startTowerDefense() {
     lives = VILLAGE_LIVES;
     highScore = getValue(HIGH_SCORE_KEY) | 0;
 
+    // Build the first map (zone + sand path + path-only field) then spawn the
+    // squad onto its track.
+    await loadMap(0);
+    spawnSquad(state);
     followActiveHero(state);
-    if (zone.soundtrack) playTrack(zone.soundtrack);
+    if (state.zone?.soundtrack) playTrack(state.zone.soundtrack);
     enterBuild();
-    // Seed the opening build phase with a couple of stones so the player can
-    // start shaping the path before wave 1 (each cleared wave drops more). Keep
-    // them near the squad so they're on-screen and immediately shoveable.
-    const lead = activeHero(state) || state.player;
-    spawnStonesInView(state, INITIAL_STONES, {
-      near: { x: lead.tileX | 0, y: lead.tileY | 0 }, radius: 4,
-    });
     showTdHud();
     // On touch, surface the melee/remove action button — the squad may carry
     // no melee weapon, which would otherwise keep it hidden.
@@ -185,6 +175,31 @@ export async function startTowerDefense() {
   }
 }
 
+// Build (or rebuild) the arena for map `idx`: a fresh random sand path, the
+// horde's path-only flow field, and a clean obstacle schedule. Safe to call
+// mid-run at a map boundary — the previous wave is fully cleared (no live
+// enemies to lose) and heroes aren't zone entities, so they survive the swap;
+// living heroes are relocated onto the new track and healed.
+async function loadMap(idx) {
+  const state = getState();
+  if (!state) return;
+  // The cached base zone stays pristine (loadZone caches it), so generation
+  // re-randomises each map. Hero starts come back on the new path.
+  const rawZone = { ...(await loadZone(TD_ZONE_ID)) };
+  const map = generateMap(rawZone, idx);
+  rawZone.td = { ...(rawZone.td || {}), heroSpawns: map.heroSpawns };
+  const zone = buildZone(rawZone);
+  state.rawZone = rawZone;
+  state.zone = zone;
+  initBoard(rawZone, zone);
+  resetMaze();
+  installMap(map);
+  paintPath(zone);                       // sand track visible from the start
+  recomputeField(zone, monsterGrid(zone)); // horde locked to the path
+  mapIndex = idx;
+  relocateSquad(state);                  // no-op before the squad exists (boot)
+}
+
 function spawnSquad(state) {
   const spawns = getHeroSpawns();
   state.players = [];
@@ -194,6 +209,23 @@ function spawnSquad(state) {
   state.lastTile2 = { x: state.player2.tileX, y: state.player2.tileY };
   resetPlayerHealth(0);
   resetPlayerHealth(1);
+}
+
+// On a map change: drop each living hero onto the new path's start tiles and
+// heal them to full (the between-maps reward). Downed heroes stay down — still
+// revivable from the dock. Does nothing before the squad is spawned (boot).
+function relocateSquad(state) {
+  const squad = squadPlayers(state);
+  if (!squad.length) return;
+  const spawns = getHeroSpawns();
+  let i = 0;
+  for (const hero of squad) {
+    const idx = hero.index | 0;
+    if (isPlayerDead(idx)) continue;
+    placeHero(hero, freeHeroTile(state, spawns[i % spawns.length] || spawns[0], hero));
+    resetPlayerHealth(idx);
+    i++;
+  }
 }
 
 function placeHero(p, tile) {
@@ -210,7 +242,7 @@ function occupiedByHero(state, x, y, exclude) {
 }
 
 // The preferred tile, or — if it's blocked or already taken by a hero — the
-// nearest walkable, stone-free, hero-free tile spiralling out from it. Keeps
+// nearest walkable, hero-free tile spiralling out from it. Keeps
 // recruited/revived heroes (and the second starter) from spawning on top of
 // the squad, since the heroes-share-a-tile guard only blocks *stepping* onto
 // an occupied tile, not spawning onto one.
@@ -218,7 +250,7 @@ function freeHeroTile(state, preferred, exclude) {
   const zone = state.zone;
   const px = preferred.x | 0, py = preferred.y | 0;
   const ok = (x, y) =>
-    isWalkable(zone, x, y) && !stoneBlocksTile(zone, x, y) && !occupiedByHero(state, x, y, exclude);
+    isWalkable(zone, x, y) && !occupiedByHero(state, x, y, exclude);
   if (ok(px, py)) return { x: px, y: py };
   for (let r = 1; r <= 6; r++) {
     for (let dy = -r; dy <= r; dy++) {
@@ -235,9 +267,6 @@ function freeHeroTile(state, preferred, exclude) {
 function enterBuild() {
   phase = "build";
   buildTimer = BUILD_TIME;
-  // Fresh build phase: drop every ally's stone claim so the squad redistributes
-  // across whatever stones are on the board now (including the new wave's drop).
-  resetAllyBuilder();
 }
 
 function startNextWave({ early = false } = {}) {
@@ -256,10 +285,19 @@ function startNextWave({ early = false } = {}) {
 function clearWave() {
   score += WAVE_CLEAR_BONUS * wave;
   addGold(STIPEND_BASE + wave * STIPEND_PER_WAVE);
+  const state = getState();
+  waveInMap += 1;
+  if (waveInMap >= WAVES_PER_MAP) {
+    // Map cleared — advance to a fresh, harder map. loadMap rebuilds the zone
+    // and relocates + heals the squad; safe here since the wave is fully clear.
+    waveInMap = 0;
+    showToast(`Map ${mapIndex + 2}`, "hint");
+    loadMap(mapIndex + 1);
+  } else if (state?.zone) {
+    // Same map, next wave: pop a batch of off-path obstacles to crowd the squad.
+    revealNextObstacles(state.zone, obstacleBatch(mapIndex));
+  }
   enterBuild();
-  // Drop fresh stones in the host's view so the player can reshape the path
-  // for the next wave by shoving them around.
-  spawnStonesInView(getState());
 }
 
 function gameOver(reason = "squad") {
@@ -346,10 +384,10 @@ function reviveHero(index) {
   resetPlayerHealth(index | 0);
 }
 
-function switchHero() {
+function switchHero(slot = 1) {
   const state = getState();
   if (!state || phase === "gameover") return;
-  cycleActiveHero(state, isPlayerDead);
+  switchHeroForSlot(state, slot, isPlayerDead);
   followActiveHero(state);
 }
 
@@ -364,8 +402,8 @@ export function tickTowerDefense(dt, frame) {
   if (!paused && phase !== "gameover") {
     simulate(state, dt);
   }
-  // The camera follows the active hero — the one the player drives to shove
-  // stones during build and to fight during a wave.
+  // The camera follows the active hero — the one the player drives to
+  // reposition along the track during build and to fight during a wave.
   followActiveHero(state);
   tickBiomeAnimation(frame.biomeAnim, dt);
   tickEntities(dt);
@@ -388,45 +426,32 @@ function simulate(state, dt) {
     if (buildTimer <= 0) startNextWave();
   }
 
-  // Heroes: real input to the active hero, allyAI to the rest. In both phases
-  // the human drives the active hero directly — during build that's how stones
-  // get shoved into a maze; during a wave it's how the hero fights and dodges.
-  ensureLiveActive(state, isPlayerDead);
+  // Heroes: route input by ownership. A hero owned by a local slot takes that
+  // slot's real input; a free (unowned) hero runs on allyAI. Each owner is
+  // first nudged off a corpse onto a free living hero if one exists.
+  for (const slot of ownerSlots()) ensureLiveOwner(state, slot, isPlayerDead);
   const enemies = getEnemies(state.zone);
   const goal = getGoal();
-  const humanInput = pollInput(1);
   const living = squadPlayers(state).filter((h) => !isPlayerDead(h.index | 0));
   for (const hero of living) {
-    const active = isActiveHero(hero.index | 0);
-    if (active) {
-      // Snapshot stone tiles around the human's step so any stone they shove is
-      // flagged player-placed — the ally builders then leave it be (it's part of
-      // the player's deliberate maze, not loose material to herd).
-      const before = snapshotStoneTiles(state.zone);
-      updatePlayer(hero, humanInput, dt, state.zone);
-      flagPlayerPlacedStones(state.zone, before);
+    const slot = ownerSlotOf(hero.index | 0);
+    if (slot != null) {
+      // Local human drives this hero directly in both phases — during build to
+      // reposition along the track, during a wave to fight and dodge.
+      updatePlayer(hero, pollInput(slot), dt, state.zone);
       continue;
     }
-    // Allies are AI-driven and never step onto another hero's tile (no
-    // stacking). Between waves they help build — herding stones toward the exit
-    // (canPush on); during a wave they fight and leave the maze to the human
-    // (canPush off, so a stone reads as a wall to them).
-    const building = phase === "build";
-    const input = building
-      ? driveBuilder(state, hero, { goal, otherHeroTile: (tx, ty) => heroOnTile(living, hero, tx, ty) })
+    // Free heroes are AI-driven and never step onto another hero's tile (no
+    // stacking). The maze is auto-generated now, so between waves there's
+    // nothing to build — idle allies just regroup toward the player's view;
+    // during a wave they fight.
+    const input = phase === "build"
+      ? seekVisibleArea(state, hero)
       : driveAlly(state, hero, { enemies, goal });
     updatePlayer(hero, input, dt, state.zone, {
-      // Only the builder's deliberate goal-ward shove may push a stone (input.push);
-      // navigating/idle frames treat stones as walls. During a wave nobody pushes.
-      canPush: building && !!input.push,
       blockedTile: (tx, ty) => heroOnTile(living, hero, tx, ty),
     });
   }
-
-  // Stones the heroes shoved this frame: animate their slide and, if any
-  // changed tile, recompute the flow field so the horde reroutes.
-  tickPushables(state.zone, dt);
-  reconcileStones(state);
 
   // World ticks. Two systems are intentionally NOT run: mobs.js (TD enemies
   // seek the goal via the flow field, not the player) and monster fusion
@@ -448,27 +473,6 @@ function simulate(state, dt) {
   // Wave clear.
   if (phase === "wave" && isWaveSpawningDone() && aliveEnemyCount(state.zone) === 0) {
     clearWave();
-  }
-}
-
-// Map of stone id → tile, taken just before the human's step so a shove can be
-// attributed to them (and only them — allies move later in the loop).
-function snapshotStoneTiles(zone) {
-  const m = new Map();
-  for (const e of zone.entities) {
-    if (e.species_id === STONE_SPECIES && !e._dying) m.set(e.id, { x: e.frame.x | 0, y: e.frame.y | 0 });
-  }
-  return m;
-}
-
-// Any stone that changed tile since the snapshot was moved by the human — flag
-// it player-placed so the ally builders stop targeting it (allyBuilder skips
-// these; they still block as obstacles via stoneBlocksTile).
-function flagPlayerPlacedStones(zone, before) {
-  for (const e of zone.entities) {
-    if (e._dying || e.species_id !== STONE_SPECIES) continue;
-    const prev = before.get(e.id);
-    if (prev && (prev.x !== (e.frame.x | 0) || prev.y !== (e.frame.y | 0))) e._playerPlaced = true;
   }
 }
 
@@ -504,6 +508,7 @@ function buildModel(state) {
   const active = activeHero(state);
   return {
     wave,
+    map: mapIndex + 1,
     phase: phaseLabel(),
     score,
     highScore,
@@ -523,7 +528,7 @@ function buildModel(state) {
       full: nextRecruitIndex(state) == null,
       label: nextRecruitIndex(state) == null ? "Squad full" : `Recruit hero (${recruitCost()}g)`,
     },
-    buildHint: "Push the stones to shape the path",
+    buildHint: "Hold the line — obstacles are closing in",
     revives,
   };
 }
@@ -548,7 +553,7 @@ function onKey(e) {
   const hero = activeHero(state);
   if (!hero) return;
   // Build phase: there's nothing to fire at — movement (read via pollInput in
-  // simulate) drives the active hero into stones to shove them. The action keys
+  // simulate) just repositions the active hero along the track. The action keys
   // are inert; starting the wave is the dock button only.
   if (phase === "build") return;
   // Wave phase: the action keys fight.
@@ -577,23 +582,46 @@ function installDebugHook() {
   window.td = {
     start: () => startTowerDefense(),
     startWave: () => startNextWave(),
-    state: () => ({ phase, wave, score, highScore, lives, gold: getGold(), combo }),
+    state: () => ({ phase, wave, mapIndex, waveInMap, score, highScore, lives, gold: getGold(), combo }),
     gold: (n) => addGold(n | 0),
     addWaves: (n) => { wave += (n | 0); },
     enemies: () => { const s = getState(); return s?.zone ? getEnemies(s.zone).length : 0; },
+    enemyTiles: () => {
+      const s = getState();
+      if (!s?.zone) return [];
+      return getEnemies(s.zone).map((e) => ({ x: e.frame.x | 0, y: e.frame.y | 0 }));
+    },
+    // How many live monsters are standing OFF the sand path (should stay 0 — the
+    // horde is confined to the track). The goal tile is open ground, so exclude
+    // an enemy sitting exactly on it.
+    enemyOffPath: () => {
+      const s = getState();
+      if (!s?.zone) return 0;
+      const g = getGoal();
+      let n = 0;
+      for (const e of getEnemies(s.zone)) {
+        const x = e.frame.x | 0, y = (e.frame.y | 0) + Math.max(0, (e.frame.h | 0) - 1);
+        if (g && x === g.x && y === g.y) continue;
+        if (s.zone.biome[y]?.[x] !== BIOME.DESERT) n++;
+      }
+      return n;
+    },
     squad: () => squadPlayers(getState()).length,
     activeIndex: () => getActiveHeroIndex(),
     heroTiles: () => squadPlayers(getState())
       .filter((p) => !isPlayerDead(p.index | 0))
       .map((p) => ({ i: p.index | 0, x: p.tileX | 0, y: p.tileY | 0 })),
-    stoneTiles: () => {
+    maze: () => mazeProgress(),
+    revealAll: () => { const s = getState(); return s?.zone ? revealAll(s.zone) : 0; },
+    map: () => ({ mapIndex, waveInMap, wavesPerMap: WAVES_PER_MAP }),
+    nextMap: () => loadMap(mapIndex + 1),
+    sandCount: () => {
       const s = getState();
-      if (!s?.zone) return [];
-      return s.zone.entities
-        .filter((e) => e.species_id === STONE_SPECIES && !e._dying)
-        .map((e) => ({ x: e.frame.x | 0, y: e.frame.y | 0 }));
+      if (!s?.zone) return 0;
+      let n = 0;
+      for (const row of s.zone.biome) for (const b of row) if (b === BIOME.DESERT) n++;
+      return n;
     },
-    stones: () => { const s = getState(); return s?.zone ? stoneCount(s.zone) : 0; },
     goal: () => getGoal(),
     recruit: () => recruitHero(),
     killAll: () => {
