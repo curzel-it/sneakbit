@@ -13,8 +13,11 @@ import { TD_ZONE_ID } from "./constants.js";
 import { BIOME } from "./biomes.js";
 import { loadZone } from "./data.js";
 import { buildZone, isWalkable } from "./zone.js";
-import { createPlayer, updatePlayer } from "./player.js";
+import { createPlayer, updatePlayer, updateGuestAvatar } from "./player.js";
 import { pollInput } from "./input.js";
+import { getNetRole } from "./onlineBootstrap.js";
+import { broadcastHostEvent } from "./hostEvents.js";
+import { guestSlots } from "./hostGuests.js";
 import { setGameMode, GAME_MODE, isTowerDefenseMode } from "./gameMode.js";
 import { localPlayerCount, setLocalPlayerCount } from "./coopMode.js";
 import { updateCamera } from "./camera.js";
@@ -56,7 +59,7 @@ import { driveAlly, resetAllyAI, seekVisibleArea } from "./allyAI.js";
 import {
   resetHeroSwitch, getActiveHeroIndex, ownerSlotOf, squadPlayers,
   switchHeroForSlot, ensureLiveOwner, ownerSlots, followActiveHero, activeHero,
-  ownedHeroPlayer, cameraTargetFor,
+  ownedHeroPlayer, cameraTargetFor, setOwnership, releaseSlot,
 } from "./heroSwitch.js";
 import { resetGold, getGold, addGold, spendGold, canAfford } from "./arcadeCurrency.js";
 import { refreshTouchActions } from "./touch.js";
@@ -209,10 +212,12 @@ async function loadMap(idx) {
   relocateSquad(state);                  // no-op before the squad exists (boot)
 }
 
-// Spawn the starting squad: one hero per local player (indices 0..count-1),
-// each a distinct archetype, full HP, on the hero-spawn tiles. Generalizes the
-// old hardcoded 2-hero spawn — solo gets one hero, co-op gets one per player.
+// Spawn the starting squad. Online host: the host owns hero 0, each connected
+// guest owns hero slot-1 (reconciled on the first tick). Local / solo: one
+// distinct-archetype hero per local player (indices 0..count-1), full HP, on
+// the hero-spawn tiles. Generalizes the old hardcoded 2-hero spawn.
 function spawnSquad(state) {
+  if (getNetRole() === "host") { spawnSquadHost(state); return; }
   const spawns = getHeroSpawns();
   const count = localPlayerCount();
   state.players = [];
@@ -228,15 +233,68 @@ function spawnSquad(state) {
   }
 }
 
+// Online host: hero 0 is the host's own avatar; guest heroes (their existing
+// playerId-tagged avatars) are placed + owned by reconcileGuestHeroes on the
+// first tick and as guests join/leave. Guest avatars are preserved here, not
+// recreated, so their playerId/step state survives the TD entry.
+function spawnSquadHost(state) {
+  const spawns = getHeroSpawns();
+  tdGuestSlots = new Set();
+  state.player.index = 0;
+  placeHero(state.player, { x: spawns[0].x | 0, y: spawns[0].y | 0 });
+  state.lastTile = { x: state.player.tileX, y: state.player.tileY };
+  resetPlayerHealth(0);
+  setOwnership(1, 0);
+}
+
 // Slot a hero player object into the canonical co-op state shape by its index:
 // hero 0 → state.player, hero 1 → state.player2, the rest → state.players[]
-// (the same array online guests use). playerId stays null — these are local
-// heroes; the host attaches a guest's playerId in Phase 3.
-function attachHero(state, p, index) {
+// (the same array online guests use). `playerId` is null for local heroes; the
+// host passes a guest's id so its avatar carries the network identity.
+function attachHero(state, p, index, playerId = null) {
+  p.playerId = playerId || null;
+  if (playerId) p.slot = index + 1;
   const lt = { x: p.tileX, y: p.tileY };
   if (index === 0) { state.player = p; state.lastTile = lt; }
   else if (index === 1) { state.player2 = p; state.lastTile2 = lt; }
-  else state.players.push({ player: p, slot: index + 1, playerId: null, lastTile: lt });
+  else state.players.push({ player: p, slot: index + 1, playerId, lastTile: lt });
+}
+
+// Online host only: keep each connected guest owning its hero (slot s → hero
+// index s-1) as guests join and leave mid-run. A joining guest adopts its
+// existing avatar (or one is created on the fly if none is free); a leaving
+// guest's slot releases its ownership. Cheap to run every tick — it only acts
+// on the join/leave delta tracked in tdGuestSlots.
+let tdGuestSlots = new Set();
+function reconcileGuestHeroes(state) {
+  const current = new Map(guestSlots().map((g) => [g.slot, g.playerId]));
+  for (const [slot, playerId] of current) {
+    if (tdGuestSlots.has(slot)) continue;
+    setupGuestHero(state, slot, playerId);
+    tdGuestSlots.add(slot);
+  }
+  for (const slot of [...tdGuestSlots]) {
+    if (current.has(slot)) continue;
+    releaseSlot(slot);              // avatar already despawned by hostGuests
+    tdGuestSlots.delete(slot);
+  }
+}
+
+function setupGuestHero(state, slot, playerId) {
+  const index = slot - 1;
+  const spawns = getHeroSpawns();
+  const pref = spawns[index % spawns.length] || spawns[0];
+  let hero = squadPlayers(state).find((p) => p.playerId === playerId);
+  if (hero) {
+    hero.index = index;
+    placeHero(hero, freeHeroTile(state, pref, hero));
+  } else {
+    // Join with no free hero → create one on the fly (additional info #2).
+    hero = placeHero(createPlayer({ index }), freeHeroTile(state, pref));
+    attachHero(state, hero, index, playerId);
+  }
+  resetPlayerHealth(index);
+  setOwnership(slot, index);
 }
 
 // On a map change: drop each living hero onto the new path's start tiles and
@@ -328,13 +386,16 @@ function clearWave() {
   enterBuild();
 }
 
+let gameOverTitle = "";
 function gameOver(reason = "squad") {
   if (phase === "gameover") return;
   phase = "gameover";
   const isNewBest = score > highScore;
   if (isNewBest) { highScore = score; setValue(HIGH_SCORE_KEY, score | 0); }
-  const title = reason === "village" ? "Village overrun" : "Squad defeated";
-  showTdGameOver({ wave, score, highScore, isNewBest, title });
+  gameOverTitle = reason === "village" ? "Village overrun" : "Squad defeated";
+  showTdGameOver({ wave, score, highScore, isNewBest, title: gameOverTitle });
+  // Push the final state so guests swap their HUD for the defeat card.
+  if (getNetRole() === "host") broadcastHostEvent("tdState", { model: buildModel(getState()) });
 }
 
 // — Enemy hooks ——————————————————————————————————————————————————————————
@@ -450,6 +511,22 @@ export function tickTowerDefense(dt, frame) {
   }
   updateHud(frame.hud, { zoneId: state.zone.id, fps: 1 / dt, showFps: getSettings().showFps });
   updateTdHud(buildModel(state));
+  maybeBroadcastTdState(state, dt);
+}
+
+// Online host: push the HUD model to guests so they can render a read-only TD
+// HUD. Throttled to ~5 Hz, but fired immediately whenever the phase flips so a
+// build→wave transition lands without lag. Enemies (zone entities) and the mode
+// already ride the 20 Hz snapshot stream, so this is the only TD-specific wire.
+let tdBroadcastTimer = 0;
+let tdBroadcastPhase = "";
+function maybeBroadcastTdState(state, dt) {
+  if (getNetRole() !== "host") return;
+  tdBroadcastTimer += dt;
+  if (phase === tdBroadcastPhase && tdBroadcastTimer < 0.2) return;
+  tdBroadcastPhase = phase;
+  tdBroadcastTimer = 0;
+  broadcastHostEvent("tdState", { model: buildModel(state) });
 }
 
 // Point each camera at the hero its slot drives. Split-screen: per-slice camera
@@ -484,14 +561,28 @@ function simulate(state, dt) {
     if (buildTimer <= 0) startNextWave();
   }
 
-  // Heroes: route input by ownership. A hero owned by a local slot takes that
-  // slot's real input; a free (unowned) hero runs on allyAI. Each owner is
+  // Online host: keep guest ownership in sync with who's connected.
+  if (getNetRole() === "host") reconcileGuestHeroes(state);
+
+  // Heroes: route by ownership. A guest-owned hero (carries a playerId) is
+  // animated from the steps the guest streams — the host is authoritative but
+  // never decides its movement. A hero owned by a *local* slot takes that
+  // slot's real input. A free (unowned) hero runs on allyAI. Local owners are
   // first nudged off a corpse onto a free living hero if one exists.
-  for (const slot of ownerSlots()) ensureLiveOwner(state, slot, isPlayerDead);
+  for (const slot of ownerSlots()) {
+    const owned = ownedHeroPlayer(state, slot);
+    if (owned && !owned.playerId) ensureLiveOwner(state, slot, isPlayerDead);
+  }
   const enemies = getEnemies(state.zone);
   const goal = getGoal();
   const living = squadPlayers(state).filter((h) => !isPlayerDead(h.index | 0));
   for (const hero of living) {
+    if (hero.playerId) {
+      // Guest-owned: advance the committed step the guest committed (host
+      // executes it via hostGuests.onMove; updateGuestAvatar animates it).
+      updateGuestAvatar(hero, dt, state.zone);
+      continue;
+    }
     const slot = ownerSlotOf(hero.index | 0);
     if (slot != null) {
       // Local human drives this hero directly in both phases — during build to
@@ -588,6 +679,7 @@ function buildModel(state) {
     },
     buildHint: "Hold the line — obstacles are closing in",
     revives,
+    gameOverTitle,
   };
 }
 

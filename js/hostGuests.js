@@ -69,6 +69,15 @@ export function getLastSeqMap() {
   return lastSeqOut;
 }
 
+// Connected guests as { slot, playerId }, sorted by slot. Tower Defense reads
+// this to give each guest its own hero (slot s → hero index s-1) and to keep
+// ownership in sync as guests join/leave a live run.
+export function guestSlots() {
+  return Array.from(guestSlotByPlayerId.entries())
+    .map(([playerId, slot]) => ({ slot, playerId }))
+    .sort((a, b) => a.slot - b.slot);
+}
+
 export function installHostGuests(getState, opts = {}) {
   if (getNetRole() !== "host" && !opts.force) return false;
   uninstallHostGuests();

@@ -85,7 +85,9 @@ export function updateTdHud(model) {
   phaseEl.textContent = model.phase;
   phaseEl.classList.toggle("td-phase-build", build);
   phaseEl.classList.toggle("td-phase-wave", wave);
-  goldEl.textContent = String(getGold());
+  // Guests don't run the local economy — they show the host's gold from the
+  // model. Host/local fall back to the live wallet (kept ticking via onGoldChange).
+  goldEl.textContent = String(model.gold ?? getGold());
   scoreEl.textContent = String(model.score | 0);
   const lv = model.lives | 0;
   const mx = model.maxLives | 0;
@@ -118,6 +120,16 @@ export function updateTdHud(model) {
     : "Defend the village!";
 
   // — Actions —————————————————————————————————————————————————————————————
+  // Read-only (online guest): the economy is host-driven in v1, so hide every
+  // action and don't claim the touch cluster — the guest only watches the bars.
+  if (model.readOnly) {
+    startBtn.style.display = "none";
+    recruitBtn.style.display = "none";
+    switchBtn.style.display = "none";
+    reviveWrap.style.display = "none";
+    setTdActionMode(null);
+    return;
+  }
   // On touch the recruit/switch buttons move into the action cluster, so the
   // dock shows them only on desktop (where there's no cluster).
   recruitBtn.style.display = (build && !touch) ? "" : "none";
