@@ -155,27 +155,34 @@ class Bot {
 
     if (now < this.waitUntil) { this.idle(); return; }
 
-    // 2. Combat — shoot-forward-while-moving. Combat does NOT stop the bot:
-    // every tick a monster is near it sprays the kunai in its travel direction
-    // and swings the sword (which hits all around), then keeps navigating. The
-    // hero out-paces the 1-2 chasers so they never pile on (stopping to aim was
-    // what got it contact-killed), and forward fire clears anything in the
-    // path. Only a flee (hurt + a monster on top of us) overrides nav, briefly.
-    // Combat ticks still push the action/zone clocks forward so combat time
-    // isn't charged against the plan. `steady` (mid-Sokoban) keeps the flee
-    // suppressed so a push isn't displaced — the bot fires in place instead.
+    // 2. Combat — fire alongside movement, don't stop and get piled on (see
+    // combatActions for the rules). The sword swings while we keep navigating
+    // (chips down a close follower); the kunai fires down a cardinal line that
+    // actually has a monster on it — if we're already facing that line we fire
+    // and keep moving, otherwise we turn to it for one tick and fire next. Low
+    // HP makes us flee and recover. Combat ticks still push the action/zone
+    // clocks forward so combat isn't charged against the plan. `steady`
+    // (mid-Sokoban) suppresses turning/fleeing so a push isn't displaced.
     const steady = this.action?.type === "puzzle" && this.action.phase === "exec";
     const ca = combatActions(state, { steady });
     if (ca.monstersNear) {
       for (const [slot, id] of ca.equip) setEquipped(slot, id, 0);
-      if (ca.melee) tryMeleeForSlot(SLOT);
-      if (ca.shoot) tryShoot();
+      if (ca.swing) tryMeleeForSlot(SLOT);
       if (this.action) this.action.deadline += TICK_MS;
       this.zoneEnteredTs += TICK_MS;
       if (ca.flee && !steady) {
         this.step(state.player, ca.flee);
         this.maybeRefreshOverlay(state, now);
         return;
+      }
+      if (ca.shootDir) {
+        if (state.player.direction === ca.shootDir || steady) {
+          tryShoot(); // already aimed (or mid-push) — fire, then keep moving
+        } else {
+          this.step(state.player, ca.shootDir); // turn to the firing line; fire next tick
+          this.maybeRefreshOverlay(state, now);
+          return;
+        }
       }
     }
     // Monster-avoid halo for this tick's pathing (used on nav recompute).

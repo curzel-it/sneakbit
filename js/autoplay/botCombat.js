@@ -150,25 +150,33 @@ export function decideCombat(state, opts = {}) {
   return { hold: true }; // cornered — brace
 }
 
-// Shoot-forward-while-moving combat (the model bot.js actually uses). Unlike
-// decideCombat this does NOT preempt navigation: it returns what to FIRE this
-// tick while the bot keeps walking, so the hero out-paces the 1-2 chasers
-// instead of stopping to aim and getting piled on. The kunai sprays in the
-// hero's travel direction (it's spammable; engine cooldown gates the rate) and
-// the sword swings every tick (it hits all around — most damage forward, a
-// little behind — so it mops up whatever's adjacent without needing to aim).
-// Returns:
-//   { monstersNear:false }                            — nothing around; just navigate
-//   { monstersNear:true, equip:[[slot,id]...],
-//     shoot, melee, flee }                             — fire these alongside movement;
-//                                                         `flee` (a dir) only when hurt and
-//                                                         something's on top of us, to break contact
+// Kunai effective range — how far a bullet travels before its lifespan ends,
+// so a monster farther than this on the firing line can't actually be hit.
+const KUNAI_RANGE = 8;
+// A monster this close (Manhattan) is "following / on us" — swing the sword as
+// we move so the chip damage finishes it without our having to stop.
+const SWORD_NEAR = 2;
+// Below this HP fraction the hero breaks off and recovers instead of pursuing.
+const RECOVER_HP_FRACTION = 0.25;
+// Keep a small reserve — only spend the kunai when we have more than this.
+const MIN_SHOOT_AMMO = 10;
+
+// Combat directives for bot.js. Does NOT preempt navigation by default —
+// returns what to FIRE / how to aim this tick while the bot keeps moving, so
+// the hero out-paces the 1-2 chasers. The logic (author's spec):
+//   - HP < 25%  → flee and recover (don't pursue until HP comes back).
+//   - a monster sits on a cardinal line of sight within kunai range (and we
+//     have ammo to spare) → fire the kunai down that line (turn to it if
+//     needed). Prefers the current facing so we usually fire without turning.
+//   - a monster is right on us (≤ SWORD_NEAR) → swing the sword while moving;
+//     its all-directions hit chips the follower down over a few steps.
+// Returns { monstersNear, equip, flee, shootDir, swing }.
 export function combatActions(state, opts = {}) {
   const player = state.player;
   const zone = state.zone;
   if (!player || !zone) return { monstersNear: false };
   const idx = player.index | 0;
-  const monsters = nearbyMonsters(zone, player, SHOOT_RANGE);
+  const monsters = nearbyMonsters(zone, player, KUNAI_RANGE);
   if (!monsters.length) return { monstersNear: false };
 
   const equip = [];
@@ -177,16 +185,51 @@ export function combatActions(state, opts = {}) {
   const armed = rangedReady(idx);
   if (armed?.equip != null) equip.push([SLOT_RANGED, armed.equip]);
 
+  const nearest = monsters[0];
+
+  // Low HP → break off and recover (flee the nearest mob, keep swinging).
   let flee = null;
-  if (!opts.steady && monsters[0].dist <= 1) {
+  if (!opts.steady && nearest.dist <= CLUSTER_RANGE) {
     const hp = getPlayerHp(idx);
-    const maxHp = getPlayerMaxHp(idx);
-    if (hp <= maxHp * LOW_HP_FRACTION) {
+    if (hp < getPlayerMaxHp(idx) * RECOVER_HP_FRACTION) {
       flee = fleeDir(zone, player, monsters.filter((m) => m.dist <= CLUSTER_RANGE));
     }
   }
 
-  return { monstersNear: true, equip, shoot: !!armed?.ready, melee: !!melee?.ready, flee };
+  // Kunai: fire down a cardinal line that has a monster on it, ammo permitting.
+  const shootDir = (armed?.ready && rangedAmmo(idx) > MIN_SHOOT_AMMO)
+    ? shootTarget(zone, player, monsters)
+    : null;
+
+  // Sword: swing while moving when something's right on us.
+  const swing = !!melee?.ready && nearest.dist <= SWORD_NEAR;
+
+  return { monstersNear: true, equip, flee, shootDir, swing };
+}
+
+// The direction to fire the kunai: a cardinal line from the hero with a monster
+// on it (aligned, clear line, within range). Prefers the hero's current facing
+// (fire without turning), else the nearest such monster's direction. Null if no
+// line has a target.
+function shootTarget(zone, player, monsters) {
+  let facing = null;
+  let any = null;
+  for (const m of monsters) {
+    if (m.dist > KUNAI_RANGE) continue;
+    const dir = alignedDir(player, m.tile);
+    if (!dir || !clearLine(zone, player, m.tile)) continue;
+    if (dir === player.direction && (!facing || m.dist < facing.d)) facing = { dir, d: m.dist };
+    if (!any || m.dist < any.d) any = { dir, d: m.dist };
+  }
+  return (facing ?? any)?.dir ?? null;
+}
+
+// Ammo count of the hero's equipped ranged weapon (defaults to the kunai).
+function rangedAmmo(idx) {
+  const weapon = getSpecies(getEquipped(SLOT_RANGED, idx));
+  const bulletId = (weapon?.entity_type === "WeaponRanged" && weapon.bullet_species_id)
+    || KUNAI_BULLET_SPECIES_ID;
+  return getAmmo(bulletId, idx);
 }
 
 // The shoot/face/move decision against the nearest workable target.
