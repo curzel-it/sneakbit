@@ -41,6 +41,7 @@
 import { tileKey, gateLock } from "./worldModel.js";
 import { shouldBeVisible } from "../entityVisibility.js";
 import { LOCK_NONE, LOCK_PERMANENT } from "../locks.js";
+import { puzzleRecipe } from "./puzzleRecipes.js";
 
 const DIRS = [
   { name: "up",    dx: 0,  dy: -1 },
@@ -88,6 +89,19 @@ export function solveToTiles(model, startTile, goalTiles, opts = {}) {
   const a = search(world, startState, maxStates, false);
   if (a.reachable || world.pushableStart.size === 0) return a;
 
+  // Phase A.4: authored recipe — for the dungeons whose feasible box→plate
+  // assignment + order the general search gets wrong (it finds a model-valid
+  // but engine-infeasible plan), follow the zone author's plan and let the
+  // single-box solver fill in each step's micro-pushes. Trusted, so tried first.
+  const recipe = puzzleRecipe(model.id);
+  if (recipe) {
+    const authored = decomposeAuthored(world, startState, recipe, maxStates);
+    if (authored) {
+      const fr = reachableRegion(world, authored.state);
+      if (fr.goalHit >= 0) return done(world, authored.moves, world.tileOf(fr.goalHit));
+    }
+  }
+
   // Phase A.5: sub-goal decomposition (see decompose). Solves the 4+ box
   // dungeons the joint search can't. Strict fallback below — never regresses.
   const decomp = decompose(world, startState, maxStates);
@@ -96,6 +110,79 @@ export function solveToTiles(model, startTile, goalTiles, opts = {}) {
     if (fr.goalHit >= 0) return done(world, decomp.moves, world.tileOf(fr.goalHit));
   }
   return search(world, startState, maxStates, true);
+}
+
+// Follow an authored recipe (ordered [{ box, to:{x,y} }]): push each named box
+// to its waypoint tile, in order, via the single-box solver. The order is the
+// author's, so each step's prerequisite gates/paths are already open when its
+// push runs. Returns { moves, state } (full move list from the start layout)
+// or null if any step is unsolvable / the recipe doesn't match this zone.
+function decomposeAuthored(world, startState, recipe, maxStates) {
+  let state = { pushables: new Map(startState.pushables), player: startState.player };
+  const allMoves = [];
+  const budget = { left: maxStates };
+  const boxTileOf = (st, box) => {
+    for (const [k, id] of st.pushables) if (id === box) return k;
+    return -1;
+  };
+  for (let i = 0; i < recipe.length; i++) {
+    const step = recipe[i];
+    const target = world.idx(step.to.x, step.to.y);
+    if (target < 0) return null;
+    const cur = boxTileOf(state, step.box);
+    if (cur === target) continue; // already here
+    // Re-solve safety: if this box already sits on a LATER waypoint of its own,
+    // it's past this one — don't push it backward (a box may have two
+    // waypoints, e.g. an intermediate shove then its final plate).
+    const pastIt = recipe.slice(i + 1).some(
+      (s) => s.box === step.box && boxTileOf(state, s.box) === world.idx(s.to.x, s.to.y));
+    if (pastIt) continue;
+    const sub = pushBoxToTile(world, state, step.box, target, budget);
+    if (!sub || budget.left <= 0) return null; // authored step infeasible — give up
+    allMoves.push(...sub.moves);
+    state = sub.state;
+    const r = reachableRegion(world, state);
+    if (r.goalHit >= 0) return { moves: allMoves, state };
+  }
+  return { moves: allMoves, state };
+}
+
+// Single-box search that pushes box `id` until it sits on `target` (a tile
+// index), others frozen. Mirrors oneBoxSearch but its goal/score are a specific
+// tile rather than a plate color. Returns { moves, state } or null.
+function pushBoxToTile(world, startState, id, target, budget) {
+  const tx = target % world.cols;
+  const ty = (target / world.cols) | 0;
+  const boxTileOf = (state) => {
+    for (const [k, bid] of state.pushables) if (bid === id) return k;
+    return -1;
+  };
+  const score = (state) => {
+    const k = boxTileOf(state);
+    if (k < 0) return 1e9;
+    return Math.abs((k % world.cols) - tx) + Math.abs(((k / world.cols) | 0) - ty);
+  };
+  if (boxTileOf(startState) === target) return { moves: [], state: startState };
+  const startRegion = reachableRegion(world, startState);
+  const startKey = macroKey(startState, startRegion);
+  const seen = new Map([[startKey, null]]);
+  const heap = makeHeap();
+  heapPush(heap, score(startState), { state: startState, key: startKey });
+  let local = 0;
+  while (heap.length) {
+    const { state, key } = heapPop(heap);
+    const region = reachableRegion(world, state);
+    for (const succ of successors(world, state, region, true, id)) {
+      const region2 = reachableRegion(world, succ.state);
+      const key2 = macroKey(succ.state, region2);
+      if (seen.has(key2)) continue;
+      seen.set(key2, { prev: key, move: succ.move });
+      if (boxTileOf(succ.state) === target) return { moves: reconstruct(seen, key2), state: succ.state };
+      if (--budget.left <= 0 || ++local >= SUBSOLVE_MAX_STATES) return null;
+      heapPush(heap, score(succ.state), { state: succ.state, key: key2 });
+    }
+  }
+  return null;
 }
 
 function search(world, startState, maxStates, allowPush) {
