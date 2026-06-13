@@ -29,6 +29,7 @@ import { makePusher, liveBoxTile } from "./botPush.js";
 import { makeSolver } from "./botSolver.js";
 import { tickJanitor } from "./botDialogue.js";
 import { combatActions, monsterHalo } from "./botCombat.js";
+import { planBarrel, faceDirToBarrel } from "./botBarrels.js";
 import { installOverlay, updateOverlay } from "./botOverlay.js";
 import { logEvent, recentEvents } from "./botLog.js";
 
@@ -235,6 +236,8 @@ class Bot {
       if (objAction) return objAction;
       const puzzleAction = this.pickPuzzle(state, model, now);
       if (puzzleAction) return puzzleAction;
+      const barrelAction = this.pickBarrel(state, now);
+      if (barrelAction) return barrelAction;
     }
     return this.planTravel(state, now);
   }
@@ -312,6 +315,27 @@ class Bot {
     };
   }
 
+  // Opportunistic loot: with a sword in hand and no objective/puzzle left, walk
+  // to the nearest barrel within a short detour and smash it for coins/ammo
+  // (botBarrels). Filler before leaving the zone — combat preempts if a monster
+  // shows up mid-walk, and the per-zone budget (this isn't called when over it)
+  // bounds how long a barrel-dense zone holds the tour.
+  pickBarrel(state, now) {
+    const target = planBarrel(state.zone, state.player, this.blockedThisZone);
+    if (!target) return null;
+    this.nav.setGoal(target.standTiles);
+    logEvent("barrel", `smashing barrel #${target.entity.id} in ${state.zone.id}`);
+    return {
+      type: "barrel",
+      entityId: target.entity.id,
+      barrelTile: target.barrelTile,
+      key: `barrel:${target.entity.id}`,
+      phase: "nav",
+      swings: 0,
+      deadline: now + Math.min(MAX_ACTION_MS, Math.max(MIN_ACTION_MS, target.path.length * WALK_MS_PER_TILE)),
+    };
+  }
+
   // Leave the current zone through the nearest walk-reachable teleporter,
   // preferring an unvisited destination and avoiding an immediate backtrack
   // through the door we just came in. One hop at a time — we replan on
@@ -366,6 +390,7 @@ class Bot {
     if (this.action.type === "travel") return this.runTravel(state, now);
     if (this.action.type === "talk") return this.runTalk(state, now);
     if (this.action.type === "puzzle") return this.runPuzzle(state, now);
+    if (this.action.type === "barrel") return this.runBarrel(state, now);
     return this.runReach(state, now); // pickup / hint / cutscene
   }
 
@@ -485,6 +510,46 @@ class Bot {
     this.step(state.player, r.dir);
   }
 
+  // Walk to a barrel, face it, swing. The barrel-gone check (its entity is
+  // removed on death) ends the action; the loot scatter is auto-collected by
+  // the engine when we walk over it. A few swings without it breaking → give
+  // up (model/engine drift, or it isn't actually a barrel).
+  runBarrel(state, now) {
+    const a = this.action;
+    if (!state.zone.entities.some((e) => e.id === a.entityId)) {
+      logEvent("barrel", `barrel #${a.entityId} smashed in ${state.zone.id}`);
+      this.completeAction(state, now, { keepZoneClock: true });
+      return;
+    }
+    if (a.phase === "nav") {
+      const r = this.nav.tick(state.player, state.zone, this.avoid);
+      if (r.status === "blocked") { this.failAction(); return; }
+      if (r.status === "arrived") {
+        a.phase = "face";
+        a.faceDir = faceDirToBarrel(state.player, a.barrelTile);
+        this.idle();
+        return;
+      }
+      this.step(state.player, r.dir);
+      return;
+    }
+    if (a.phase === "face") {
+      if (a.faceDir && state.player.direction !== a.faceDir) { this.step(state.player, a.faceDir); return; }
+      this.idle();
+      tryMeleeForSlot(SLOT);
+      a.swings++;
+      a.phase = "settle";
+      a.settleAt = now + PACING.settleMs;
+      return;
+    }
+    // settle: let the swing land (barrel-gone check at the top ends us), then
+    // re-face and swing again, or give up after a few tries.
+    if (now < a.settleAt) return;
+    if (a.swings >= 3) { this.failAction(); return; }
+    a.faceDir = faceDirToBarrel(state.player, a.barrelTile);
+    a.phase = "face";
+  }
+
   runTalk(state, now) {
     const model = this.world.modelFor(state.zone.id);
     if (!objectiveLive(model, this.action.objective)) { this.completeAction(state, now); return; }
@@ -546,15 +611,17 @@ class Bot {
     this.step(state.player, r.dir);
   }
 
-  completeAction(state, now) {
+  completeAction(state, now, opts = {}) {
     this.idle();
     this.waitUntil = now + PACING.postActionMs;
     this.action = null;
     // Progress restarts the per-zone clock: the budget exists to stop
     // PROGRESS-FREE farming of one zone, not to yank the bot out of a big
     // dungeon (1013's key run takes several objectives + a solve, well over
-    // one flat budget) while it's still completing objectives.
-    this.zoneEnteredTs = now;
+    // one flat budget) while it's still completing objectives. Barrels are
+    // filler, though — they must NOT keep extending the budget, or a
+    // barrel-dense zone could hold the tour indefinitely.
+    if (!opts.keepZoneClock) this.zoneEnteredTs = now;
   }
 
   failAction(opts = {}) {
