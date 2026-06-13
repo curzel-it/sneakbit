@@ -150,6 +150,45 @@ export function decideCombat(state, opts = {}) {
   return { hold: true }; // cornered — brace
 }
 
+// Shoot-forward-while-moving combat (the model bot.js actually uses). Unlike
+// decideCombat this does NOT preempt navigation: it returns what to FIRE this
+// tick while the bot keeps walking, so the hero out-paces the 1-2 chasers
+// instead of stopping to aim and getting piled on. The kunai sprays in the
+// hero's travel direction (it's spammable; engine cooldown gates the rate) and
+// the sword swings every tick (it hits all around — most damage forward, a
+// little behind — so it mops up whatever's adjacent without needing to aim).
+// Returns:
+//   { monstersNear:false }                            — nothing around; just navigate
+//   { monstersNear:true, equip:[[slot,id]...],
+//     shoot, melee, flee }                             — fire these alongside movement;
+//                                                         `flee` (a dir) only when hurt and
+//                                                         something's on top of us, to break contact
+export function combatActions(state, opts = {}) {
+  const player = state.player;
+  const zone = state.zone;
+  if (!player || !zone) return { monstersNear: false };
+  const idx = player.index | 0;
+  const monsters = nearbyMonsters(zone, player, SHOOT_RANGE);
+  if (!monsters.length) return { monstersNear: false };
+
+  const equip = [];
+  const melee = meleeReady(idx);
+  if (melee?.equip != null) equip.push([SLOT_MELEE, melee.equip]);
+  const armed = rangedReady(idx);
+  if (armed?.equip != null) equip.push([SLOT_RANGED, armed.equip]);
+
+  let flee = null;
+  if (!opts.steady && monsters[0].dist <= 1) {
+    const hp = getPlayerHp(idx);
+    const maxHp = getPlayerMaxHp(idx);
+    if (hp <= maxHp * LOW_HP_FRACTION) {
+      flee = fleeDir(zone, player, monsters.filter((m) => m.dist <= CLUSTER_RANGE));
+    }
+  }
+
+  return { monstersNear: true, equip, shoot: !!armed?.ready, melee: !!melee?.ready, flee };
+}
+
 // The shoot/face/move decision against the nearest workable target.
 function engagePlan(zone, player, monsters, steady) {
   for (const m of monsters) {

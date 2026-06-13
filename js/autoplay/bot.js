@@ -28,7 +28,7 @@ import { makeNavigator, makePuzzleNav, findPath, isNavWalkable } from "./botNav.
 import { makePusher, liveBoxTile } from "./botPush.js";
 import { makeSolver } from "./botSolver.js";
 import { tickJanitor } from "./botDialogue.js";
-import { decideCombat, monsterHalo } from "./botCombat.js";
+import { combatActions, monsterHalo } from "./botCombat.js";
 import { installOverlay, updateOverlay } from "./botOverlay.js";
 import { logEvent, recentEvents } from "./botLog.js";
 
@@ -95,7 +95,6 @@ class Bot {
     this.wasDead = false;
     this.deaths = 0;
     this.avoid = null;
-    this.engagedId = null; // last monster we logged an engage for
   }
 
   async start() {
@@ -156,23 +155,28 @@ class Bot {
 
     if (now < this.waitUntil) { this.idle(); return; }
 
-    // 2. Combat — a monster in engage range preempts everything: line up
-    // and shoot it (or re-equip / kite / flee, per the intent). Monsters
-    // beyond engage range are routed AROUND via the avoid halo below.
-    // Combat time is NOT the plan's fault: in spawn-dense dungeons waves of
-    // chasers used to eat an action's wall-clock deadline and the per-zone
-    // budget, blowing objectives the bot never got to walk — so both clocks
-    // are pushed forward by every combat tick. `steady` keeps combat from
-    // displacing the player mid-Sokoban (a moved player breaks the push
-    // plan and forces a re-solve).
+    // 2. Combat — shoot-forward-while-moving. Combat does NOT stop the bot:
+    // every tick a monster is near it sprays the kunai in its travel direction
+    // and swings the sword (which hits all around), then keeps navigating. The
+    // hero out-paces the 1-2 chasers so they never pile on (stopping to aim was
+    // what got it contact-killed), and forward fire clears anything in the
+    // path. Only a flee (hurt + a monster on top of us) overrides nav, briefly.
+    // Combat ticks still push the action/zone clocks forward so combat time
+    // isn't charged against the plan. `steady` (mid-Sokoban) keeps the flee
+    // suppressed so a push isn't displaced — the bot fires in place instead.
     const steady = this.action?.type === "puzzle" && this.action.phase === "exec";
-    const intent = decideCombat(state, { steady });
-    if (intent) {
+    const ca = combatActions(state, { steady });
+    if (ca.monstersNear) {
+      for (const [slot, id] of ca.equip) setEquipped(slot, id, 0);
+      if (ca.melee) tryMeleeForSlot(SLOT);
+      if (ca.shoot) tryShoot();
       if (this.action) this.action.deadline += TICK_MS;
       this.zoneEnteredTs += TICK_MS;
-      this.handleCombat(state, intent);
-      this.maybeRefreshOverlay(state, now);
-      return;
+      if (ca.flee && !steady) {
+        this.step(state.player, ca.flee);
+        this.maybeRefreshOverlay(state, now);
+        return;
+      }
     }
     // Monster-avoid halo for this tick's pathing (used on nav recompute).
     this.avoid = monsterHalo(state.zone, state.player);
@@ -331,44 +335,6 @@ class Bot {
 
   // --- combat ----------------------------------------------------------------
 
-  // Acts on a botCombat intent. Shooting taps tryShoot() every tick while
-  // facing the target — shoot() gates itself on the weapon cooldown, so this
-  // fires exactly at the weapon's rate.
-  handleCombat(state, intent) {
-    if (intent.equipMelee != null) {
-      setEquipped(SLOT_MELEE, intent.equipMelee, 0);
-      logEvent("combat", `equipped melee weapon ${intent.equipMelee}`);
-      return;
-    }
-    if (intent.melee) {
-      this.idle();
-      if (intent.target !== this.engagedId) {
-        this.engagedId = intent.target;
-        logEvent("combat", `meleeing monster #${intent.target} in ${state.zone.id}`);
-      }
-      tryMeleeForSlot(SLOT);
-      return;
-    }
-    if (intent.equip != null) {
-      setEquipped(SLOT_RANGED, intent.equip, 0);
-      logEvent("combat", `re-equipped ranged weapon ${intent.equip} (equipped one had no ammo)`);
-      return;
-    }
-    if (intent.shoot) {
-      this.idle();
-      if (intent.target !== this.engagedId) {
-        this.engagedId = intent.target;
-        logEvent("combat", `engaging monster #${intent.target} in ${state.zone.id}`);
-      }
-      tryShoot();
-      return;
-    }
-    if (intent.face || intent.move || intent.flee) {
-      this.step(state.player, intent.face || intent.move || intent.flee);
-      return;
-    }
-    this.idle(); // hold — cornered
-  }
 
   // --- execution -----------------------------------------------------------
 

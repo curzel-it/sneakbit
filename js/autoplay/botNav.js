@@ -191,22 +191,15 @@ export function makeNavigator() {
       if (!path) return { status: "blocked", dir: null };
     }
 
-    let idx = path.findIndex((t) => t.x === player.tileX && t.y === player.tileY);
-    let next = path[idx + 1];
-    // A monster may have drifted onto the cached path since it was computed
-    // — stepping into the live halo is how the bot used to walk straight
-    // into roamers. Recompute around the current halo before committing the
-    // step; if the halo seals the corridor, keep the un-avoided step (the
-    // combat layer engages anything that close anyway).
-    if (next && avoid && avoid.has(`${next.x},${next.y}`) && !goalSet.has(`${next.x},${next.y}`)) {
-      const start = { x: player.tileX, y: player.tileY };
-      const detour = findPath(zone, start, goalSet, avoid);
-      if (detour) {
-        path = detour;
-        idx = 0;
-        next = path[1];
-      }
-    }
+    const idx = path.findIndex((t) => t.x === player.tileX && t.y === player.tileY);
+    const next = path[idx + 1];
+    // Follow the committed path. It was already routed around the halo when it
+    // was computed (on recompute / stall); we deliberately DON'T re-detour
+    // around the live halo every tick — the halo moves with the monster, so
+    // re-detouring each step made the bot oscillate between two tiles forever
+    // at a chokepoint. If a monster drifts onto the next tile we step through
+    // it (non-rigid, a little chip damage) and the shoot-while-moving combat
+    // layer is firing at it anyway; a persistent block trips stall-recompute.
     if (!next) return { status: "arrived", dir: null };
     return { status: "moving", dir: stepDirection({ x: player.tileX, y: player.tileY }, next) };
   }
