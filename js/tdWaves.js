@@ -1,8 +1,13 @@
 // Tower Defense wave director: how many enemies a wave spawns, of which tier,
 // at what cadence, and from which spawn tile. Difficulty rides the berry HP
-// ladder — later waves start at a higher tier, stepping through every rung so
-// the climb stays smooth. The wave-table math is pure (no zone/DOM) so it's
-// unit-testable; only tickWaves touches the world.
+// ladder — higher-difficulty waves start at a higher tier, stepping through
+// every rung so the climb stays smooth. The wave-table math is pure (no
+// zone/DOM) so it's unit-testable; only tickWaves touches the world.
+//
+// The single integer these functions take is an EFFECTIVE DIFFICULTY, not a
+// cumulative wave number: the controller derives it per round from the current
+// map's difficulty + the round within that map (waves reset to 1 each map,
+// Bloons-style), so a fresh map starts easy and later maps start tougher.
 
 import { spawnEnemy } from "./tdEnemies.js";
 import { getSpawns } from "./tdBoard.js";
@@ -15,26 +20,27 @@ import { getSpawns } from "./tdBoard.js";
 // what this table emits.
 const TIERS = [4003, 4004, 4005, 4006, 4007];
 
-// How many enemies a wave releases. Grows linearly so each wave is a step up.
-export function waveCount(wave) {
-  return 6 + Math.floor((Math.max(1, wave) - 1) * 3);
+// How many enemies a wave releases. Grows linearly with difficulty so each step
+// up is a step up.
+export function waveCount(difficulty) {
+  return 6 + Math.floor((Math.max(1, difficulty) - 1) * 3);
 }
 
-// Seconds between spawns — tightens as waves escalate, floored so the horde
-// never becomes a single clumped blob.
-export function waveInterval(wave) {
-  return Math.max(0.35, 0.9 - Math.max(1, wave) * 0.05);
+// Seconds between spawns — tightens as difficulty escalates, floored so the
+// horde never becomes a single clumped blob.
+export function waveInterval(difficulty) {
+  return Math.max(0.35, 0.9 - Math.max(1, difficulty) * 0.05);
 }
 
 // The ordered list of species ids a wave spawns. Base tier rises every two
-// waves; from wave 3 on, every fifth enemy is one tier tougher (a mini-elite)
-// to keep the squad honest. Pure — drives both tickWaves and the tests.
-export function buildWaveSpecies(wave) {
-  const n = waveCount(wave);
-  const baseIdx = Math.min(TIERS.length - 1, Math.floor((Math.max(1, wave) - 1) / 2));
+// difficulty steps; from difficulty 3 on, every fifth enemy is one tier tougher
+// (a mini-elite) to keep the squad honest. Pure — drives tickWaves and tests.
+export function buildWaveSpecies(difficulty) {
+  const n = waveCount(difficulty);
+  const baseIdx = Math.min(TIERS.length - 1, Math.floor((Math.max(1, difficulty) - 1) / 2));
   const out = [];
   for (let i = 0; i < n; i++) {
-    const bump = wave >= 3 && i % 5 === 4 ? 1 : 0;
+    const bump = difficulty >= 3 && i % 5 === 4 ? 1 : 0;
     out.push(TIERS[Math.min(TIERS.length - 1, baseIdx + bump)]);
   }
   return out;
@@ -45,14 +51,13 @@ let cursor = 0;       // next index in `plan` to spawn
 let timer = 0;        // countdown to the next spawn
 let interval = 0.9;
 let spawnTileCursor = 0;
-let waveNumber = 0;
 
-export function startWave(wave) {
-  waveNumber = wave;
-  plan = buildWaveSpecies(wave);
+// `difficulty` is the effective difficulty for this round (see header).
+export function startWave(difficulty) {
+  plan = buildWaveSpecies(difficulty);
   cursor = 0;
   timer = 0;            // release the first enemy immediately
-  interval = waveInterval(wave);
+  interval = waveInterval(difficulty);
   spawnTileCursor = 0;
 }
 
@@ -62,7 +67,6 @@ export function resetWaves() {
   timer = 0;
   interval = 0.9;
   spawnTileCursor = 0;
-  waveNumber = 0;
 }
 
 export function tickWaves(zone, dt) {
