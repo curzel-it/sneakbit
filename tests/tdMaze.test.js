@@ -80,7 +80,7 @@ test("hero starts sit on the path", () => {
 });
 
 test("difficulty scales with the map index — longer path, denser obstacles", () => {
-  assert.ok(obstacleBatch(3) > obstacleBatch(0), "later maps reveal more obstacles per wave");
+  assert.ok(obstacleBatch(3) > obstacleBatch(0), "later maps place more obstacles");
   const easy = generateMap(makeRaw(), 0).path.size;
   const hard = generateMap(makeRaw(), 4).path.size;
   assert.ok(hard > easy, `harder map has a longer path (${hard} > ${easy})`);

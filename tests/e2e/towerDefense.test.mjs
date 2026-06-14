@@ -2,7 +2,7 @@
 // driven via the ?mode=td deep link. Asserts the whole loop wires up: the
 // board + squad boot with a visible sand path, the build→wave→clear cycle
 // runs, enemies spawn and march, kills score + bank gold, off-path obstacles
-// pop up after a wave clears, clearing the map's wave quota advances to a
+// are placed once at map load and stay fixed across waves, clearing the map's wave quota advances to a
 // fresh harder map, hero switching cycles, and a leak ends the run — all with
 // zero uncaught page exceptions. Self-skips when Chrome isn't installed.
 
@@ -46,9 +46,10 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   assert.ok(await evalExpr(s, "!!document.getElementById('td-hud') && getComputedStyle(document.getElementById('td-hud')).display !== 'none'"), "HUD visible");
   assert.ok(await evalExpr(s, "window.td.state().lives > 0"), "village starts with lives, not instant-loss");
 
-  // — The sand path is visible from the start, with no obstacles yet ————————
+  // — The sand path AND the map's obstacles are visible from the start ————————
   assert.ok(await evalExpr(s, "window.td.sandCount() > 0"), "a sand path is painted at boot");
-  assert.equal(await evalExpr(s, "window.td.maze().revealed"), 0, "no obstacles before the first wave clears");
+  const obstaclesAtBoot = await evalExpr(s, "window.td.maze().revealed");
+  assert.ok(obstaclesAtBoot > 0, "obstacles are placed once at map load");
   assert.equal(await evalExpr(s, "window.td.state().mapIndex"), 0, "run starts on map 0");
 
   // — Recruiting grows the squad with a real second hero ———————————————————
@@ -72,10 +73,10 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   assert.ok(after.gold >= before.gold, "kills + stipend banked gold");
   assert.ok(after.wave >= 1, "survived a wave");
 
-  // — Off-path obstacles pop up after the wave clears ——————————————————————
+  // — Obstacles are fixed for the map: unchanged after the wave clears ————————
   // (Path-locking + solvability are unit-tested in tests/tdMaze.test.js.)
   assert.equal(after.waveInMap, 1, "one wave cleared on this map");
-  assert.ok(await evalExpr(s, "window.td.maze().revealed > 0"), "obstacles revealed after the wave");
+  assert.equal(await evalExpr(s, "window.td.maze().revealed"), obstaclesAtBoot, "obstacles stay fixed between waves on the same map");
 
   // — Clearing the map's wave quota advances to a fresh, harder map ————————
   await evalExpr(s, "window.td.win(); window.td.win();"); // reach WAVES_PER_MAP clears

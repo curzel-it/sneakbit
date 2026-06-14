@@ -2,11 +2,12 @@
 // fixed, immediately-visible SAND PATH (a serpentine track painted in the
 // desert biome over the grass) that the horde is hard-locked to — the flow
 // field is computed once per map over the path tiles only, so monsters never
-// leave the sand. Between that map's waves, batches of off-path FOREST
-// obstacles pop up to crowd the heroes' movement (the monsters are unaffected).
+// leave the sand. A batch of off-path FOREST obstacles is placed once when the
+// map loads and stays fixed for all of that map's waves, crowding the heroes'
+// movement (the monsters are unaffected).
 //
 // After a few waves the controller advances to the next map: a fresh, harder
-// path (more lanes → longer/twistier) with a denser obstacle schedule. Higher
+// path (more lanes → longer/twistier) with a denser obstacle batch. Higher
 // `mapIndex` ⇒ more complexity.
 //
 // Generation is pure (Math.random only) and never mutates the raw zone; the
@@ -31,7 +32,7 @@ const PATH_BIOME = BIOME.DESERT;
 const BASE_LANES = 3;       // winding waypoints on map 0; +1 per map
 const MAX_LANES = 7;
 const CLEAR_PORTAL = 1;     // tiles kept obstacle-free around spawns + goal
-const OBSTACLES_BASE = 8;   // off-path tiles revealed per wave on map 0 …
+const OBSTACLES_BASE = 8;   // off-path tiles placed at load on map 0 …
 const OBSTACLES_PER_MAP = 6; // … plus this much per map
 
 // — Per-map runtime state —————————————————————————————————————————————————
@@ -142,7 +143,7 @@ function sameFlat(a, b) {
   return true;
 }
 
-// Off-path tiles to reveal per wave — denser on later maps.
+// Off-path tiles to place at map load — denser on later maps.
 export function obstacleBatch(mapIndex) {
   return OBSTACLES_BASE + Math.max(0, mapIndex | 0) * OBSTACLES_PER_MAP;
 }

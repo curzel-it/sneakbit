@@ -208,6 +208,7 @@ async function loadMap(idx) {
   resetMaze();
   installMap(map);
   paintPath(zone);                       // sand track visible from the start
+  revealNextObstacles(zone, obstacleBatch(idx)); // off-path obstacles, fixed for the map's life
   recomputeField(zone, monsterGrid(zone)); // horde locked to the path
   mapIndex = idx;
   relocateSquad(state);                  // no-op before the squad exists (boot)
@@ -374,7 +375,6 @@ function startNextWave({ early = false } = {}) {
 function clearWave() {
   score += WAVE_CLEAR_BONUS * wave;
   addGold(STIPEND_BASE + wave * STIPEND_PER_WAVE);
-  const state = getState();
   waveInMap += 1;
   if (waveInMap >= WAVES_PER_MAP) {
     // Map cleared — advance to a fresh, harder map. loadMap rebuilds the zone
@@ -382,11 +382,9 @@ function clearWave() {
     waveInMap = 0;
     showToast(`Map ${mapIndex + 2}`, "hint");
     loadMap(mapIndex + 1);
-  } else if (state?.zone) {
-    // Same map, next wave: pop a batch of off-path obstacles to crowd the squad.
-    revealNextObstacles(state.zone, obstacleBatch(mapIndex));
-    broadcastTdMap();                    // online: reveal the same obstacles on guests
   }
+  // Obstacles are placed once at map load and stay fixed for the map's waves,
+  // so there's nothing to reveal between waves on the same map.
   enterBuild();
 }
 
