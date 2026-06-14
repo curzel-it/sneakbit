@@ -33,6 +33,44 @@ const hasLS = probeLocalStorage();
 
 const cache = new Map();
 let hydrated = false;
+
+// — Transient context (Tower Defense) ———————————————————————————————————————
+// TD runs are throwaway: their per-hero inventory, equipment and coin purse
+// must never touch the real save. Rather than namespace every feature, we
+// intercept just the TD-owned keys here into an in-memory map that bypasses
+// localStorage. Everything else (settings, key bindings, skins, the TD high
+// score) still falls through to the persistent cache below, so a run can't
+// blank the player's real progress or preferences. enterTransientContext()
+// starts a fresh (empty) run; it's one-directional in practice — leaving TD
+// reloads the page, which drops the transient map and re-reads the real save.
+const TD_OWNED_KEY = /^(?:player\.\d+\.(?:inventory\.amount\.\d+|equipped\.(?:melee|ranged)|coins(?:\.seeded)?)|skill\.knockback_aura\.owned)$/;
+const transientCache = new Map();
+let transient = false;
+
+// The backing map for a key: the transient cache for TD-owned keys while a
+// transient context is active, the persistent cache otherwise.
+function backing(key) {
+  return (transient && typeof key === "string" && TD_OWNED_KEY.test(key)) ? transientCache : cache;
+}
+
+// True when writes to `key` must skip localStorage (transient TD state).
+function isTransientKey(key) {
+  return transient && typeof key === "string" && TD_OWNED_KEY.test(key);
+}
+
+// Start a fresh transient context: wipe any prior run's transient state so a
+// TD restart begins from empty (coins/ammo/gear reseeded by tdSave).
+export function enterTransientContext() {
+  transientCache.clear();
+  transient = true;
+}
+
+// Drop the transient context (tests / symmetry). The persistent cache is
+// untouched, so the real save reappears intact.
+export function exitTransientContext() {
+  transientCache.clear();
+  transient = false;
+}
 // Change subscribers — cloudSave listens here to know when progress (the
 // kv.v1 namespace) changed, so it can debounce a cloud push. Kept as a
 // passive notify so storage.js takes on no dependency on the sync layer.
@@ -95,7 +133,8 @@ export function getValue(key) {
       return values.size === 1 ? values.values().next().value : null;
     }
   }
-  return cache.has(key) ? cache.get(key) : null;
+  const store = backing(key);
+  return store.has(key) ? store.get(key) : null;
 }
 
 // Returns true if the value was persisted (disk write succeeded, or we're in
@@ -105,21 +144,23 @@ export function getValue(key) {
 // failed migration write silently drop a save (see migrations.js v3).
 export function setValue(key, value) {
   hydrate();
+  const td = isTransientKey(key);
+  const store = backing(key);
   if (value == null) {
-    if (hasLS) {
+    if (hasLS && !td) {
       try { localStorage.removeItem(PREFIX + key); }
       catch (e) { console.error("storage removeItem failed", e); return false; }
     }
-    cache.delete(key);
+    store.delete(key);
     notifyChange(key);
     return true;
   }
   const v = value | 0;
-  if (hasLS) {
+  if (hasLS && !td) {
     try { localStorage.setItem(PREFIX + key, String(v)); }
     catch (e) { console.error("storage setItem failed; cache left unchanged", e); return false; }
   }
-  cache.set(key, v);
+  store.set(key, v);
   notifyChange(key);
   return true;
 }

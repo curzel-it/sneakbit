@@ -10,6 +10,7 @@
 
 import { getValue, setValue } from "./storage.js";
 import { isCoopMode } from "./coopMode.js";
+import { isTowerDefenseMode } from "./gameMode.js";
 
 const MAX_PLAYERS = 4;
 // Every fresh save starts the hero with a small purse so the zone-1001 shop is
@@ -33,9 +34,12 @@ function seededKey(playerIndex) {
 
 // Local co-op shares one save slot — both local heroes use player.0. Network
 // co-op keeps slots independent. Mirrors inventory.js effectiveIndex.
+// Tower Defense is a special case: the squad shares ONE coin purse (loot, the
+// shop, recruit/revive all draw from it), so every hero folds onto index 0
+// regardless of local/online — unlike inventory/equipment, which stay per-hero.
 function effectiveIndex(playerIndex) {
   const idx = playerIndex | 0;
-  if (idx > 0 && isCoopMode()) return 0;
+  if (idx > 0 && (isCoopMode() || isTowerDefenseMode())) return 0;
   return idx;
 }
 
@@ -89,7 +93,14 @@ export function clearWallet(playerIndex) {
   }
 }
 
-// Test-only: drop the in-memory mirror so a fresh storage state is re-read.
-export function _resetWalletForTesting() {
+// Drop the in-memory mirror so balances are re-read from storage on next
+// access. Used when switching save contexts (tdSave enters a transient TD
+// purse) and by tests for a clean slate.
+export function resetWalletCache() {
   balances.fill(null);
+}
+
+// Test-only alias kept for existing tests.
+export function _resetWalletForTesting() {
+  resetWalletCache();
 }

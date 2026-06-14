@@ -15,7 +15,7 @@
 // transparently via the no-entry fallback, so the seam is also safe to
 // use in single-player paths.
 
-import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
+import { getEquipped, getEquippedId, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { isPvp, isTowerDefenseMode } from "./gameMode.js";
 
 const loadouts = new Map(); // playerId -> { melee, ranged }
@@ -89,10 +89,19 @@ export function listSessionLoadouts() {
 // still get the right answer without a session entry.
 export function resolveLoadout(player) {
   if (!player) return { melee: null, ranged: null };
-  // Tower Defense: the squad's archetypes are fixed per slot and resolved in
-  // memory, never from saved equipment. Gated on the mode so the normal /
-  // co-op / PvP loadout resolution below is byte-identical when TD is absent.
-  if (isTowerDefenseMode()) return { ...tdHeroLoadout(player.index | 0) };
+  // Tower Defense: each slot starts on its fixed archetype, but the shop can
+  // re-arm a hero — a bought weapon is written to the (transient) TD equipment
+  // and overrides the archetype here, per slot. getEquippedId returns the RAW
+  // stored id (null when the slot is untouched), so a melee-only archetype
+  // keeps ranged: null until the player actually buys a ranged weapon — unlike
+  // getEquipped, whose kunai-launcher default would mask that.
+  if (isTowerDefenseMode()) {
+    const idx = player.index | 0;
+    const base = tdHeroLoadout(idx);
+    const melee = getEquippedId(SLOT_MELEE, idx);
+    const ranged = getEquippedId(SLOT_RANGED, idx);
+    return { melee: melee ?? base.melee, ranged: ranged ?? base.ranged };
+  }
   let melee = null;
   let ranged = null;
   const sid = player.playerId;

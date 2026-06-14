@@ -21,7 +21,7 @@
 // the handlers wired at install time.
 
 import { el } from "./dom.js";
-import { onGoldChange, getGold } from "./arcadeCurrency.js";
+import { onWalletChange, getCoins } from "./wallet.js";
 import { setTdActionMode } from "./touch.js";
 
 let api = {};
@@ -32,7 +32,7 @@ let installed = false;
 // Status-bar refs.
 let waveEl, phaseEl, goldEl, livesEl, scoreEl;
 // Dock refs.
-let dockLabelEl, dockValEl, progFillEl, startBtn, recruitBtn, switchBtn, hintEl;
+let dockLabelEl, dockValEl, progFillEl, startBtn, recruitBtn, switchBtn, shopBtn, hintEl;
 let reviveWrap;
 let reviveSig = "";   // signature of the rendered revive set (see renderRevives)
 // Game-over refs.
@@ -51,7 +51,8 @@ export function installTdHud(handlers = {}) {
   document.body.appendChild(root);
   document.body.appendChild(dock);
   document.body.appendChild(gameOver);
-  onGoldChange((g) => { if (goldEl) goldEl.textContent = String(g); });
+  // The squad's coin purse lives at wallet index 0 (TD folds every hero there).
+  onWalletChange((next, idx) => { if (goldEl && idx === 0) goldEl.textContent = String(next); });
 }
 
 export function showTdHud() {
@@ -85,9 +86,9 @@ export function updateTdHud(model) {
   phaseEl.textContent = model.phase;
   phaseEl.classList.toggle("td-phase-build", build);
   phaseEl.classList.toggle("td-phase-wave", wave);
-  // Guests don't run the local economy — they show the host's gold from the
-  // model. Host/local fall back to the live wallet (kept ticking via onGoldChange).
-  goldEl.textContent = String(model.gold ?? getGold());
+  // Guests don't run the local economy — they show the host's coins from the
+  // model. Host/local fall back to the live wallet (kept ticking via onWalletChange).
+  goldEl.textContent = String(model.coins ?? getCoins(0));
   scoreEl.textContent = String(model.score | 0);
   const lv = model.lives | 0;
   const mx = model.maxLives | 0;
@@ -104,7 +105,7 @@ export function updateTdHud(model) {
     // the dock keeps only its slim countdown strip.
     startBtn.style.display = touch ? "none" : "";
     startBtn.textContent = model.earlyBonus > 0
-      ? `Start wave ▶  +${model.earlyBonus}g`
+      ? `Start wave ▶  +${model.earlyBonus}`
       : "Start wave ▶";
   } else {
     const left = model.alive | 0;
@@ -126,6 +127,7 @@ export function updateTdHud(model) {
     startBtn.style.display = "none";
     recruitBtn.style.display = "none";
     switchBtn.style.display = "none";
+    shopBtn.style.display = "none";
     reviveWrap.style.display = "none";
     setTdActionMode(null);
     return;
@@ -135,11 +137,15 @@ export function updateTdHud(model) {
   recruitBtn.style.display = (build && !touch) ? "" : "none";
   if (build && !touch) {
     const r = model.recruit || {};
-    recruitBtn.textContent = r.label || `Recruit hero (${r.cost}g)`;
+    recruitBtn.textContent = r.label || `Recruit hero (${r.cost})`;
     recruitBtn.disabled = !r.can;
     recruitBtn.classList.toggle("td-disabled", !r.can);
   }
   switchBtn.style.display = (model.canSwitch && !(touch && (build || wave))) ? "" : "none";
+  // The shop is open in both build and wave (opening it pauses the TD sim, so
+  // buying ammo mid-wave is safe). It stays in the dock on touch too — the slim
+  // wave/build strip keeps button pointer-events, so it's still tappable.
+  shopBtn.style.display = (build || wave) ? "" : "none";
 
   // Revives can be bought in any phase (mid-wave at a premium).
   reviveWrap.style.display = model.revives?.length ? "" : "none";
@@ -191,7 +197,7 @@ function renderRevives(revives) {
   for (const r of revives) {
     reviveWrap.appendChild(el("button", {
       class: "td-btn td-revive",
-      text: `Revive ${r.name} (${r.cost}g)`,
+      text: `Revive ${r.name} (${r.cost})`,
       on: { click: () => api.onRevive?.(r.index) },
     }));
   }
@@ -237,10 +243,11 @@ function buildDock() {
 
   recruitBtn = el("button", { class: "td-btn", text: "Recruit hero", on: { click: () => api.onRecruit?.() } });
   switchBtn = el("button", { class: "td-btn td-switch", text: "Switch hero", on: { click: () => api.onSwitch?.() } });
+  shopBtn = el("button", { class: "td-btn td-shop", text: "Shop", on: { click: () => api.onShop?.() } });
   reviveWrap = el("div", { class: "td-revives" });
 
   const mainRow = el("div", { class: "td-dock-main" }, [
-    el("div", { class: "td-dock-actions" }, [recruitBtn, switchBtn, reviveWrap]),
+    el("div", { class: "td-dock-actions" }, [recruitBtn, switchBtn, shopBtn, reviveWrap]),
   ]);
 
   hintEl = el("span", { class: "td-dock-hint" });
@@ -337,6 +344,8 @@ function injectStyles() {
     #td-dock .td-primary { background: #2a4a32; border-color: #3f6b4a; font-weight: bold; }
     #td-dock .td-primary:hover:not(:disabled) { background: #335a3d; }
     #td-dock .td-revive { background: #4a2a2a; border-color: #6b3f3f; }
+    #td-dock .td-shop { background: #3a3320; border-color: #6b5a2f; color: #ffe7a0; font-weight: bold; }
+    #td-dock .td-shop:hover:not(:disabled) { background: #4a4128; }
     #td-dock .td-btn:disabled, #td-dock .td-btn.td-disabled { opacity: 0.45; cursor: not-allowed; }
 
     /* Touch: a slim build dock just under the top status bar. It can't go to

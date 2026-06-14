@@ -341,9 +341,9 @@ function applyTdActionMode() {
     // the build actions — Start wave (▶), Recruit, Switch — so the dock can
     // shrink to a slim countdown strip. Start sits in the bottom (melee) slot,
     // the most thumb-reachable spot.
-    setActionButton(melee, ICON_START, tdEarlyBonus > 0 ? `+${tdEarlyBonus}g` : "", "");
+    setActionButton(melee, ICON_START, tdEarlyBonus > 0 ? `+${tdEarlyBonus}` : "", "");
     if (tdRecruit && !tdRecruit.full) {
-      setActionButton(throwBtn, ICON_RECRUIT, `${tdRecruit.cost}g`, "");
+      setActionButton(throwBtn, ICON_RECRUIT, `${tdRecruit.cost}`, "");
       throwBtn.classList.toggle("touch-dim", !tdRecruit.can);
     } else {
       setActionButton(throwBtn, ICON_RECRUIT, "", "none");

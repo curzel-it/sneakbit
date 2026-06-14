@@ -8,6 +8,7 @@
 
 import { getValue, setValue } from "./storage.js";
 import { isCoopMode } from "./coopMode.js";
+import { isTowerDefenseMode } from "./gameMode.js";
 
 export const SLOT_RANGED = "ranged";
 export const SLOT_MELEE  = "melee";
@@ -29,7 +30,11 @@ function keyFor(slot, index) {
 // which we deliberately exclude.
 function effectiveIndex(index) {
   const i = index | 0;
-  if (i > 0 && isCoopMode()) return 0;
+  // Tower Defense keeps gear per-hero (each squad slot has its own weapon, and
+  // the shop re-equips the active hero alone), so it must NOT fold even in
+  // local co-op. The transient TD save (tdSave.js) keeps these off the real
+  // equipment.
+  if (i > 0 && isCoopMode() && !isTowerDefenseMode()) return 0;
   return i;
 }
 
@@ -44,6 +49,16 @@ export function getEquipped(slot, index = 0) {
     return v == null ? null : v;
   }
   return null;
+}
+
+// The RAW stored weapon id for a slot — null when nothing is set, with no
+// kunai-launcher default. sessionLoadouts' Tower Defense branch uses this to
+// tell "the player bought/equipped a weapon for this slot" apart from "use the
+// slot's archetype default", which getEquipped's ranged default would mask.
+export function getEquippedId(slot, index = 0) {
+  if (slot !== SLOT_RANGED && slot !== SLOT_MELEE) return null;
+  const v = getValue(keyFor(slot, effectiveIndex(index)));
+  return v == null ? null : v;
 }
 
 export function setEquipped(slot, speciesId, index = 0) {

@@ -42,7 +42,7 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   await waitFor(s, "window.td.state().phase === 'build'");
 
   assert.equal(await evalExpr(s, "window.td.squad()"), 1, "solo starts with one hero (the Ninja)");
-  assert.ok(await evalExpr(s, "window.td.state().gold > 0"), "starting gold granted");
+  assert.ok(await evalExpr(s, "window.td.state().coins > 0"), "starting coins granted");
   assert.ok(await evalExpr(s, "!!document.getElementById('td-hud') && getComputedStyle(document.getElementById('td-hud')).display !== 'none'"), "HUD visible");
   assert.ok(await evalExpr(s, "window.td.state().lives > 0"), "village starts with lives, not instant-loss");
 
@@ -53,7 +53,7 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   assert.equal(await evalExpr(s, "window.td.state().mapIndex"), 0, "run starts on map 0");
 
   // — Recruiting grows the squad with a real second hero ———————————————————
-  await evalExpr(s, "window.td.gold(500)");
+  await evalExpr(s, "window.td.coins(500)");
   await evalExpr(s, "window.td.recruit()");
   assert.equal(await evalExpr(s, "window.td.squad()"), 2, "recruited a second hero");
 
@@ -70,7 +70,7 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   await waitFor(s, "(window.td.killAll(), window.td.state().phase === 'build')", { timeoutMs: 15000 });
   const after = await evalExpr(s, "window.td.state()");
   assert.ok(after.score > before.score, "kills scored points");
-  assert.ok(after.gold >= before.gold, "kills + stipend banked gold");
+  assert.ok(after.coins >= before.coins, "kills + stipend banked coins");
   assert.ok(after.wave >= 1, "survived a wave");
 
   // — Obstacles are fixed for the map: unchanged after the wave clears ————————

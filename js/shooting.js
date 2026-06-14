@@ -21,6 +21,7 @@ import { rumble } from "./rumble.js";
 import { pvpSlotCanAct } from "./pvpMatch.js";
 import { isPvp, isTowerDefenseMode } from "./gameMode.js";
 import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
+import { ownerSlotOf } from "./heroSwitch.js";
 import { spawnLocalFlash } from "./localEffects.js";
 import { ANIMATIONS_FPS } from "./constants.js";
 
@@ -282,10 +283,13 @@ function shoot(state, shooter) {
   // co-op / single-player / online keep the persisted inventory.
   if (isPvp()) {
     if (!spendPvpAmmo(idx, bulletId)) { playSfx("noAmmo"); rumble(idx + 1, "noAmmo"); return; }
-  } else if (isTowerDefenseMode()) {
-    // TD heroes have unlimited kunai — the run economy is gold, not ammo —
-    // and TD must never read or write the saved inventory.
-  } else {
+  } else if (!isTowerDefenseMode() || ownerSlotOf(idx) != null) {
+    // Tower Defense burns real rounds now — its ammo lives in the transient TD
+    // inventory (tdSave.js), per hero, so the shop economy has teeth and the
+    // saved game is still never touched. Only a hero a LOCAL player is driving
+    // pays: AI teammates and online-guest heroes have no purse to restock from,
+    // so they fire free (like the towers they stand in for). Outside TD the
+    // guard is always true, so the saved-inventory path is byte-identical.
     if (getAmmo(bulletId, idx) <= 0) { playSfx("noAmmo"); rumble(idx + 1, "noAmmo"); return; }
     if (!removeAmmo(bulletId, 1, idx)) return;
   }

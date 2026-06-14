@@ -15,6 +15,12 @@ import { loadZone } from "./data.js";
 import { buildZone, isWalkable } from "./zone.js";
 import { createPlayer, updatePlayer, updateGuestAvatar } from "./player.js";
 import { pollInput } from "./input.js";
+import { getSpecies } from "./species.js";
+import { addAmmo } from "./inventory.js";
+import { resolveLoadout } from "./sessionLoadouts.js";
+import { updateAmmoHud } from "./ammoHud.js";
+import { openShop, isShopOpen } from "./shop.js";
+import { tdShopStock } from "./tdShopStock.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { broadcastHostEvent } from "./hostEvents.js";
 import { guestSlots } from "./hostGuests.js";
@@ -62,7 +68,8 @@ import {
   switchHeroForSlot, ensureLiveOwner, ownerSlots, followActiveHero, activeHero,
   ownedHeroPlayer, cameraTargetFor, setOwnership, releaseSlot,
 } from "./heroSwitch.js";
-import { resetGold, getGold, addGold, spendGold, canAfford } from "./arcadeCurrency.js";
+import { getCoins, addCoins } from "./wallet.js";
+import { enterTdSave } from "./tdSave.js";
 import { refreshTouchActions } from "./touch.js";
 import {
   installTdHud, showTdHud, hideTdHud, updateTdHud, showTdGameOver,
@@ -77,6 +84,7 @@ const STIPEND_BASE = 40;          // per-wave starting income
 const STIPEND_PER_WAVE = 10;
 const WAVE_CLEAR_BONUS = 100;     // score per wave survived
 const RECRUIT_BASE_COST = 150;    // doubles per recruit
+const STARTING_AMMO = 100;        // rounds a ranged hero spawns with (tunable)
 const REVIVE_BASE_COST = 60;      // ×5 mid-wave (locked spec)
 const MID_WAVE_REVIVE_MULT = 5;
 const COMBO_WINDOW = 3;           // seconds a kill streak survives without a kill
@@ -108,6 +116,34 @@ let lives = VILLAGE_LIVES;
 let recruitedCount = 0;
 let booting = false;
 
+// — Coin purse ———————————————————————————————————————————————————————————
+// TD's currency is the game's own coins, kept in a single shared squad purse.
+// wallet.js folds every hero index to 0 in TD mode, and tdSave routes those
+// coins through the transient run context, so this is one throwaway purse the
+// whole squad — loot, the shop, recruit/revive — draws from. Index 0 is the
+// fold target.
+const TD_PURSE = 0;
+function tdCoins() { return getCoins(TD_PURSE); }
+function tdEarn(n) { if (n) addCoins(n | 0, TD_PURSE); }
+function tdCanAfford(cost) { return tdCoins() >= (cost | 0); }
+function tdSpend(cost) {
+  const c = cost | 0;
+  if (c <= 0) return true;
+  if (tdCoins() < c) return false;
+  addCoins(-c, TD_PURSE);
+  return true;
+}
+
+// Stock a freshly-spawned hero with rounds for its ranged weapon, so finite
+// ammo doesn't leave a shooter dry on wave 1. Melee-only archetypes resolve to
+// ranged: null and get nothing (they have no gun). Lands in the transient TD
+// inventory, per hero.
+function grantStartingAmmo(hero) {
+  const ranged = resolveLoadout(hero).ranged;
+  const bullet = ranged ? getSpecies(ranged)?.bullet_species_id : null;
+  if (bullet) addAmmo(bullet, STARTING_AMMO, hero.index | 0);
+}
+
 // Cached one-shot read of the ?mode=td boot latch — the deep-link equivalent
 // of the party panel's Tower Defense button. Mirrors creativeMode's pattern:
 // read once at boot, stable for the page lifetime. Guests (?join=…) never TD.
@@ -128,6 +164,7 @@ export function installTowerDefense(stateGetter) {
     onRecruit: recruitHero,
     onRevive: reviveHero,
     onSwitch: switchHero,
+    onShop: openTdShop,
     onRestart: restartRun,
   });
   window.addEventListener("keydown", onKey);
@@ -145,6 +182,11 @@ export async function startTowerDefense() {
   booting = true;
   try {
     setGameMode(GAME_MODE.td);
+    // Enter the transient TD save FIRST (before anything reads coins/inventory):
+    // a fresh, throwaway purse + empty packs that never touch the real save.
+    // Must follow setGameMode so the wallet/inventory/equipment fold rules see
+    // TD mode.
+    enterTdSave();
     // Honor the current local player count: each local human owns one starting
     // hero, every extra/recruited hero is free (AI). Solo (count 1) = one human.
 
@@ -152,7 +194,7 @@ export async function startTowerDefense() {
     resetWaves();
     resetAllyAI();
     setTdEnemyHooks({ onKill, onLeak });
-    resetGold(START_GOLD);
+    tdEarn(START_GOLD);
     resetHeroSwitch(localPlayerCount());
     recruitedCount = 0;
     mapIndex = 0;
@@ -179,10 +221,11 @@ export async function startTowerDefense() {
     // On touch, surface the melee/remove action button — the squad may carry
     // no melee weapon, which would otherwise keep it hidden.
     refreshTouchActions();
-    // The ammo chip is meaningless in TD (infinite kunai, no inventory) — hide
-    // it so it doesn't show stray "x0" boxes. Restored on the exit reload.
+    // Ammo is finite now, so the chip matters: make sure it's visible (a prior
+    // build hid it) and tracking the active hero's rounds.
     const ammo = typeof document !== "undefined" && document.getElementById("ammo-hud");
-    if (ammo) ammo.style.display = "none";
+    if (ammo) ammo.style.display = "";
+    updateAmmoHud();
   } finally {
     booting = false;
   }
@@ -231,8 +274,10 @@ function spawnSquad(state) {
     // Hero 0 takes its spawn tile verbatim; later heroes spiral out so they
     // never stack on an already-placed teammate.
     const tile = i === 0 ? { x: pref.x | 0, y: pref.y | 0 } : freeHeroTile(state, pref);
-    attachHero(state, placeHero(createPlayer({ index: i }), tile), i);
+    const hero = placeHero(createPlayer({ index: i }), tile);
+    attachHero(state, hero, i);
     resetPlayerHealth(i);
+    grantStartingAmmo(hero);
   }
 }
 
@@ -247,6 +292,7 @@ function spawnSquadHost(state) {
   placeHero(state.player, { x: spawns[0].x | 0, y: spawns[0].y | 0 });
   state.lastTile = { x: state.player.tileX, y: state.player.tileY };
   resetPlayerHealth(0);
+  grantStartingAmmo(state.player);
   setOwnership(1, 0);
 }
 
@@ -365,7 +411,7 @@ function startNextWave({ early = false } = {}) {
   // convention) — a real trade: more gold now, less time to maze.
   if (early) {
     const bonus = Math.round(Math.max(0, buildTimer) * EARLY_BONUS_PER_SEC);
-    if (bonus > 0) { addGold(bonus); showToast(`+${bonus}g early-call bonus`, "hint"); }
+    if (bonus > 0) { tdEarn(bonus); showToast(`+${bonus} coins — early call`, "hint"); }
   }
   wave += 1;
   startWave(wave);
@@ -374,7 +420,7 @@ function startNextWave({ early = false } = {}) {
 
 function clearWave() {
   score += WAVE_CLEAR_BONUS * wave;
-  addGold(STIPEND_BASE + wave * STIPEND_PER_WAVE);
+  tdEarn(STIPEND_BASE + wave * STIPEND_PER_WAVE);
   waveInMap += 1;
   if (waveInMap >= WAVES_PER_MAP) {
     // Map cleared — advance to a fresh, harder map. loadMap rebuilds the zone
@@ -402,7 +448,7 @@ function gameOver(reason = "squad") {
 
 // — Enemy hooks ——————————————————————————————————————————————————————————
 function onKill(speciesId) {
-  addGold(GOLD_FOR[speciesId] || 5);
+  tdEarn(GOLD_FOR[speciesId] || 5);
   combo += 1;
   comboTimer = COMBO_WINDOW;
   score += Math.round((POINTS_FOR[speciesId] || 10) * comboMultiplier());
@@ -432,7 +478,7 @@ function recruitCost() {
 }
 
 function canRecruit(state) {
-  return nextRecruitIndex(state) != null && canAfford(recruitCost());
+  return nextRecruitIndex(state) != null && tdCanAfford(recruitCost());
 }
 
 function nextRecruitIndex(state) {
@@ -446,11 +492,13 @@ function recruitHero() {
   if (!state || phase !== "build") return;
   const index = nextRecruitIndex(state);
   if (index == null) return;
-  if (!spendGold(recruitCost())) { showToast("Not enough gold", "hint"); return; }
+  if (!tdSpend(recruitCost())) { showToast("Not enough coins", "hint"); return; }
   const spawns = getHeroSpawns();
   const tile = freeHeroTile(state, spawns[index % spawns.length] || spawns[0]);
-  attachHero(state, placeHero(createPlayer({ index }), tile), index);
+  const hero = placeHero(createPlayer({ index }), tile);
+  attachHero(state, hero, index);
   resetPlayerHealth(index);
+  grantStartingAmmo(hero);
   recruitedCount += 1;
 }
 
@@ -466,7 +514,7 @@ function reviveHero(index) {
   const state = getState();
   if (!state) return;
   if (!isPlayerDead(index | 0)) return;
-  if (!spendGold(reviveCost())) { showToast("Not enough gold", "hint"); return; }
+  if (!tdSpend(reviveCost())) { showToast("Not enough coins", "hint"); return; }
   const hero = squadPlayers(state).find((p) => (p.index | 0) === (index | 0));
   if (!hero) return;
   const spawns = getHeroSpawns();
@@ -479,6 +527,16 @@ function switchHero(slot = 1) {
   if (!state || phase === "gameover") return;
   switchHeroForSlot(state, slot, isPlayerDead);
   followSquadCameras(state);
+}
+
+// Open the regular shop UI stocked with the TD catalog, buying for the hero the
+// player is currently driving: weapons/ammo/consumables land on that hero, and
+// coins come from the shared squad purse (wallet folds every hero to index 0 in
+// TD). isShopOpen() feeds isOverlayOpen below, so the sim pauses while shopping.
+function openTdShop() {
+  const state = getState();
+  if (!state || phase === "gameover") return;
+  openShop(tdShopStock(), getActiveHeroIndex() | 0);
 }
 
 // — Per-frame driver ——————————————————————————————————————————————————————
@@ -512,6 +570,9 @@ export function tickTowerDefense(dt, frame) {
     });
   }
   updateHud(frame.hud, { zoneId: state.zone.id, fps: 1 / dt, showFps: getSettings().showFps });
+  // Keep the ammo chip on the hero the player is currently driving (switching
+  // heroes doesn't fire an inventory/equipment change, so refresh it here).
+  updateAmmoHud();
   updateTdHud(buildModel(state));
   maybeBroadcastTdState(state, dt);
 }
@@ -647,7 +708,7 @@ function squadWiped(state) {
   const anyAlive = squad.some((p) => !isPlayerDead(p.index | 0));
   if (anyAlive) return false;
   // Everyone's down — only a wipe if no downed hero can be revived.
-  return !canAfford(reviveCost());
+  return !tdCanAfford(reviveCost());
 }
 
 function livingHeroes(state) {
@@ -668,7 +729,7 @@ function heroOnTile(heroes, self, tx, ty) {
 
 function buildModel(state) {
   const revives = downedHeroes(state)
-    .filter(() => canAfford(reviveCost()))
+    .filter(() => tdCanAfford(reviveCost()))
     .map((p) => ({ index: p.index | 0, name: HERO_NAMES[p.index | 0] || "Hero", cost: reviveCost() }));
   const active = activeHero(state);
   return {
@@ -679,7 +740,7 @@ function buildModel(state) {
     highScore,
     lives,
     maxLives: VILLAGE_LIVES,
-    gold: getGold(),
+    coins: tdCoins(),
     countdown: phase === "build" ? Math.max(0, buildTimer) : null,
     countdownMax: BUILD_TIME,
     earlyBonus: phase === "build" ? Math.round(Math.max(0, buildTimer) * EARLY_BONUS_PER_SEC) : 0,
@@ -691,7 +752,7 @@ function buildModel(state) {
       cost: recruitCost(),
       can: canRecruit(state),
       full: nextRecruitIndex(state) == null,
-      label: nextRecruitIndex(state) == null ? "Squad full" : `Recruit hero (${recruitCost()}g)`,
+      label: nextRecruitIndex(state) == null ? "Squad full" : `Recruit hero (${recruitCost()})`,
     },
     buildHint: "Hold the line — obstacles are closing in",
     revives,
@@ -751,7 +812,7 @@ function onKey(e) {
 }
 
 function isOverlayOpen() {
-  return isMenuOpen() || isDialogueOpen() || isPartyPanelOpen() || isAccountPanelOpen();
+  return isMenuOpen() || isDialogueOpen() || isPartyPanelOpen() || isAccountPanelOpen() || isShopOpen();
 }
 
 // — Restart ——————————————————————————————————————————————————————————————
@@ -770,8 +831,8 @@ function installDebugHook() {
     slices: () => sliceCount(),
     ownerSlot: (i) => ownerSlotOf(i | 0),
     startWave: () => startNextWave(),
-    state: () => ({ phase, wave, mapIndex, waveInMap, score, highScore, lives, gold: getGold(), combo }),
-    gold: (n) => addGold(n | 0),
+    state: () => ({ phase, wave, mapIndex, waveInMap, score, highScore, lives, coins: tdCoins(), combo }),
+    coins: (n) => tdEarn(n | 0),
     addWaves: (n) => { wave += (n | 0); },
     enemies: () => { const s = getState(); return s?.zone ? getEnemies(s.zone).length : 0; },
     enemyTiles: () => {

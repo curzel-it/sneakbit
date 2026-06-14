@@ -13,7 +13,9 @@ import { ICON_RES, paintInventoryIcon } from "./inventoryIcon.js";
 import { getAmmo, onInventoryChange } from "./inventory.js";
 import { getEquipped, SLOT_RANGED, onEquipmentChange } from "./equipment.js";
 import { getSpecies } from "./species.js";
-import { isPvp } from "./gameMode.js";
+import { isPvp, isTowerDefenseMode } from "./gameMode.js";
+import { getActiveHeroIndex } from "./heroSwitch.js";
+import { resolveLoadout } from "./sessionLoadouts.js";
 import { localPlayerCount } from "./coopMode.js";
 import { sliceCount, getSlices } from "./splitScreen.js";
 import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
@@ -48,6 +50,16 @@ function rangedBulletFor(playerIndex) {
   return sp?.bullet_species_id || KUNAI_SPECIES_ID;
 }
 
+// Tower Defense resolves the ranged weapon through sessionLoadouts (archetype +
+// shop override), so a melee-only hero has no ranged ammo to show — return null
+// to hide the chip rather than fall back to the kunai default. The TD branch of
+// resolveLoadout only reads player.index, so a bare {index} is enough.
+function rangedBulletForTd(heroIndex) {
+  const ranged = resolveLoadout({ index: heroIndex }).ranged;
+  if (!ranged) return null;
+  return getSpecies(ranged)?.bullet_species_id || KUNAI_SPECIES_ID;
+}
+
 function makeChip(index) {
   const icon = el("canvas", {
     width: ICON_RES,
@@ -76,18 +88,29 @@ export function updateAmmoHud() {
   setTopHudSplit(split);
   const slices = split ? getSlices() : null;
   const count = split ? localPlayerCount() : 1;
+  // Tower Defense, single slice: the one chip follows whichever squad hero the
+  // player is currently driving (Tab/switch), reading that hero's per-hero TD
+  // ammo. (Split-screen TD keeps one chip per slice/hero, handled below.)
+  const tdActive = isTowerDefenseMode() && !split;
   // Tag with the player number when more than one chip is on screen, or in
   // PvP (where the chip tracks a specific player's scavenged loadout).
   const tagged = pvp || count > 1;
   for (const c of chips) {
     if (c.index >= count) { c.root.style.display = "none"; continue; }
-    c.root.style.display = "";
+    // The hero this chip reports on: the active squad hero in single-slice TD,
+    // otherwise this chip's own player index.
+    const readIndex = tdActive ? getActiveHeroIndex() : c.index;
     // PvP draws from the per-player scavenge loadout and follows that player's
-    // equipped caliber; outside PvP it's the persisted inventory pool.
+    // equipped caliber; TD resolves the squad archetype + shop override; outside
+    // both it's the persisted inventory pool.
     const bulletId = pvp
       ? bulletOfWeapon(getPvpRangedWeapon(c.index))
+      : tdActive ? rangedBulletForTd(readIndex)
       : rangedBulletFor(c.index);
-    const n = pvp ? getPvpAmmo(c.index, bulletId) : getAmmo(bulletId, c.index);
+    // A melee-only TD hero has no ranged ammo — hide the chip entirely.
+    if (tdActive && bulletId == null) { c.root.style.display = "none"; continue; }
+    c.root.style.display = "";
+    const n = pvp ? getPvpAmmo(c.index, bulletId) : getAmmo(bulletId, readIndex);
     const label = tagged ? `P${c.index + 1}  x${n}` : `x${n}`;
     if (label !== c.lastLabel) {
       c.count.textContent = label;
