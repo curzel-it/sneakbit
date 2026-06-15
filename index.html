@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -6,141 +6,237 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SneakBit — a top-down pixel-art adventure</title>
     <meta name="description"
-        content="SneakBit is a top-down pixel-art adventure: explore, fight, farm, and team up in co-op. Play free in your browser, or get it on Steam, iOS, and Android.">
+        content="SneakBit is a top-down pixel-art adventure: explore, fight, and team up in co-op. Play free in your browser, or get it on Steam, iOS, and Android.">
     <link rel="icon" href="/favicon.ico">
 
     <!-- Open Graph / social cards -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="SneakBit">
     <meta property="og:description"
-        content="A top-down pixel-art adventure. Explore, fight, farm, and team up in co-op.">
-    <meta property="og:image" content="/media/overworld.png">
+        content="Adventure, Action, Nostalgia — a story-driven pixel-art RPG. Play free in your browser.">
+    <meta property="og:image" content="/media/screenshots/1.png">
     <meta property="og:url" content="https://sneakbit.curzel.it/">
     <meta name="twitter:card" content="summary_large_image">
 
-    <link rel="stylesheet" href="/site.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
     <style>
-        /* Hero */
-        .hero { text-align: center; padding: 56px 0 8px; }
-        .hero h1 {
-            font-size: 40px; letter-spacing: 3px; margin: 0;
-            text-transform: uppercase;
+        /* Ported from curzel.it/sneakbit — kept self-contained (no shared
+           site.css) so the landing matches that page exactly; the account
+           page keeps its own dark theme. */
+        :root {
+            --bg: #f5f5f5;
+            --bg-card: #fafafa;
+            --fg: #444;
+            --fg-strong: #000;
+            --fg-h2: #111;
+            --border: #ccc;
+            --border-subtle: #e5e5e5;
+            --accent: #ffb703;
+            /* Match the game's look: a pixel/arcade font for titles, and a
+               monospace body — the game's own DOM HUD is monospace too. */
+            --font-display: "Press Start 2P", "Courier New", monospace;
+            --font-body: ui-monospace, SFMono-Regular, Menlo, Consolas, "Courier New", monospace;
         }
-        .hero .tagline { color: #aaa; font-size: 16px; margin: 12px 0 28px; }
-        .hero-shot {
-            display: block; width: 100%; height: auto;
-            border: 1px solid #2a2a2a; border-radius: 6px;
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #101010;
+                --bg-card: #181818;
+                --fg: #ccc;
+                --fg-strong: #fff;
+                --fg-h2: #eee;
+                --border: #333;
+                --border-subtle: #2a2a2a;
+            }
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            max-width: 1024px;
             margin: 0 auto;
+            padding: 16px;
+            font-family: var(--font-body);
+            line-height: 1.7;
+            color: var(--fg);
+            background-color: var(--bg);
         }
-        .stores { margin-top: 6px; }
 
-        /* Sections */
-        section.block { margin-top: 56px; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        b, strong { font-weight: 700; }
+
+        /* Press Start 2P renders large and single-weight, so titles use smaller
+           font-size + generous line-height than a normal sans would. */
+        h1 {
+            font-family: var(--font-display); font-weight: 400;
+            font-size: 1.9rem; line-height: 1.4; letter-spacing: 1px;
+            margin: 0 0 14px; color: var(--fg-strong);
+        }
         h2 {
-            font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
-            color: #888; border-bottom: 1px solid #222; padding-bottom: 8px; margin: 0 0 18px;
+            font-family: var(--font-display); font-weight: 400;
+            font-size: 1rem; line-height: 1.6; letter-spacing: 0.5px;
+            margin: 0 0 1rem; color: var(--fg-h2);
         }
 
-        /* Feature grid */
-        .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-        .feature { background: #131313; border: 1px solid #222; border-radius: 6px; padding: 16px 18px; }
-        .feature h3 { margin: 0 0 6px; font-size: 15px; color: #fff; }
-        .feature p { margin: 0; color: #aaa; font-size: 14px; }
+        header { margin-bottom: 48px; }
+        header .lede { margin-top: 12px; }
+        section { margin: 32px 0; }
 
-        /* Gallery */
-        .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-        .gallery img { width: 100%; height: auto; border: 1px solid #2a2a2a; border-radius: 6px; }
+        /* Top-right account chip (preserved from the previous landing). */
+        .topbar { display: flex; justify-content: flex-end; min-height: 22px; margin-bottom: 4px; }
+        .site-auth-link { font-size: 0.9rem; color: var(--fg); }
 
-        /* Footer */
-        footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid #222; color: #888; font-size: 13px; }
-        footer p { margin: 6px 0; }
-
-        @media (max-width: 560px) {
-            .hero h1 { font-size: 30px; }
-            .features, .gallery { grid-template-columns: 1fr; }
+        /* Screenshot carousel. */
+        .carousel-container { position: relative; overflow: hidden; margin: auto; }
+        .carousel {
+            display: flex; width: 100%; margin: 20px 0;
+            border-radius: 10px; transition: transform 0.5s ease-in-out;
         }
+        .carousel img { flex: 0 0 100%; width: 100%; height: auto; border-radius: 8px; }
+        .carousel-controls {
+            display: flex; justify-content: space-between;
+            position: absolute; top: 50%; width: 100%;
+            transform: translateY(-50%); z-index: 10;
+        }
+        .carousel-controls button {
+            background: rgba(0, 0, 0, 0.5); border: none; border-radius: 4px;
+            color: white; padding: 10px; cursor: pointer; font-size: 1rem;
+        }
+
+        /* Play + store badges. */
+        .download-links { margin: 20px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+        .download-links a { display: inline-flex; align-items: center; }
+        .play-badge {
+            display: inline-flex; align-items: center; gap: 8px; box-sizing: border-box;
+            width: 200px; aspect-ratio: 560 / 168; padding: 0 14px;
+            background-color: #000; color: #fff;
+            border: 1px solid #a6a6a6; border-radius: 10px; text-decoration: none;
+        }
+        .play-badge:hover { opacity: 0.85; text-decoration: none; }
+        .play-badge svg { flex: 0 0 auto; }
+        .play-badge .label { display: flex; flex-direction: column; line-height: 1.15; text-align: left; white-space: nowrap; }
+        .play-badge .label .small { font-size: 0.6rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .play-badge .label .big { font-size: 1.1rem; font-weight: 700; }
+
+        /* Features / credits lists. */
+        .features ul { padding-left: 20px; }
+        .features li { margin-bottom: 6px; }
+
+        footer { text-align: center; margin-top: 60px; font-size: 0.85rem; }
+        .social-links a { margin: 0 8px; }
+        .social-links img { width: 20px; height: auto; vertical-align: middle; }
     </style>
 </head>
 
 <body>
-    <nav class="site-nav">
-        <a class="brand" href="/">SneakBit</a>
-        <span id="account-link"></span>
-    </nav>
-    <main>
-        <header class="hero">
-            <h1>SneakBit</h1>
-            <p class="tagline">A top-down pixel-art adventure — explore, fight, farm, and team up in co-op.</p>
-            <img class="hero-shot" src="/media/overworld.png" width="960" height="640"
-                alt="SneakBit gameplay: a hero standing in a summoning circle beside a forest shop">
+    <div class="topbar"><span id="account-link"></span></div>
 
-            <div class="cta">
-                <a class="btn primary" href="/play">▶ Play in your browser</a>
-            </div>
-            <div class="cta stores">
-                <a class="btn" href="https://store.steampowered.com/app/3360860/SneakBit/" target="_blank" rel="noopener">Steam</a>
-                <a class="btn" href="https://apps.apple.com/app/sneakbit/id6737452377" target="_blank" rel="noopener">App Store</a>
-                <a class="btn" href="https://play.google.com/store/apps/details?id=it.curzel.bitscape" target="_blank" rel="noopener">Google Play</a>
-            </div>
-        </header>
+    <header>
+        <h1>SneakBit</h1>
+        <h2>Adventure, Action, Nostalgia</h2>
+        <div class="lede">
+            Awaken in a mysterious world teeming with danger, magic, and secrets.<br><br>
+            Explore stunning pixel-art landscapes, from serene villages to treacherous dungeons.<br>
+            Meet unforgettable characters, uncover secrets and choose your path in this story-driven RPG.
+        </div>
+    </header>
 
-        <section class="block">
-            <h2>What is it</h2>
-            <div class="features">
-                <div class="feature">
-                    <h3>Explore a handcrafted world</h3>
-                    <p>Forests, farmland, dusk-woods and dungeons — a connected world built tile by tile.</p>
-                </div>
-                <div class="feature">
-                    <h3>Fight &amp; survive</h3>
-                    <p>Weapons, monsters, and a demon lord at the end of it. Real combat, not just walking around.</p>
-                </div>
-                <div class="feature">
-                    <h3>Farm &amp; build</h3>
-                    <p>Grow crops, gather, and make a place your own between the fights.</p>
-                </div>
-                <div class="feature">
-                    <h3>Play together</h3>
-                    <p>Drop-in co-op over the network — host a world and bring a friend along.</p>
-                </div>
+    <section>
+        <div class="carousel-container">
+            <div class="carousel">
+                <img src="/media/screenshots/1.png" alt="SneakBit screenshot 1">
+                <img src="/media/screenshots/2.png" alt="SneakBit screenshot 2">
+                <img src="/media/screenshots/3.png" alt="SneakBit screenshot 3">
+                <img src="/media/screenshots/4.png" alt="SneakBit screenshot 4">
+                <img src="/media/screenshots/5.png" alt="SneakBit screenshot 5">
             </div>
-        </section>
-
-        <section class="block">
-            <h2>Screenshots</h2>
-            <div class="gallery">
-                <img src="/media/duskwood.png" width="960" height="640" alt="SneakBit duskwood biome with purple trees and ruins">
-                <img src="/media/farmland.png" width="960" height="640" alt="SneakBit farmland biome with crops and forest">
+            <div class="carousel-controls">
+                <button id="prev" aria-label="Previous screenshot">&#10094;</button>
+                <button id="next" aria-label="Next screenshot">&#10095;</button>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="block">
-            <h2>Get it</h2>
-            <div class="cta" style="justify-content: flex-start;">
-                <a class="btn primary" href="/play">▶ Play free in browser</a>
-                <a class="btn" href="https://store.steampowered.com/app/3360860/SneakBit/" target="_blank" rel="noopener">Steam</a>
-                <a class="btn" href="https://apps.apple.com/app/sneakbit/id6737452377" target="_blank" rel="noopener">App Store</a>
-                <a class="btn" href="https://play.google.com/store/apps/details?id=it.curzel.bitscape" target="_blank" rel="noopener">Google Play</a>
-            </div>
-        </section>
+    <section>
+        <h2>Play it Now!</h2>
+        <p>Play instantly in your browser — no download required:</p>
+        <div class="download-links">
+            <a href="/play" class="play-badge">
+                <svg viewBox="0 0 24 24" width="34" height="34" fill="currentColor" stroke="none" aria-hidden="true">
+                    <polygon points="7,4 20,12 7,20" />
+                </svg>
+                <span class="label">
+                    <span class="small">Play it now</span>
+                    <span class="big">In Browser</span>
+                </span>
+            </a>
+            <a href="https://store.steampowered.com/app/3360860/SneakBit/" target="_blank" rel="noopener">
+                <img src="/media/badges/steam_badge.webp" alt="Get it on Steam" style="width: 200px; height: auto;">
+            </a>
+            <a href="https://apps.apple.com/app/sneakbit/id6737452377" target="_blank" rel="noopener">
+                <img src="/media/badges/appstore_badge.webp" alt="Download on the App Store" style="width: 200px; height: auto;">
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=it.curzel.bitscape" target="_blank" rel="noopener">
+                <img src="/media/badges/playstore_badge.webp" alt="Get it on Google Play" style="width: 200px; height: auto;">
+            </a>
+        </div>
+    </section>
 
-        <footer>
-            <p>
-                <strong>SneakBit</strong> · web port of the
-                <a href="https://github.com/curzel-it/sneakbit/tree/rust-core-tip" target="_blank" rel="noopener">original Rust build</a> ·
-                source on <a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener">GitHub</a>.
-            </p>
-            <p>
-                Music by <a href="https://www.filippovicarelli.com/8bit-game-background-music" target="_blank" rel="noopener">Filippo Vicarelli</a> ·
-                sound effects by <a href="https://opengameart.org/content/512-sound-effects-8-bit-style" target="_blank" rel="noopener">SubspaceAudio</a> ·
-                font by <a href="https://dl.dafont.com/dl/?f=pixel_operator" target="_blank" rel="noopener">HarvettFox96</a>.
-            </p>
-            <p>
-                <a href="/privacy.html">Privacy Policy</a> ·
-                <a href="/terms.html">Terms &amp; Conditions</a>
-            </p>
-        </footer>
-    </main>
+    <section class="features">
+        <h2>Features</h2>
+        <ul>
+            <li>Adventure-action gameplay with kunai and sword combat.</li>
+            <li>Grid-based tiling system with biomes and constructions.</li>
+            <li>Unlockable combat skills and story-driven progression.</li>
+            <li>Nostalgic pixel art aesthetics.</li>
+            <li>Online co-op multiplayer — play together right in the browser.</li>
+            <li>Playable on desktop, mobile, and the web.</li>
+        </ul>
+    </section>
+
+    <section class="features">
+        <h2>Credits</h2>
+        <ul>
+            <li>Music by <a href="https://www.filippovicarelli.com/8bit-game-background-music" target="_blank" rel="noopener">Filippo Vicarelli</a></li>
+            <li>Sound Effects by <a href="https://opengameart.org/content/512-sound-effects-8-bit-style" target="_blank" rel="noopener">SubspaceAudio</a></li>
+            <li>Font by <a href="https://dl.dafont.com/dl/?f=pixel_operator" target="_blank" rel="noopener">HarvettFox96</a></li>
+            <li>Web port of the <a href="https://github.com/curzel-it/sneakbit/tree/rust-core-tip" target="_blank" rel="noopener">original Rust build</a> — source on <a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; Federico Curzel</p>
+        <div class="social-links">
+            <a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener"><img src="/media/badges/github.png" alt="GitHub"></a>
+            | <a href="https://discord.gg/ZP7vfXub" target="_blank" rel="noopener"><img src="/media/badges/discord.png" alt="Discord"></a>
+            | <a href="https://www.youtube.com/@HiddenMugs" target="_blank" rel="noopener"><img src="/media/badges/youtube.png" alt="YouTube"></a>
+            | <a href="https://x.com/HiddenMugs" target="_blank" rel="noopener"><img src="/media/badges/twitter.png" alt="Twitter"></a>
+            | <a href="/privacy.html">Privacy Policy</a>
+            | <a href="/terms.html">Terms &amp; Conditions</a>
+        </div>
+    </footer>
+
+    <script>
+        // Screenshot carousel — auto-advances, with prev/next controls.
+        const carousel = document.querySelector('.carousel');
+        const images = carousel.children;
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+        let index = 0;
+
+        function showImage(newIndex) {
+            index = (newIndex + images.length) % images.length;
+            carousel.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        prevButton.addEventListener('click', () => showImage(index - 1));
+        nextButton.addEventListener('click', () => showImage(index + 1));
+        setInterval(() => showImage(index + 1), 3000);
+    </script>
     <script type="module" src="./js/siteAccount.js"></script>
 </body>
 
