@@ -24,8 +24,6 @@ import { snapshotInventory, onInventoryChange } from "./inventory.js";
 import { weaponsInSlot } from "./weaponSlots.js";
 import { unlockedSkills, onSkillsChange } from "./skills.js";
 import { isCoopMode } from "./coopMode.js";
-import { isTowerDefenseMode } from "./gameMode.js";
-import { getActiveHeroIndex } from "./heroSwitch.js";
 import {
   isConsumable, consumableVerb, canUseConsumable, useConsumable,
 } from "./consumables.js";
@@ -64,16 +62,9 @@ function teardown() {
   unsubscribers = [];
 }
 
-// The hero this panel edits. Normally the local/primary hero (index 0); in
-// Tower Defense it follows the hero the player is currently driving, so bought
-// gear shows up and "Drink"/equip act on the active squad member, matching the
-// TD shop's buyer.
-function invPlayerIndex() {
-  return isTowerDefenseMode() ? (getActiveHeroIndex() | 0) : 0;
-}
-
 function draw(host) {
-  const idx = invPlayerIndex();
+  // The panel always edits the local/primary hero (index 0).
+  const idx = 0;
   host.innerHTML = sectionsHtml(idx);
   bindButtons(host, idx);
   paintIcons(host);

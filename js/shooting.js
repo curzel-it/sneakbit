@@ -19,9 +19,8 @@ import { getNetRole } from "./onlineBootstrap.js";
 import { isPlayerDead } from "./playerHealth.js";
 import { rumble } from "./rumble.js";
 import { pvpSlotCanAct } from "./pvpMatch.js";
-import { isPvp, isTowerDefenseMode } from "./gameMode.js";
+import { isPvp } from "./gameMode.js";
 import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
-import { ownerSlotOf } from "./heroSwitch.js";
 import { spawnLocalFlash } from "./localEffects.js";
 import { ANIMATIONS_FPS } from "./constants.js";
 
@@ -144,10 +143,8 @@ export function tryShootForSlot(slot) {
   shoot(state, shooter);
 }
 
-// Tower Defense seam: fire for a specific hero player object (the active hero
-// on a keypress, or any ally hero from allyAI), without the slot→player
-// resolution that gates online guest slots on a playerId. TD heroes are local
-// players with no playerId, so the slot path wouldn't find slots 2..4.
+// Fire for a specific hero player object directly, without the slot→player
+// resolution that gates online guest slots on a playerId.
 export function tryShootForPlayer(player) {
   const state = stateRef?.();
   if (!state || !player) return;
@@ -213,10 +210,6 @@ function playerForSlotInState(state, slot) {
 
 function onKey(e) {
   if (e.repeat) return;
-  // Tower Defense routes the shoot key to the *active* hero (which may be any
-  // squad slot), so its own input handler owns the key — let it, and don't
-  // also fire P1 here. towerDefense.js calls tryShootForPlayer(activeHero).
-  if (isTowerDefenseMode()) return;
   // Guests must not drive the local sim — they forward the intent over
   // the wire and let the host decide. Without this gate the local zone
   // gets a bullet and the local ammo counter decrements on every press
@@ -283,13 +276,7 @@ function shoot(state, shooter) {
   // co-op / single-player / online keep the persisted inventory.
   if (isPvp()) {
     if (!spendPvpAmmo(idx, bulletId)) { playSfx("noAmmo"); rumble(idx + 1, "noAmmo"); return; }
-  } else if (!isTowerDefenseMode() || ownerSlotOf(idx) != null) {
-    // Tower Defense burns real rounds now — its ammo lives in the transient TD
-    // inventory (tdSave.js), per hero, so the shop economy has teeth and the
-    // saved game is still never touched. Only a hero a LOCAL player is driving
-    // pays: AI teammates and online-guest heroes have no purse to restock from,
-    // so they fire free (like the towers they stand in for). Outside TD the
-    // guard is always true, so the saved-inventory path is byte-identical.
+  } else {
     if (getAmmo(bulletId, idx) <= 0) { playSfx("noAmmo"); rumble(idx + 1, "noAmmo"); return; }
     if (!removeAmmo(bulletId, 1, idx)) return;
   }

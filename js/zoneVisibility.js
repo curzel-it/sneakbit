@@ -22,12 +22,11 @@ const ALWAYS_VISIBLE_TYPES = new Set([
 // mobs/pickups around them; offline / local co-op pass the single shared
 // camera, exactly as before.
 //
-// `all` skips the viewport test and flags every entity visible. Tower Defense
-// sets it: its camera follows one hero across a large arena, but the whole
-// battlefield must keep simulating — off-screen enemies still take fire, deal
-// melee damage and fuse, and off-screen allies still fight. Rendering culls on
-// its own (entities.js::collect), so this only opens the combat/fusion gates
-// that read `_visible` / `visibleEntities`; it never draws an off-screen prop.
+// `all` skips the viewport test and flags every entity visible — for callers
+// that must keep the whole zone simulating regardless of the camera (off-screen
+// enemies still take fire, deal melee damage and fuse). Rendering culls on its
+// own (entities.js::collect), so this only opens the combat/fusion gates that
+// read `_visible` / `visibleEntities`; it never draws an off-screen prop.
 export function updateVisibleEntities(zone, cameras, { all = false } = {}) {
   if (!zone) return;
   // Reuse the zone's existing visibleEntities array (clear + refill) instead of

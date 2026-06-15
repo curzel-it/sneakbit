@@ -159,9 +159,6 @@ function resolveBullets(zone, players, dt) {
       // A dying entity is already a fireball — bullets pass through it
       // instead of re-triggering its death (which would reset the timer).
       if (t._dying) continue;
-      // Invulnerable props (e.g. Tower Defense build-placed barrels) take no
-      // damage — bullets fly through them and they can't be destroyed.
-      if (t._invulnerable) continue;
       // Off-screen targets don't take bullet damage. Matches Rust's hitmap
       // gating — a kunai launched towards a tile the player can no longer
       // see passes harmlessly through it.
@@ -179,7 +176,7 @@ function resolveBullets(zone, players, dt) {
         // so it stops blocking, fusing, attacking and taking further hits.
         startDeathAnimation(t);
         // Real-game loot: one mutually-exclusive roll → nothing / coins / ammo
-        // (no-op in TD/PvP/creative — see lootDrops.js). The killing bullet's
+        // (no-op in PvP/creative — see lootDrops.js). The killing bullet's
         // owner drives weapon-aware ammo type. Monsters and barrels use
         // different odds.
         maybeDropLoot(zone, t, b._playerIndex | 0);

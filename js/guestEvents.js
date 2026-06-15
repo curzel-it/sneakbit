@@ -21,9 +21,6 @@ import {
 import { startCutsceneByKey, endCutsceneByKey } from "./cutscenes.js";
 import { getMirrorZone } from "./mirrorWorld.js";
 import { setHostPausedRemote } from "./guestHostPause.js";
-import { showTdHud, hideTdHud, updateTdHud, showTdGameOver } from "./tdHud.js";
-import { applyMirrorMap, resetMirrorMap } from "./tdMaze.js";
-import { TD_ZONE_ID } from "./constants.js";
 
 let installed = false;
 let unsub = null;
@@ -61,11 +58,6 @@ export function uninstallGuestEvents() {
   installed = false;
   customHandlers.clear();
   seenPickupEids.clear();
-  // A guest that leaves mid-TD-run must drop the TD HUD so a later normal
-  // session doesn't show a stale dock, and forget the painted map so a rejoin
-  // repaints from scratch.
-  hideTdHud();
-  resetMirrorMap();
   // Drop the cached host-pause flag so a future re-join doesn't show
   // a stale "Host paused" overlay before the new host has sent its
   // first hostPause event.
@@ -136,44 +128,9 @@ export function dispatch(msg) {
     case "pvpEnd":
       if (isGameOverOpen()) hideGameOver();
       return;
-    case "tdState":
-      handleTdState(msg);
-      return;
-    case "tdMap":
-      handleTdMap(msg);
-      return;
     default:
       return;
   }
-}
-
-// Paint the host's TD sand-path + obstacles onto the mirror zone. Guarded on
-// the mirror actually being the TD zone, so a tdMap that races ahead of the
-// guest's zone reload doesn't paint the overworld.
-function handleTdMap(msg) {
-  const zone = getMirrorZone();
-  if (!zone || zone.id !== TD_ZONE_ID) return;
-  applyMirrorMap(zone, msg?.path || [], msg?.obstacles || []);
-}
-
-// Host is running a Tower Defense co-op run. The mode itself rides the snapshot
-// stream (the guest already renders the mirror board + synced enemies); this
-// just drives the TD HUD read-only. The first tdState shows it; a gameover
-// phase swaps in the defeat card. The guest can't drive the economy in v1, so
-// the action buttons are hidden (readOnly).
-function handleTdState(msg) {
-  const model = msg?.model;
-  if (!model) return;
-  if (model.phase === "Defeated") {
-    showTdGameOver({
-      title: model.gameOverTitle || "Defeated",
-      wave: model.wave, score: model.score,
-      highScore: model.highScore, isNewBest: false,
-    });
-    return;
-  }
-  showTdHud();
-  updateTdHud({ ...model, readOnly: true });
 }
 
 // Host opened (or restarted) a realtime PvP match. Enter PvP rendering so the

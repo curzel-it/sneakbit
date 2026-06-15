@@ -8,7 +8,6 @@
 
 import { getValue, setValue } from "./storage.js";
 import { isCoopMode } from "./coopMode.js";
-import { isTowerDefenseMode } from "./gameMode.js";
 
 // In-memory mirror per player. Lazy-loaded once from storage on first
 // access of any function. We snapshot from storage.js's cache rather
@@ -64,11 +63,7 @@ function key(playerIndex, speciesId) {
 // which we deliberately exclude here.
 function effectiveIndex(playerIndex) {
   const idx = playerIndex | 0;
-  // Tower Defense keeps ammo per-hero (each hero loads its own weapon and
-  // burns its own rounds), so it must NOT fold even in local co-op — unlike
-  // the shared coin purse (wallet.js). The transient TD save (tdSave.js)
-  // keeps these counts off the real inventory.
-  if (idx > 0 && isCoopMode() && !isTowerDefenseMode()) return 0;
+  if (idx > 0 && isCoopMode()) return 0;
   return idx;
 }
 
@@ -123,16 +118,6 @@ export function clearInventory(playerIndex) {
     for (const sid of ids) setValue(key(idx, sid), null);
     for (const fn of listeners) fn(counts[idx], idx);
   }
-}
-
-// Drop the in-memory counts and mark hydrated so the next access starts from
-// an EMPTY pool without re-scanning the real localStorage. Used by tdSave when
-// entering a transient Tower Defense run, so the squad begins with no carried
-// ammo and the real inventory is never read or written for the rest of the run.
-export function resetInventoryCache() {
-  for (let i = 0; i < counts.length; i++) counts[i] = {};
-  hydrated = true;
-  for (const fn of listeners) for (let i = 0; i < counts.length; i++) fn(counts[i], i);
 }
 
 // Returns a shallow snapshot of a player's counts. Used by the inventory

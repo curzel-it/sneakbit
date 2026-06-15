@@ -15,37 +15,10 @@
 // transparently via the no-entry fallback, so the seam is also safe to
 // use in single-player paths.
 
-import { getEquipped, getEquippedId, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
-import { isPvp, isTowerDefenseMode } from "./gameMode.js";
+import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
+import { isPvp } from "./gameMode.js";
 
 const loadouts = new Map(); // playerId -> { melee, ranged }
-
-// Tower Defense hero archetypes, by 0-based squad slot. These are fixed for
-// the run and resolved purely in memory — TD never reads or writes the saved
-// equipment, so a run can't pollute the real game's loadout. Each slot is a
-// distinct hero (its 0-based index also picks the sprite column, P1..P4) with
-// a real weapon, so recruits play differently rather than being kunai clones:
-//   0 Ninja      — kunai launcher 1160 (ranged, fast  → rooted shooter)
-//   1 Barbarian  — sword 1159          (melee         → charger)
-//   2 Bombardier — cannon 1167         (ranged, heavy → rooted shooter)
-//   3 Knight     — darkblade 1179      (melee         → charger)
-// allyAI keys archetype off the loadout (melee && !ranged === charger), so the
-// two ranged slots hold and shoot while the two melee slots charge. Weapons are
-// chosen to read differently under infinite TD ammo: the Ninja's kunai is a
-// fast 0.15s patter, the Bombardier's cannon a slow 0.5s heavy shell (the
-// AR-15's 0.005s rate would be a firehose without an ammo cap). The display
-// names live next to the squad logic in towerDefense.js (HERO_NAMES) and must
-// stay aligned with this table.
-const TD_HERO_LOADOUTS = [
-  { melee: null, ranged: 1160 },  // Ninja      — kunai launcher
-  { melee: 1159, ranged: null },  // Barbarian  — sword
-  { melee: null, ranged: 1167 },  // Bombardier — cannon
-  { melee: 1179, ranged: null },  // Knight      — darkblade
-];
-
-function tdHeroLoadout(index) {
-  return TD_HERO_LOADOUTS[index | 0] || TD_HERO_LOADOUTS[0];
-}
 
 // In PvP everyone fights with at least a melee weapon: a player who walks
 // into the arena without a melee equipped is handed the sword, so a match is
@@ -89,19 +62,6 @@ export function listSessionLoadouts() {
 // still get the right answer without a session entry.
 export function resolveLoadout(player) {
   if (!player) return { melee: null, ranged: null };
-  // Tower Defense: each slot starts on its fixed archetype, but the shop can
-  // re-arm a hero — a bought weapon is written to the (transient) TD equipment
-  // and overrides the archetype here, per slot. getEquippedId returns the RAW
-  // stored id (null when the slot is untouched), so a melee-only archetype
-  // keeps ranged: null until the player actually buys a ranged weapon — unlike
-  // getEquipped, whose kunai-launcher default would mask that.
-  if (isTowerDefenseMode()) {
-    const idx = player.index | 0;
-    const base = tdHeroLoadout(idx);
-    const melee = getEquippedId(SLOT_MELEE, idx);
-    const ranged = getEquippedId(SLOT_RANGED, idx);
-    return { melee: melee ?? base.melee, ranged: ranged ?? base.ranged };
-  }
   let melee = null;
   let ranged = null;
   const sid = player.playerId;

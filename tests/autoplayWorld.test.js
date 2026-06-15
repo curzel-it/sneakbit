@@ -25,7 +25,6 @@ const world = discoverWorld(loadRawZone);
 const MENU_ENTERED_ZONES = new Set([
   1099, // demo arena
   1301, // PvP arena
-  1401, // tower-defense board
   1501, // tutorial arena (if present)
 ]);
 

@@ -24,7 +24,7 @@ import { findPathToNearest } from "./pathfinding.js";
 import { getValue, setValue } from "./storage.js";
 import { openDialogueWithEntity } from "./interact.js";
 import { isCreativeMode } from "./creativeMode.js";
-import { isPvp, isTowerDefenseMode } from "./gameMode.js";
+import { isPvp } from "./gameMode.js";
 import { isDialogueOpen } from "./dialogue.js";
 import { isShopOpen } from "./shop.js";
 import { isPlayerDead } from "./playerHealth.js";
@@ -79,7 +79,7 @@ export function tickNpcInterception(state, dt) {
 
   // Always advance an in-flight approach so a started cutscene completes, but
   // only ARM new ones during live, non-modal play.
-  const canArm = !isCreativeMode() && !isPvp() && !isTowerDefenseMode()
+  const canArm = !isCreativeMode() && !isPvp()
     && !isDialogueOpen() && !isShopOpen();
   const players = canArm ? localTargets(state) : null;
 

@@ -13,7 +13,7 @@ import { getAmmo } from "./inventory.js";
 import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { codesFor } from "./keyBindings.js";
-import { isTowerDefenseMode, isPvp } from "./gameMode.js";
+import { isPvp } from "./gameMode.js";
 import { onActiveInputDeviceChange } from "./activeInputDevice.js";
 import { getSettings } from "./settings.js";
 import { mountJoystick, unmountJoystick } from "./touchJoystick.js";
@@ -60,12 +60,6 @@ const ICON_DIR_RIGHT = svg(`<polyline points="9,6 15,12 9,18"></polyline>`);
 const ICON_INTERACT = svg(`<path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"></path><circle cx="12" cy="12" r="0.6" fill="currentColor"></circle>`, 24);
 const ICON_THROW    = svg(`<path d="M12 3 L13.4 9.4 L20 11 L13.4 12.6 L12 19 L10.6 12.6 L4 11 L10.6 9.4 Z" fill="currentColor" stroke="none"></path>`, 24);
 const ICON_MELEE    = svg(`<path d="M14 4 L20 4 L20 10 L9.5 20.5 L7 21 L3 17 L3.5 14.5 L14 4 Z"></path><line x1="9" y1="9" x2="15" y2="15"></line>`, 24);
-//   Switch:  two looping arrows — "cycle to the next hero" (TD only).
-//   Start:   a play triangle — "start the next wave now" (TD build).
-//   Recruit: a person + plus — "buy another hero" (TD build).
-const ICON_SWITCH   = svg(`<polyline points="17 3 21 7 17 11"></polyline><path d="M21 7H8a4 4 0 0 0-4 4"></path><polyline points="7 21 3 17 7 13"></polyline><path d="M3 17h13a4 4 0 0 0 4-4"></path>`, 24);
-const ICON_START    = svg(`<path d="M8 5 L19 12 L8 19 Z" fill="currentColor" stroke="none"></path>`, 24);
-const ICON_RECRUIT  = svg(`<circle cx="9" cy="8" r="3.2"></circle><path d="M3.5 20a5.5 5.5 0 0 1 11 0"></path><line x1="19" y1="8" x2="19" y2="14"></line><line x1="16" y1="11" x2="22" y2="11"></line>`, 24);
 
 const heldBindings = new Map(); // dir -> pointerId
 
@@ -85,9 +79,7 @@ let controlStyle = "buttons";
 let forcedTouch = false;
 // Localized label for the auto-managed interact button, or null when there's
 // nothing in front to interact with (button hidden). Driven each frame by
-// main.js forwarding interact.tickInteract()'s return value. In Tower Defense
-// the cluster is owned by setTdActionMode, so we only remember the verb and
-// reapply it once TD hands the buttons back.
+// main.js forwarding interact.tickInteract()'s return value.
 let interactVerb = null;
 
 // Cached refs for the two attack buttons' weapon-icon canvas + cooldown ring,
@@ -118,9 +110,9 @@ export function installTouchControls() {
       <button class="touch-btn" data-dir="down">${ICON_DIR_DOWN}</button>
     </div>
     <div class="touch-pad" data-side="right">
-      <button class="touch-btn touch-action touch-melee"    data-action="melee">${ICON_MELEE}<canvas class="touch-wicon"></canvas><span class="touch-cd"></span><span class="touch-label"></span></button>
-      <button class="touch-btn touch-action touch-throw"    data-action="throw">${ICON_THROW}<canvas class="touch-wicon"></canvas><span class="touch-cd"></span><span class="touch-label"></span></button>
-      <button class="touch-btn touch-action touch-interact" data-action="interact">${ICON_INTERACT}<span class="touch-verb"></span><span class="touch-label"></span></button>
+      <button class="touch-btn touch-action touch-melee"    data-action="melee">${ICON_MELEE}<canvas class="touch-wicon"></canvas><span class="touch-cd"></span></button>
+      <button class="touch-btn touch-action touch-throw"    data-action="throw">${ICON_THROW}<canvas class="touch-wicon"></canvas><span class="touch-cd"></span></button>
+      <button class="touch-btn touch-action touch-interact" data-action="interact">${ICON_INTERACT}<span class="touch-verb"></span></button>
     </div>
   `,
     style: {
@@ -201,13 +193,12 @@ export function installTouchControls() {
 
 // Auto-managed interact button. `verb` is the localized label to show ("Talk"),
 // or null to hide the button. Cheap to call every frame — bails when nothing
-// changed. While Tower Defense owns the cluster we just remember the verb;
-// applyTdActionMode reapplies it when TD hands the buttons back.
+// changed.
 export function setInteractPrompt(verb) {
   const next = verb || null;
   if (next === interactVerb) return;
   interactVerb = next;
-  if (!tdActionMode) applyInteractPrompt();
+  applyInteractPrompt();
 }
 
 function applyInteractPrompt() {
@@ -248,10 +239,7 @@ function syncMeleeVisibility() {
   if (!root) return;
   const btn = root.querySelector(".touch-melee");
   if (!btn) return;
-  // In Tower Defense the active hero may carry no melee weapon yet still needs
-  // the wave-phase swing button, so show it regardless of what's equipped.
-  // (tdActionMode hides it during build, where there's nothing to swing at.)
-  btn.style.display = (isTowerDefenseMode() || getEquipped(SLOT_MELEE)) ? "" : "none";
+  btn.style.display = getEquipped(SLOT_MELEE) ? "" : "none";
 }
 
 // The bullet the local hero's equipped ranged weapon fires (mirrors
@@ -261,20 +249,17 @@ function localRangedBullet() {
   return sp?.bullet_species_id || KUNAI_BULLET_SPECIES_ID;
 }
 
-// True when the local hero can actually fire: TD heroes have unlimited kunai;
-// PvP draws from the per-player scavenge pool; story/co-op from the persisted
-// inventory. Mirrors shooting.js::shoot's ammo gate so the button matches what
-// a tap would do.
+// True when the local hero can actually fire: PvP draws from the per-player
+// scavenge pool; story/co-op from the persisted inventory. Mirrors
+// shooting.js::shoot's ammo gate so the button matches what a tap would do.
 function hasRangedAmmo() {
-  if (isTowerDefenseMode()) return true;
   if (isPvp()) return getPvpAmmo(0, bulletOfWeapon(getPvpRangedWeapon(0))) > 0;
   return getAmmo(localRangedBullet(), 0) > 0;
 }
 
 // Hide the throw button when the ranged weapon is out of ammo so a thumb never
-// taps a dead control. TD owns the button's display by phase, so leave it alone
-// there (tdActionMode gates the per-frame caller). Memoised on lastThrowHidden
-// so the per-frame poll only writes the DOM on a real change.
+// taps a dead control. Memoised on lastThrowHidden so the per-frame poll only
+// writes the DOM on a real change.
 let lastThrowHidden = null;
 function syncThrowVisibility() {
   if (!root) return;
@@ -286,112 +271,15 @@ function syncThrowVisibility() {
   btn.style.display = hidden ? "none" : "";
 }
 
-// Re-evaluate which action buttons show — towerDefense calls this when a run
-// starts so the melee/remove button appears even if the squad carries no
-// melee weapon (and the mode flips after the overlay was first built).
+// Re-evaluate which action buttons show — called when the overlay appears.
 export function refreshTouchActions() {
-  if (tdActionMode) applyTdActionMode(); else syncMeleeVisibility();
-}
-
-// — Tower-Defense action cluster ——————————————————————————————————————————
-// In TD the three right-side buttons change job by phase:
-//   build → none (you build by walking the hero into stones to shove them)
-//   wave  → attack cluster (shoot + melee), no labels
-//   null  → back to the normal game cluster
-// Driven each frame by tdHud.updateTdHud, cached so the DOM only churns on a
-// real change.
-let tdActionMode = null;
-// Cluster-render inputs pushed from tdHud each frame. Tracked so a change while
-// the mode stays the same (a falling countdown, a now-affordable recruit, a
-// hero going down) still re-renders. Handlers (onStart/onRecruit) are stable
-// refs straight from the run's install-time wiring.
-let tdCanSwitch = false;
-let tdEarlyBonus = 0;
-let tdRecruit = null;   // { cost, can, full } or null
-let tdHandlers = {};    // { onStart, onRecruit }
-let tdSig = "";
-
-export function setTdActionMode(mode, opts = {}) {
-  const next = mode || null;
-  tdHandlers = opts; // onStart / onRecruit live here, stable across frames
-  const canSwitch = !!opts.canSwitch;
-  const recruit = opts.recruit || null;
-  const sig = [
-    next, canSwitch ? 1 : 0, opts.earlyBonus | 0,
-    recruit ? `${recruit.cost}|${recruit.can ? 1 : 0}|${recruit.full ? 1 : 0}` : "",
-  ].join(":");
-  if (sig === tdSig) return;
-  tdSig = sig;
-  tdActionMode = next;
-  tdCanSwitch = canSwitch;
-  tdEarlyBonus = opts.earlyBonus | 0;
-  tdRecruit = recruit;
-  applyTdActionMode();
-}
-
-function applyTdActionMode() {
-  if (!root) return;
-  const interact = root.querySelector(".touch-interact");
-  const melee = root.querySelector(".touch-melee");
-  const throwBtn = root.querySelector(".touch-throw");
-  if (!interact || !melee || !throwBtn) return;
-
-  if (tdActionMode === "build") {
-    // Movement (d-pad / joystick) shoves the stones; the right cluster carries
-    // the build actions — Start wave (▶), Recruit, Switch — so the dock can
-    // shrink to a slim countdown strip. Start sits in the bottom (melee) slot,
-    // the most thumb-reachable spot.
-    setActionButton(melee, ICON_START, tdEarlyBonus > 0 ? `+${tdEarlyBonus}` : "", "");
-    if (tdRecruit && !tdRecruit.full) {
-      setActionButton(throwBtn, ICON_RECRUIT, `${tdRecruit.cost}`, "");
-      throwBtn.classList.toggle("touch-dim", !tdRecruit.can);
-    } else {
-      setActionButton(throwBtn, ICON_RECRUIT, "", "none");
-    }
-    if (tdCanSwitch) setActionButton(interact, ICON_SWITCH, "", "");
-    else setActionButton(interact, ICON_INTERACT, "", "none");
-  } else if (tdActionMode === "wave") {
-    setActionButton(throwBtn, ICON_THROW, "", "");
-    setActionButton(melee, ICON_MELEE, "", "");
-    // The interact slot becomes "switch hero" mid-wave (there's nothing to talk
-    // to). Hidden when the squad has only one hero standing.
-    if (tdCanSwitch) setActionButton(interact, ICON_SWITCH, "", "");
-    else setActionButton(interact, ICON_INTERACT, "", "none");
-  } else {
-    // Not TD — restore the normal game cluster. The interact button is then
-    // auto-managed by setInteractPrompt (shown only when something's in range),
-    // so reapply its current verb/hidden state rather than forcing the icon.
-    setActionButton(interact, ICON_INTERACT, "", "none");
-    setActionButton(throwBtn, ICON_THROW, "", "");
-    setActionButton(melee, ICON_MELEE, "", "");
-    syncMeleeVisibility();
-    applyInteractPrompt();
-  }
-  // Hide the weapon canvases in any TD mode; repaint them when the normal
-  // cluster returns. refreshWeaponIcons() gates on tdActionMode internally.
-  refreshWeaponIcons();
-  // We just forced the throw button's display by phase, so drop the memo —
-  // syncThrowVisibility re-asserts ammo gating on the next normal-cluster tick.
-  lastThrowHidden = null;
-}
-
-function setActionButton(btn, iconHtml, label, display) {
-  const icon = btn.querySelector(".touch-icon");
-  if (icon) icon.outerHTML = iconHtml; // constants include the .touch-icon wrapper
-  const lbl = btn.querySelector(".touch-label");
-  if (lbl) lbl.textContent = label;
-  // An explicit icon takes the button face — drop the auto verb-text mode
-  // (only the interact button ever carries it) so the icon isn't CSS-hidden,
-  // and clear any leftover "dimmed" (can't-afford) state from a prior phase.
-  btn.classList.remove("show-verb", "touch-dim");
-  btn.style.display = display;
+  syncMeleeVisibility();
 }
 
 // — Equipped-weapon icons + cooldown rings ————————————————————————————————
 // The throw/melee buttons paint the actual equipped weapon's inventory icon
 // (so a thumb knows what it's holding at a glance, sword included) and overlay
-// a sweep that drains over the weapon's cooldown. Both are gated off in Tower
-// Defense, where the cluster is build controls rather than attacks.
+// a sweep that drains over the weapon's cooldown.
 
 function cacheCombatEls() {
   if (!root) return;
@@ -408,12 +296,9 @@ function cacheCombatEls() {
   }
 }
 
-// Repaint both attack buttons from the currently equipped weapons. In TD the
-// cluster carries build glyphs, so hide the weapon canvases and fall back to
-// whatever icon setActionButton put there.
+// Repaint both attack buttons from the currently equipped weapons.
 function refreshWeaponIcons() {
   if (!root) return;
-  if (tdActionMode) { hideWeaponIcon("melee"); hideWeaponIcon("throw"); return; }
   weaponIconsPending = false;
   applyWeaponIcon("melee", getEquipped(SLOT_MELEE, 0));
   applyWeaponIcon("throw", getEquipped(SLOT_RANGED, 0));
@@ -422,8 +307,7 @@ function refreshWeaponIcons() {
 function applyWeaponIcon(action, weaponId) {
   const e = combatEls[action];
   if (!e) return;
-  // setActionButton swaps .touch-icon's outerHTML for the TD glyphs, so re-grab
-  // the live SVG node before toggling it.
+  // Re-grab the live SVG node before toggling it.
   e.svg = e.btn.querySelector(".touch-icon");
   const sp = weaponId != null ? getSpecies(weaponId) : null;
   const painted = sp ? paintWeaponIcon(e.wicon, sp) : false;
@@ -441,14 +325,6 @@ function applyWeaponIcon(action, weaponId) {
     // on a species that legitimately has no offset.
     if (weaponId != null && (!sp || sp.inventory_texture_offset)) weaponIconsPending = true;
   }
-}
-
-function hideWeaponIcon(action) {
-  const e = combatEls[action];
-  if (!e) return;
-  if (e.wicon) e.wicon.style.display = "none";
-  const svg = e.btn.querySelector(".touch-icon");
-  if (svg) svg.style.display = "";
 }
 
 // Blit a weapon species' inventory icon into the button canvas. Returns false
@@ -470,9 +346,9 @@ function paintWeaponIcon(canvas, sp) {
 }
 
 // Per-frame combat HUD tick, called from the main loop. Cheap: bails while the
-// overlay is hidden or TD owns the cluster, and only writes the DOM on change.
+// overlay is hidden, and only writes the DOM on change.
 export function updateTouchCombat() {
-  if (!visible || tdActionMode) return;
+  if (!visible) return;
   if (weaponIconsPending) refreshWeaponIcons();
   syncThrowVisibility();
   updateCooldownRing("melee", getMeleeSwingProgress(0));
@@ -500,9 +376,7 @@ function show() {
   lastThrowHidden = null; // re-assert ammo gating on the next combat tick
   root.style.display = "block";
   document.body.classList.add("touch-mode");
-  // The action set can depend on the live game mode (TD relabels the cluster
-  // by phase) — re-evaluate each time the overlay appears, respecting any
-  // active TD mode rather than just the melee-visibility default.
+  // Re-evaluate which action buttons show each time the overlay appears.
   refreshTouchActions();
   refreshWeaponIcons();
 }
@@ -528,18 +402,10 @@ function onPress(e, btn) {
     dirPointerHeld.set(e.pointerId, btn);
     dispatchKey("keydown", KEY_FOR_DIR[dir]);
   } else if (action === "interact") {
-    // In any TD phase the interact slot is the "switch hero" button — synthesise
-    // a single Q press (towerDefense.onKey owns Tab/Q switching). Otherwise it's
-    // the normal talk/use key.
-    if (isTowerDefenseMode() && tdActionMode) dispatchKey("keydown", "KeyQ");
-    else dispatchKey("keydown", "KeyE");
+    dispatchKey("keydown", "KeyE");
   } else if (action === "throw") {
-    if (isTowerDefenseMode() && tdActionMode === "build") {
-      // Build cluster: this slot is the Recruit button, not an attack.
-      tdHandlers.onRecruit?.();
-    } else if (isTowerDefenseMode() || getNetRole() === "guest") {
-      // TD wave: shoot the active hero (route through onKey so possession is
-      // respected). Guests can't drive the local sim — synthesise a keydown so
+    if (getNetRole() === "guest") {
+      // Guests can't drive the local sim — synthesise a keydown so
       // guestInputForwarder turns it into a `shoot` intent on the wire.
       dispatchKey("keydown", codesFor("shoot")[0] || "KeyF");
     } else {
@@ -548,11 +414,7 @@ function onPress(e, btn) {
       tryShoot();
     }
   } else if (action === "melee") {
-    if (isTowerDefenseMode() && tdActionMode === "build") {
-      // Build cluster: this slot starts the next wave early, not a swing.
-      tdHandlers.onStart?.();
-    } else if (isTowerDefenseMode() || getNetRole() === "guest") {
-      // TD wave: a swing for the active hero.
+    if (getNetRole() === "guest") {
       dispatchKey("keydown", codesFor("melee")[0] || "KeyG");
     } else {
       tryMelee();
@@ -571,8 +433,7 @@ function onRelease(e, btn) {
   btn.classList.remove("active");
   const action = btn.dataset.action;
   if (action === "interact") {
-    const code = (isTowerDefenseMode() && tdActionMode) ? "KeyQ" : "KeyE";
-    dispatchKey("keyup", code);
+    dispatchKey("keyup", "KeyE");
   }
 }
 
@@ -721,9 +582,6 @@ function injectStyles() {
     #touch-controls .touch-btn.active {
       background: var(--sb-surface-bg-active);
     }
-    /* Can't-afford state for a TD build-action button (e.g. Recruit with too
-       little gold). Still tappable — the handler answers with a toast. */
-    #touch-controls .touch-btn.touch-dim { opacity: 0.45; }
     /* Icon wrapper. pointer-events: none so taps that land on the SVG
        still bubble to the button — without this the wrapper would
        eat the pointerdown and onPress wouldn't fire on direct hits. */
@@ -754,19 +612,8 @@ function injectStyles() {
       transition: opacity 90ms ease;
       background: conic-gradient(rgba(0,0,0,0.55) calc(var(--cd, 0) * 360deg), transparent 0);
     }
-    /* Verb label for the TD build cluster. Sits to the LEFT of the round
-       button (toward screen centre) so it never collides with the stacked
-       buttons above/below, and reads as a little pill. Empty = hidden. */
+    /* Positioned ancestor for the absolutely-placed cooldown ring + weapon icon. */
     #touch-controls .touch-action { position: relative; }
-    #touch-controls .touch-label {
-      position: absolute; right: 100%; top: 50%; transform: translate(-8px, -50%);
-      pointer-events: none; white-space: nowrap;
-      font-family: var(--sb-font, monospace); font-size: 12px; font-weight: bold;
-      color: var(--sb-text); background: var(--sb-surface-bg);
-      border: var(--sb-surface-border); border-radius: var(--sb-surface-radius); padding: 3px 7px;
-      text-shadow: 0 1px 0 #000;
-    }
-    #touch-controls .touch-label:empty { display: none; }
     /* Auto-managed interact button shows a verb word ("Talk") in place of the
        icon — the button only appears when something's in range, so the word
        reads as the action without a hint banner. Centered on the button face;

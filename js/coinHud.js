@@ -1,12 +1,11 @@
 // Coin HUD: a small chip showing the coin icon + the hero's balance. DOM, not
 // canvas (project rule). Mirrors ammoHud.js but reads the real-game wallet
-// (wallet.js) instead of ammo. Anchored top-centre; hidden in Tower Defense
-// (its own gold HUD) and PvP (no coins).
+// (wallet.js) instead of ammo. Anchored top-centre; hidden in PvP (no coins).
 
 import { ICON_RES, paintInventoryIcon } from "./inventoryIcon.js";
 import { getSpecies } from "./species.js";
 import { getCoins, onWalletChange } from "./wallet.js";
-import { isTowerDefenseMode, isPvp } from "./gameMode.js";
+import { isPvp } from "./gameMode.js";
 import { COIN_SPECIES_ID } from "./coinDrops.js";
 import { sliceCount, getSlices } from "./splitScreen.js";
 import { topHudRow } from "./topHudRow.js";
@@ -38,8 +37,8 @@ export function installCoinHud() {
 
 export function updateCoinHud() {
   if (!root) return;
-  // Real-game currency only — TD has its own gold, PvP has no coins.
-  const visible = !isTowerDefenseMode() && !isPvp();
+  // Real-game currency only — PvP has no coins.
+  const visible = !isPvp();
   root.style.display = visible ? "" : "none";
   if (!visible) return;
   // In split-screen the HP bar + ammo chips anchor to each slice, leaving the

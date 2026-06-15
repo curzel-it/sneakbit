@@ -1,5 +1,5 @@
 // End-to-end coin economy through the real module graph + DOM HUD. Boots the
-// normal offline game (not ?mode=td) and asserts the wiring the unit tests
+// normal offline game and asserts the wiring the unit tests
 // can't see in node: the coin species loaded from data/species.json with the
 // real sprite + tuned monster drops, the #coin-hud mounted and reacting to
 // wallet changes, and the whole graph importing with zero page exceptions.
@@ -42,7 +42,7 @@ test("coins: species loads, HUD mounts and tracks the wallet, no exceptions", as
   await waitFor(s, "!!document.getElementById('coin-hud')");
   assert.ok(
     await evalExpr(s, "getComputedStyle(document.getElementById('coin-hud')).display !== 'none'"),
-    "coin HUD is visible in the normal (non-TD) game",
+    "coin HUD is visible in the normal game",
   );
   assert.equal(
     await evalExpr(s, "document.querySelector('#coin-hud span').textContent"),

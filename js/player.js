@@ -118,14 +118,7 @@ function ackGuestStep(player, seq) {
 // read-only on these paths, so a single instance is safe.
 const FROZEN_INPUT = { events: [], held: new Set() };
 
-export function updatePlayer(player, input, dt, zone, opts = {}) {
-  // Per-tick movement constraints (Tower Defense allies use these): whether the
-  // hero may shove pushables, and a predicate flagging tiles it must not enter
-  // (occupied by another hero). Reset every call so they never leak across
-  // frames or into the net/guest paths, which pass no opts and keep the
-  // original behaviour (push allowed, no hero-stacking check).
-  player._canPush = opts.canPush !== false;
-  player._blockedTile = opts.blockedTile || null;
+export function updatePlayer(player, input, dt, zone) {
   // A frozen hero (caught by a demands-attention NPC, npcInterception.js)
   // takes no new steps; haltPlayer already snapped it onto a tile when the
   // freeze began, so it just stands idle until the encounter releases it.
@@ -329,7 +322,7 @@ function startStep(player, dir, zone) {
   // blocked for the rock we fall through and move normally (e.g. stepping
   // off the rock onto a teleporter the rock can't follow onto).
   const standingOn = findPushableAt(zone, player.tileX, player.tileY);
-  if (player._canPush !== false && standingOn && canPushableEnter(zone, standingOn, toX, toY)) {
+  if (standingOn && canPushableEnter(zone, standingOn, toX, toY)) {
     startSlide(standingOn, dx, dy);
     standingOn.frame.x = toX;
     standingOn.frame.y = toY;
@@ -359,9 +352,6 @@ function canEnter(player, tx, ty, zone, dir) {
   // for entries; same idea in reverse for exits).
   const onTeleporter = hasEnterableTeleporter(zone, tx, ty);
   if (!onTeleporter && !isWalkable(zone, tx, ty)) return false;
-  // Another hero is on (or stepping onto) this tile — don't stack. Only set
-  // for constrained movers (TD allies); normal play passes no predicate.
-  if (player._blockedTile && player._blockedTile(tx, ty)) return false;
   // Pushables: if there's one in front, try to shove it one tile in the
   // same direction. On success the player steps in. If the push fails
   // (rock pinned by a wall, gate, water, etc.), the player still walks
@@ -371,9 +361,6 @@ function canEnter(player, tx, ty, zone, dir) {
   // into a 1-wide dead end would be unrecoverable.
   const pushable = findPushableAt(zone, tx, ty);
   if (pushable) {
-    // Constrained movers (TD allies) don't shove stones — a stone reads as a
-    // wall to them, so the human alone shapes the maze.
-    if (player._canPush === false) return false;
     pushOneTile(zone, pushable, dir);
     return true;
   }

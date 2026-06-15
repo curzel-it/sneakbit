@@ -73,14 +73,6 @@ test("resolveSkinColumn: an equipped skin overrides the per-index column", () =>
   assert.equal(skins.resolveSkinColumn({ index: 2 }), 1 + 2 * 4);
 });
 
-test("resolveSkinColumn: Tower Defense ignores skins (fixed per-slot columns)", () => {
-  reset();
-  skins.markOwned("ninja_black");
-  skins.setSelected("ninja_black");
-  gameMode.setGameMode(GAME_MODE.td);
-  assert.equal(skins.resolveSkinColumn({ index: 1 }), 1 + 1 * 4);
-});
-
 test("resolveSkinColumn: a synced session skin wins for a networked avatar", () => {
   reset();
   sessionSkins.setSessionSkin("peerA", "tracksuit_black"); // column 17

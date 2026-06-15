@@ -110,8 +110,8 @@ test("a collected entity inside the viewport is not simulated", () => {
   setValue("item_collected.5002", null);
 });
 
-// Even Tower Defense's { all: true } must not resurrect a collected entity:
-// it forces off-screen simulation, not visibility of things the player killed.
+// { all: true } must not resurrect a collected entity: it forces off-screen
+// simulation, not visibility of things the player killed.
 test("{ all: true } still excludes collected entities", () => {
   const dead = { id: 5003, species_id: 4004, frame: { x: 10, y: 10, w: 1, h: 2 } };
   setValue("item_collected.5003", 1);
@@ -121,8 +121,8 @@ test("{ all: true } still excludes collected entities", () => {
   setValue("item_collected.5003", null);
 });
 
-// Tower Defense passes { all: true }: the whole board simulates even though
-// the camera follows one hero, so every entity must read as visible.
+// With { all: true } the whole zone simulates even though the camera may follow
+// one hero, so every entity must read as visible.
 test("{ all: true } flags every entity regardless of the camera", () => {
   const onScreen  = { species_id: 4004, frame: { x: 10, y: 10, w: 1, h: 2 } };
   const offScreen = { species_id: 4004, frame: { x: 900, y: 900, w: 1, h: 2 } };

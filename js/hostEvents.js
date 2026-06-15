@@ -34,8 +34,6 @@ const ALLOWED_KINDS = new Set([
   "pvpStart",   // host opened a realtime PvP match — guests enter PvP rendering
   "pvpResult",  // realtime PvP resolved — guests show the winner/result screen
   "pvpEnd",     // host left PvP — guests dismiss the result/death overlay
-  "tdState",    // host pushed the Tower Defense HUD model — guests render it read-only
-  "tdMap",      // host pushed the TD sand-path + obstacle tiles — guests paint their mirror zone
 ]);
 const ALLOWED_TOAST_TYPES = new Set(["regular", "hint", "longHint"]);
 

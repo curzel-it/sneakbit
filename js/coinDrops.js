@@ -7,12 +7,12 @@
 //
 // Host-side only: maybeDropCoin runs where the kill resolves (combat.js), so
 // the scatter RNG never runs on a guest, and the spawned coins reach guests
-// through the normal zone-entity snapshot. Gated out of Tower Defense (its own
-// gold), PvP (no monsters) and creative (arranging the world, not farming).
+// through the normal zone-entity snapshot. Gated out of PvP (no monsters) and
+// creative (arranging the world, not farming).
 
 import { getSpecies } from "./species.js";
 import { isWalkable, isEntityBlocked } from "./zone.js";
-import { isTowerDefenseMode, isPvp } from "./gameMode.js";
+import { isPvp } from "./gameMode.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { isExplosive } from "./explosives.js";
 
@@ -63,7 +63,7 @@ export function rollCoinDrop(species, rng = Math.random) {
 // footprint. No-op outside the real game. Mutates zone.entities.
 export function maybeDropCoin(zone, entity, rng = Math.random) {
   if (!zone?.entities || !entity) return;
-  if (isTowerDefenseMode() || isPvp() || isCreativeMode()) return;
+  if (isPvp() || isCreativeMode()) return;
   const count = rollCoinDrop(getSpecies(entity.species_id), rng);
   scatterPickups(zone, entity, count, makeCoin, rng);
 }

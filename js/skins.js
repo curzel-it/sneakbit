@@ -19,7 +19,6 @@
 
 import { getValue, setValue } from "./storage.js";
 import { isCoopMode } from "./coopMode.js";
-import { isTowerDefenseMode } from "./gameMode.js";
 import { skinFor as sessionSkinFor } from "./sessionSkins.js";
 
 export const DEFAULT_SKIN_ID = "default";
@@ -114,11 +113,10 @@ export function defaultColumn(index) {
 
 // The render seam: which heroes-sheet column a given avatar draws from.
 // Online co-op prefers the synced skin by playerId; otherwise the local
-// selection by index. Tower Defense ignores skins (fixed per-slot archetypes).
+// selection by index.
 export function resolveSkinColumn(player) {
   if (!player) return HERO_BASE_COLUMN;
   const index = player.index | 0;
-  if (isTowerDefenseMode()) return defaultColumn(index);
   const id = sessionSkinFor(player.playerId) ?? getSelected(index);
   const skin = byId.get(id);
   if (!skin || skin.column == null) return defaultColumn(index);

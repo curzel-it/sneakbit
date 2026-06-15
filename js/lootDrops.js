@@ -2,11 +2,11 @@
 // and barrels use different odds. This replaces the old standalone coin roll at
 // the kill site (combat.js) so a single death never yields both coins and ammo.
 // Coins keep their tier-scaled amount; ammo is delegated to ammoDrops.js. No-op
-// outside the real game (Tower Defense / PvP / creative), matching coin drops.
+// outside the real game (PvP / creative), matching coin drops.
 
 import { getSpecies } from "./species.js";
 import { isExplosive } from "./explosives.js";
-import { isTowerDefenseMode, isPvp } from "./gameMode.js";
+import { isPvp } from "./gameMode.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { dropCoins } from "./coinDrops.js";
 import { dropAmmo } from "./ammoDrops.js";
@@ -35,7 +35,7 @@ export function rollLootCategory(species, rng = Math.random) {
 // landed the kill (drives weapon-aware ammo type). Mutates zone.entities.
 export function maybeDropLoot(zone, entity, killerIndex = 0, rng = Math.random) {
   if (!zone?.entities || !entity) return;
-  if (isTowerDefenseMode() || isPvp() || isCreativeMode()) return;
+  if (isPvp() || isCreativeMode()) return;
   const sp = getSpecies(entity.species_id);
   const category = rollLootCategory(sp, rng);
   if (category === "coin") {
