@@ -27,12 +27,20 @@ import { showToast } from "./toast.js";
 import { askCloudConflict } from "./cloudConflictPrompt.js";
 
 const META_KEY = "sneakbit.cloudsave.v1";
+// Session flag set by the menu's "Clear cache" before it wipes localStorage +
+// reloads. It tells the next boot to pull the account's cloud save and apply it
+// *before* any state is built, so the player never sees a fresh new game flash
+// and then get replaced a beat later when the cloud copy lands. sessionStorage
+// (not localStorage) so it survives the reload but never leaks past it.
+const BOOT_RESTORE_KEY = "sneakbit.cloudRestorePending";
 const DEBOUNCE_MS = 4000;
+const BOOT_RESTORE_TIMEOUT_MS = 5000;
 
 let installed = false;
 let pushTimer = null;
 let prevHash = null;     // last hash we've observed (seeded from lastHash)
 let syncing = false;
+let suppressPullReload = false; // boot-restore applies inline; the boot rehydrates without a reload
 
 // — Pure conflict decision (unit-tested) ——————————————————————————————————
 // Returns one of: "seed" | "push" | "pull" | "conflict" | "insync" | "noop".
@@ -72,7 +80,55 @@ export function installCloudSave() {
       meta: () => readMeta(),
     };
   }
-  if (isSignedIn()) reconcile().catch(() => {});
+  // Skip the fire-and-forget boot reconcile when a clear-cache restore is
+  // pending: main() drives an awaited bootRestoreFromCloud() instead, and two
+  // concurrent reconciles would race the `syncing` lock.
+  if (isSignedIn() && !bootRestorePending()) reconcile().catch(() => {});
+}
+
+// True when the previous page told us (via the menu's Clear cache) to restore
+// from the cloud on this boot. Peeks without consuming — bootRestoreFromCloud
+// is what clears it.
+function bootRestorePending() {
+  try { return sessionStorage.getItem(BOOT_RESTORE_KEY) === "1"; } catch { return false; }
+}
+
+// Boot-time restore for the Clear-cache path. When the previous page set the
+// pending flag and we're signed in, fetch the account's cloud save and apply it
+// inline (NO reload) so the very first state main() builds is the restored one.
+// Best-effort and bounded: offline, signed-out, no cloud save, or a slow
+// network all just resolve false and the normal fresh start proceeds. The flag
+// is consumed unconditionally so a stuck flag can't wedge every future boot.
+export async function bootRestoreFromCloud() {
+  const pending = bootRestorePending();
+  try { sessionStorage.removeItem(BOOT_RESTORE_KEY); } catch { /* ignore */ }
+  if (!pending || !isSignedIn() || syncing) return false;
+  const token = getToken();
+  if (!token) return false;
+  syncing = true;
+  try {
+    const r = await withTimeout(getCloudSave(token), BOOT_RESTORE_TIMEOUT_MS);
+    if (!r || r.offline || r.status === 401) return false;
+    if (r.status === 204 || !r.data) return false; // no cloud save → fresh start
+    const cloud = { rev: r.data.rev, updatedAt: r.data.updatedAt, hash: hashBlob(r.data.blob), blob: r.data.blob };
+    // localStorage was just wiped, so cloud is unambiguously authoritative.
+    suppressPullReload = true;
+    try { pull(cloud); } finally { suppressPullReload = false; }
+    return hasLocalProgress();
+  } catch { return false; }
+  finally { syncing = false; }
+}
+
+// Resolve to the promise's value, or null if it doesn't settle within `ms`, so a
+// hung network call can never block boot indefinitely. A late resolution is
+// harmless: the boot has already moved on and the result is ignored.
+function withTimeout(promise, ms) {
+  return new Promise((resolve) => {
+    let done = false;
+    const settle = (v) => { if (!done) { done = true; clearTimeout(t); resolve(v); } };
+    const t = setTimeout(() => settle(null), ms);
+    promise.then(settle, () => settle(null));
+  });
 }
 
 // Called on any local progress change (kv writes, rebinds, language).
@@ -197,6 +253,10 @@ function pull(cloud) {
   applyBlob(cloud.blob);
   writeMeta({ rev: cloud.rev, updatedAt: cloud.updatedAt, lastHash: hashBlob(cloud.blob), localUpdatedAt: cloud.updatedAt });
   prevHash = null;
+  // Boot-restore applies inline and lets main() build state straight off the
+  // freshly-written storage — no reload needed (and a reload mid-boot would be
+  // jarring rather than the "synced from another device" mid-play case below).
+  if (suppressPullReload) return;
   reloadForPull();
 }
 

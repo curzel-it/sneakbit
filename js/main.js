@@ -72,7 +72,7 @@ import { tickLocalEffects } from "./localEffects.js";
 import { getSelfPlayerId } from "./onlineBootstrap.js";
 import { installPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
 import { installAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
-import { installCloudSave } from "./cloudSave.js";
+import { installCloudSave, bootRestoreFromCloud } from "./cloudSave.js";
 import { installStore } from "./storeBoot.js";
 import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js";
 import { setHostPaused } from "./hostPauseState.js";
@@ -124,6 +124,12 @@ async function main() {
   // "Connecting to host…" label everywhere.
   showLoadingScreen(bootGuest ? 4 : 5);
   const progressLabel = (label) => bootGuest ? "Connecting to host…" : label;
+  // If the previous page was a signed-in "Clear cache", restore the account's
+  // cloud save and apply it before anything reads localStorage — migrations,
+  // settings, language and initOfflineState all then see the restored data, so
+  // there's no fresh-new-game flash. Best-effort + bounded; offline/no-save
+  // just proceeds to a normal fresh start.
+  if (!bootGuest) await bootRestoreFromCloud();
   if (!bootGuest) runMigrations();
   initInput();
   loadSettings();

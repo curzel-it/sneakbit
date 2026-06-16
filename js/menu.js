@@ -444,6 +444,10 @@ function bindWidgets() {
     // sign the player out of their account.
     const savedSession = captureSession();
     try { window.save?.suppressUnloadSave?.(); } catch {}
+    // Signed in? The wiped progress lives in the cloud — flag the next boot to
+    // restore it before building any state, so we don't flash a fresh new game
+    // that then "disappears" when the cloud copy syncs back a beat later.
+    if (isSignedIn()) { try { sessionStorage.setItem("sneakbit.cloudRestorePending", "1"); } catch {} }
     try { localStorage.clear(); } catch {}
     restoreSession(savedSession);
     location.replace(location.pathname);
