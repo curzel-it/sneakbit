@@ -125,11 +125,12 @@ async function main() {
   showLoadingScreen(bootGuest ? 4 : 5);
   const progressLabel = (label) => bootGuest ? "Connecting to host…" : label;
   // If the previous page was a signed-in "Clear cache", restore the account's
-  // cloud save and apply it before anything reads localStorage — migrations,
-  // settings, language and initOfflineState all then see the restored data, so
-  // there's no fresh-new-game flash. Best-effort + bounded; offline/no-save
-  // just proceeds to a normal fresh start.
-  if (!bootGuest) await bootRestoreFromCloud();
+  // cloud save and reload before building any game state — so the player never
+  // sees a fresh new game flash before their progress syncs back. When it
+  // returns true a reload is already in flight: stop here (loading screen stays
+  // up until the reload navigates) and let the reloaded boot start from the
+  // restored save. Best-effort + bounded; offline/no-save proceeds normally.
+  if (!bootGuest && await bootRestoreFromCloud()) return;
   if (!bootGuest) runMigrations();
   initInput();
   loadSettings();

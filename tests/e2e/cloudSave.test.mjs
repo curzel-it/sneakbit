@@ -24,8 +24,10 @@ const CHROME_A = 9264;
 const CHROME_B = 9265;
 const CHROME_C = 9266;
 const CHROME_D = 9267;
+const CHROME_E = 9268;
 const EMAIL = "cloud-e2e@sneakbit.test";
 const EMAIL2 = "cloud-conflict-e2e@sneakbit.test";
+const EMAIL3 = "cloud-clearcache-e2e@sneakbit.test";
 const PASS = "password1";
 
 let servers;
@@ -110,6 +112,49 @@ test("two devices on one account: progress syncs across them", async (t) => {
   await waitFor(b, "window.skills.get().catcher === true", { timeoutMs: 20000 });
   // And the earlier progress is still present after the second pull.
   assert.equal(await evalExpr(b, "window.skills.get().piercing"), true);
+});
+
+test("Clear cache on a signed-in device restores the cloud save instead of starting a new game", async (t) => {
+  if (!skipIfNoChrome(t)) return;
+  const url = `${servers.appUrl}/play/?api=http://127.0.0.1:${RELAY_PORT}`;
+
+  // — Register, make progress, push it to the cloud ————————————————————————
+  const e = await openDevice(CHROME_E, "/tmp/sb-e2e-cloud-e", t);
+  await navigate(e, url);
+  await waitFor(e, "!!window.account && !!window.cloudSave && !!window.save");
+  await evalExpr(e, "window.account.open('register')");
+  await setVal(e, '[data-view="register"] input[type="email"]', EMAIL3);
+  await setVal(e, '[data-view="register"] input[type="password"]', PASS);
+  await clickSel(e, '[data-view="register"] button.account-primary');
+  await waitFor(e, "window.account.isSignedIn()");
+  await waitFor(e, "(window.cloudSave.meta().rev || 0) >= 1");
+  await evalExpr(e, "window.skills.unlock('piercing')");
+  await evalExpr(e, "window.cloudSave.flush().then(()=>true)");
+  await waitFor(e, "(window.cloudSave.meta().rev || 0) >= 2");
+  assert.equal(await evalExpr(e, "window.skills.get().piercing"), true);
+
+  // — Simulate menu > Clear cache: wipe local state (keeping the signed-in
+  // account) and flag the next boot to restore from the cloud. This mirrors
+  // js/menu.js's handler; we reload() rather than replace(pathname) so the
+  // test's dev `?api=` override (dropped by a bare-pathname nav) survives —
+  // in production the API is same-origin, so the pathname nav is fine there.
+  await evalExpr(e, `(()=>{
+    sessionStorage.setItem('sneakbit.cloudRestorePending','1');
+    window.save.suppressUnloadSave();
+    const acct = localStorage.getItem('sneakbit.account.v1');
+    localStorage.clear();
+    if (acct) localStorage.setItem('sneakbit.account.v1', acct);
+    location.reload();
+    return true;
+  })()`, { awaitPromise: false });
+
+  // The boot must pull the cloud save and resume from it — never flash a fresh
+  // new game. Asserting piercing is back proves the restore landed (and that
+  // the reload rehydrated storage.js's in-memory cache off the pulled save).
+  await waitFor(e, "window.account.isSignedIn() && window.skills.get().piercing === true", { timeoutMs: 20000 });
+  // The one-shot flag was consumed (no reload loop) and progress is stable.
+  assert.equal(await evalExpr(e, "sessionStorage.getItem('sneakbit.cloudRestorePending')"), null);
+  assert.equal(await evalExpr(e, "window.skills.get().piercing"), true);
 });
 
 test("first sign-in with genuine offline progress prompts; 'Keep this device' pushes local over the account", async (t) => {

@@ -40,7 +40,6 @@ let installed = false;
 let pushTimer = null;
 let prevHash = null;     // last hash we've observed (seeded from lastHash)
 let syncing = false;
-let suppressPullReload = false; // boot-restore applies inline; the boot rehydrates without a reload
 
 // — Pure conflict decision (unit-tested) ——————————————————————————————————
 // Returns one of: "seed" | "push" | "pull" | "conflict" | "insync" | "noop".
@@ -94,11 +93,18 @@ function bootRestorePending() {
 }
 
 // Boot-time restore for the Clear-cache path. When the previous page set the
-// pending flag and we're signed in, fetch the account's cloud save and apply it
-// inline (NO reload) so the very first state main() builds is the restored one.
-// Best-effort and bounded: offline, signed-out, no cloud save, or a slow
-// network all just resolve false and the normal fresh start proceeds. The flag
-// is consumed unconditionally so a stuck flag can't wedge every future boot.
+// pending flag and we're signed in, fetch the account's cloud save, apply it,
+// and reload — all before main() builds any game state, so the player never
+// sees a fresh new game. We reload rather than apply inline because applyBlob
+// writes localStorage directly (bypassing the in-memory caches in storage.js /
+// keyBindings / settings); only a reload rehydrates every module cleanly off
+// the restored save. The reload happens while the loading screen is still up,
+// so there's no visible flash. Returns true when it has kicked off a reload
+// (the caller must then stop building boot state); false to proceed with a
+// normal start. The flag is consumed unconditionally so it can never wedge a
+// future boot, and the reloaded boot — flag now gone — takes the false path.
+// Best-effort and bounded: offline / signed-out / no cloud save / slow network
+// all resolve false.
 export async function bootRestoreFromCloud() {
   const pending = bootRestorePending();
   try { sessionStorage.removeItem(BOOT_RESTORE_KEY); } catch { /* ignore */ }
@@ -110,11 +116,12 @@ export async function bootRestoreFromCloud() {
     const r = await withTimeout(getCloudSave(token), BOOT_RESTORE_TIMEOUT_MS);
     if (!r || r.offline || r.status === 401) return false;
     if (r.status === 204 || !r.data) return false; // no cloud save → fresh start
-    const cloud = { rev: r.data.rev, updatedAt: r.data.updatedAt, hash: hashBlob(r.data.blob), blob: r.data.blob };
-    // localStorage was just wiped, so cloud is unambiguously authoritative.
-    suppressPullReload = true;
-    try { pull(cloud); } finally { suppressPullReload = false; }
-    return hasLocalProgress();
+    // localStorage was just wiped, so the cloud copy is unambiguously
+    // authoritative — apply it and reload so the next boot starts from it.
+    applyBlob(r.data.blob);
+    writeMeta({ rev: r.data.rev, updatedAt: r.data.updatedAt, lastHash: hashBlob(r.data.blob), localUpdatedAt: r.data.updatedAt });
+    if (typeof location !== "undefined") { try { location.reload(); } catch { /* ignore */ } }
+    return true;
   } catch { return false; }
   finally { syncing = false; }
 }
@@ -253,10 +260,6 @@ function pull(cloud) {
   applyBlob(cloud.blob);
   writeMeta({ rev: cloud.rev, updatedAt: cloud.updatedAt, lastHash: hashBlob(cloud.blob), localUpdatedAt: cloud.updatedAt });
   prevHash = null;
-  // Boot-restore applies inline and lets main() build state straight off the
-  // freshly-written storage — no reload needed (and a reload mid-boot would be
-  // jarring rather than the "synced from another device" mid-play case below).
-  if (suppressPullReload) return;
   reloadForPull();
 }
 
@@ -297,6 +300,10 @@ function noteLocalChange() {
 }
 
 function flush() {
+  // Clear-cache wipes localStorage just before this unload, so a flush here
+  // would push the *emptied* save over the cloud copy we're about to restore.
+  // Skip it — the pending flag means the next boot pulls the cloud back down.
+  if (bootRestorePending()) return;
   // beforeunload: fire-and-forget. keepalive:true keeps the final PUT alive
   // through page teardown (a normal fetch is killed when the tab closes), so
   // the last bit of progress lands instead of waiting for the next load.
