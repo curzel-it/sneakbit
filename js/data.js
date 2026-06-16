@@ -8,7 +8,16 @@ const cache = new Map();
 async function fetchJson(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`);
-  return res.json();
+  // A 200 isn't proof of JSON: a server/proxy that serves an SPA fallback
+  // page for unknown paths (prod nginx does this) answers a missing file
+  // with 200 + HTML. res.json() would then throw the opaque
+  // "Unexpected token '<', "<!DOCTYPE "... is not valid JSON" far from the
+  // cause. Catch it here and rethrow with the URL so callers can react.
+  try {
+    return await res.json();
+  } catch {
+    throw new Error(`Non-JSON response for ${url} (status ${res.status}) — file missing or path not served`);
+  }
 }
 
 // Creative mode: consult the server-side edited-world store before falling

@@ -515,8 +515,22 @@ async function initOfflineState() {
   // arena: never boot into it. Drop the save so we fall back to the starting
   // zone, as if no progress existed. (An explicit ?zone=1301 still works.)
   if (saved?.zoneId === PVP_ARENA_ZONE_ID) saved = null;
-  const startId = Number.isFinite(urlZone) ? urlZone : (saved?.zoneId ?? STARTING_ZONE_ID);
-  const zoneRaw = await loadZone(startId).then(r => { bumpLoadingProgress("Zone loaded"); return r; });
+  let startId = Number.isFinite(urlZone) ? urlZone : (saved?.zoneId ?? STARTING_ZONE_ID);
+  // A save can point at a zone that no longer ships (e.g. a mode removed in a
+  // later build). loadZone then throws rather than white-screening the boot;
+  // drop the stale save and fall back to the starting zone, same as the PvP
+  // guard above. saveProgress() at the end heals the persisted save.
+  let zoneRaw;
+  try {
+    zoneRaw = await loadZone(startId);
+  } catch (err) {
+    if (startId === STARTING_ZONE_ID) throw err;
+    console.warn(`Zone ${startId} failed to load (${err.message}); falling back to starting zone`);
+    saved = null;
+    startId = STARTING_ZONE_ID;
+    zoneRaw = await loadZone(startId);
+  }
+  bumpLoadingProgress("Zone loaded");
   const zone = buildZone(zoneRaw);
   setupPuzzles(zone);
   setupCutscenes(zone);
