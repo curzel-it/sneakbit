@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Dev-only reference page (not linked from the game, not bundled for
+         production). Same <base href="/"> trick as index.html so the module
+         graph in js/ resolves from the site root regardless of the served
+         path. Serve the repo root with any static server and open
+         /play/showcase.html. -->
+    <base href="/" />
+    <title>SneakBit — Design System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        background: #0c0e16;
+        font-family: monospace;
+        color: #eee;
+        -webkit-text-size-adjust: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module" src="./js/showcase.js"></script>
+  </body>
+</html>

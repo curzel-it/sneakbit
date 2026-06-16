@@ -20,10 +20,18 @@ const SPRITES = {
   smoke:    { sheet: "animated_objects", texX: 28, texY: 13, w: 1, h: 2, frames: 7 },
 };
 
-// kind is "smoke" or "teleport". Idempotent — a second call on an already
-// vanishing entity is a no-op so the fade can't be restarted.
+// "fade" vanishes the body alone — no effect strip layered on top — over this
+// span. Used when the puff would be too much and the fade-out reads on its own.
+const FADE_DURATION = 0.7; // seconds
+
+// kind is "smoke", "teleport", or "fade". Idempotent — a second call on an
+// already vanishing entity is a no-op so the fade can't be restarted.
 export function startVanish(entity, kind, onRemove) {
   if (!entity || entity._vanish) return;
+  if (kind === "fade") {
+    entity._vanish = { sprite: null, elapsed: 0, duration: FADE_DURATION, onRemove: onRemove ?? null };
+    return;
+  }
   const sprite = SPRITES[kind] || SPRITES.smoke;
   const duration = sprite.frames / ANIMATIONS_FPS;  // play the strip once
   entity._vanish = { sprite, elapsed: 0, duration, onRemove: onRemove ?? null };
@@ -61,7 +69,7 @@ export function vanishAlpha(entity) {
 
 export function vanishOverlay(entity) {
   const v = entity?._vanish;
-  if (!v) return null;
+  if (!v || !v.sprite) return null;
   const sp = v.sprite;
   const frame = Math.min(sp.frames - 1, Math.floor(v.elapsed * ANIMATIONS_FPS));
   return { sprite: sp, frame };

@@ -26,7 +26,7 @@ import { buildZone } from "./zone.js";
 import { setupPuzzles } from "./puzzles.js";
 import { setupCutscenes } from "./cutscenes.js";
 import { invalidateZoneCache } from "./data.js";
-import { saveEditedWorld } from "./editedWorlds.js";
+import { writeZoneFile, flushZoneFile, restoreDataDir } from "./localZoneFiles.js";
 import { getBiomeSheet } from "./biomeSheet.js";
 import { getSprite } from "./assets.js";
 import { tryBuildingPrefab } from "./prefabs.js";
@@ -121,6 +121,9 @@ export function installMapEditor(getState) {
     window.creative = window.creative || {};
     window.creative.openMapEditor = openMapEditor;
   }
+  // Re-adopt a previously granted data/ folder so per-edit writes work without
+  // re-picking it each session (best-effort; needs the permission still live).
+  if (isCreativeMode()) restoreDataDir();
 }
 
 function isTouchDevice() {
@@ -475,10 +478,11 @@ function addEntity(raw, tileX, tileY, speciesId) {
     if (prefab) {
       raw.entities = raw.entities ?? [];
       for (const e of prefab.entities) raw.entities.push(e);
-      // Persist each generated interior zone to the server so the door
-      // teleporter resolves on first crossing. Fire-and-forget.
+      // Write each generated interior zone to its data/<id>.json so the door
+      // teleporter resolves on first crossing. Flushed immediately (these are
+      // one-shot creations, not the rapid paint flushes writeZoneFile coalesces).
       for (const interior of prefab.interiorZones ?? []) {
-        saveEditedWorld(interior.id, interior).catch((err) => {
+        flushZoneFile(interior.id, interior).catch((err) => {
           console.warn("prefabs: failed to save interior zone", err);
         });
       }
@@ -507,10 +511,9 @@ function addEntity(raw, tileX, tileY, speciesId) {
   raw.entities.push(entity);
 }
 
-// Re-derive the runtime zone from the mutated raw JSON. Also flushes
-// the override buffer in the background so the edit survives a refresh
-// even without an intervening teleport — matches the spec's "Save zone
-// (flush to buffer)" semantics, just automatic on every placement.
+// Re-derive the runtime zone from the mutated raw JSON. Also writes the edit
+// to data/<id>.json in the background (debounced) so it survives a refresh
+// even without an intervening teleport — automatic on every placement.
 function rebuildZone(state) {
   const next = buildZone(state.rawZone);
   setupPuzzles(next);
@@ -521,9 +524,7 @@ function rebuildZone(state) {
   state.zone = next;
   invalidateZoneCache(state.zone?.id ?? state.rawZone.id);
   if (state.rawZone?.id != null) {
-    saveEditedWorld(state.rawZone.id, state.rawZone).catch((err) => {
-      console.warn("creative: save flush failed", err);
-    });
+    writeZoneFile(state.rawZone.id, state.rawZone);
   }
 }
 

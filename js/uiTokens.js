@@ -29,10 +29,18 @@ export function installUiTokens() {
 
       /* Modal cards (menu, party panel, dialogue, message). Fully
          opaque — they own the screen while open, and pretending to
-         see through them just makes the text harder to read. */
-      --sb-card-bg: #181818;
-      --sb-card-border: 1px solid #333;
+         see through them just makes the text harder to read. The
+         family is dark navy with periwinkle accents (see the modal-
+         accent block below): message.js, confirmDialog.js and
+         dialogue.js had each hardcoded their own near-copy of it, so
+         it now lives here as the one source of truth. */
+      --sb-card-bg: #15182a;
+      --sb-card-border-color: #2c3654;
+      --sb-card-border: 1px solid var(--sb-card-border-color);
       --sb-card-radius: 8px;
+      /* The lighter "lit from above" top edge some cards carry (the
+         dialogue panel, its name tab). */
+      --sb-card-border-hi: #3d4a72;
 
       /* Type. Monospace everywhere — matches the pixel-art aesthetic
          and ships in every browser without a font download. */
@@ -40,6 +48,22 @@ export function installUiTokens() {
       --sb-text: #eee;
       --sb-text-muted: #8a92ad;
       --sb-text-dim: #888;
+      /* Modal-card text: periwinkle headings + a lighter body than the
+         muted grey above, which reads as secondary/explanatory text. */
+      --sb-title: #c8d4ff;
+      --sb-text-body: #cfd6e8;
+      /* Rich-text emphasis inside dialogue/messages: cool italic, warm
+         bold. The gold is the one warm note in an otherwise cool
+         palette — reserved for highlighting names/keywords. */
+      --sb-text-em: #c8d4ff;
+      --sb-text-strong: #ffe9a8;
+
+      /* Modal buttons — the blue "action" button shared by message,
+         confirm and any future modal. (Danger/positive accents below
+         tint specific buttons on top of this base.) */
+      --sb-button-bg: #1d2440;
+      --sb-button-border: #303a60;
+      --sb-button-bg-hover: #2a345a;
 
       /* Action accents — used as border tints for the touch action
          buttons and the colored buttons inside modals (danger / etc).

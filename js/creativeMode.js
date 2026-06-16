@@ -1,18 +1,33 @@
-// Creative-mode predicate. Mirrors Rust's `is_creative_mode()` — the
-// single source of truth other features consult to gate behavior. The
-// HTML port reads `?creative=true` from the URL at boot so the toggle
-// is stable for the whole session (no in-game switch); same shape as
-// the Rust desktop build that reads the flag once from `argv`.
+// Creative-mode predicate. The single source of truth other features consult
+// to gate the map editor and zone-authoring tools.
 //
-// Default is `false`. See creative-mode-requirements.md for the list
-// of behaviors each gate is supposed to change once we wire them up;
-// today this module only powers the save export/import gating.
+// Creative mode is now a LOCAL-ONLY tool: it activates only when the page is
+// served from localhost AND `?creative=true` is set. It writes edits straight
+// into this repo's data/<id>.json (see localZoneFiles.js), so it must never
+// engage on the deployed site — hence the local-origin requirement, which is
+// what keeps it out of production entirely.
+//
+// The flag is read once at boot and cached for the whole session (no in-game
+// switch). Default is `false`.
 
 let cached = null;
+
+// Local origin: a dev server on localhost/127.0.0.1, or a file:// page. This
+// gate is what removes production exposure — the editor only ever runs against
+// a local checkout of the repo.
+export function isLocalHost() {
+  if (typeof location === "undefined") return false;
+  if (location.protocol === "file:") return true;
+  const h = location.hostname;
+  return h === "localhost" || h === "127.0.0.1" || h === "[::1]" || h === "";
+}
 
 export function isCreativeMode() {
   if (cached !== null) return cached;
   if (typeof location === "undefined") return false;
+  // Local-only: the editor writes to the repo's data/ files, so it must never
+  // engage on the deployed site regardless of the URL flag.
+  if (!isLocalHost()) { cached = false; return cached; }
   const params = new URLSearchParams(location.search);
   // Guests don't own the world — letting them flip creative mode (which
   // gates "walk through anything" and the map editor) would only desync

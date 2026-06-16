@@ -1697,6 +1697,28 @@
     "z_index": 14
   },
   {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 6006,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.arrow_up",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 35,
+      "y": 18
+    },
+    "sprite_number_of_frames": 2,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
     "base_speed": 7.0,
     "dps": 1800,
     "entity_type": "Bullet",
@@ -4885,8 +4907,8 @@
     "sprite_frame": {
       "h": 2,
       "w": 3,
-      "x": 35,
-      "y": 5
+      "x": 34,
+      "y": 3
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1004

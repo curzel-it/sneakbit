@@ -44,7 +44,6 @@ test("register -> login -> me happy path", async () => {
     assert.ok(regBody.token);
     assert.equal(regBody.user.email, "m@b.com"); // normalized lowercase
     assert.equal(regBody.user.displayName, "Neo");
-    assert.equal(regBody.user.editor, false); // not on the editor allowlist
 
     const login = await post(base, "/auth/login", { email: "m@b.com", password: "password1" });
     assert.equal(login.status, 200);

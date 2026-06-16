@@ -915,6 +915,81 @@
           "expected_value": 1,
           "key": "always",
           "reward": null,
+          "text": "hint.007.monsters_drop_loot"
+        }
+      ],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 68,
+        "y": 52
+      },
+      "id": 14997400,
+      "is_consumable": true,
+      "lock_type": "None",
+      "species_id": 50000
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [
+        {
+          "expected_value": 1,
+          "key": "always",
+          "reward": null,
+          "text": "hint.008.collect_coins"
+        }
+      ],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 63,
+        "y": 52
+      },
+      "id": 14997410,
+      "is_consumable": true,
+      "lock_type": "None",
+      "species_id": 50000
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [
+        {
+          "expected_value": 1,
+          "key": "always",
+          "reward": null,
+          "text": "hint.009.harmless_creatures"
+        }
+      ],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 62,
+        "y": 38
+      },
+      "id": 14997420,
+      "is_consumable": true,
+      "lock_type": "None",
+      "species_id": 50000
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [
+        {
+          "expected_value": 1,
+          "key": "always",
+          "reward": null,
           "text": "hint.002.throw_knife"
         }
       ],

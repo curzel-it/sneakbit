@@ -23,7 +23,6 @@ import { authenticateUser } from "./bearerAuth.js";
 import { hashPassword, verifyPassword } from "./passwords.js";
 import { readJsonBody } from "./httpBody.js";
 import { sendEmail } from "./email.js";
-import { isEditor } from "./editors.js";
 import { createRateLimiter } from "./rateLimitHttp.js";
 import { log } from "./logger.js";
 
@@ -261,10 +260,6 @@ function publicUser(row) {
     displayName: row.display_name ?? null,
     emailVerified: !!row.email_verified,
     createdAt: row.created_at,
-    // Editor allowlist flag — gates the creative-mode world editor UI on the
-    // client. The /editing routes enforce it server-side regardless; this is
-    // purely so the client knows whether to show the tools.
-    editor: isEditor(row.email),
   };
 }
 

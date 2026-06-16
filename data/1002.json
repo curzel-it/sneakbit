@@ -197,6 +197,35 @@
     {
       "after_dialogue": "Nothing",
       "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [
+        {
+          "expected_value": 1,
+          "key": "seen.first_city_arrow",
+          "visible": false
+        },
+        {
+          "expected_value": 0,
+          "key": "always",
+          "visible": true
+        }
+      ],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 77,
+        "y": 45
+      },
+      "id": 12900077,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 6006
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
       "destination": {
         "direction": "Down",
         "world": 1018,

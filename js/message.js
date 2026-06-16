@@ -92,23 +92,23 @@ function injectStyles() {
   if (document.getElementById("message-styles")) return;
   const css = `
     #message .msg-card {
-      background: #15182a;
-      border: 1px solid #2c3654;
+      background: var(--sb-card-bg);
+      border: var(--sb-card-border);
       border-radius: var(--sb-card-radius);
       padding: 26px 32px;
       max-width: min(560px, 86vw);
       box-shadow: 0 16px 48px rgba(0,0,0,0.6);
       text-align: center;
     }
-    #message h1 { margin: 0 0 12px; font-size: 18px; letter-spacing: 2px; color: #c8d4ff; }
-    #message p  { margin: 0 0 18px; color: #cfd6e8; line-height: 1.55; white-space: pre-wrap; }
+    #message h1 { margin: 0 0 12px; font-size: 18px; letter-spacing: 2px; color: var(--sb-title); }
+    #message p  { margin: 0 0 18px; color: var(--sb-text-body); line-height: 1.55; white-space: pre-wrap; }
     #message .msg-actions { text-align: center; }
     #message button {
-      background: #1d2440; color: #e6ecff; border: 1px solid #303a60;
+      background: var(--sb-button-bg); color: #e6ecff; border: 1px solid var(--sb-button-border);
       padding: 8px 22px; border-radius: var(--sb-surface-radius); cursor: pointer;
       font-family: inherit; font-size: 13px; letter-spacing: 1px;
     }
-    #message button:hover:enabled { background: #2a345a; }
+    #message button:hover:enabled { background: var(--sb-button-bg-hover); }
     #message button:disabled { opacity: 0.5; cursor: default; }
   `;
   const style = document.createElement("style");

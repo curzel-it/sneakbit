@@ -62,14 +62,19 @@ export function installDialogue() {
       -webkit-user-select: none; user-select: none;
     }
     #dialogue.is-open { opacity: 1; transform: translateX(-50%) translateY(0); }
+    /* Keeps its own gradient + name-tab character (that's what makes an NPC
+       line read as an NPC line and not a system message), but every colour
+       now comes from the shared modal tokens so it sits in the same family
+       as message/confirm. The two gradient stops bracket --sb-card-bg
+       (#15182a): a touch lighter on top, a touch darker at the bottom. */
     #dialogue-panel {
       position: relative;
       padding: 18px 20px 16px;
-      color: #f2f2f2;
-      font-family: monospace; font-size: 15px; line-height: 1.5;
-      background: linear-gradient(180deg, #20242e 0%, #14161c 100%);
-      border: 1px solid #3a4150;
-      border-top-color: #525d70;
+      color: var(--sb-text);
+      font-family: var(--sb-font); font-size: 15px; line-height: 1.5;
+      background: linear-gradient(180deg, #1b1f33 0%, #11131f 100%);
+      border: 1px solid var(--sb-card-border-color);
+      border-top-color: var(--sb-card-border-hi);
       border-radius: var(--sb-card-radius);
       box-shadow: 0 10px 34px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
     }
@@ -84,26 +89,25 @@ export function installDialogue() {
        show a scrollbar, so the common case is unchanged. The reveal
        auto-follows to the bottom (see startTypewriter) so the typewriter
        never types below the fold. */
+    /* Scrollbar intentionally left to the global token styling in
+       uiTokens.js — no local override, so the rare long entry's scrollbar
+       matches every other scroll surface. */
     #dialogue-text {
       white-space: pre-wrap; overflow-wrap: break-word;
       max-height: 60vh; overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      scrollbar-width: thin; scrollbar-color: #525d70 transparent;
     }
-    #dialogue-text::-webkit-scrollbar { width: 8px; }
-    #dialogue-text::-webkit-scrollbar-thumb { background: #525d70; border-radius: 4px; }
-    #dialogue-text::-webkit-scrollbar-track { background: transparent; }
-    #dialogue-text em { font-style: italic; color: #cfe0ff; }
-    #dialogue-text strong { font-weight: 700; color: #ffe9a8; }
+    #dialogue-text em { font-style: italic; color: var(--sb-text-em); }
+    #dialogue-text strong { font-weight: 700; color: var(--sb-text-strong); }
     #dialogue-name {
       display: none;
       position: relative; z-index: 1;
       margin: 0 0 -7px 14px; padding: 4px 12px 9px;
       width: fit-content; max-width: calc(100% - 28px);
-      font-family: monospace; font-size: 13px; font-weight: 700;
+      font-family: var(--sb-font); font-size: 13px; font-weight: 700;
       letter-spacing: .3px; color: #fff;
-      background: linear-gradient(180deg, #3a4d8a 0%, #2b3a6b 100%);
-      border: 1px solid #525d70; border-bottom: none;
+      background: linear-gradient(180deg, var(--sb-button-border) 0%, var(--sb-button-bg) 100%);
+      border: 1px solid var(--sb-card-border-hi); border-bottom: none;
       border-radius: var(--sb-card-radius) var(--sb-card-radius) 0 0;
       box-shadow: 0 -2px 10px rgba(0,0,0,.35);
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -111,7 +115,7 @@ export function installDialogue() {
     #dialogue.has-name #dialogue-name { display: block; }
     #dialogue-caret {
       position: absolute; right: 12px; bottom: 8px;
-      color: #8fa3c8; font-size: 13px; opacity: 0;
+      color: var(--sb-text-muted); font-size: 13px; opacity: 0;
       transition: opacity .1s linear;
       animation: dialogue-caret-bob .9s ease-in-out infinite;
     }

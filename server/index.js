@@ -7,7 +7,6 @@ import { negotiate as negotiateExtensions, formatResponse as formatExtResponse }
 import { handleTurnRequest } from "./turnCredentials.js";
 import { createAuthHandler } from "./authRoutes.js";
 import { createSavesHandler } from "./savesRoutes.js";
-import { createEditingHandler } from "./editingRoutes.js";
 import { createPaymentsHandler } from "./paymentsRoutes.js";
 import { createStripeWebhookHandler } from "./stripeWebhook.js";
 import { assertStrongSecret } from "./jwt.js";
@@ -97,13 +96,12 @@ function applyAuthCors(res, originHeader, allowedHosts) {
   applyCors(res, CORS_AUTH_METHODS, originHeader, allowedHosts);
 }
 
-// Endpoints behind bearer auth (account + cloud saves + editor worlds) share the
-// wide CORS + lazy-db treatment.
+// Endpoints behind bearer auth (account + cloud saves) share the wide CORS +
+// lazy-db treatment.
 function isAuthScoped(url) {
   if (!url) return false;
   return url.startsWith("/auth/")
     || url === "/saves" || url.startsWith("/saves?")
-    || url === "/editing" || url.startsWith("/editing/") || url.startsWith("/editing?")
     || url === "/store" || url.startsWith("/store/") || url.startsWith("/store?");
 }
 
@@ -170,11 +168,6 @@ export function startServer({
   function getSavesHandler() {
     if (!savesHandler) { const d = getDb(); if (d) savesHandler = createSavesHandler({ db: d }); }
     return savesHandler;
-  }
-  let editingHandler = null;
-  function getEditingHandler() {
-    if (!editingHandler) { const d = getDb(); if (d) editingHandler = createEditingHandler({ db: d }); }
-    return editingHandler;
   }
   let paymentsHandler = null;
   function getPaymentsHandler() {
@@ -267,7 +260,6 @@ export function startServer({
     if (isAuthScoped(req.url)) {
       applyAuthCors(res, req.headers.origin, allowedHosts);
       const handler = req.url.startsWith("/saves") ? getSavesHandler()
-        : req.url.startsWith("/editing") ? getEditingHandler()
         : req.url.startsWith("/store") ? getPaymentsHandler()
         : getAuthHandler();
       if (!handler) {

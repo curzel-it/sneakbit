@@ -27,6 +27,7 @@ import { isDying, DEATH_SPRITE } from "./deathAnimation.js";
 import { isVanishing, vanishAlpha, vanishOverlay } from "./vanishEffect.js";
 import { isDemandingAttention } from "./npcInterception.js";
 import { isGiant } from "./giantMode.js";
+import { hasUnlocked as fastTravelUnlocked } from "./fastTravel.js";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
@@ -295,6 +296,19 @@ export function sortingKey(bottom, zIndex, isPushable) {
   return z + a + b + p;
 }
 
+// FastTravelLink props swap sprite by global unlock state: a still 1-frame
+// dormant portal until fast travel is unlocked (≥4 zones visited), then a
+// 4-frame animated active portal. Both share the link's 3×2 footprint.
+const FAST_TRAVEL_SPRITE = {
+  locked:   { texX: 31, texY: 3, frames: 1 },
+  unlocked: { texX: 34, texY: 3, frames: 4 },
+};
+
+function fastTravelSpriteOverride(sp) {
+  if (sp?.entity_type !== "FastTravelLink") return null;
+  return fastTravelUnlocked() ? FAST_TRAVEL_SPRITE.unlocked : FAST_TRAVEL_SPRITE.locked;
+}
+
 function draw(ctx, e, camera) {
   const sp = e._species;
 
@@ -322,7 +336,8 @@ function draw(ctx, e, camera) {
   if (!sheet) return;
 
   const { x, y, w, h } = e.frame;
-  const frames = reskin ? 1 : Math.max(1, sp.frames);
+  const ftSprite = fastTravelSpriteOverride(sp);
+  const frames = reskin ? 1 : (ftSprite ? ftSprite.frames : Math.max(1, sp.frames));
   let frame = 0;
   let dirRow = 0;
   const moving = isEntityMoving(e, sp);
@@ -351,8 +366,8 @@ function draw(ctx, e, camera) {
   const offsetX = (e._frameOffsetX | 0);
   // inventory_texture_offset is [row, col]; everything else uses
   // texture_x / texture_y (cols, rows).
-  const baseX = reskin ? reskin.col : sp.texture_x;
-  const baseY = reskin ? reskin.row : sp.texture_y;
+  const baseX = reskin ? reskin.col : (ftSprite ? ftSprite.texX : sp.texture_x);
+  const baseY = reskin ? reskin.row : (ftSprite ? ftSprite.texY : sp.texture_y);
   const sx = (baseX + offsetX + frame * w) * TILE_SIZE;
   const sy = (baseY + dirRow * h) * TILE_SIZE;
   const sw = w * TILE_SIZE;

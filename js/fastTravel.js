@@ -64,7 +64,7 @@ export function tickFastTravel(dt) {
   showFastTravelMenu(state);
 }
 
-function hasUnlocked() {
+export function hasUnlocked() {
   let visited = 0;
   for (const d of DESTINATIONS) {
     if (getValue(`did_visit.${d.zoneId}`)) visited++;

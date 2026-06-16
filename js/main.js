@@ -44,6 +44,7 @@ import { tickMonsterFusion } from "./monsters.js";
 import { tickMinionSpawning } from "./minions.js";
 import { tickCombat } from "./combat.js";
 import { tickAfterDialogue } from "./afterDialogue.js";
+import { tickSummoningCircle } from "./summoningCircle.js";
 import { tickNpcInterception, isInterceptionActive } from "./npcInterception.js";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
 import { tickKnockbackAura, resetKnockbackAura } from "./knockbackAura.js";
@@ -419,6 +420,7 @@ async function main() {
       // (low HP + enemy in range) before health regen runs.
       tickKnockbackAura(state.zone, allPlayers(state), dt);
       tickAfterDialogue(state.zone, dt);
+      tickSummoningCircle(state.zone, dt);
       tickNpcInterception(state, dt);
       tickPuzzles(state.zone, state.player);
       tickCutscenes(state.zone, state.player, dt);

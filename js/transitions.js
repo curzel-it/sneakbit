@@ -17,8 +17,9 @@ import { getZoneCache } from "./zoneCache.js";
 import { setupPuzzles } from "./puzzles.js";
 import { setupCutscenes } from "./cutscenes.js";
 import { isCreativeMode } from "./creativeMode.js";
-import { saveEditedWorld } from "./editedWorlds.js";
+import { flushZoneFile } from "./localZoneFiles.js";
 import { resetPlayerHealth, isPlayerDead } from "./playerHealth.js";
+import { noteZoneExited } from "./firstCityArrow.js";
 
 const TELEPORTER_SPECIES_ID = 1019;
 const FADE_DURATION_MS = 220;
@@ -106,13 +107,15 @@ export async function travelTo(state, destination, opts = {}) {
   busy = true;
   try {
     const sourceZoneId = state.zone?.id ?? 0;
-    // Creative mode persists the source zone's raw JSON to the
-    // IndexedDB override buffer before we tear down, so map-editor
-    // mutations made on the way out survive the zone transition (Rust
-    // engine.save() runs on every teleport in creative). Awaited so the
-    // write actually flushes before we lose the source reference.
+    // One-shot zone-exit hints (the first-city arrow in 1002). Skipped in
+    // creative mode so editing teleports don't burn the flag into the save.
+    if (!isCreativeMode()) noteZoneExited(sourceZoneId);
+    // Creative mode flushes the source zone's raw JSON to its data/<id>.json
+    // before we tear down, so map-editor mutations made on the way out survive
+    // the zone transition (Rust engine.save() runs on every teleport in
+    // creative). Awaited so the write lands before we lose the source ref.
     if (isCreativeMode() && sourceZoneId && state.rawZone) {
-      try { await saveEditedWorld(sourceZoneId, state.rawZone); }
+      try { await flushZoneFile(sourceZoneId, state.rawZone); }
       catch (e) { console.warn("creative: failed to save zone on teleport", e); }
     }
     playSfx("zoneChange");

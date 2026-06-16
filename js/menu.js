@@ -18,7 +18,7 @@ import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDe
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { isCoopActive } from "./coopMode.js";
 import { exportSave, importSave } from "./saveBackup.js";
-import { initCreativeZoneTools, saveZoneNow, exportZone, resetZone } from "./creativeZoneTools.js";
+import { initCreativeZoneTools, saveZoneNow, exportZone, reloadZoneFromDisk, connectDataFolder } from "./creativeZoneTools.js";
 import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
 import { openAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
 import { onAccountChange, getUser, getToken, isSignedIn, captureSession, restoreSession } from "./accountSession.js";
@@ -191,10 +191,11 @@ export function installMenu(stateGetter) {
       <div class="menu-row menu-controls menu-stack">
         <button id="menu-export-save" data-creative-only>Export save (copy JSON)</button>
         <button id="menu-import-save" data-creative-only>Import save (paste JSON)</button>
-        <button id="menu-save-zone" data-creative-only data-desktop-only data-editor-only>Save zone (flush to server)</button>
+        <button id="menu-connect-data" data-creative-only data-desktop-only>Connect data/ folder…</button>
+        <button id="menu-save-zone" data-creative-only data-desktop-only>Save zone (write to data/)</button>
         <button id="menu-export-zone" data-creative-only data-desktop-only>Export zone JSON…</button>
-        <button id="menu-reset-zone" data-creative-only data-desktop-only data-editor-only>Reset zone (revert to shipped)</button>
-        <button id="menu-open-map-editor" data-creative-only data-desktop-only data-editor-only>Map editor…</button>
+        <button id="menu-reset-zone" data-creative-only data-desktop-only>Reload zone from disk</button>
+        <button id="menu-open-map-editor" data-creative-only data-desktop-only>Map editor…</button>
       </div>
       <div class="menu-row menu-controls">
         <button id="menu-creative-back">Back</button>
@@ -275,19 +276,13 @@ export function openInventory() {
 function applyCreativeModeVisibility() {
   const creative = isCreativeMode();
   const desktop = isDesktop();
-  const editor = !!getUser()?.editor;
-  // Three attributes, ANDed: a [data-creative-only] entry hides outside
-  // creative; [data-desktop-only] additionally hides on coarse-pointer
-  // devices where the click-and-drag editor + Save/Export wouldn't be
-  // usable; [data-editor-only] additionally hides for non-editor accounts
-  // (the server enforces this too — a non-editor PUT gets 403). The
-  // server-backed zone tools (Save/Reset/Map editor) carry all three.
+  // Two attributes, ANDed: a [data-creative-only] entry hides outside creative
+  // mode (which is itself local-only now — see creativeMode.js); [data-desktop-only]
+  // additionally hides on coarse-pointer devices where the click-and-drag editor
+  // wouldn't be usable. No account/editor gate — creative mode is a local tool.
   root.querySelectorAll("[data-creative-only]").forEach((node) => {
     const requiresDesktop = node.hasAttribute("data-desktop-only");
-    const requiresEditor = node.hasAttribute("data-editor-only");
-    const show = creative
-      && (!requiresDesktop || desktop)
-      && (!requiresEditor || editor);
+    const show = creative && (!requiresDesktop || desktop);
     node.style.display = show ? "" : "none";
   });
 }
@@ -401,9 +396,10 @@ function bindWidgets() {
   root.querySelector("#menu-creative-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-export-save").addEventListener("click", exportSave);
   root.querySelector("#menu-import-save").addEventListener("click", importSave);
+  root.querySelector("#menu-connect-data").addEventListener("click", connectDataFolder);
   root.querySelector("#menu-save-zone").addEventListener("click", saveZoneNow);
   root.querySelector("#menu-export-zone").addEventListener("click", exportZone);
-  root.querySelector("#menu-reset-zone").addEventListener("click", resetZone);
+  root.querySelector("#menu-reset-zone").addEventListener("click", reloadZoneFromDisk);
   root.querySelector("#menu-open-map-editor").addEventListener("click", () => {
     closeMenu();
     window.creative?.openMapEditor?.();
