@@ -96,7 +96,7 @@ export function openDialogueWithEntity(state, initiator, target, { local = false
   const dialogue = resolveEntityDialogue(target);
   if (!dialogue) return null;
   const speaker = speakerNameForEntity(target);
-  return showDialogue(dialogue, initiator.index | 0, speaker).then(() => {
+  return showDialogue(dialogue, initiator.index | 0, speaker, initiator.playerId || null).then(() => {
     handleAfterDialogue(state.zone, target);
     // A clerk carrying shop_stock opens the buy screen once the greeting
     // closes (Pokémon-mart cadence). Local players only — a host driving a

@@ -80,6 +80,10 @@ export function dispatch(msg) {
   if (custom) { try { custom(msg); } catch (e) { console.error(e); } return; }
   switch (msg.kind) {
     case "toast":
+      // A toast may be addressed to one guest (a hint they walked into, an
+      // NPC reward they earned). Untargeted toasts (no playerId) still fan to
+      // everyone, as before.
+      if (msg.playerId != null && msg.playerId !== getSelfPlayerId()) return;
       if (typeof msg.text === "string") {
         showToast(msg.text, msg.toastType || "hint", { _fromNetwork: true });
       }

@@ -71,7 +71,7 @@ export function checkPickup(state) {
     if (!picker) continue;
     if (kind === "hint-persistent") {
       // Non-consumable hint: show the toast (once per text), don't despawn.
-      triggerHint(e, /* persist */ true);
+      triggerHint(e, /* persist */ true, picker);
     } else {
       zone.entities.splice(i, 1);
       // Runtime loot (coins) carries `_ephemeral` and a throwaway negative id —
@@ -109,7 +109,7 @@ function classify(e) {
 
 function trigger(e, kind, picker) {
   if (kind === "hint") {
-    triggerHint(e, /* persist */ false);
+    triggerHint(e, /* persist */ false, picker);
     return;
   }
   const playerIndex = picker?.index | 0;
@@ -272,11 +272,17 @@ function inventoryIconFor(sp) {
   };
 }
 
-// Renders the hint as a toast. For persistent hints (Rust is_consumable=false)
-// we suppress repeats by storing a read-flag under "hint.read.<text>" — same
-// storage key as Rust entities/hint.rs::set_hint_read. The flag persists
-// across reloads so a hint the player has already seen never spams again.
-function triggerHint(e, persist) {
+// Renders the hint as a toast for whoever walked into it. For persistent hints
+// (Rust is_consumable=false) we suppress repeats by storing a read-flag under
+// "hint.read.<text>" — same storage key as Rust entities/hint.rs::set_hint_read.
+// The flag persists across reloads so a hint the player has already seen never
+// spams again.
+//
+// In online co-op the host runs every player's pickup loop, so a hint a GUEST
+// stepped on must be shown on the guest's own screen, not the host's — send it
+// as a toast addressed to that guest. The host's own avatar (index 0, no
+// playerId) shows it locally with the hint sound.
+function triggerHint(e, persist, picker) {
   const dialogue = resolveEntityDialogue(e);
   const lines = dialogueLines(dialogue);
   if (!lines.length) return;
@@ -285,6 +291,10 @@ function triggerHint(e, persist) {
     const key = `hint.read.${text}`;
     if (getValue(key)) return;
     setValue(key, 1);
+  }
+  if (picker?.playerId) {
+    broadcastHostEvent("toast", { text, toastType: "hint", playerId: picker.playerId });
+    return;
   }
   playSfx("hintReceived");
   showToast(text, "hint");

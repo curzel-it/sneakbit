@@ -11,7 +11,7 @@ import { tr, trVariant } from "./strings.js";
 import { getActiveInputDevice } from "./activeInputDevice.js";
 import { playSfx } from "./audio.js";
 import { getValue, setValue, keyMatches } from "./storage.js";
-import { addAmmo } from "./inventory.js";
+import { addAmmo, getAmmo } from "./inventory.js";
 import { showToast } from "./toast.js";
 import { getSpecies } from "./species.js";
 import { matchesAction } from "./keyBindings.js";
@@ -179,7 +179,10 @@ export function installDialogue() {
 
 export function isDialogueOpen() { return active !== null; }
 
-export function showDialogue(payload, playerIndex = 0, speaker = "") {
+// `playerId` (online co-op only) is the initiating player's network id, when
+// known — carried so a reward granted on close can be synced to that guest's
+// own client (its HUD + a "received" toast). null/absent for local play.
+export function showDialogue(payload, playerIndex = 0, speaker = "", playerId = null) {
   return new Promise((resolve) => {
     const dialogue = isDialogueObject(payload) ? payload : null;
     const rawLines = dialogue ? [dialogue.text] : (Array.isArray(payload) ? payload : [payload]);
@@ -189,11 +192,11 @@ export function showDialogue(payload, playerIndex = 0, speaker = "") {
     // nothing to show. Still settle the promise and grant any reward so
     // progression/read-tracking isn't skipped, but don't open an empty panel.
     if (lines.length === 0) {
-      if (dialogue) handleReward(dialogue, playerIndex | 0);
+      if (dialogue) handleReward(dialogue, playerIndex | 0, playerId);
       resolve(dialogue);
       return;
     }
-    active = { lines, idx: 0, resolve, dialogue, playerIndex: playerIndex | 0, speaker: speaker || "" };
+    active = { lines, idx: 0, resolve, dialogue, playerIndex: playerIndex | 0, playerId: playerId || null, speaker: speaker || "" };
     openPanel();
     paint();
     playSfx("hintReceived", { volume: 0.5 });
@@ -355,10 +358,11 @@ function close() {
   const resolve = active.resolve;
   const dialogue = active.dialogue;
   const playerIndex = active.playerIndex | 0;
+  const playerId = active.playerId || null;
   active = null;
   hidePanel();
   broadcastHostEvent("dialogueClose");
-  if (dialogue) handleReward(dialogue, playerIndex);
+  if (dialogue) handleReward(dialogue, playerIndex, playerId);
   if (typeof resolve === "function") resolve(dialogue);
 }
 
@@ -369,17 +373,30 @@ function close() {
 // display_conditions resolve correctly. The reward-collected flag is
 // global (one-shot per dialogue text), but the ammo lands in the
 // initiating player's bucket.
-export function handleReward(d, playerIndex) {
+export function handleReward(d, playerIndex, playerId = null) {
   if (d.text) setValue(`dialogue.answer.${d.text}`, 1);
   if (!d.reward) return;
   const rewardKey = `dialogue.reward.${d.text}`;
   if (getValue(rewardKey) === 1) return;
   setValue(rewardKey, 1);
-  grantReward(d.reward, playerIndex | 0);
+  const idx = playerIndex | 0;
+  const granted = grantReward(d.reward, idx);
   const sp = getSpecies(d.reward);
   const name = sp ? tr(sp.name) : String(d.reward);
-  const template = tr("dialogue.reward_received");
-  showToast(template.replace("%s", name), "longHint");
+  const text = tr("dialogue.reward_received").replace("%s", name);
+  // Online co-op: the reward landed in the initiating guest's authoritative
+  // pool on the host. Push the new counts (so its HUD ticks up immediately
+  // instead of lagging until its next shot) and the "received" toast to that
+  // guest's own client. Local play shows the toast here.
+  if (playerId) {
+    broadcastHostEvent("ammoSet", {
+      playerId,
+      items: granted.map((sid) => ({ speciesId: sid, count: getAmmo(sid, idx) })),
+    });
+    broadcastHostEvent("toast", { text, toastType: "longHint", playerId });
+  } else {
+    showToast(text, "longHint");
+  }
 }
 
 // Drop a reward species into the player's inventory, expanding bundles into
@@ -387,15 +404,18 @@ export function handleReward(d, playerIndex) {
 // single un-usable bundle entry. Mirrors Rust storage.rs::increment_inventory_count,
 // which recurses through bundle_contents, and matches the floor-pickup path in
 // pickups.js.
+// Returns the species ids it credited (bundle-expanded), so the online-co-op
+// path can sync exactly those counts to the initiating guest.
 function grantReward(speciesId, playerIndex) {
   const sp = getSpecies(speciesId);
   if (sp?.bundle_contents?.length) {
     const counts = new Map();
     for (const cid of sp.bundle_contents) counts.set(cid, (counts.get(cid) || 0) + 1);
     for (const [cid, n] of counts) addAmmo(cid, n, playerIndex);
-  } else {
-    addAmmo(speciesId, 1, playerIndex);
+    return [...counts.keys()];
   }
+  addAmmo(speciesId, 1, playerIndex);
+  return [speciesId];
 }
 
 // Resolve the first dialogue from an entity that matches the current
