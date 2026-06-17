@@ -6,7 +6,7 @@
 // is equipped in their melee slot.
 
 import { getAmmo, addAmmo } from "./inventory.js";
-import { setEquipped, SLOT_MELEE } from "./equipment.js";
+import { getEquipped, setEquipped, SLOT_MELEE } from "./equipment.js";
 import { weaponsInSlot } from "./weaponSlots.js";
 
 // Kunai bullet (the default ranged ammo). At or above this count the player is
@@ -19,10 +19,13 @@ export const KUNAI_THRESHOLD = 5;
 export const SWORD_ITEM_ID = 1164;
 export const SWORD_WEAPON_ID = 1159;
 
-// True when the player holds no melee weapon at all — "no melee in the
-// inventory" in requirement terms (weaponsInSlot derives the owned melee
-// weapons from inventory items carrying an associated WeaponMelee).
+// True when the player has no melee weapon at all — neither one equipped nor
+// one owned in the inventory (weaponsInSlot derives owned melee weapons from
+// inventory items carrying an associated WeaponMelee). "No melee in the
+// inventory" in requirement terms, read defensively so an already-armed
+// player is never handed a redundant sword.
 function hasNoMelee(playerIndex) {
+  if (getEquipped(SLOT_MELEE, playerIndex) != null) return false;
   return weaponsInSlot(SLOT_MELEE, playerIndex).length === 0;
 }
 
