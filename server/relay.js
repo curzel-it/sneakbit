@@ -53,6 +53,10 @@ const LIMIT_BROADCAST_PER_S = 30;
 const LIMIT_OTHER_PER_S = 10;
 const SEVERE_WINDOW_MS = 10_000;
 const SEVERE_LIMIT = 1000;
+// Cap the item list a `shop.bought` frame may carry, so a tampered guest can't
+// fan a huge array out at the host's bandwidth cost. A clerk's stock is short;
+// a single purchase touches one entry (plus bundle expansion), so this is roomy.
+const SHOP_BOUGHT_MAX_ITEMS = 16;
 
 // Idle close: ping cadence is 20s on the client; spec allows 30s; this
 // gives ~3 missed pings before we drop the connection.
@@ -170,6 +174,7 @@ export function createRelay({
       case "move": return onMove(ctx, msg);
       case "guest.resync": return onGuestResync(ctx);
       case "guest.loadout": return onGuestLoadout(ctx, msg);
+      case "shop.bought": return onGuestShopBought(ctx, msg);
       case "snapshot":
       case "delta":
       case "event":
@@ -492,6 +497,33 @@ export function createRelay({
     };
     session.hostConn.sendJSON(out);
     metrics.frameRelayed("guest.loadout", jsonByteLength(out));
+  }
+
+  // Guest tells the host what it just bought from a clerk (a list of granted
+  // inventory items: { speciesId, amount }). The guest runs the buy on its own
+  // client against its own wallet; this only mirrors the granted AMMO into the
+  // host's authoritative per-guest pool (hostShop.js). Forwarded host-bound and
+  // whitelisted to bounded numeric fields, mirroring input/guest.loadout, so a
+  // tampered client can't ride extra bytes (or a wild list) out at the host's
+  // cost.
+  function onGuestShopBought(ctx, msg) {
+    if (ctx.role !== "guest") return;
+    const session = store.sessionsById.get(ctx.sessionId);
+    if (!session || !session.hostConn) return;
+    const src = Array.isArray(msg.items) ? msg.items : [];
+    const items = [];
+    for (const it of src) {
+      if (!it) continue;
+      const speciesId = it.speciesId | 0;
+      const amount = it.amount | 0;
+      if (speciesId <= 0 || amount <= 0) continue;
+      items.push({ speciesId, amount });
+      if (items.length >= SHOP_BOUGHT_MAX_ITEMS) break;
+    }
+    if (!items.length) return;
+    const out = { op: "shop.bought", from: ctx.playerId, items };
+    session.hostConn.sendJSON(out);
+    metrics.frameRelayed("shop.bought", jsonByteLength(out));
   }
 
   function onHostBroadcast(ctx, msg) {

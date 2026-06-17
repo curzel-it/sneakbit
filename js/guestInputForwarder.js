@@ -20,6 +20,7 @@ import { readPadSnapshotForSlot } from "./gamepad.js";
 import { predictGuestSwing } from "./melee.js";
 import { predictGuestShoot } from "./shooting.js";
 import { getPredictedSelf } from "./predictedSelf.js";
+import { isShopOpen } from "./shop.js";
 
 // Discrete one-shot intents — losing one is a missed shot/swing/talk, which
 // is what the pending buffer exists to prevent.
@@ -149,6 +150,11 @@ export function _injectGamepadFrameForTesting(_dirs = [], buttons = {}) {
 export const _resetForwarderForTesting = uninstallGuestInputForwarder;
 
 function sendAction(intent) {
+  // The guest's own buy screen captures input — don't forward shoot/melee/
+  // interact (or predict them) while it's open, or the avatar would fire and
+  // wander on the host while the player is shopping. Mirrors the predicted-
+  // self freeze in main.tickGuestFrame.
+  if (isShopOpen()) return;
   // Local prediction: animate the guest's own swing / muzzle flash the
   // instant they press, rather than waiting a full RTT for the host echo.
   // The host still owns the authoritative swing/bullet via the intent.

@@ -31,6 +31,7 @@ const ALLOWED_KINDS = new Set([
   "giant",      // a peer turned giant (cosmetic) — fan to everyone (giantMode.js)
   "ammoSet",
   "coins",      // host credited a guest's coin wallet (real-game currency)
+  "shopOpen",   // host tells a guest to open the clerk's buy screen on its own client
   "pvpStart",   // host opened a realtime PvP match — guests enter PvP rendering
   "pvpResult",  // realtime PvP resolved — guests show the winner/result screen
   "pvpEnd",     // host left PvP — guests dismiss the result/death overlay

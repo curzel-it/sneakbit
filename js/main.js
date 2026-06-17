@@ -658,7 +658,7 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
   // pauses its own tick) or while this guest is dead — a dead guest must
   // neither move nor stream step commits. The guest's own HP lands at
   // playerHealth index 0 via guestSelfHpSync, so that's the death seam here.
-  if (!isDialogueOpen() && !isPlayerDead(0)) tickPredictedSelf(dt);
+  if (!isDialogueOpen() && !isShopOpen() && !isPlayerDead(0)) tickPredictedSelf(dt);
   // Refresh zone.entities with interpolated positions before render.
   // Without this, mobs / pushables / projectiles snap at the broadcaster's
   // 20 Hz tick instead of sliding smoothly. See mirrorWorld.refreshMirrorEntities.

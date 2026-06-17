@@ -11,6 +11,7 @@ import { TILE_SIZE } from "./constants.js";
 import { getSprite } from "./assets.js";
 import { getSpecies } from "./species.js";
 import { getCoins, onWalletChange } from "./wallet.js";
+import { snapshotInventory } from "./inventory.js";
 import { COIN_SPECIES_ID } from "./coinDrops.js";
 import { tr } from "./strings.js";
 import { el, showOnly } from "./dom.js";
@@ -46,6 +47,11 @@ let stock = [];
 let playerIndex = 0;
 let detailEntry = null; // the stock entry currently on the detail screen
 let qty = 1;
+// Optional post-purchase hook. Online guests buy against their own local
+// wallet/inventory (index 0) but the host owns their authoritative ammo pool,
+// so the guest reports the granted items to the host through this callback —
+// see guestEvents.handleShopOpen. null for local/host shops (no round-trip).
+let onPurchase = null;
 
 // Real-money catalog (skin refId -> { sku, prices, … }), fetched once from the
 // server. Stays empty when the web store is disabled (native builds) or the
@@ -135,8 +141,10 @@ export function installShop() {
 }
 
 // Open the shop for a clerk's stock. `stockList` is the entity's shop_stock
-// array ({ item, price, stackable? }); playerIdx is the buyer.
-export function openShop(stockList, playerIdx = 0) {
+// array ({ item, price, stackable? }); playerIdx is the buyer. opts.onPurchase
+// (online guest only) is called after a successful buy with the inventory
+// items it granted, so the guest can report them to the authoritative host.
+export function openShop(stockList, playerIdx = 0, opts = {}) {
   if (!root) installShop();
   stock = Array.isArray(stockList)
     ? stockList.filter((e) => e && (
@@ -146,6 +154,7 @@ export function openShop(stockList, playerIdx = 0) {
       ))
     : [];
   playerIndex = playerIdx | 0;
+  onPurchase = typeof opts?.onPurchase === "function" ? opts.onPurchase : null;
   open = true;
   // Refresh labels built at install time, in case strings hydrated after boot.
   titleEl.textContent = tr("shop.title");
@@ -198,6 +207,7 @@ function realMoneyTag(cat) {
 export function closeShop() {
   if (!open) return;
   open = false;
+  onPurchase = null;
   root.style.display = "none";
   detailEntry = null;
   stopShowcase();
@@ -378,15 +388,32 @@ function bumpQty(delta) {
 }
 
 function confirmBuy() {
+  // Snapshot before the grant so we can report exactly what ammo/items the
+  // purchase added to the host (online guest path). Skipped for local shops.
+  const before = onPurchase ? snapshotInventory(playerIndex) : null;
   const res = buy(detailEntry, qty, playerIndex);
   if (!res.ok) { renderDetail(); return; }
   playSfx("ammoCollected");
   const name = entryName(detailEntry);
   const image = (isSkinEntry(detailEntry) || isSkillEntry(detailEntry)) ? null : toastIcon(detailEntry.item);
   showToast(tr("shop.bought").replace("%s", name), "hint", { image });
+  if (onPurchase && before) reportGrantedItems(before);
   refreshCoins();
   showStorefront();
   focusFirstIn(listScreen);
+}
+
+// Diff the inventory around the buy and hand the gained items to onPurchase.
+// Captures bundle-expanded ammo and weapon items alike, so the host mirrors
+// the guest's authoritative pool exactly (mirrors pickups.js's item list).
+function reportGrantedItems(before) {
+  const after = snapshotInventory(playerIndex);
+  const items = [];
+  for (const k of Object.keys(after)) {
+    const gained = (after[k] | 0) - (before[k] | 0);
+    if (gained > 0) items.push({ speciesId: Number(k), amount: gained });
+  }
+  if (items.length) onPurchase(items);
 }
 
 // ---- Input ---------------------------------------------------------------

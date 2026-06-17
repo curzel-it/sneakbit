@@ -747,3 +747,37 @@ test("move frame is forwarded with from=playerId and whitelisted fields", async 
     h.close(); g.close();
   });
 });
+
+test("shop.bought frame is forwarded with from=playerId and a bounded item list", async () => {
+  // A guest reports a clerk purchase so the host mirrors the granted ammo into
+  // its authoritative per-guest pool (hostShop.js). Forwarded host-bound; the
+  // item list is whitelisted to numeric {speciesId, amount} and capped, so a
+  // tampered client can't ride bloat out at the host's cost.
+  await withServer(async ({ host, port }) => {
+    const h = await openWsClient(host, port);
+    await hello(h, "u-shop-h");
+    h.send({ op: "host.open" });
+    const opened = await h.recv();
+
+    const g = await openWsClient(host, port);
+    const gw = await hello(g, "u-shop-g");
+    g.send({ op: "guest.join", code: opened.code });
+    await g.recv(); await h.recv();
+
+    g.send({
+      op: "shop.bought",
+      items: [
+        { speciesId: 7000, amount: 10, junk: "ignored" },
+        { speciesId: 0, amount: 5 },   // bad speciesId — dropped
+        { speciesId: 1164, amount: -1 }, // bad amount — dropped
+      ],
+      payload: "x".repeat(50_000),
+    });
+    const fwd = await h.recv();
+    assert.equal(fwd.op, "shop.bought");
+    assert.equal(fwd.from, gw.playerId);
+    assert.deepEqual(fwd.items, [{ speciesId: 7000, amount: 10 }]);
+    assert.equal(fwd.payload, undefined);
+    h.close(); g.close();
+  });
+});

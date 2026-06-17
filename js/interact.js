@@ -15,6 +15,7 @@ import { getActiveInputDevice } from "./activeInputDevice.js";
 import { tr } from "./strings.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { getNetRole } from "./onlineBootstrap.js";
+import { broadcastHostEvent } from "./hostEvents.js";
 import { isDying } from "./deathAnimation.js";
 import { isVanishing } from "./vanishEffect.js";
 import { isWalkable } from "./zone.js";
@@ -115,7 +116,18 @@ function performInteract(state, initiator) {
   const target = findFacingEntity(state.zone, initiator);
   if (!target) return false;
   faceTargetAtInitiator(target, initiator);
-  const local = initiator === state.player || initiator === state.player2;
+  // A network guest facing a clerk opens the shop on its OWN client — the
+  // dialogue modal is host-owned and host-advanced, so routing a guest's
+  // clerk visit through it would strand the buy screen behind a greeting only
+  // the host can dismiss. Send the stock straight to the guest (which reads
+  // its own wallet/inventory) and skip the host-side greeting for them.
+  if (initiator.playerId && Array.isArray(target.shop_stock) && target.shop_stock.length) {
+    broadcastHostEvent("shopOpen", { playerId: initiator.playerId, stock: target.shop_stock });
+    return true;
+  }
+  // Any player physically at this machine (P1..P4, no playerId) gets the
+  // host-side modal after the greeting; guests are handled above.
+  const local = !initiator.playerId;
   return openDialogueWithEntity(state, initiator, target, { local }) != null;
 }
 

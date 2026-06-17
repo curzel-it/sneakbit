@@ -9,9 +9,10 @@ import { showToast } from "./toast.js";
 import { fadeOverlayOut, fadeOverlayIn, FADE_OVERLAY_MS } from "./transitions.js";
 import { addAmmo, getAmmo, removeAmmo } from "./inventory.js";
 import { addCoins } from "./wallet.js";
+import { openShop } from "./shop.js";
 import { showGameOver, hideGameOver, isGameOverOpen, showMatchResult } from "./gameOver.js";
 import { setGameMode, GAME_MODE } from "./gameMode.js";
-import { getSelfPlayerId, getNameForPlayerId } from "./onlineBootstrap.js";
+import { getSelfPlayerId, getNameForPlayerId, getNet } from "./onlineBootstrap.js";
 import { tr } from "./strings.js";
 import {
   showNetworkDialogue,
@@ -94,6 +95,9 @@ export function dispatch(msg) {
       return;
     case "coins":
       handleCoins(msg);
+      return;
+    case "shopOpen":
+      handleShopOpen(msg);
       return;
     case "death":
       handleDeath(msg);
@@ -182,6 +186,25 @@ function handleCoins(msg) {
   if (alreadyApplied(msg?.eid)) return;
   const amount = msg?.amount | 0;
   if (amount > 0) addCoins(amount, 0);
+}
+
+// Host says THIS guest walked up to a clerk — open the buy screen on the
+// guest's own client. The shop reads the guest's own wallet/inventory (index
+// 0) and runs the purchase locally; coins and equipment are guest-authoritative
+// and persist on this device. Ammo, though, lives in the host's authoritative
+// per-guest pool (shooting.js spends it, ammoSet rebroadcasts it), so the buy
+// screen reports each grant back over `shop.bought` and the host mirrors it
+// (see hostShop.js). Other guests ignore a shopOpen addressed to a peer.
+function handleShopOpen(msg) {
+  if (msg?.playerId != null && msg.playerId !== getSelfPlayerId()) return;
+  const stock = Array.isArray(msg?.stock) ? msg.stock : [];
+  if (!stock.length) return;
+  openShop(stock, 0, {
+    onPurchase: (items) => {
+      const net = getNet();
+      if (net?.isConnected?.()) net.send({ op: "shop.bought", items });
+    },
+  });
 }
 
 // Authoritative absolute-count update from the host. Used for shoot

@@ -26,6 +26,7 @@ import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotB
 import { installHostGuests, uninstallHostGuests } from "./hostGuests.js";
 import { installHostPauseBroadcaster, uninstallHostPauseBroadcaster } from "./hostPauseState.js";
 import { installHostLoadoutSync, uninstallHostLoadoutSync } from "./hostLoadoutSync.js";
+import { installHostShop, uninstallHostShop } from "./hostShop.js";
 import { installGuestLoadoutSync, uninstallGuestLoadoutSync } from "./guestLoadoutSync.js";
 import { installGiantNet, uninstallGiantNet } from "./giantMode.js";
 import { installGuestSelfHpSync, uninstallGuestSelfHpSync } from "./guestSelfHpSync.js";
@@ -127,6 +128,7 @@ async function teardownRole(role) {
     safe("uninstallHostGuests", uninstallHostGuests);
     safe("uninstallHostPauseBroadcaster", uninstallHostPauseBroadcaster);
     safe("uninstallHostLoadoutSync", uninstallHostLoadoutSync);
+    safe("uninstallHostShop", uninstallHostShop);
     safe("uninstallGiantNet", uninstallGiantNet);
   } else if (role === "guest") {
     safe("guest.leave", () => getNet()?.send({ op: "guest.leave" }));
@@ -193,6 +195,7 @@ async function setupRole(target, opts) {
     installSnapshotBroadcaster(stateHandlers.stateGetter);
     installHostPauseBroadcaster();
     installHostLoadoutSync();
+    installHostShop(stateHandlers.stateGetter);
     installGiantNet({ net: n });
     return;
   }
