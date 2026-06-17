@@ -1,13 +1,13 @@
 // Per-player inventory: count of each pickup-able species id, keyed by
 // player index. Mirrors Rust storage.rs: `player.{p}.inventory.amount.{sid}`.
 //
-// Single-player calls keep working unchanged — they default to index 0.
-// Local co-op (one save slot) FOLDS P2 (index 1) onto P1 (index 0) so
-// kunai pickups by either player feed a single shared pool. Network
-// co-op leaves indices independent — guests own their own inventory.
+// Every player owns a dedicated inventory — single-player and the host use
+// index 0, local split-screen co-op uses indices 1..3 for P2..P4, and each
+// online guest owns its own pool (mirrored from the host's authoritative
+// copy at player.{slot-1}.*). No index is ever folded onto another: a kunai
+// picked up by P2 lands in P2's pool, not a shared one.
 
 import { getValue, setValue } from "./storage.js";
-import { isCoopMode } from "./coopMode.js";
 
 // In-memory mirror per player. Lazy-loaded once from storage on first
 // access of any function. We snapshot from storage.js's cache rather
@@ -54,17 +54,11 @@ function key(playerIndex, speciesId) {
   return `${PLAYER_KEY_PREFIX}${playerIndex | 0}${KEY_SUFFIX}${speciesId | 0}`;
 }
 
-// Local co-op shares one save slot — both local heroes drop pickups
-// into player.0.*. Single-player keeps its own index. Network co-op
-// keeps slots independent: each guest owns its own pool, and the host
-// reflects per-guest counts back over the wire (see hostInventorySync /
-// guestEvents handlers). isCoopMode() distinguishes the two: it's true
-// only for local co-op; isCoopActive() would also catch network co-op,
-// which we deliberately exclude here.
+// Inventories are never folded: each player index addresses its own pool.
+// (Kept as a named seam so the read/write paths below read uniformly and a
+// future remap — e.g. PvP scratch pools — has one place to hook.)
 function effectiveIndex(playerIndex) {
-  const idx = playerIndex | 0;
-  if (idx > 0 && isCoopMode()) return 0;
-  return idx;
+  return playerIndex | 0;
 }
 
 function persist(playerIndex, speciesId) {

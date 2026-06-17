@@ -4,9 +4,9 @@
 //     + E/F/G + Esc)
 //   * P2 uses its own rebindable keymap (defaults: IJKL + B/N/M),
 //     stored alongside P1's bindings in keyBindings.js
-//   * inventory and equipment are shared (one save slot); HP, invuln
-//     windows and per-player death state stay independent so the death
-//     toast / camera averaging features work
+//   * each player owns a dedicated inventory, wallet and equipment
+//     (keyed by player index — no folding onto P1); HP, invuln windows
+//     and per-player death state are likewise independent
 //   * the camera follows the midpoint between the two players
 //
 // In-memory only — any reload (intentional F5, or one triggered by an

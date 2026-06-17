@@ -1,15 +1,14 @@
 // Per-player coin wallet: the real game's currency balance, keyed by player
 // index. Sibling to inventory.js (ammo / pickup counts) — same persistence
-// namespace and the same co-op folding rule, but a single scalar per player
-// instead of a per-species map.
+// namespace, a single scalar per player instead of a per-species map.
 //
-// Single-player defaults to index 0. Local split-screen co-op (one save slot)
-// FOLDS P2..P4 onto P1 so both heroes spend from one purse. Network co-op
-// keeps indices independent — each guest owns its own balance and the host
-// reflects per-guest credits over the wire (see guestEvents.js `coins`).
+// Every player owns a dedicated purse and spends from it alone: single-player
+// and the host use index 0, local split-screen co-op uses indices 1..3 for
+// P2..P4, and each online guest owns its own balance (the host reflects
+// per-guest credits over the wire — see guestEvents.js `coins`). No index is
+// folded onto another.
 
 import { getValue, setValue } from "./storage.js";
-import { isCoopMode } from "./coopMode.js";
 
 const MAX_PLAYERS = 4;
 // Every fresh save starts the hero with a small purse so the zone-1001 shop is
@@ -31,12 +30,10 @@ function seededKey(playerIndex) {
   return `player.${playerIndex | 0}.coins.seeded`;
 }
 
-// Local co-op shares one save slot — both local heroes use player.0. Network
-// co-op keeps slots independent. Mirrors inventory.js effectiveIndex.
+// Wallets are never folded: each player index addresses its own purse.
+// Mirrors inventory.js effectiveIndex.
 function effectiveIndex(playerIndex) {
-  const idx = playerIndex | 0;
-  if (idx > 0 && isCoopMode()) return 0;
-  return idx;
+  return playerIndex | 0;
 }
 
 function load(idx) {

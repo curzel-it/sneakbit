@@ -612,7 +612,10 @@ function injectStyles() {
     #menu .inv-list .inv-action button:hover { background: #353535; }
     #menu .inv-list .inv-action button:disabled { opacity: .4; cursor: default; background: #2a2a2a; }
     #menu .inv-equipped-tag { color: #b8c6ff; font-size: 10px; letter-spacing: 1px; }
-    #menu .inv-player { margin: 8px 0 6px; font-size: 13px; color: #b8c6ff; letter-spacing: 1px; }
+    #menu .inv-player-tabs { display: flex; gap: 6px; margin: 0 0 12px; flex-wrap: wrap; }
+    #menu .inv-player-tab { padding: 6px 14px; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: var(--sb-surface-radius); color: #aaa; font: inherit; font-size: 12px; letter-spacing: 1px; cursor: pointer; }
+    #menu .inv-player-tab:hover { background: #292929; }
+    #menu .inv-player-tab.is-active { background: #1d2440; border-color: #3a4a80; color: #b8c6ff; }
     #menu .inv-sep { border: none; border-top: 1px dashed #2e2e2e; margin: 14px 0; }
     #menu .inv-slot { margin-bottom: 12px; min-width: 340px; }
     #menu .inv-slot-title { margin: 0 0 6px; font-size: 12px; color: #8090b0; letter-spacing: 1px; text-transform: uppercase; }

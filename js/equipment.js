@@ -2,12 +2,12 @@
 // Mirrors Rust equipment/basics.rs: per-player slot, stored as the weapon
 // species id, with keys `player.{p}.equipped.{slot}.weapon`.
 // Default ranged = kunai launcher (1160) per player; default melee = none.
-// Local co-op folds P2 (index 1) onto P1 (index 0) so a single save slot
-// holds the shared loadout — network co-op leaves indices independent.
+// Every player carries a dedicated loadout — local split-screen co-op uses
+// indices 1..3 for P2..P4, online guests own their own (synced via
+// sessionLoadouts). No index is folded onto another.
 // Exposes `window.equipment` for devtools (parity with window.skills).
 
 import { getValue, setValue } from "./storage.js";
-import { isCoopMode } from "./coopMode.js";
 
 export const SLOT_RANGED = "ranged";
 export const SLOT_MELEE  = "melee";
@@ -21,16 +21,10 @@ function keyFor(slot, index) {
   return `player.${i}.equipped.${slot}`;
 }
 
-// Local co-op folds P2 (index 1) onto P1 (index 0) so a single save slot
-// holds the shared loadout. Network co-op must NOT fold — each guest is
-// a distinct player with their own equipment (sourced from their client's
-// localStorage and synced via sessionLoadouts). isCoopMode() is true only
-// for the local case; isCoopActive() would also catch network co-op,
-// which we deliberately exclude.
+// Loadouts are never folded: each player index addresses its own slots.
+// Mirrors inventory.js / wallet.js effectiveIndex.
 function effectiveIndex(index) {
-  const i = index | 0;
-  if (i > 0 && isCoopMode()) return 0;
-  return i;
+  return index | 0;
 }
 
 export function getEquipped(slot, index = 0) {

@@ -8,6 +8,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "sneakbit": "file:..",
     "stripe": "^17.7.0"
   },
   "engines": {

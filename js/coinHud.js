@@ -1,12 +1,18 @@
-// Coin HUD: a small chip showing the coin icon + the hero's balance. DOM, not
+// Coin HUD: a small chip showing the coin icon + a hero's balance. DOM, not
 // canvas (project rule). Mirrors ammoHud.js but reads the real-game wallet
-// (wallet.js) instead of ammo. Anchored top-centre; hidden in PvP (no coins).
+// (wallet.js) instead of ammo. Hidden in PvP (no coins).
+//
+// Single-slice (single-player / online): one chip in the shared top row for
+// the local hero. In split-screen local play (co-op) one chip per player is
+// anchored beside THAT player's HP card — mirroring the per-slice ammo chips
+// and HP bars — each showing that player's own dedicated balance.
 
 import { ICON_RES, paintInventoryIcon } from "./inventoryIcon.js";
 import { getSpecies } from "./species.js";
 import { getCoins, onWalletChange } from "./wallet.js";
 import { isPvp } from "./gameMode.js";
 import { COIN_SPECIES_ID } from "./coinDrops.js";
+import { localPlayerCount } from "./coopMode.js";
 import { sliceCount, getSlices } from "./splitScreen.js";
 import { topHudRow } from "./topHudRow.js";
 import { el } from "./dom.js";
@@ -14,25 +20,32 @@ import { el } from "./dom.js";
 // Match the ammo chip exactly (ammoHud.js) so the two top-of-screen counters
 // read as the same size: 28px icon, 6px/10px padding, 8px icon-to-text gap.
 const ICON_PIXELS = 28;
+const MAX_PLAYERS = 4;
 
 let root = null;
-let iconCanvas = null;
-let countEl = null;
-let lastLabel = null;
+const chips = []; // [{ root, icon, count, lastLabel, index }]
 
 export function installCoinHud() {
   if (root) return root;
   injectStyles();
-  iconCanvas = el("canvas", {
+  // Build all four chips up front; updateCoinHud shows only the active ones
+  // (the local player count is hot-toggled, so we can't size the set here).
+  for (let i = 0; i < MAX_PLAYERS; i++) chips.push(makeChip(i));
+  root = el("div", { id: "coin-hud" }, chips.map((c) => c.root));
+  topHudRow().appendChild(root);
+  onWalletChange(updateCoinHud);
+  return root;
+}
+
+function makeChip(index) {
+  const icon = el("canvas", {
     width: ICON_RES,
     height: ICON_RES,
     style: { width: `${ICON_PIXELS}px`, height: `${ICON_PIXELS}px` },
   });
-  countEl = el("span", { text: "0" });
-  root = el("div", { id: "coin-hud" }, [iconCanvas, countEl]);
-  topHudRow().appendChild(root);
-  onWalletChange(updateCoinHud);
-  return root;
+  const count = el("span", { text: "0" });
+  const card = el("div", { class: "coin-chip" }, [icon, count]);
+  return { root: card, icon, count, lastLabel: null, index };
 }
 
 export function updateCoinHud() {
@@ -41,40 +54,52 @@ export function updateCoinHud() {
   const visible = !isPvp();
   root.style.display = visible ? "" : "none";
   if (!visible) return;
-  // In split-screen the HP bar + ammo chips anchor to each slice, leaving the
-  // top row empty — pin the (single, shared) coin counter beside P1's HP card,
-  // mirroring the desktop top strip, instead of leaving it stranded mid-screen.
+  // Split-screen local play shows one chip per player, each anchored to its
+  // own slice and reading its own wallet. Single-slice (single-player /
+  // online) shows just the local hero's chip in the shared top row.
   const split = sliceCount() > 1;
   root.classList.toggle("split", split);
-  if (split) anchorCoin(); else { root.style.left = lastLeft = ""; root.style.top = lastTop = ""; }
-  const label = String(getCoins(0));
-  if (label !== lastLabel) {
-    countEl.textContent = label;
-    lastLabel = label;
+  const slices = split ? getSlices() : null;
+  const count = split ? localPlayerCount() : 1;
+  // Tag with the player number when more than one chip is on screen.
+  const tagged = count > 1;
+  for (const c of chips) {
+    if (c.index >= count) { c.root.style.display = "none"; continue; }
+    c.root.style.display = "";
+    const n = getCoins(c.index);
+    const label = tagged ? `P${c.index + 1}  ${n}` : String(n);
+    if (label !== c.lastLabel) {
+      c.count.textContent = label;
+      c.lastLabel = label;
+    }
+    // Lazy-draw the icon the first time the sprite sheet is available (loaded
+    // async at startup, so the first frames may not have it).
+    if (!c.icon.dataset.painted) paintIcon(c.icon);
+    anchorChip(c, slices);
   }
-  // Lazy-draw the icon the first time the sprite sheet is available (loaded
-  // async at startup, so the first frames may not have it).
-  if (!iconCanvas.dataset.painted) paintIcon();
 }
 
-// Pin the coin chip just right of P1's HP card in split-screen, anchored to
-// slice 0's top-left corner. HP_CARD_W must track the split HP-card width in
-// topHudRow.js (#top-hud-row.split .hp-card). Clamped to a 12px viewport margin
-// like the HP card, since the centred canvas can start a few px off-screen.
+// Pin a coin chip just right of its slice's HP card in split-screen, anchored
+// to that slice's top-left corner. HP_CARD_W must track the split HP-card
+// width in topHudRow.js (#top-hud-row.split .hp-card). Clamped to a 12px
+// viewport margin like the HP card. Single-slice resets to the top-row flow.
 const ANCHOR_MARGIN = 12;
 const HP_CARD_W = 180;
 const HP_TO_COIN_GAP = 10;
-let lastLeft = null, lastTop = null;
-function anchorCoin() {
-  const css = getSlices()?.[0]?.cssRect;
-  if (!css) { if (lastLeft !== "") { root.style.left = lastLeft = ""; root.style.top = lastTop = ""; } return; }
-  const left = `${Math.max(ANCHOR_MARGIN, Math.round(css.left + ANCHOR_MARGIN)) + HP_CARD_W + HP_TO_COIN_GAP}px`;
-  const top = `${Math.max(ANCHOR_MARGIN, Math.round(css.top + ANCHOR_MARGIN))}px`;
-  if (left !== lastLeft) { root.style.left = left; lastLeft = left; }
-  if (top !== lastTop) { root.style.top = top; lastTop = top; }
+function anchorChip(c, slices) {
+  const css = slices?.[c.index]?.cssRect;
+  if (css) {
+    Object.assign(c.root.style, {
+      position: "fixed",
+      left: `${Math.max(ANCHOR_MARGIN, Math.round(css.left + ANCHOR_MARGIN)) + HP_CARD_W + HP_TO_COIN_GAP}px`,
+      top: `${Math.max(ANCHOR_MARGIN, Math.round(css.top + ANCHOR_MARGIN))}px`,
+    });
+  } else {
+    Object.assign(c.root.style, { position: "", left: "", top: "" });
+  }
 }
 
-function paintIcon() {
+function paintIcon(iconCanvas) {
   const off = getSpecies(COIN_SPECIES_ID)?.inventory_texture_offset;
   if (!off) return; // `inventory_texture_offset` is [row, col] in the rust source.
   paintInventoryIcon(iconCanvas, off[0], off[1]);
@@ -89,6 +114,16 @@ function injectStyles() {
       position: relative;
       flex: 0 0 auto;
       display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .coin-chip {
+      flex: 0 0 auto;
+      display: flex;
       align-items: center;
       gap: 8px;
       padding: 6px 10px;
@@ -98,13 +133,11 @@ function injectStyles() {
       color: var(--sb-text);
       font-family: var(--sb-font);
       font-size: 14px;
+      white-space: nowrap;
       pointer-events: none;
-      user-select: none;
-      -webkit-user-select: none;
     }
-    /* Split-screen: leave the row; anchorCoin() pins left/top beside P1's card. */
-    #coin-hud.split {
-      position: fixed;
+    /* Split-screen: anchorChip pins each chip beside its slice's HP card. */
+    #coin-hud.split .coin-chip {
       z-index: 11;
     }
   `;

@@ -24,6 +24,7 @@ loadSpeciesData([
 const playerHealth = await import("../js/playerHealth.js");
 const inventory = await import("../js/inventory.js");
 const equipment = await import("../js/equipment.js");
+const wallet = await import("../js/wallet.js");
 const storage = await import("../js/storage.js");
 const coopMode = await import("../js/coopMode.js");
 const { updateCamera, createCamera, cameraRectFor } = await import("../js/camera.js");
@@ -32,6 +33,7 @@ function freshAll() {
   storage._resetStorageForTesting();
   playerHealth.resetPlayerHealth();
   inventory.clearInventory();
+  wallet._resetWalletForTesting();
   coopMode._setCoopModeForTesting(false);
 }
 
@@ -119,29 +121,44 @@ test("camera with a single player matches the old single-player path", () => {
   assert.ok(Math.abs(camCenterY - 100.5) < 0.001);
 });
 
-test("local co-op folds P2 inventory onto P1 (shared kunai pool)", () => {
+test("local co-op keeps P2 inventory dedicated (no folding onto P1)", () => {
   freshAll();
   coopMode._setCoopModeForTesting(true);
   inventory.addAmmo(7000, 5, 0);
-  // P2 deposit goes into the same pool as P1; the HUD reads index 0 and
-  // shows the combined count, so P1 isn't stuck with 0 kunai because P2
-  // happened to step on the pickup first.
+  // P2's pickup lands in P2's own pool — it must not bleed into P1's count,
+  // so a kunai P2 grabbed is P2's to throw, not added to P1's HUD total.
   inventory.addAmmo(7000, 3, 1);
-  assert.equal(inventory.getAmmo(7000, 0), 8);
-  assert.equal(inventory.getAmmo(7000, 1), 8);
-  // Either player removing decrements the shared pool.
+  assert.equal(inventory.getAmmo(7000, 0), 5);
+  assert.equal(inventory.getAmmo(7000, 1), 3);
+  // Each player removes from their own pool only.
   inventory.removeAmmo(7000, 2, 1);
-  assert.equal(inventory.getAmmo(7000, 0), 6);
+  assert.equal(inventory.getAmmo(7000, 0), 5);
+  assert.equal(inventory.getAmmo(7000, 1), 1);
   coopMode._setCoopModeForTesting(false);
 });
 
-test("local co-op folds P2 equipment onto P1 (shared loadout)", () => {
+test("local co-op keeps P2 wallet dedicated (each player spends their own purse)", () => {
   freshAll();
   coopMode._setCoopModeForTesting(true);
-  // P2 picks up the AR15 — equipment.js routes the write to index 0.
+  wallet.addCoins(100, 0);
+  wallet.addCoins(40, 1);
+  assert.equal(wallet.getCoins(0), 100);
+  assert.equal(wallet.getCoins(1), 40);
+  // P2 spending (a shop purchase) only draws down P2's balance.
+  wallet.addCoins(-25, 1);
+  assert.equal(wallet.getCoins(0), 100, "P1 purse untouched by P2's spend");
+  assert.equal(wallet.getCoins(1), 15);
+  coopMode._setCoopModeForTesting(false);
+});
+
+test("local co-op keeps P2 equipment dedicated (no shared loadout)", () => {
+  freshAll();
+  coopMode._setCoopModeForTesting(true);
+  // P2 picks up the AR15 — it equips for P2 only; P1 stays on the default.
   equipment.setEquipped(equipment.SLOT_RANGED, 1154, 1);
-  assert.equal(equipment.getEquipped(equipment.SLOT_RANGED, 0), 1154);
   assert.equal(equipment.getEquipped(equipment.SLOT_RANGED, 1), 1154);
+  assert.equal(equipment.getEquipped(equipment.SLOT_RANGED, 0),
+               equipment.DEFAULT_RANGED_WEAPON_ID);
   coopMode._setCoopModeForTesting(false);
 });
 

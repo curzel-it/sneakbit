@@ -39,6 +39,7 @@ import { installControllerPresence, isControllerPaused } from "./controllerPrese
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js";
 import { installCoinHud, updateCoinHud } from "./coinHud.js";
 import { seedStartingCoins } from "./wallet.js";
+import { giftStarterWeaponIfNeeded } from "./starterGift.js";
 import { tickMobs } from "./mobs.js";
 import { tickMonsterFusion } from "./monsters.js";
 import { tickMinionSpawning } from "./minions.js";
@@ -775,6 +776,7 @@ export function setLocalPlayers(n) {
     state.player2 = makeCoopP2(state.player, state.zone, { index: 1 });
     state.lastTile2 = { x: state.player2.tileX, y: state.player2.tileY };
     resetPlayerHealth(1);
+    setupNewLocalPlayer(1);
   } else if (n < 2 && state.player2) {
     state.player2 = null;
     state.lastTile2 = null;
@@ -801,10 +803,23 @@ function ensureLocalExtra(slot, want) {
     const p = makeCoopP2(state.player, state.zone, { index: idx });
     state.players.push({ player: p, slot, playerId: null, lastTile: { x: p.tileX, y: p.tileY } });
     resetPlayerHealth(idx);
+    setupNewLocalPlayer(idx);
   } else if (!want && existing) {
     state.players = state.players.filter((e) => !(e.slot === slot && e.playerId == null));
     clearInputState(slot);
   }
+}
+
+// First-time setup for a freshly spawned local co-op player (P2..P4). Each
+// owns a dedicated wallet + inventory now (no folding onto P1), so seed the
+// same starting purse a fresh single-player save gets and — if they'd be
+// defenceless (under 5 kunai, no melee) — hand them a sword, the same gift an
+// online guest receives on join. seedStartingCoins / giftStarterWeaponIfNeeded
+// are both idempotent, so re-spawning a slot (party-panel toggling) never
+// stacks duplicates.
+function setupNewLocalPlayer(playerIndex) {
+  seedStartingCoins(playerIndex);
+  giftStarterWeaponIfNeeded(playerIndex);
 }
 
 // Back-compat thin wrappers (party panel / any other callers).

@@ -282,8 +282,8 @@ test("E2E: snapshot sent in response to peer.joined includes the joining guest",
 // Step-by-step: send moveDown intents at the start of each tile and
 // repeat until state.player2 lands on the bundle. The host's pickup loop
 // then resolves the bundle and credits 10 kunai into the picker's own
-// inventory slot — per-player in network co-op (effectiveIndex only
-// folds for isCoopMode, not network). The matching event:pickup frame
+// inventory slot — every player owns a dedicated inventory (indices are
+// never folded together). The matching event:pickup frame
 // goes onto the wire tagged with the picker's playerId so only that
 // guest's HUD ticks up; other clients ignore the pickup payload.
 

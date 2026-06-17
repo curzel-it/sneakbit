@@ -11,8 +11,10 @@
 // both listen on onEquipmentChange, so a menu equip propagates in every
 // mode without extra wiring here.
 //
-// Local co-op shares one save slot (P1 / P2 fold to index 0), so we render
-// a single section even when co-op is on. Pure DOM; menu.js owns open/close.
+// Each local player owns a dedicated inventory now. In local co-op the panel
+// shows a player selector (P1/P2/…) so any player can manage their own gear
+// and consumables; single-player renders just the one hero. Pure DOM; menu.js
+// owns open/close.
 
 import { getSpecies } from "./species.js";
 import { tr } from "./strings.js";
@@ -23,7 +25,7 @@ import {
 import { snapshotInventory, onInventoryChange } from "./inventory.js";
 import { weaponsInSlot } from "./weaponSlots.js";
 import { unlockedSkills, onSkillsChange } from "./skills.js";
-import { isCoopMode } from "./coopMode.js";
+import { localPlayerCount } from "./coopMode.js";
 import {
   isConsumable, consumableVerb, canUseConsumable, useConsumable,
 } from "./consumables.js";
@@ -37,6 +39,9 @@ import { paintHeroPreview, PREVIEW_W, PREVIEW_H } from "./heroPreview.js";
 
 const ICON_PIXELS = 24;
 let unsubscribers = [];
+// Which local player the panel is currently showing. Clamped to the live
+// player count on each draw, so it falls back to P1 when co-op turns off.
+let activePlayer = 0;
 
 export function renderInventoryInto(host) {
   if (!host) return;
@@ -63,12 +68,17 @@ function teardown() {
 }
 
 function draw(host) {
-  // The panel always edits the local/primary hero (index 0).
-  const idx = 0;
+  const idx = activeIdx();
   host.innerHTML = sectionsHtml(idx);
   bindButtons(host, idx);
   paintIcons(host);
   paintHeroPreviews(host);
+}
+
+// The player the panel currently edits, clamped to the live local count so a
+// stale selection (P3 chosen, then co-op dropped to 2) snaps back in range.
+function activeIdx() {
+  return Math.min(Math.max(0, activePlayer | 0), localPlayerCount() - 1);
 }
 
 // The list HTML embeds blank icon canvases tagged with their [row, col]; paint
@@ -106,13 +116,24 @@ function paintHeroPreviews(host) {
 }
 
 function sectionsHtml(playerIndex) {
-  const header = isCoopMode() ? `<h2 class="inv-player">Shared</h2>` : "";
-  return `${header}
+  return `${playerTabsHtml(playerIndex)}
     ${slotPanelHtml("Ranged", SLOT_RANGED, playerIndex, false)}
     ${slotPanelHtml("Melee",  SLOT_MELEE,  playerIndex, true)}
     ${skinPanelHtml(playerIndex)}
     <hr class="inv-sep" />
     ${itemsHtml(playerIndex)}`;
+}
+
+// In local co-op the panel can edit any player's dedicated inventory; a row of
+// P1/P2/… tabs picks which. Single-player renders nothing (one inventory).
+function playerTabsHtml(playerIndex) {
+  const count = localPlayerCount();
+  if (count < 2) return "";
+  const tabs = [];
+  for (let i = 0; i < count; i++) {
+    tabs.push(`<button class="inv-player-tab${i === playerIndex ? " is-active" : ""}" data-player-tab="${i}">P${i + 1}</button>`);
+  }
+  return `<div class="inv-player-tabs">${tabs.join("")}</div>`;
 }
 
 // The Skin slot — purely cosmetic, but modelled like the weapon slots: a
@@ -266,6 +287,14 @@ function isWeaponItem(sp) {
 }
 
 function bindButtons(host, playerIndex) {
+  for (const btn of host.querySelectorAll("[data-player-tab]")) {
+    btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.playerTab, 10) | 0;
+      if (idx === activePlayer) return;
+      activePlayer = idx;
+      draw(host); // re-render for the newly selected player's inventory
+    });
+  }
   for (const btn of host.querySelectorAll("[data-equip]")) {
     btn.addEventListener("click", () => {
       const id = parseInt(btn.dataset.equip, 10);
