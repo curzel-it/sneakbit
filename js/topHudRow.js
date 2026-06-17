@@ -99,7 +99,7 @@ function injectStyles() {
        compact panel — the desktop look, one per slice. */
     #top-hud-row.split .hp-card { width: 180px; }
     #top-hud-row:not(.split) .hp-card,
-    #top-hud-row:not(.split) #coin-hud,
+    #top-hud-row:not(.split) .coin-chip,
     #top-hud-row:not(.split) .ammo-chip {
       background: none;
       border: none;
