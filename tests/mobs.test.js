@@ -4,7 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadSpeciesData } from "../js/species.js";
-import { tickMobs, chaseDirections } from "../js/mobs.js";
+import { tickMobs, chaseDirections, canEnter } from "../js/mobs.js";
 
 // Minimal species table: one chase monster, one wandering NPC, one wall.
 loadSpeciesData([
@@ -72,34 +72,75 @@ test("FindHero mob wanders when the player is out of vision range", () => {
   assert.ok(mob._ai.step, "wander step started even though player is out of vision");
 });
 
-test("FindHero mob is blocked by every tile of a multi-tile rigid entity", () => {
-  // Load a "Building" species: 4 wide × 4 tall, rigid. Mirrors the house
-  // sprite from monster-over-house.png — without the multi-tile footprint
-  // check, mobs could walk through every tile except the bottom-left.
+test("FindHero mob is blocked across the full width of a tall obstacle's base", () => {
+  // A 4-wide × 4-tall rigid building. Its hittable (feet) rect covers the
+  // bottom rows across all four columns, so a mob can't slip past on the
+  // right edge — every column of the base blocks.
   loadSpeciesData([
     { id: 4004, entity_type: "CloseCombatMonster", sprite_sheet_id: 1023,
       movement_directions: "FindHero", dps: 100, hp: 200,
       sprite_frame: { x: 0, y: 0, w: 1, h: 2 } },
     { id: 1100, entity_type: "Building", is_rigid: true, sprite_sheet_id: 1014,
-      width: 4, height: 4, sprite_frame: { x: 0, y: 0, w: 4, h: 4 } },
+      sprite_frame: { x: 0, y: 0, w: 4, h: 4 } },
   ]);
   const zone = makeZone();
   // Building covers (10..13, 10..13). Place the mob next to its east wall.
   zone.entities.push({ species_id: 1100, frame: { x: 10, y: 10, w: 4, h: 4 } });
-  const mob = { species_id: 4004, frame: { x: 14, y: 11, w: 1, h: 2 } };
+  const mob = { species_id: 4004, frame: { x: 14, y: 12, w: 1, h: 2 } };
   zone.entities.push(mob);
-  // Player is two tiles west of the mob — chase wants to go 'left' into
-  // the building's middle row. That tile should be blocked.
-  const player = { tileX: 12, tileY: 12 };
+  // Player is two tiles west — chase wants 'left' onto the building's base
+  // row (13, 13). That tile is inside the feet rect and must be blocked.
+  const player = { tileX: 12, tileY: 13 };
   tickMobs(zone, player, 0.02);
-  // Mob should NOT have stepped onto a tile inside the building. The
-  // chase 'left' tile (13, 12) is inside the footprint. If unblocked,
-  // pre-fix code happily moves there.
   if (mob._ai.step) {
-    const { toX, toY } = mob._ai.step;
-    assert.ok(!(toX >= 10 && toX < 14 && toY >= 10 && toY < 14),
-      `mob walked into building footprint at (${toX}, ${toY})`);
+    assert.notEqual(mob._ai.step.toX, 13, "mob stepped into the building base");
   }
+});
+
+test("a tall obstacle's top row does not block a mover (walk-behind)", () => {
+  loadSpeciesData([
+    { id: 1100, entity_type: "Building", is_rigid: true, sprite_sheet_id: 1014,
+      sprite_frame: { x: 0, y: 0, w: 1, h: 3 } },
+  ]);
+  const zone = makeZone();
+  // Building at (10,10) is 1×3: feet rect covers its bottom two rows
+  // (11, 12); its head row (10) is walk-behind, like every tall sprite.
+  zone.entities.push({ species_id: 1100, frame: { x: 10, y: 10, w: 1, h: 3 } });
+  const mover = { _ai: { tileX: 0, tileY: 0, w: 1, h: 1 } };
+  assert.ok(canEnter(zone, mover, 10, 10), "head row should be walkable");
+  assert.ok(!canEnter(zone, mover, 10, 11), "base row should block");
+  assert.ok(!canEnter(zone, mover, 10, 12), "base row should block");
+});
+
+test("2x2 mover: only the feet row collides, full width is checked", () => {
+  loadSpeciesData([
+    { id: 1137, entity_type: "Npc", sprite_sheet_id: 1016,
+      movement_directions: "Free", sprite_frame: { x: 0, y: 0, w: 2, h: 2 } },
+  ]);
+  // Wall at the mover's RIGHT foot tile (11, 5); its left foot (10, 5) is clear.
+  const zone = makeZone((c, r) => !(c === 11 && r === 5));
+  const mover = { _ai: { tileX: 0, tileY: 0, w: 2, h: 2 } };
+  // Stepping so feet land on row 5 must fail — pre-fix code only checked the
+  // bottom-left tile and would have let the right half clip the wall.
+  assert.ok(!canEnter(zone, mover, 10, 4), "right foot tile must be checked");
+  // A wall on the mover's HEAD row (top) must NOT block — feet are on row 6.
+  const headWall = makeZone((c, r) => !(c === 10 && r === 5));
+  assert.ok(canEnter(headWall, mover, 10, 5), "head row should not collide");
+});
+
+test("2x2 mover walks behind another 2x2 humanoid's head row", () => {
+  loadSpeciesData([
+    { id: 1137, entity_type: "Npc", sprite_sheet_id: 1016,
+      movement_directions: "Free", sprite_frame: { x: 0, y: 0, w: 2, h: 2 } },
+  ]);
+  const zone = makeZone();
+  // An idle 2×2 humanoid obstacle at (10,10): its feet rect is row 11.
+  zone.entities.push({ species_id: 1137, frame: { x: 10, y: 10, w: 2, h: 2 } });
+  const mover = { _ai: { tileX: 0, tileY: 0, w: 2, h: 2 } };
+  // Mover whose feet land on the obstacle's HEAD row (10) may pass...
+  assert.ok(canEnter(zone, mover, 10, 9), "head row of a 2x2 must not block");
+  // ...but feet overlapping the obstacle's feet row (11) are blocked.
+  assert.ok(!canEnter(zone, mover, 10, 10), "feet row of a 2x2 must block");
 });
 
 test("FindHero mob targets the closest live player in co-op", () => {

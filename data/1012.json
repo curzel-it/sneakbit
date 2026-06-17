@@ -365,15 +365,15 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 4,
-        "w": 5,
+        "h": 3,
+        "w": 4,
         "x": 69,
         "y": 32
       },
       "id": 11110888,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1008
+      "species_id": 1186
     },
     {
       "after_dialogue": "Nothing",

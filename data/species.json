@@ -37,8 +37,8 @@
     "sprite_frame": {
       "h": 4,
       "w": 5,
-      "x": 0,
-      "y": 1
+      "x": 1,
+      "y": 2
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -58,8 +58,8 @@
     "sprite_frame": {
       "h": 4,
       "w": 5,
-      "x": 0,
-      "y": 6
+      "x": 5,
+      "y": 7
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -79,8 +79,8 @@
     "sprite_frame": {
       "h": 4,
       "w": 5,
-      "x": 0,
-      "y": 11
+      "x": 1,
+      "y": 12
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -100,8 +100,8 @@
     "sprite_frame": {
       "h": 5,
       "w": 5,
-      "x": 5,
-      "y": 0
+      "x": 6,
+      "y": 1
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -121,8 +121,8 @@
     "sprite_frame": {
       "h": 5,
       "w": 5,
-      "x": 5,
-      "y": 5
+      "x": 10,
+      "y": 6
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -142,8 +142,8 @@
     "sprite_frame": {
       "h": 5,
       "w": 5,
-      "x": 5,
-      "y": 10
+      "x": 6,
+      "y": 11
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -163,8 +163,8 @@
     "sprite_frame": {
       "h": 4,
       "w": 5,
-      "x": 15,
-      "y": 5
+      "x": 25,
+      "y": 7
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -184,8 +184,29 @@
     "sprite_frame": {
       "h": 4,
       "w": 5,
-      "x": 20,
-      "y": 5
+      "x": 30,
+      "y": 7
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1186,
+    "inventory_texture_offset": [
+      4,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 3,
+      "x": 35,
+      "y": 8
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -205,8 +226,8 @@
     "sprite_frame": {
       "h": 5,
       "w": 5,
-      "x": 25,
-      "y": 5
+      "x": 20,
+      "y": 6
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -1300,8 +1321,8 @@
     "sprite_frame": {
       "h": 4,
       "w": 5,
-      "x": 10,
-      "y": 1
+      "x": 11,
+      "y": 2
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -1321,8 +1342,8 @@
     "sprite_frame": {
       "h": 4,
       "w": 5,
-      "x": 10,
-      "y": 6
+      "x": 15,
+      "y": 7
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -1342,8 +1363,8 @@
     "sprite_frame": {
       "h": 4,
       "w": 5,
-      "x": 10,
-      "y": 11
+      "x": 11,
+      "y": 12
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -1363,8 +1384,8 @@
     "sprite_frame": {
       "h": 4,
       "w": 5,
-      "x": 20,
-      "y": 15
+      "x": 21,
+      "y": 16
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -1711,12 +1732,12 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 35,
-      "y": 18
+      "x": 0,
+      "y": 16
     },
-    "sprite_number_of_frames": 2,
-    "sprite_sheet_id": 1012,
-    "z_index": 14
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": -1
   },
   {
     "base_speed": 7.0,
@@ -2127,27 +2148,6 @@
     "sprite_sheet_id": 1010
   },
   {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 60001,
-    "inventory_texture_offset": [
-      4,
-      13
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.demon_lord_castle",
-    "sprite_frame": {
-      "h": 8,
-      "w": 8,
-      "x": 0,
-      "y": 21
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
     "base_speed": 0.0,
     "entity_type": "Npc",
     "id": 60002,
@@ -2228,8 +2228,8 @@
     "sprite_frame": {
       "h": 3,
       "w": 4,
-      "x": 31,
-      "y": 7
+      "x": 1,
+      "y": 8
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -2312,8 +2312,8 @@
     "sprite_frame": {
       "h": 3,
       "w": 4,
-      "x": 42,
-      "y": 1
+      "x": 43,
+      "y": 2
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -2606,8 +2606,8 @@
     "sprite_frame": {
       "h": 4,
       "w": 5,
-      "x": 0,
-      "y": 16
+      "x": 1,
+      "y": 17
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -2627,8 +2627,8 @@
     "sprite_frame": {
       "h": 5,
       "w": 5,
-      "x": 5,
-      "y": 15
+      "x": 6,
+      "y": 16
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -2648,8 +2648,8 @@
     "sprite_frame": {
       "h": 3,
       "w": 4,
-      "x": 16,
-      "y": 12
+      "x": 17,
+      "y": 13
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -2669,8 +2669,8 @@
     "sprite_frame": {
       "h": 3,
       "w": 5,
-      "x": 20,
-      "y": 12
+      "x": 21,
+      "y": 13
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -2690,8 +2690,8 @@
     "sprite_frame": {
       "h": 4,
       "w": 5,
-      "x": 25,
-      "y": 11
+      "x": 26,
+      "y": 12
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -3535,8 +3535,8 @@
     "sprite_frame": {
       "h": 3,
       "w": 5,
-      "x": 31,
-      "y": 0
+      "x": 32,
+      "y": 1
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -3556,8 +3556,8 @@
     "sprite_frame": {
       "h": 3,
       "w": 3,
-      "x": 36,
-      "y": 0
+      "x": 37,
+      "y": 1
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
@@ -4105,27 +4105,6 @@
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
     "z_index": -1
-  },
-  {
-    "base_speed": 3.0,
-    "entity_type": "StaticObject",
-    "id": 1165,
-    "inventory_texture_offset": [
-      11,
-      4
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "objects.name.stonehenge",
-    "sprite_frame": {
-      "h": 3,
-      "w": 4,
-      "x": 13,
-      "y": 5
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1010
   },
   {
     "base_speed": 1.0,
@@ -4907,31 +4886,10 @@
     "sprite_frame": {
       "h": 2,
       "w": 3,
-      "x": 34,
-      "y": 3
+      "x": 35,
+      "y": 4
     },
     "sprite_number_of_frames": 4,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 0.0,
-    "entity_type": "Building",
-    "id": 1186,
-    "inventory_texture_offset": [
-      6,
-      4
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.stonehenge",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 31,
-      "y": 10
-    },
-    "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
   }
 ]
