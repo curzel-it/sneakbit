@@ -25,7 +25,7 @@ import {
   isMatchOver, playerCount as pvpPlayerCount, pvpSlotCanAct,
 } from "./pvpMatch.js";
 import { getPvpAmmo, addPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
-import { PVP_ARENA_ZONE_ID } from "./constants.js";
+import { pickPvpArena, currentPvpArena, setForcedPvpArena } from "./pvpArenaPool.js";
 
 // Where to drop the player when PvP ends if we have no record of where the
 // match was started from (Rust default: Duskhaven 1011 @ 59,57). Normally
@@ -122,10 +122,12 @@ async function enterArena(n) {
   let revealArena = false;
   try {
     const state = getState();
+    // The arena was chosen by the match starter (pickPvpArena); load that one.
+    const arenaId = currentPvpArena();
     // skipFadeIn: stay black through the corner scatter so players aren't
     // shown at travelTo's centre fallback before they jump to their corners.
-    await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" }, { skipFadeIn: true });
-    if (state.zone?.id !== PVP_ARENA_ZONE_ID) return;
+    await travelTo(state, { zone: arenaId, x: 0, y: 0, direction: "Down" }, { skipFadeIn: true });
+    if (state.zone?.id !== arenaId) return;
     revealArena = true;
     state.zone.ephemeralState = true;
     pvpDeadToasted.clear();
@@ -142,9 +144,10 @@ async function enterArena(n) {
   }
 }
 
-// Rematch: re-arm the turn machine + loadout, then reload the arena fresh.
+// Rematch: re-arm the turn machine + loadout, roll a fresh arena, then reload.
 function onPvpRematch() {
   rematchPvpLogic();
+  pickPvpArena();
   enterArena(pvpPlayerCount());
 }
 
@@ -171,6 +174,7 @@ export async function startPvpMatch(n) {
   setGameMode(GAME_MODE.pvp);
   setLocalPlayers(n);
   startPvpLogic(n);
+  pickPvpArena();
   await enterArena(n);
 }
 
@@ -201,6 +205,8 @@ function installDebugHook() {
   window.pvp = {
     start: (n) => startPvpMatch(n),
     exit: () => exitPvp(),
+    // Pin (or release, with null) the arena so tests get a known map+pickups.
+    forceArena: (id) => setForcedPvpArena(id),
     // Force a player's death for win/lose tests (HP straight to 0).
     kill: (index) => setPlayerHp(0, index),
     // Fire a shot for the given 1-based slot through the real path.

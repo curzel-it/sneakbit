@@ -1,6 +1,7 @@
 // Entry point. Wires features together; holds no game logic itself.
 
-import { STARTING_ZONE_ID, STARTING_SPAWN, PVP_ARENA_ZONE_ID } from "./constants.js";
+import { STARTING_ZONE_ID, STARTING_SPAWN } from "./constants.js";
+import { isPvpArenaZone } from "./pvpArenaPool.js";
 import { loadAssets } from "./assets.js";
 import { loadSpecies, loadStrings, loadZone } from "./data.js";
 import { loadStringsData, tr } from "./strings.js";
@@ -514,10 +515,10 @@ function maybeFallBackToOffline() {
 async function initOfflineState() {
   const urlZone = parseInt(new URLSearchParams(location.search).get("zone"), 10);
   let saved = Number.isFinite(urlZone) ? null : loadProgress();
-  // Guard against a save polluted by an older build that persisted the PvP
-  // arena: never boot into it. Drop the save so we fall back to the starting
+  // Guard against a save polluted by an older build that persisted a PvP
+  // arena: never boot into one. Drop the save so we fall back to the starting
   // zone, as if no progress existed. (An explicit ?zone=1301 still works.)
-  if (saved?.zoneId === PVP_ARENA_ZONE_ID) saved = null;
+  if (isPvpArenaZone(saved?.zoneId)) saved = null;
   let startId = Number.isFinite(urlZone) ? urlZone : (saved?.zoneId ?? STARTING_ZONE_ID);
   // A save can point at a zone that no longer ships (e.g. a mode removed in a
   // later build). loadZone then throws rather than white-screening the boot;

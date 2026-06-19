@@ -24,7 +24,10 @@ const world = discoverWorld(loadRawZone);
 // teleporter discovery legitimately can't see them.
 const MENU_ENTERED_ZONES = new Set([
   1099, // demo arena
-  1301, // PvP arena
+  1301, // PvP arena (original)
+  1302, // PvP arena (Pillars)
+  1303, // PvP arena (Crossfire)
+  1304, // PvP arena (Ringside)
   1501, // tutorial arena (if present)
 ]);
 

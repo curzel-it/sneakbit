@@ -36,6 +36,11 @@ test("local realtime PvP: arena, corners, simultaneous input, scavenge, win/lose
   await navigate(s, `${servers.appUrl}/play/`);
   await waitFor(s, "!!(window.pvp && window.coop)");
 
+  // Pin the arena to the original (1301) so this test's fixed pickup tile and
+  // 1301-specific geometry assertions stay deterministic — live play picks a
+  // random arena from the pool.
+  await evalExpr(s, "window.pvp.forceArena(1301)");
+
   // Start a 2-player match and wait for the arena + PvP mode + 1000 HP.
   await evalExpr(s, "window.pvp.start(2)");
   const started = await waitFor(s, "(() => { const st = window.pvp.state(); return st.mode === 'pvp' && st.zoneId === 1301 ? st : null; })()");

@@ -42,6 +42,9 @@ test("realtime online PvP: arena, 1000 HP, kill → result on both clients", asy
   // never be *shown* there (they're scattered to corners while the screen is
   // still black), so no arena frame should read centre (45,45).
   await waitFor(session.host, "!!window.deathmatch");
+  // Pin the arena to the original (1301) so the 1301-specific assertions below
+  // stay deterministic — live play picks a random arena from the pool.
+  await evalExpr(session.host, "window.deathmatch.forceArena(1301)");
   await evalExpr(session.host, `
     window.__dmTrail = [];
     window.__dmSample = setInterval(() => {
@@ -127,6 +130,8 @@ test("realtime online PvP: 'Back to single player' drops the host to offline", a
 
   // Start the match and resolve it (host kills guest → host wins).
   await waitFor(session.host, "!!window.deathmatch");
+  // Pin to 1301 so the arena-zone assertions below stay deterministic.
+  await evalExpr(session.host, "window.deathmatch.forceArena(1301)");
   await evalExpr(session.host, "window.deathmatch.start()");
   await waitFor(session.host, "(() => { const s = window.deathmatch.state(); return s.mode === 'pvp' && s.zoneId === 1301 && s.players.length >= 2 ? s : null; })()");
   await evalExpr(session.host, "window.deathmatch.kill(1)");

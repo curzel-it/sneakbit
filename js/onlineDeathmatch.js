@@ -23,7 +23,7 @@ import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./pla
 import { showMatchResult, isGameOverOpen, hideGameOver } from "./gameOver.js";
 import { refreshHealthHud } from "./healthHud.js";
 import { updateCamera } from "./camera.js";
-import { PVP_ARENA_ZONE_ID } from "./constants.js";
+import { pickPvpArena, currentPvpArena, setForcedPvpArena } from "./pvpArenaPool.js";
 
 // Fallback exit destination if we have no record of the pre-match zone
 // (Rust default: Duskhaven 1011 @ 59,57). Normally exit() returns to the
@@ -52,6 +52,8 @@ function installDebugHook() {
   window.deathmatch = {
     start: () => startMatch(),
     exit: () => exit(),
+    // Pin (or release, with null) the arena so tests get a known map+pickups.
+    forceArena: (id) => setForcedPvpArena(id),
     kill: (index) => setPlayerHp(0, index),
     state: () => {
       const state = getState();
@@ -92,14 +94,18 @@ async function setupArena() {
   let revealArena = false;
   try {
     const state = getState();
+    // The arena was chosen by the match starter (pickPvpArena); load that one.
+    // Guests follow via the zoneChange + snapshot stream, so they don't need
+    // to know the id ahead of time — they load whatever the host travels to.
+    const arenaId = currentPvpArena();
     // skipFadeIn: keep the screen black through the corner scatter below so
     // players are never shown at travelTo's centre fallback before they jump
     // to their corners. We fade in ourselves once everyone is placed.
-    await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" }, { skipFadeIn: true });
+    await travelTo(state, { zone: arenaId, x: 0, y: 0, direction: "Down" }, { skipFadeIn: true });
     // travelTo silently no-ops if a transition is already in flight (its
     // `busy` guard). Bail rather than arm the match on — and mark ephemeral —
     // the wrong (story) zone.
-    if (state.zone?.id !== PVP_ARENA_ZONE_ID) return;
+    if (state.zone?.id !== arenaId) return;
     revealArena = true;
     state.zone.ephemeralState = true;
     dmDeadToasted.clear();
@@ -137,6 +143,7 @@ export async function startMatch() {
   setGameMode(GAME_MODE.pvp);
   broadcastHostEvent("pvpStart", {});
   startPvpLogic(n);
+  pickPvpArena();
   await setupArena();
 }
 
@@ -163,10 +170,11 @@ export function tickHostFrame() {
   }
 }
 
-// Host rematch: re-arm + re-broadcast pvpStart, then reload the arena fresh.
+// Host rematch: re-arm + re-broadcast pvpStart, roll a fresh arena, then reload.
 function onRematch() {
   rematchPvpLogic();
   broadcastHostEvent("pvpStart", {});
+  pickPvpArena();
   setupArena();
 }
 
