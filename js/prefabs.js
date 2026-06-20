@@ -41,10 +41,15 @@ const INTERIOR_GRID_ROWS = 10;
 
 // Mirrors prefabs::all::new_building's dispatch table. Species not listed
 // here render as a single entity (handled by the caller).
-const SMALL_HOUSE_IDS = new Set([1033, 1130]);
-const HOUSE_IDS       = new Set([1002, 1003, 1004, 1084, 1086, 1087, 1129]);
-const TWO_FLOOR_IDS   = new Set([1005, 1006, 1007, 1085]);
-const SHOP_IDS        = new Set([1070, 1071, 1072]);
+// Building species are laid out as 9 skin rows × 8 kinds on the buildings
+// sheet; ids run 260620100 + row*8 + col (col 0 small, 1 single, 2 two-floor,
+// 3 shop). The prefab dispatch keys off the kind, so each set lists that
+// column across all 9 rows.
+const buildingRow = (col) => Array.from({ length: 9 }, (_, r) => 260620100 + r * 8 + col);
+const SMALL_HOUSE_IDS = new Set(buildingRow(0));
+const HOUSE_IDS       = new Set(buildingRow(1));
+const TWO_FLOOR_IDS   = new Set(buildingRow(2));
+const SHOP_IDS        = new Set(buildingRow(3));
 
 // Default goods a prefab-spawned shop sells: ammo bundles (stackable) plus
 // one-of-a-kind weapons, gated purely by price. Shipped zone data can

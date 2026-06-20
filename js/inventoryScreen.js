@@ -156,6 +156,7 @@ function armorPanelHtml(title, slot, playerIndex) {
     rows.push(rowHtml({
       active: e.isEquipped,
       name: escapeHtml(name),
+      note: e.species?.description ? escapeHtml(tr(e.species.description)) : "",
       icon: e.species?.inventory_texture_offset,
       iconSheet: "armor",
       attrs: `data-equip="${e.id}" data-slot="${slot}" data-player="${playerIndex | 0}"`,
@@ -243,14 +244,16 @@ function slotPanelHtml(title, slot, playerIndex, withUnarmed) {
   </div>`;
 }
 
-function rowHtml({ active, name, icon = null, iconSheet = "inventory", ammo = null, attrs, raw = false }) {
+function rowHtml({ active, name, note = "", icon = null, iconSheet = "inventory", ammo = null, attrs, raw = false }) {
   const nameHtml = raw ? name : escapeHtml(name);
+  const noteHtml = note ? `<span class="inv-note">${note}</span>` : "";
   const ammoHtml = ammo != null ? `<span class="inv-count">x${ammo}</span>` : "";
   return `<li>
     <button class="inv-slot-row${active ? " is-active" : ""}" ${attrs}>
       <span class="inv-radio">${active ? "◉" : "◯"}</span>
       ${iconHtml(icon, iconSheet)}
       <span class="inv-name">${nameHtml}</span>
+      ${noteHtml}
       ${ammoHtml}
     </button>
   </li>`;

@@ -674,14 +674,14 @@
       "display_conditions": [],
       "frame": {
         "h": 3.0,
-        "w": 3.0,
+        "w": 4.0,
         "x": 52.0,
         "y": 32.0
       },
       "id": 12745768,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1130
+      "species_id": 260620164
     },
     {
       "after_dialogue": "Nothing",
@@ -692,14 +692,14 @@
       "display_conditions": [],
       "frame": {
         "h": 3.0,
-        "w": 3.0,
+        "w": 4.0,
         "x": 77.0,
         "y": 31.0
       },
       "id": 12745778,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1130
+      "species_id": 260620164
     },
     {
       "after_dialogue": "Nothing",
@@ -733,14 +733,14 @@
       "display_conditions": [],
       "frame": {
         "h": 3.0,
-        "w": 3.0,
+        "w": 4.0,
         "x": 72.0,
         "y": 30.0
       },
       "id": 12745857,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1130
+      "species_id": 260620164
     },
     {
       "after_dialogue": "Nothing",
@@ -819,15 +819,15 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 3.0,
+        "h": 4.0,
         "w": 5.0,
         "x": 68.0,
-        "y": 22.0
+        "y": 21.0
       },
       "id": 12745847,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1129
+      "species_id": 260620165
     },
     {
       "after_dialogue": "Nothing",
@@ -838,14 +838,14 @@
       "display_conditions": [],
       "frame": {
         "h": 3.0,
-        "w": 3.0,
+        "w": 4.0,
         "x": 57.0,
         "y": 25.0
       },
       "id": 12745867,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1130
+      "species_id": 260620164
     },
     {
       "after_dialogue": "Nothing",
@@ -878,15 +878,15 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 3.0,
+        "h": 4.0,
         "w": 5.0,
         "x": 63.0,
-        "y": 25.0
+        "y": 24.0
       },
       "id": 12745837,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1129
+      "species_id": 260620165
     },
     {
       "after_dialogue": "Nothing",

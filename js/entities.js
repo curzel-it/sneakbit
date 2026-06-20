@@ -323,8 +323,8 @@ export function sortingKey(bottom, zIndex, isPushable) {
 // dormant portal until fast travel is unlocked (≥4 zones visited), then a
 // 4-frame animated active portal. Both share the link's 3×2 footprint.
 const FAST_TRAVEL_SPRITE = {
-  locked:   { texX: 32, texY: 4, frames: 1 },
-  unlocked: { texX: 34, texY: 3, frames: 4 },
+  locked:   { texX: 10, texY: 22, frames: 1 },
+  unlocked: { texX: 13, texY: 22, frames: 4 },
 };
 
 function fastTravelSpriteOverride(sp) {

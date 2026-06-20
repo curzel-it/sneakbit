@@ -24,216 +24,6 @@
   },
   {
     "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1002,
-    "inventory_texture_offset": [
-      4,
-      1
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 1,
-      "y": 2
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1003,
-    "inventory_texture_offset": [
-      4,
-      3
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 5,
-      "y": 7
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1004,
-    "inventory_texture_offset": [
-      4,
-      5
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 1,
-      "y": 12
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1005,
-    "inventory_texture_offset": [
-      4,
-      2
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house_two_floors",
-    "sprite_frame": {
-      "h": 5,
-      "w": 5,
-      "x": 6,
-      "y": 1
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1006,
-    "inventory_texture_offset": [
-      4,
-      4
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house_two_floors",
-    "sprite_frame": {
-      "h": 5,
-      "w": 5,
-      "x": 10,
-      "y": 6
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1007,
-    "inventory_texture_offset": [
-      4,
-      6
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house_two_floors",
-    "sprite_frame": {
-      "h": 5,
-      "w": 5,
-      "x": 6,
-      "y": 11
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1008,
-    "inventory_texture_offset": [
-      4,
-      10
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.broken_house",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 25,
-      "y": 7
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1009,
-    "inventory_texture_offset": [
-      4,
-      11
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.broken_house",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 30,
-      "y": 7
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1186,
-    "inventory_texture_offset": [
-      4,
-      13
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.broken_house",
-    "sprite_frame": {
-      "h": 4,
-      "w": 3,
-      "x": 35,
-      "y": 8
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 50010,
-    "inventory_texture_offset": [
-      4,
-      12
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.villa",
-    "sprite_frame": {
-      "h": 5,
-      "w": 5,
-      "x": 20,
-      "y": 6
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
     "entity_type": "Npc",
     "id": 3005,
     "inventory_texture_offset": [
@@ -507,8 +297,8 @@
     "sprite_frame": {
       "h": 2,
       "w": 1,
-      "x": 30,
-      "y": 0
+      "x": 31,
+      "y": 1
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -529,8 +319,8 @@
     "sprite_frame": {
       "h": 2,
       "w": 1,
-      "x": 30,
-      "y": 2
+      "x": 31,
+      "y": 3
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -551,8 +341,8 @@
     "sprite_frame": {
       "h": 2,
       "w": 1,
-      "x": 30,
-      "y": 4
+      "x": 31,
+      "y": 5
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -573,8 +363,8 @@
     "sprite_frame": {
       "h": 2,
       "w": 1,
-      "x": 30,
-      "y": 6
+      "x": 31,
+      "y": 7
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -595,8 +385,8 @@
     "sprite_frame": {
       "h": 2,
       "w": 1,
-      "x": 30,
-      "y": 8
+      "x": 31,
+      "y": 9
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -617,8 +407,8 @@
     "sprite_frame": {
       "h": 2,
       "w": 1,
-      "x": 30,
-      "y": 10
+      "x": 31,
+      "y": 11
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -637,8 +427,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 9,
-      "y": 7
+      "x": 10,
+      "y": 8
     },
     "sprite_number_of_frames": 12,
     "sprite_sheet_id": 1012,
@@ -657,8 +447,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 38,
-      "y": 0
+      "x": 39,
+      "y": 1
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -677,8 +467,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 38,
-      "y": 1
+      "x": 39,
+      "y": 2
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -697,8 +487,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 38,
-      "y": 2
+      "x": 39,
+      "y": 3
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -717,8 +507,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 38,
-      "y": 3
+      "x": 39,
+      "y": 4
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -737,8 +527,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 38,
-      "y": 4
+      "x": 39,
+      "y": 5
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -757,8 +547,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 38,
-      "y": 5
+      "x": 39,
+      "y": 6
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -777,8 +567,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 38,
-      "y": 6
+      "x": 39,
+      "y": 7
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -797,8 +587,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 38,
-      "y": 7
+      "x": 39,
+      "y": 8
     },
     "sprite_number_of_frames": 7,
     "sprite_sheet_id": 1012,
@@ -817,8 +607,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 38,
-      "y": 8
+      "x": 39,
+      "y": 9
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -837,8 +627,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 38,
-      "y": 3
+      "x": 39,
+      "y": 4
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -1307,90 +1097,6 @@
     "z_index": 10
   },
   {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1070,
-    "inventory_texture_offset": [
-      4,
-      7
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.shop",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 11,
-      "y": 2
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1071,
-    "inventory_texture_offset": [
-      4,
-      8
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.shop",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 15,
-      "y": 7
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1072,
-    "inventory_texture_offset": [
-      4,
-      9
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.shop",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 11,
-      "y": 12
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1201,
-    "inventory_texture_offset": [
-      5,
-      26
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.shop",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 21,
-      "y": 16
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
     "base_speed": 1.0,
     "entity_type": "Npc",
     "id": 4001,
@@ -1622,8 +1328,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 0,
-      "y": 5
+      "x": 1,
+      "y": 6
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -1644,8 +1350,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 0,
-      "y": 6
+      "x": 1,
+      "y": 7
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -1666,8 +1372,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 0,
-      "y": 7
+      "x": 1,
+      "y": 8
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -1688,8 +1394,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 0,
-      "y": 8
+      "x": 1,
+      "y": 9
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -1710,8 +1416,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 0,
-      "y": 9
+      "x": 1,
+      "y": 10
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -1966,8 +1672,8 @@
     "sprite_frame": {
       "h": 3,
       "w": 3,
-      "x": 9,
-      "y": 0
+      "x": 10,
+      "y": 1
     },
     "sprite_number_of_frames": 6,
     "sprite_sheet_id": 1012,
@@ -1988,8 +1694,8 @@
     "sprite_frame": {
       "h": 3,
       "w": 3,
-      "x": 9,
-      "y": 3
+      "x": 10,
+      "y": 4
     },
     "sprite_number_of_frames": 6,
     "sprite_sheet_id": 1012,
@@ -2032,8 +1738,8 @@
     "sprite_frame": {
       "h": 2,
       "w": 2,
-      "x": 0,
-      "y": 15
+      "x": 1,
+      "y": 16
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -2054,8 +1760,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 0,
-      "y": 17
+      "x": 1,
+      "y": 18
     },
     "sprite_number_of_frames": 5,
     "sprite_sheet_id": 1012,
@@ -2076,8 +1782,8 @@
     "sprite_frame": {
       "h": 3,
       "w": 3,
-      "x": 9,
-      "y": 13
+      "x": 10,
+      "y": 14
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -2098,8 +1804,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 9,
-      "y": 6
+      "x": 10,
+      "y": 7
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012,
@@ -2212,27 +1918,6 @@
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1010,
     "z_index": 15
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1033,
-    "inventory_texture_offset": [
-      7,
-      12
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house",
-    "sprite_frame": {
-      "h": 3,
-      "w": 4,
-      "x": 1,
-      "y": 8
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
   },
   {
     "base_speed": 2.0,
@@ -2459,8 +2144,8 @@
     "sprite_frame": {
       "h": 2,
       "w": 1,
-      "x": 0,
-      "y": 19
+      "x": 1,
+      "y": 20
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012
@@ -2480,8 +2165,8 @@
     "sprite_frame": {
       "h": 2,
       "w": 2,
-      "x": 9,
-      "y": 19
+      "x": 10,
+      "y": 20
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012
@@ -2501,8 +2186,8 @@
     "sprite_frame": {
       "h": 5,
       "w": 3,
-      "x": 17,
-      "y": 16
+      "x": 18,
+      "y": 17
     },
     "sprite_number_of_frames": 6,
     "sprite_sheet_id": 1012
@@ -2585,116 +2270,11 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 9,
-      "y": 16
+      "x": 10,
+      "y": 17
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1084,
-    "inventory_texture_offset": [
-      5,
-      18
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 1,
-      "y": 17
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1085,
-    "inventory_texture_offset": [
-      5,
-      19
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house",
-    "sprite_frame": {
-      "h": 5,
-      "w": 5,
-      "x": 6,
-      "y": 16
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1086,
-    "inventory_texture_offset": [
-      5,
-      20
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house",
-    "sprite_frame": {
-      "h": 3,
-      "w": 4,
-      "x": 17,
-      "y": 13
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1087,
-    "inventory_texture_offset": [
-      5,
-      21
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house",
-    "sprite_frame": {
-      "h": 3,
-      "w": 5,
-      "x": 21,
-      "y": 13
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1088,
-    "inventory_texture_offset": [
-      5,
-      22
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.house",
-    "sprite_frame": {
-      "h": 4,
-      "w": 5,
-      "x": 26,
-      "y": 12
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
   },
   {
     "base_speed": 2.0,
@@ -2711,8 +2291,8 @@
     "sprite_frame": {
       "h": 3,
       "w": 3,
-      "x": 9,
-      "y": 8
+      "x": 10,
+      "y": 9
     },
     "sprite_number_of_frames": 7,
     "sprite_sheet_id": 1012
@@ -3522,48 +3102,6 @@
   },
   {
     "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1129,
-    "inventory_texture_offset": [
-      5,
-      23
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.igloo",
-    "sprite_frame": {
-      "h": 3,
-      "w": 5,
-      "x": 32,
-      "y": 1
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
-    "entity_type": "Building",
-    "id": 1130,
-    "inventory_texture_offset": [
-      5,
-      24
-    ],
-    "is_invulnerable": true,
-    "is_rigid": true,
-    "lock_type": "None",
-    "name": "building.name.igloo",
-    "sprite_frame": {
-      "h": 3,
-      "w": 3,
-      "x": 37,
-      "y": 1
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1004
-  },
-  {
-    "base_speed": 2.0,
     "entity_type": "Npc",
     "id": 1131,
     "inventory_texture_offset": [
@@ -3794,8 +3332,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 0,
-      "y": 11
+      "x": 1,
+      "y": 12
     },
     "sprite_number_of_frames": 5,
     "sprite_sheet_id": 1012,
@@ -3921,8 +3459,8 @@
     "sprite_frame": {
       "h": 2,
       "w": 1,
-      "x": 0,
-      "y": 0
+      "x": 1,
+      "y": 1
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1012
@@ -4011,8 +3549,8 @@
     "sprite_frame": {
       "h": 3,
       "w": 2,
-      "x": 0,
-      "y": 2
+      "x": 1,
+      "y": 3
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -4033,8 +3571,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 35,
-      "y": 13
+      "x": 36,
+      "y": 14
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -4055,8 +3593,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 35,
-      "y": 14
+      "x": 36,
+      "y": 15
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -4077,8 +3615,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 35,
-      "y": 15
+      "x": 36,
+      "y": 16
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -4099,8 +3637,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 35,
-      "y": 16
+      "x": 36,
+      "y": 17
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -4744,8 +4282,8 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 0,
-      "y": 18
+      "x": 1,
+      "y": 19
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
@@ -4886,14 +4424,15 @@
     "sprite_frame": {
       "h": 2,
       "w": 3,
-      "x": 35,
-      "y": 4
+      "x": 13,
+      "y": 22
     },
     "sprite_number_of_frames": 4,
-    "sprite_sheet_id": 1004
+    "sprite_sheet_id": 1012
   },
   {
     "armor_slot": "helmet",
+    "description": "objects.desc.armor.reduce",
     "entity_type": "Armour",
     "id": 1190,
     "inventory_texture_offset": [
@@ -4901,7 +4440,7 @@
       1
     ],
     "name": "objects.name.armor.iron.helmet",
-    "received_damage_reduction": 0.12,
+    "received_damage_reduction": 0.08,
     "sprite_frame": {
       "h": 4,
       "w": 4,
@@ -4913,6 +4452,7 @@
   },
   {
     "armor_slot": "chest",
+    "description": "objects.desc.armor.reduce",
     "entity_type": "Armour",
     "id": 1191,
     "inventory_texture_offset": [
@@ -4920,7 +4460,7 @@
       33
     ],
     "name": "objects.name.armor.iron.chest",
-    "received_damage_reduction": 0.22,
+    "received_damage_reduction": 0.16,
     "sprite_frame": {
       "h": 4,
       "w": 4,
@@ -4932,6 +4472,7 @@
   },
   {
     "armor_slot": "legs",
+    "description": "objects.desc.armor.reduce",
     "entity_type": "Armour",
     "id": 1192,
     "inventory_texture_offset": [
@@ -4939,7 +4480,7 @@
       17
     ],
     "name": "objects.name.armor.iron.legs",
-    "received_damage_reduction": 0.12,
+    "received_damage_reduction": 0.1,
     "sprite_frame": {
       "h": 4,
       "w": 4,
@@ -5017,6 +4558,7 @@
   },
   {
     "armor_slot": "helmet",
+    "description": "objects.desc.armor.reduce_greatly",
     "entity_type": "Armour",
     "id": 1210,
     "inventory_texture_offset": [
@@ -5024,7 +4566,7 @@
       49
     ],
     "name": "objects.name.armor.dark.helmet",
-    "received_damage_reduction": 0.08,
+    "received_damage_reduction": 0.12,
     "sprite_frame": {
       "h": 4,
       "w": 4,
@@ -5036,6 +4578,7 @@
   },
   {
     "armor_slot": "chest",
+    "description": "objects.desc.armor.reduce_greatly",
     "entity_type": "Armour",
     "id": 1211,
     "inventory_texture_offset": [
@@ -5043,7 +4586,7 @@
       81
     ],
     "name": "objects.name.armor.dark.chest",
-    "received_damage_reduction": 0.16,
+    "received_damage_reduction": 0.22,
     "sprite_frame": {
       "h": 4,
       "w": 4,
@@ -5055,6 +4598,7 @@
   },
   {
     "armor_slot": "legs",
+    "description": "objects.desc.armor.reduce_greatly",
     "entity_type": "Armour",
     "id": 1212,
     "inventory_texture_offset": [
@@ -5062,7 +4606,7 @@
       65
     ],
     "name": "objects.name.armor.dark.legs",
-    "received_damage_reduction": 0.1,
+    "received_damage_reduction": 0.12,
     "sprite_frame": {
       "h": 4,
       "w": 4,
@@ -5137,5 +4681,1517 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1025
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620100,
+    "inventory_texture_offset": [
+      7,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 1,
+      "y": 3
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620101,
+    "inventory_texture_offset": [
+      4,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 5,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620102,
+    "inventory_texture_offset": [
+      4,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 10,
+      "y": 1
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620103,
+    "inventory_texture_offset": [
+      4,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 15,
+      "y": 1
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620104,
+    "inventory_texture_offset": [
+      4,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.villa",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 20,
+      "y": 3
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620105,
+    "inventory_texture_offset": [
+      4,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 25,
+      "y": 3
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620106,
+    "inventory_texture_offset": [
+      4,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 29,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620107,
+    "inventory_texture_offset": [
+      4,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 34,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620108,
+    "inventory_texture_offset": [
+      7,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 1,
+      "y": 8
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620109,
+    "inventory_texture_offset": [
+      4,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 5,
+      "y": 7
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620110,
+    "inventory_texture_offset": [
+      4,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 10,
+      "y": 6
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620111,
+    "inventory_texture_offset": [
+      4,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 15,
+      "y": 6
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620112,
+    "inventory_texture_offset": [
+      4,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.villa",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 20,
+      "y": 8
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620113,
+    "inventory_texture_offset": [
+      4,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 25,
+      "y": 8
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620114,
+    "inventory_texture_offset": [
+      4,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 29,
+      "y": 7
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620115,
+    "inventory_texture_offset": [
+      4,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 34,
+      "y": 7
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620116,
+    "inventory_texture_offset": [
+      7,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 1,
+      "y": 13
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620117,
+    "inventory_texture_offset": [
+      4,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 5,
+      "y": 12
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620118,
+    "inventory_texture_offset": [
+      4,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 10,
+      "y": 11
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620119,
+    "inventory_texture_offset": [
+      4,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 15,
+      "y": 11
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620120,
+    "inventory_texture_offset": [
+      4,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.villa",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 20,
+      "y": 13
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620121,
+    "inventory_texture_offset": [
+      4,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 25,
+      "y": 13
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620122,
+    "inventory_texture_offset": [
+      4,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 29,
+      "y": 12
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620123,
+    "inventory_texture_offset": [
+      4,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 34,
+      "y": 12
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620124,
+    "inventory_texture_offset": [
+      7,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 1,
+      "y": 18
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620125,
+    "inventory_texture_offset": [
+      4,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 5,
+      "y": 17
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620126,
+    "inventory_texture_offset": [
+      4,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 10,
+      "y": 16
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620127,
+    "inventory_texture_offset": [
+      4,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 15,
+      "y": 16
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620128,
+    "inventory_texture_offset": [
+      4,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.villa",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 20,
+      "y": 18
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620129,
+    "inventory_texture_offset": [
+      4,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 25,
+      "y": 18
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620130,
+    "inventory_texture_offset": [
+      4,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 29,
+      "y": 17
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620131,
+    "inventory_texture_offset": [
+      4,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 34,
+      "y": 17
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620132,
+    "inventory_texture_offset": [
+      7,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 1,
+      "y": 23
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620133,
+    "inventory_texture_offset": [
+      4,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 5,
+      "y": 22
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620134,
+    "inventory_texture_offset": [
+      4,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 10,
+      "y": 21
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620135,
+    "inventory_texture_offset": [
+      4,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 15,
+      "y": 21
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620136,
+    "inventory_texture_offset": [
+      4,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.villa",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 20,
+      "y": 23
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620137,
+    "inventory_texture_offset": [
+      4,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 25,
+      "y": 23
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620138,
+    "inventory_texture_offset": [
+      4,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 29,
+      "y": 22
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620139,
+    "inventory_texture_offset": [
+      4,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 34,
+      "y": 22
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620140,
+    "inventory_texture_offset": [
+      7,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 1,
+      "y": 28
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620141,
+    "inventory_texture_offset": [
+      4,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 5,
+      "y": 27
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620142,
+    "inventory_texture_offset": [
+      4,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 10,
+      "y": 26
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620143,
+    "inventory_texture_offset": [
+      4,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 15,
+      "y": 26
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620144,
+    "inventory_texture_offset": [
+      4,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.villa",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 20,
+      "y": 28
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620145,
+    "inventory_texture_offset": [
+      4,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 25,
+      "y": 28
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620146,
+    "inventory_texture_offset": [
+      4,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 29,
+      "y": 27
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620147,
+    "inventory_texture_offset": [
+      4,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 34,
+      "y": 27
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620148,
+    "inventory_texture_offset": [
+      7,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 1,
+      "y": 33
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620149,
+    "inventory_texture_offset": [
+      4,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 5,
+      "x": 5,
+      "y": 32
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620150,
+    "inventory_texture_offset": [
+      4,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 10,
+      "y": 31
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620151,
+    "inventory_texture_offset": [
+      4,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 15,
+      "y": 31
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620152,
+    "inventory_texture_offset": [
+      4,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.villa",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 20,
+      "y": 33
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620153,
+    "inventory_texture_offset": [
+      4,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 25,
+      "y": 33
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620154,
+    "inventory_texture_offset": [
+      4,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 29,
+      "y": 32
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620155,
+    "inventory_texture_offset": [
+      4,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 34,
+      "y": 32
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620156,
+    "inventory_texture_offset": [
+      7,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 1,
+      "y": 38
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620157,
+    "inventory_texture_offset": [
+      4,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 5,
+      "x": 5,
+      "y": 37
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620158,
+    "inventory_texture_offset": [
+      4,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 10,
+      "y": 36
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620159,
+    "inventory_texture_offset": [
+      4,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 15,
+      "y": 36
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620160,
+    "inventory_texture_offset": [
+      4,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.villa",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 20,
+      "y": 38
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620161,
+    "inventory_texture_offset": [
+      4,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 25,
+      "y": 38
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620162,
+    "inventory_texture_offset": [
+      4,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 29,
+      "y": 37
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620163,
+    "inventory_texture_offset": [
+      4,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 34,
+      "y": 37
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620164,
+    "inventory_texture_offset": [
+      7,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 1,
+      "y": 43
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620165,
+    "inventory_texture_offset": [
+      4,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 5,
+      "y": 42
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620166,
+    "inventory_texture_offset": [
+      4,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 10,
+      "y": 41
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620167,
+    "inventory_texture_offset": [
+      4,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 15,
+      "y": 41
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620168,
+    "inventory_texture_offset": [
+      4,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.villa",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 20,
+      "y": 43
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620169,
+    "inventory_texture_offset": [
+      4,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 25,
+      "y": 43
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620170,
+    "inventory_texture_offset": [
+      4,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 29,
+      "y": 42
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 260620171,
+    "inventory_texture_offset": [
+      4,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 34,
+      "y": 42
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
   }
 ]

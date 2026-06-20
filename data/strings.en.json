@@ -367,6 +367,8 @@
   "objects.name.armor.dark.chest": "Dark Chestplate",
   "objects.name.armor.dark.helmet": "Dark Helmet",
   "objects.name.armor.dark.legs": "Dark Greaves",
+  "objects.desc.armor.reduce": "Reduces incoming damage",
+  "objects.desc.armor.reduce_greatly": "Greatly reduces incoming damage",
   "objects.name.seat_green": "Green Seat",
   "objects.name.seat_orange": "Orange Seat",
   "objects.name.seat_pink": "Pink Seat",

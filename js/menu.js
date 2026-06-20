@@ -627,6 +627,7 @@ function injectStyles() {
     #menu .inv-slot-row .inv-radio { color: #6678b0; }
     #menu .inv-slot-row.is-active .inv-radio { color: #b8c6ff; }
     #menu .inv-slot-row .inv-name { flex: 1; }
+    #menu .inv-slot-row .inv-note { color: #888; font-size: 10px; font-style: italic; text-align: right; }
     #menu .inv-slot-row .inv-count { color: #aaa; font-size: 11px; min-width: 36px; text-align: right; }
     #menu .menu-controls-list { list-style: none; padding: 0; margin: 0 0 12px; min-width: 360px; }
     #menu .menu-controls-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 4px 0; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: var(--sb-surface-radius); }

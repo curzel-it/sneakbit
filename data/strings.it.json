@@ -366,6 +366,8 @@
   "objects.name.armor.dark.chest": "Corazza Nera",
   "objects.name.armor.dark.helmet": "Elmo Nero",
   "objects.name.armor.dark.legs": "Gambali Neri",
+  "objects.desc.armor.reduce": "Riduce i danni subiti",
+  "objects.desc.armor.reduce_greatly": "Riduce molto i danni subiti",
   "objects.name.seat_brown": "Sedia Marrone",
   "objects.name.seat_green": "Sedia Verde",
   "objects.name.seat_orange": "Sedia Arancione",

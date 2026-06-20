@@ -228,7 +228,7 @@
       "id": 10754361,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1006
+      "species_id": 260620102
     },
     {
       "after_dialogue": "Nothing",
@@ -264,7 +264,7 @@
       "id": 10754376,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1003
+      "species_id": 260620101
     },
     {
       "after_dialogue": "Nothing",
@@ -305,7 +305,7 @@
       "id": 10754386,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1033
+      "species_id": 260620100
     },
     {
       "after_dialogue": "Nothing",
@@ -346,7 +346,7 @@
       "id": 10754396,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1033
+      "species_id": 260620100
     },
     {
       "after_dialogue": "Nothing",
@@ -387,7 +387,7 @@
       "id": 10754416,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1033
+      "species_id": 260620100
     },
     {
       "after_dialogue": "Nothing",

@@ -16,8 +16,8 @@ import { ANIMATIONS_FPS } from "./constants.js";
 // plays once over `frames / ANIMATIONS_FPS` seconds and the body fades out
 // across that same span.
 const SPRITES = {
-  teleport: { sheet: "animated_objects", texX: 22, texY: 13, w: 1, h: 2, frames: 6 },
-  smoke:    { sheet: "animated_objects", texX: 28, texY: 13, w: 1, h: 2, frames: 7 },
+  teleport: { sheet: "animated_objects", texX: 23, texY: 14, w: 1, h: 2, frames: 6 },
+  smoke:    { sheet: "animated_objects", texX: 29, texY: 14, w: 1, h: 2, frames: 7 },
 };
 
 // "fade" vanishes the body alone — no effect strip layered on top — over this

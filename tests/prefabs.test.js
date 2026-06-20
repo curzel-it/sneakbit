@@ -10,17 +10,17 @@ import { tryBuildingPrefab } from "../js/prefabs.js";
 // plus the auxiliary species the interior populates (teleporter, table,
 // seats, stairs, shop clerk).
 loadSpeciesData([
-  // Single-floor house species.
-  { id: 1002, entity_type: "Building", sprite_sheet_id: 1004,
+  // Single-floor house species (row 0, col 1).
+  { id: 260620101, entity_type: "Building", sprite_sheet_id: 1004,
     sprite_frame: { x: 0, y: 1, w: 5, h: 4 } },
-  // Two-floor house species.
-  { id: 1005, entity_type: "Building", sprite_sheet_id: 1004,
+  // Two-floor house species (row 0, col 2).
+  { id: 260620102, entity_type: "Building", sprite_sheet_id: 1004,
     sprite_frame: { x: 5, y: 0, w: 5, h: 5 } },
-  // Small house species (4×3).
-  { id: 1033, entity_type: "Building", sprite_sheet_id: 1004,
+  // Small house species (4×3) (row 0, col 0).
+  { id: 260620100, entity_type: "Building", sprite_sheet_id: 1004,
     sprite_frame: { x: 0, y: 0, w: 4, h: 3 } },
-  // Shop species.
-  { id: 1070, entity_type: "Building", sprite_sheet_id: 1004,
+  // Shop species (row 0, col 3).
+  { id: 260620103, entity_type: "Building", sprite_sheet_id: 1004,
     sprite_frame: { x: 0, y: 0, w: 5, h: 4 } },
   // Building that isn't in the prefab table — should NOT expand.
   { id: 9999, entity_type: "Building", sprite_sheet_id: 1004,
@@ -47,11 +47,11 @@ test("non-prefab building (unknown id) → null, single-entity fallback", () => 
 });
 
 test("single-floor house emits building + door + one interior zone", () => {
-  const out = tryBuildingPrefab(1002, SOURCE, 40, 20);
+  const out = tryBuildingPrefab(260620101, SOURCE, 40, 20);
   assert.ok(out, "prefab should match");
   assert.equal(out.entities.length, 2, "one building + one door teleporter");
   const [building, door] = out.entities;
-  assert.equal(building.species_id, 1002);
+  assert.equal(building.species_id, 260620101);
   assert.equal(building.frame.x, 40);
   assert.equal(building.frame.y, 20);
   assert.equal(building.frame.w, 5);
@@ -67,7 +67,7 @@ test("single-floor house emits building + door + one interior zone", () => {
 });
 
 test("interior zone has the right shell: floor, walls, back-doors", () => {
-  const out = tryBuildingPrefab(1002, SOURCE, 0, 0);
+  const out = tryBuildingPrefab(260620101, SOURCE, 0, 0);
   const interior = out.interiorZones[0];
   assert.equal(interior.world_type, "HouseInterior");
   // 30 cols × 10 rows is the bounds Rust ships with.
@@ -90,7 +90,7 @@ test("interior zone has the right shell: floor, walls, back-doors", () => {
 });
 
 test("two-floor house: door points to first floor, stairs link first → second", () => {
-  const out = tryBuildingPrefab(1005, SOURCE, 0, 0);
+  const out = tryBuildingPrefab(260620102, SOURCE, 0, 0);
   const [, door] = out.entities;
   // Two-floor door y-offset is +4.
   assert.equal(door.frame.y, 4);
@@ -115,7 +115,7 @@ test("two-floor house: door points to first floor, stairs link first → second"
 });
 
 test("small house: door y-offset is +2 (smaller building)", () => {
-  const out = tryBuildingPrefab(1033, SOURCE, 0, 0);
+  const out = tryBuildingPrefab(260620100, SOURCE, 0, 0);
   const [building, door] = out.entities;
   assert.equal(building.frame.w, 4);
   assert.equal(door.frame.x, Math.ceil(4 / 2));
@@ -123,7 +123,7 @@ test("small house: door y-offset is +2 (smaller building)", () => {
 });
 
 test("shop: interior has counter + library construction blocks + clerk NPC", () => {
-  const out = tryBuildingPrefab(1070, SOURCE, 0, 0);
+  const out = tryBuildingPrefab(260620103, SOURCE, 0, 0);
   const interior = out.interiorZones[0];
   // Counter (id 5 → char "5") tile at one of the cluster positions.
   assert.equal(interior.construction_tiles.tiles[3][5], "5");
@@ -138,7 +138,7 @@ test("shop: interior has counter + library construction blocks + clerk NPC", () 
   assert.equal(clerk.dialogues[0].text, "shop.greeting");
   assert.ok(Array.isArray(clerk.shop_stock) && clerk.shop_stock.length > 0);
   // Stock entries are independent copies, not shared references.
-  const other = tryBuildingPrefab(1070, SOURCE, 0, 0).interiorZones[0]
+  const other = tryBuildingPrefab(260620103, SOURCE, 0, 0).interiorZones[0]
     .entities.find((e) => e.species_id === 3008);
   assert.notEqual(clerk.shop_stock[0], other.shop_stock[0]);
   assert.deepEqual(clerk.shop_stock[0], other.shop_stock[0]);
@@ -150,7 +150,7 @@ test("non-Building species returns null (NPCs, items, etc.)", () => {
 });
 
 test("editor entity ids are negative (so the eraser keeps shipped entities)", () => {
-  const out = tryBuildingPrefab(1002, SOURCE, 0, 0);
+  const out = tryBuildingPrefab(260620101, SOURCE, 0, 0);
   for (const e of out.entities) {
     assert.ok(e.id < 0, `editor entity id should be negative, got ${e.id}`);
   }
@@ -160,8 +160,8 @@ test("editor entity ids are negative (so the eraser keeps shipped entities)", ()
 });
 
 test("interior zone ids are unique across back-to-back placements", () => {
-  const a = tryBuildingPrefab(1002, SOURCE, 0, 0);
-  const b = tryBuildingPrefab(1002, SOURCE, 10, 10);
+  const a = tryBuildingPrefab(260620101, SOURCE, 0, 0);
+  const b = tryBuildingPrefab(260620101, SOURCE, 10, 10);
   assert.notEqual(a.interiorZones[0].id, b.interiorZones[0].id);
 });
 
@@ -171,7 +171,7 @@ test("interior zone id fits in int32 (storage.js coerces via `n | 0`)", () => {
   // reload into a non-existent zone. This regression test pins the
   // contract: interior ids must round-trip through int32 unchanged.
   const INT32_MAX = 2 ** 31 - 1;
-  const out = tryBuildingPrefab(1002, SOURCE, 0, 0);
+  const out = tryBuildingPrefab(260620101, SOURCE, 0, 0);
   for (const w of out.interiorZones) {
     assert.ok(
       w.id > 0 && w.id <= INT32_MAX,

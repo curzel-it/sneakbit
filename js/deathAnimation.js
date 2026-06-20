@@ -15,9 +15,9 @@ import { setValue } from "./storage.js";
 // Rust: `remaining_lifespan = 10.0 / ANIMATIONS_FPS` → 1.0s at 10fps.
 const DEATH_LIFESPAN = 10 / ANIMATIONS_FPS;
 
-// Fireball strip on the animated_objects sheet (sheet id 1012): row 10,
+// Fireball strip on the animated_objects sheet (sheet id 1012): row 11,
 // 5 frames — the same source rect Rust's play_death_animation assigns.
-export const DEATH_SPRITE = { sheet: "animated_objects", texX: 0, texY: 10, frames: 5 };
+export const DEATH_SPRITE = { sheet: "animated_objects", texX: 1, texY: 11, frames: 5 };
 
 export function isDying(entity) {
   return !!entity?._dying;
