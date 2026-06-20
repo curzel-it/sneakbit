@@ -12,6 +12,18 @@ import { getValue, setValue } from "./storage.js";
 export const SLOT_RANGED = "ranged";
 export const SLOT_MELEE  = "melee";
 
+// Armour slots, mirroring the doom build: three independent body pieces, each
+// holding one Armour species id. Their damage reductions stack multiplicatively
+// in playerHealth.js, exactly like a weapon's received_damage_reduction.
+export const SLOT_HELMET = "helmet";
+export const SLOT_CHEST  = "chest";
+export const SLOT_LEGS   = "legs";
+export const ARMOR_SLOTS = [SLOT_HELMET, SLOT_CHEST, SLOT_LEGS];
+
+// Every persisted equipment slot. Ranged carries an implicit default; all
+// others default to empty (null).
+const EQUIP_SLOTS = new Set([SLOT_RANGED, SLOT_MELEE, ...ARMOR_SLOTS]);
+
 export const DEFAULT_RANGED_WEAPON_ID = 1160; // kunai launcher
 
 const listeners = new Set();
@@ -28,30 +40,43 @@ function effectiveIndex(index) {
 }
 
 export function getEquipped(slot, index = 0) {
+  if (!EQUIP_SLOTS.has(slot)) return null;
   const idx = effectiveIndex(index);
-  if (slot === SLOT_RANGED) {
-    const v = getValue(keyFor(SLOT_RANGED, idx));
-    return v == null ? DEFAULT_RANGED_WEAPON_ID : v;
-  }
-  if (slot === SLOT_MELEE) {
-    const v = getValue(keyFor(SLOT_MELEE, idx));
-    return v == null ? null : v;
-  }
-  return null;
+  const v = getValue(keyFor(slot, idx));
+  if (slot === SLOT_RANGED) return v == null ? DEFAULT_RANGED_WEAPON_ID : v;
+  return v == null ? null : v;
 }
 
 export function setEquipped(slot, speciesId, index = 0) {
-  if (slot !== SLOT_RANGED && slot !== SLOT_MELEE) return;
+  if (!EQUIP_SLOTS.has(slot)) return;
   const idx = effectiveIndex(index);
   setValue(keyFor(slot, idx), speciesId);
   for (const fn of listeners) fn(slot, speciesId, idx);
 }
 
 export function clearEquipped(slot, index = 0) {
-  if (slot !== SLOT_RANGED && slot !== SLOT_MELEE) return;
+  if (!EQUIP_SLOTS.has(slot)) return;
   const idx = effectiveIndex(index);
   setValue(keyFor(slot, idx), null);
   for (const fn of listeners) fn(slot, null, idx);
+}
+
+// The full equipment snapshot for a player, in the shape the loadout wire
+// protocol and resolveLoadout use: weapons as scalar ids, armour as a
+// slot-keyed object. Ranged falls back to its implicit default; every other
+// slot is null when empty.
+export function snapshotEquipment(index = 0) {
+  return {
+    melee: getEquipped(SLOT_MELEE, index),
+    ranged: getEquipped(SLOT_RANGED, index),
+    armor: armorFromEquipment(index),
+  };
+}
+
+function armorFromEquipment(index) {
+  const armor = {};
+  for (const slot of ARMOR_SLOTS) armor[slot] = getEquipped(slot, index);
+  return armor;
 }
 
 export function onEquipmentChange(fn) {
@@ -64,7 +89,12 @@ if (typeof window !== "undefined") {
     get:    getEquipped,
     set:    setEquipped,
     clear:  clearEquipped,
+    snapshot: snapshotEquipment,
     SLOT_RANGED,
     SLOT_MELEE,
+    SLOT_HELMET,
+    SLOT_CHEST,
+    SLOT_LEGS,
+    ARMOR_SLOTS,
   };
 }

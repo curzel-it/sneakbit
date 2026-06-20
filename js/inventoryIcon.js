@@ -10,12 +10,13 @@ import { getSprite } from "./assets.js";
 const ICON_SUPERSAMPLE = 8;
 export const ICON_RES = TILE_SIZE * ICON_SUPERSAMPLE;
 
-// Paint the [row, col] tile of the inventory sheet into `canvas` (which must
-// be ICON_RES square). Returns false and leaves the canvas untouched when the
-// sheet isn't loaded yet, so callers can retry on a later frame.
-export function paintInventoryIcon(canvas, row, col) {
+// Paint the [row, col] tile of a sprite sheet (default the inventory sheet,
+// but e.g. "armor" for armour icons) into `canvas` (which must be ICON_RES
+// square). Returns false and leaves the canvas untouched when the sheet isn't
+// loaded yet, so callers can retry on a later frame.
+export function paintInventoryIcon(canvas, row, col, sheetName = "inventory") {
   let sheet;
-  try { sheet = getSprite("inventory"); } catch { return false; }
+  try { sheet = getSprite(sheetName); } catch { return false; }
   if (!sheet || !sheet.complete) return false;
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = false; // crisp integer upscale into the backing canvas

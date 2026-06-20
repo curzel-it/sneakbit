@@ -12,12 +12,15 @@ import {
   setEquipped,
   clearEquipped,
   onEquipmentChange,
+  snapshotEquipment,
   SLOT_MELEE,
   SLOT_RANGED,
+  ARMOR_SLOTS,
 } from "./equipment.js";
 import {
   setSessionLoadout,
   clearSessionLoadouts,
+  emptyArmor,
 } from "./sessionLoadouts.js";
 import { setSessionSkin, clearSessionSkins } from "./sessionSkins.js";
 import { getSelected, onSkinChange } from "./skins.js";
@@ -76,13 +79,14 @@ export const _uninstallGuestLoadoutSyncForTesting = uninstallGuestLoadoutSync;
 
 function sendSelfLoadout(net) {
   if (!net?.isConnected?.()) return;
-  const payload = {
+  const { melee, ranged, armor } = snapshotEquipment(0);
+  net.send({
     op: "guest.loadout",
-    melee: getEquipped(SLOT_MELEE, 0) ?? null,
-    ranged: getEquipped(SLOT_RANGED, 0) ?? null,
+    melee,
+    ranged,
+    armor,
     skin: getSelected(0),
-  };
-  net.send(payload);
+  });
 }
 
 function onLoadoutEvent(m) {
@@ -90,7 +94,8 @@ function onLoadoutEvent(m) {
   if (!playerId) return;
   const melee = m.melee == null ? null : m.melee;
   const ranged = m.ranged == null ? null : m.ranged;
-  setSessionLoadout(playerId, melee, ranged);
+  const armor = m.armor || emptyArmor();
+  setSessionLoadout(playerId, melee, ranged, armor);
   // Skin is render-only — mirror it so every avatar draws the right column.
   // No write-through for self: this client already owns its selection locally.
   setSessionSkin(playerId, m.skin == null ? null : m.skin);
@@ -98,18 +103,17 @@ function onLoadoutEvent(m) {
   // persist on this client's local save so it survives reconnect / going
   // offline. Compare against current local equipment to avoid the echo
   // (setEquipped fires onEquipmentChange which would re-send guest.loadout
-  // unnecessarily — same value comparison short-circuits that loop).
+  // unnecessarily — same value comparison short-circuits that loop). Covers
+  // every slot: weapons and the three armour pieces.
   const selfId = getSelfPlayerId();
   if (playerId !== selfId) return;
-  const curMelee = getEquipped(SLOT_MELEE, 0) ?? null;
-  const curRanged = getEquipped(SLOT_RANGED, 0) ?? null;
-  if (melee !== curMelee) {
-    if (melee == null) clearEquipped(SLOT_MELEE, 0);
-    else setEquipped(SLOT_MELEE, melee, 0);
-  }
-  if (ranged !== curRanged) {
-    if (ranged == null) clearEquipped(SLOT_RANGED, 0);
-    else setEquipped(SLOT_RANGED, ranged, 0);
+  const incoming = { [SLOT_MELEE]: melee, [SLOT_RANGED]: ranged, ...armor };
+  for (const slot of [SLOT_MELEE, SLOT_RANGED, ...ARMOR_SLOTS]) {
+    const want = incoming[slot] ?? null;
+    const cur = getEquipped(slot, 0) ?? null;
+    if (want === cur) continue;
+    if (want == null) clearEquipped(slot, 0);
+    else setEquipped(slot, want, 0);
   }
 }
 

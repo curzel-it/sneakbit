@@ -51,6 +51,29 @@ test("resolveLoadout returns nulls for an empty player object", () => {
   assert.equal(out.ranged, null);
 });
 
+test("resolveLoadout carries armour from the session entry", () => {
+  reset();
+  setSessionLoadout("p_guest", 1159, 1160, { helmet: 1190, chest: 1191 });
+  const out = resolveLoadout({ playerId: "p_guest", index: 1 });
+  assert.equal(out.armor.helmet, 1190);
+  assert.equal(out.armor.chest, 1191);
+  assert.equal(out.armor.legs, null);
+});
+
+test("resolveLoadout reads armour from local equipment on fallback", () => {
+  reset();
+  equipment.setEquipped(equipment.SLOT_LEGS, 1192, 0);
+  const out = resolveLoadout({ index: 0 });
+  assert.equal(out.armor.legs, 1192);
+  assert.equal(out.armor.helmet, null);
+});
+
+test("resolveLoadout always returns a full armour object, even for null", () => {
+  reset();
+  const out = resolveLoadout(null);
+  assert.deepEqual(Object.keys(out.armor).sort(), ["chest", "helmet", "legs"]);
+});
+
 test("deleteSessionLoadout drops the entry so subsequent resolves fall back", () => {
   reset();
   setSessionLoadout("p_guest", 1159, 1160);

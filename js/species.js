@@ -14,6 +14,7 @@ import {
   SPRITE_SHEET_MONSTERS,
   SPRITE_SHEET_HEROES,
   SPRITE_SHEET_INVENTORY,
+  SPRITE_SHEET_ARMOR,
 } from "./constants.js";
 
 const SHEET_NAMES = {
@@ -27,6 +28,7 @@ const SHEET_NAMES = {
   [SPRITE_SHEET_WEAPONS]: "weapons",
   [SPRITE_SHEET_MONSTERS]: "monsters",
   [SPRITE_SHEET_INVENTORY]: "inventory",
+  [SPRITE_SHEET_ARMOR]: "armor",
 };
 
 const speciesById = new Map();
@@ -93,6 +95,10 @@ function decorate(raw) {
     equipment_usage_sound_effect: raw.equipment_usage_sound_effect ?? null,
     associated_weapon: raw.associated_weapon ?? null,
     received_damage_reduction: raw.received_damage_reduction ?? 0,
+    // Armour: a pickup item points at an Armour species via associated_armour;
+    // the Armour species declares which body slot it fills via armor_slot.
+    associated_armour: raw.associated_armour ?? null,
+    armor_slot: raw.armor_slot ?? null,
   };
 }
 

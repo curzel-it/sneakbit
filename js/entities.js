@@ -13,7 +13,7 @@ import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js";
 import { getEntitySheet, getSpecies } from "./species.js";
 import { getSprite } from "./assets.js";
 import { getPlayerSpriteFrame } from "./player.js";
-import { SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
+import { SLOT_MELEE, SLOT_RANGED, SLOT_HELMET, SLOT_CHEST, SLOT_LEGS } from "./equipment.js";
 import { resolveLoadout } from "./sessionLoadouts.js";
 import { getMeleeSwingProgress } from "./melee.js";
 import { getShootAnimProgress } from "./shooting.js";
@@ -114,7 +114,7 @@ function drawPlayer(ctx, player, camera) {
   // it's skipped for the duration (collision and everything else stay
   // normal-sized — only the rendered sprite changes).
   const giant = isGiant(player);
-  const { melee, ranged } = resolveLoadout(player);
+  const { melee, ranged, armor } = resolveLoadout(player);
   const equipInFront = player.direction === "up"
     || getMeleeSwingProgress(idx) != null
     || getShootAnimProgress(idx) != null;
@@ -137,6 +137,12 @@ function drawPlayer(ctx, player, camera) {
     ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
   }
 
+  // Worn armour sits on the body, so it always draws in front of the hero
+  // (the directional helmet/chest frame should never be hidden behind it).
+  // Uses the same overlay system as weapons (drawEquipment). Skipped in giant
+  // mode, like the weapon overlays.
+  if (!giant) drawArmorOverlays(ctx, player, camera, armor);
+
   if (!giant && equipInFront) {
     drawEquipment(ctx, player, camera, ranged, SLOT_RANGED);
     drawEquipment(ctx, player, camera, melee, SLOT_MELEE);
@@ -144,6 +150,17 @@ function drawPlayer(ctx, player, camera) {
 
   // Knockback-aura activation burst, drawn over the hero while it plays.
   drawAuraEffect(ctx, player, camera);
+}
+
+// Equipped armour, drawn feet-to-head so upper pieces layer over lower ones
+// (helmet on top). Each piece is a weapon-style directional overlay.
+const ARMOR_DRAW_ORDER = [SLOT_LEGS, SLOT_CHEST, SLOT_HELMET];
+
+function drawArmorOverlays(ctx, player, camera, armor) {
+  if (!armor) return;
+  for (const slot of ARMOR_DRAW_ORDER) {
+    drawEquipment(ctx, player, camera, armor[slot], slot);
+  }
 }
 
 // Giant mode renders from a dedicated 3×4 humanoid sheet (humanoids_3x4):
@@ -230,9 +247,13 @@ function drawEquipment(ctx, player, camera, weaponId, slot) {
   const h = sp.height || 1;
   const frames = Math.max(1, sp.frames);
 
+  // Only weapons play a use animation; armour pieces just track the
+  // directional idle/moving rows (no swing/shoot strip).
   const swing = slot === SLOT_MELEE
     ? getMeleeSwingProgress(player.index | 0)
-    : getShootAnimProgress(player.index | 0);
+    : slot === SLOT_RANGED
+      ? getShootAnimProgress(player.index | 0)
+      : null;
   let sourceY, frameIdx;
   if (swing != null) {
     sourceY = (ATTACK_ROW_Y[player.direction] ?? ATTACK_ROW_Y.down) * TILE_SIZE;
@@ -242,9 +263,11 @@ function drawEquipment(ctx, player, camera, weaponId, slot) {
     const dirRow = (player.moving ? DIR_ROW_MOVING : DIR_ROW_STILL)[player.direction]
       ?? DIR_ROW_STILL.down;
     sourceY = (sp.texture_y + dirRow * h) * TILE_SIZE;
-    frameIdx = player.moving && frames > 1
-      ? Math.floor(animClock * ANIMATIONS_FPS) % frames
-      : 0;
+    // Lock the overlay's frame to the wearer's body animation rather than a
+    // free-running clock: player.frameIndex is the exact frame the hero's
+    // legs/arms are on (0 when idle), so an equipped weapon or armour piece
+    // steps in lockstep with the walk cycle instead of drifting out of phase.
+    frameIdx = frames > 1 ? (player.frameIndex | 0) % frames : 0;
   }
 
   const sx = (sp.texture_x + frameIdx * w) * TILE_SIZE;
@@ -300,7 +323,7 @@ export function sortingKey(bottom, zIndex, isPushable) {
 // dormant portal until fast travel is unlocked (≥4 zones visited), then a
 // 4-frame animated active portal. Both share the link's 3×2 footprint.
 const FAST_TRAVEL_SPRITE = {
-  locked:   { texX: 31, texY: 3, frames: 1 },
+  locked:   { texX: 32, texY: 4, frames: 1 },
   unlocked: { texX: 34, texY: 3, frames: 4 },
 };
 

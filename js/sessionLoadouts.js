@@ -15,10 +15,31 @@
 // transparently via the no-entry fallback, so the seam is also safe to
 // use in single-player paths.
 
-import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
+import { getEquipped, SLOT_MELEE, SLOT_RANGED, ARMOR_SLOTS } from "./equipment.js";
 import { isPvp } from "./gameMode.js";
 
-const loadouts = new Map(); // playerId -> { melee, ranged }
+const loadouts = new Map(); // playerId -> { melee, ranged, armor }
+
+// An armour object with every slot empty. The canonical "no armour" value, so
+// resolveLoadout callers can always read armor.helmet/chest/legs.
+export function emptyArmor() {
+  const armor = {};
+  for (const slot of ARMOR_SLOTS) armor[slot] = null;
+  return armor;
+}
+
+// Coerce an arbitrary armour payload into a full {helmet,chest,legs} map
+// of ids-or-null, dropping unknown keys. Tolerates null/undefined.
+function normalizeArmor(armor) {
+  const out = emptyArmor();
+  if (armor && typeof armor === "object") {
+    for (const slot of ARMOR_SLOTS) {
+      const v = armor[slot];
+      out[slot] = v == null ? null : v | 0;
+    }
+  }
+  return out;
+}
 
 // In PvP everyone fights with at least a melee weapon: a player who walks
 // into the arena without a melee equipped is handed the sword, so a match is
@@ -27,11 +48,12 @@ const loadouts = new Map(); // playerId -> { melee, ranged }
 // untouched — a missing melee stays null. Sword = objects.name.sword.weapon.
 const PVP_DEFAULT_MELEE = 1159;
 
-export function setSessionLoadout(playerId, melee, ranged) {
+export function setSessionLoadout(playerId, melee, ranged, armor = null) {
   if (!playerId) return;
   loadouts.set(playerId, {
     melee: melee == null ? null : melee | 0,
     ranged: ranged == null ? null : ranged | 0,
+    armor: normalizeArmor(armor),
   });
 }
 
@@ -51,7 +73,7 @@ export function clearSessionLoadouts() {
 
 export function listSessionLoadouts() {
   return Array.from(loadouts.entries()).map(([playerId, e]) => ({
-    playerId, melee: e.melee, ranged: e.ranged,
+    playerId, melee: e.melee, ranged: e.ranged, armor: e.armor || emptyArmor(),
   }));
 }
 
@@ -61,21 +83,24 @@ export function listSessionLoadouts() {
 // single-player and local-coop callers (no playerId on the player object)
 // still get the right answer without a session entry.
 export function resolveLoadout(player) {
-  if (!player) return { melee: null, ranged: null };
+  if (!player) return { melee: null, ranged: null, armor: emptyArmor() };
   let melee = null;
   let ranged = null;
+  let armor = emptyArmor();
   const sid = player.playerId;
   const e = sid ? loadouts.get(sid) : null;
   if (e) {
     melee = e.melee ?? null;
     ranged = e.ranged ?? null;
+    armor = e.armor ? normalizeArmor(e.armor) : emptyArmor();
   } else {
     const idx = player.index | 0;
     melee = getEquipped(SLOT_MELEE, idx) ?? null;
     ranged = getEquipped(SLOT_RANGED, idx) ?? null;
+    for (const slot of ARMOR_SLOTS) armor[slot] = getEquipped(slot, idx) ?? null;
   }
   if (melee == null && isPvp()) melee = PVP_DEFAULT_MELEE;
-  return { melee, ranged };
+  return { melee, ranged, armor };
 }
 
 export function _resetSessionLoadoutsForTesting() { loadouts.clear(); }

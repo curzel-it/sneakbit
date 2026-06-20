@@ -206,10 +206,13 @@ function indexOf(victim) {
 // THEM and not whoever's local index it lines up with.
 function applyDamageReductions(amount, victim) {
   let out = amount;
-  const { melee, ranged } = victim && typeof victim === "object"
+  const { melee, ranged, armor } = victim && typeof victim === "object"
     ? resolveLoadout(victim)
     : resolveLoadout({ index: indexOf(victim) });
-  for (const id of [melee, ranged]) {
+  // Weapons (e.g. shield) and every equipped armour piece each soak a slice
+  // of incoming damage; the reductions stack multiplicatively.
+  const ids = [melee, ranged, ...(armor ? Object.values(armor) : [])];
+  for (const id of ids) {
     if (!id) continue;
     const sp = getSpecies(id);
     const r = sp?.received_damage_reduction || 0;

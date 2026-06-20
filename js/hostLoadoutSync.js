@@ -18,10 +18,8 @@
 import { broadcastHostEvent } from "./hostEvents.js";
 import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js";
 import {
-  getEquipped,
   onEquipmentChange,
-  SLOT_MELEE,
-  SLOT_RANGED,
+  snapshotEquipment,
 } from "./equipment.js";
 import {
   setSessionLoadout,
@@ -29,6 +27,7 @@ import {
   deleteSessionLoadout,
   clearSessionLoadouts,
   listSessionLoadouts,
+  emptyArmor,
 } from "./sessionLoadouts.js";
 import {
   setSessionSkin,
@@ -59,16 +58,15 @@ export function installHostLoadoutSync(opts = {}) {
     if (idx !== 0) return;
     const selfId = getSelfPlayerId();
     if (!selfId) return;
-    const prev = getSessionLoadout(selfId) || { melee: null, ranged: null };
-    const next = {
-      melee: slot === SLOT_MELEE ? speciesId : prev.melee,
-      ranged: slot === SLOT_RANGED ? speciesId : prev.ranged,
-    };
-    setSessionLoadout(selfId, next.melee, next.ranged);
+    // Any slot can change (weapon or armour) — snapshot the whole loadout
+    // rather than diff a single field, so armour rides the same frame.
+    const next = snapshotEquipment(0);
+    setSessionLoadout(selfId, next.melee, next.ranged, next.armor);
     broadcastHostEvent("loadout", {
       playerId: selfId,
       melee: next.melee,
       ranged: next.ranged,
+      armor: next.armor,
       skin: skinFor(selfId) ?? getSelected(0),
     });
   }));
@@ -81,8 +79,8 @@ export function installHostLoadoutSync(opts = {}) {
     if (!selfId) return;
     const skin = getSelected(0);
     setSessionSkin(selfId, skin);
-    const lo = getSessionLoadout(selfId) || { melee: null, ranged: null };
-    broadcastHostEvent("loadout", { playerId: selfId, melee: lo.melee, ranged: lo.ranged, skin });
+    const lo = getSessionLoadout(selfId) || { melee: null, ranged: null, armor: emptyArmor() };
+    broadcastHostEvent("loadout", { playerId: selfId, melee: lo.melee, ranged: lo.ranged, armor: lo.armor || emptyArmor(), skin });
   }));
 
   unsubs.push(net.on("peer.joined", broadcastAll));
@@ -105,9 +103,8 @@ export const _uninstallHostLoadoutSyncForTesting = uninstallHostLoadoutSync;
 function seedSelfFromLocal() {
   const selfId = getSelfPlayerId();
   if (!selfId) return;
-  const melee = getEquipped(SLOT_MELEE, 0) ?? null;
-  const ranged = getEquipped(SLOT_RANGED, 0) ?? null;
-  setSessionLoadout(selfId, melee, ranged);
+  const { melee, ranged, armor } = snapshotEquipment(0);
+  setSessionLoadout(selfId, melee, ranged, armor);
   setSessionSkin(selfId, getSelected(0));
 }
 
@@ -116,10 +113,11 @@ function onGuestLoadout(m) {
   const playerId = m.from;
   const melee = m.melee == null ? null : m.melee;
   const ranged = m.ranged == null ? null : m.ranged;
+  const armor = m.armor || emptyArmor();
   const skin = m.skin == null ? null : m.skin;
-  setSessionLoadout(playerId, melee, ranged);
+  setSessionLoadout(playerId, melee, ranged, armor);
   setSessionSkin(playerId, skin);
-  broadcastHostEvent("loadout", { playerId, melee, ranged, skin });
+  broadcastHostEvent("loadout", { playerId, melee, ranged, armor, skin });
 }
 
 function onPeerLeft(m) {
@@ -138,6 +136,7 @@ function broadcastAll() {
       playerId: e.playerId,
       melee: e.melee,
       ranged: e.ranged,
+      armor: e.armor || emptyArmor(),
       skin: skinFor(e.playerId),
     });
   }

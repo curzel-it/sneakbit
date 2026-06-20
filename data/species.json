@@ -4891,5 +4891,251 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1004
+  },
+  {
+    "armor_slot": "helmet",
+    "entity_type": "Armour",
+    "id": 1190,
+    "inventory_texture_offset": [
+      58,
+      1
+    ],
+    "name": "objects.name.armor.iron.helmet",
+    "received_damage_reduction": 0.12,
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 1,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
+  },
+  {
+    "armor_slot": "chest",
+    "entity_type": "Armour",
+    "id": 1191,
+    "inventory_texture_offset": [
+      58,
+      33
+    ],
+    "name": "objects.name.armor.iron.chest",
+    "received_damage_reduction": 0.22,
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 33,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
+  },
+  {
+    "armor_slot": "legs",
+    "entity_type": "Armour",
+    "id": 1192,
+    "inventory_texture_offset": [
+      58,
+      17
+    ],
+    "name": "objects.name.armor.iron.legs",
+    "received_damage_reduction": 0.12,
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 17,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
+  },
+  {
+    "associated_armour": 1190,
+    "base_speed": 1,
+    "entity_type": "PickableObject",
+    "id": 1194,
+    "inventory_texture_offset": [
+      58,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.armor.iron.helmet",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 1,
+      "y": 54
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
+  },
+  {
+    "associated_armour": 1191,
+    "base_speed": 1,
+    "entity_type": "PickableObject",
+    "id": 1195,
+    "inventory_texture_offset": [
+      58,
+      33
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.armor.iron.chest",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 33,
+      "y": 54
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
+  },
+  {
+    "associated_armour": 1192,
+    "base_speed": 1,
+    "entity_type": "PickableObject",
+    "id": 1196,
+    "inventory_texture_offset": [
+      58,
+      17
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.armor.iron.legs",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 17,
+      "y": 54
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
+  },
+  {
+    "armor_slot": "helmet",
+    "entity_type": "Armour",
+    "id": 1210,
+    "inventory_texture_offset": [
+      58,
+      49
+    ],
+    "name": "objects.name.armor.dark.helmet",
+    "received_damage_reduction": 0.08,
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 49,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
+  },
+  {
+    "armor_slot": "chest",
+    "entity_type": "Armour",
+    "id": 1211,
+    "inventory_texture_offset": [
+      58,
+      81
+    ],
+    "name": "objects.name.armor.dark.chest",
+    "received_damage_reduction": 0.16,
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 81,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
+  },
+  {
+    "armor_slot": "legs",
+    "entity_type": "Armour",
+    "id": 1212,
+    "inventory_texture_offset": [
+      58,
+      65
+    ],
+    "name": "objects.name.armor.dark.legs",
+    "received_damage_reduction": 0.1,
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 65,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
+  },
+  {
+    "associated_armour": 1210,
+    "base_speed": 1,
+    "entity_type": "PickableObject",
+    "id": 1214,
+    "inventory_texture_offset": [
+      58,
+      49
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.armor.dark.helmet",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 49,
+      "y": 54
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
+  },
+  {
+    "associated_armour": 1211,
+    "base_speed": 1,
+    "entity_type": "PickableObject",
+    "id": 1215,
+    "inventory_texture_offset": [
+      58,
+      81
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.armor.dark.chest",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 81,
+      "y": 54
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
+  },
+  {
+    "associated_armour": 1212,
+    "base_speed": 1,
+    "entity_type": "PickableObject",
+    "id": 1216,
+    "inventory_texture_offset": [
+      58,
+      65
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.armor.dark.legs",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 65,
+      "y": 54
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1025
   }
 ]

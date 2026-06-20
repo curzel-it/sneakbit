@@ -14,6 +14,8 @@ loadSpeciesData([
   { id: 7000, entity_type: "Bullet" },                                          // kunai round
   { id: 7001, entity_type: "Bundle", bundle_contents: Array(10).fill(7000) },   // kunai x10
   { id: 2020, entity_type: "PickableObject" },                                  // health potion
+  { id: 1190, entity_type: "Armour", armor_slot: "helmet", received_damage_reduction: 0.1 }, // iron helmet
+  { id: 1194, entity_type: "PickableObject", associated_armour: 1190 },         // iron helmet item
 ]);
 
 const shop = await import("../js/shopPurchase.js");
@@ -27,6 +29,7 @@ const skills = await import("../js/skills.js");
 const SWORD = { item: 1164, price: 99 };
 const AR15  = { item: 1162, price: 450 };
 const KUNAI = { item: 7001, price: 10 };
+const HELMET = { item: 1194, price: 1 }; // iron helmet (armour, one-of-a-kind)
 // Health potion: a PickableObject, so it only stacks with the explicit
 // stockentry override (mirrors data/prefabs).
 const POTION = { item: 2020, price: 30, stackable: true };
@@ -234,6 +237,33 @@ test("an owned skill cannot be re-bought (and isn't charged)", () => {
 test("an unknown skill id is an invalid good", () => {
   resetSkill(100);
   assert.equal(shop.canBuy({ skill: "not_real", price: 1 }, 1).reason, "invalid");
+});
+
+test("armour: an armour item is one-of-a-kind (not stackable)", () => {
+  reset(5);
+  assert.equal(shop.isStackable(HELMET), false);
+  assert.equal(shop.canBuy(HELMET, 2).reason, "quantity");
+});
+
+test("armour: buying an armour item grants it and auto-equips its slot", () => {
+  reset(5);
+  const res = shop.buy(HELMET, 1);
+  assert.equal(res.ok, true);
+  assert.equal(res.spent, 1);
+  assert.equal(inventory.getAmmo(1194), 1);                         // owns the item
+  assert.equal(equipment.getEquipped(equipment.SLOT_HELMET), 1190); // equipped the armour
+  assert.equal(wallet.getCoins(), 4);
+});
+
+test("armour: an owned piece can't be re-bought (and isn't charged)", () => {
+  reset(5);
+  shop.buy(HELMET, 1);
+  const after = wallet.getCoins();
+  assert.equal(shop.isEntryOwned(HELMET), true);
+  const res = shop.buy(HELMET, 1);
+  assert.equal(res.ok, false);
+  assert.equal(res.reason, "owned");
+  assert.equal(wallet.getCoins(), after);
 });
 
 test("a skill you can't afford is rejected without spending", () => {

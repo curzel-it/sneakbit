@@ -17,6 +17,7 @@ const SOURCES = {
   weapons: "./assets/weapons.png",
   monsters: "./assets/monsters.png",
   inventory: "./assets/inventory.png",
+  armor: "./assets/armour.png",
 };
 
 function loadImage(src) {

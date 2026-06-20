@@ -59,11 +59,28 @@ export function isWeaponItem(itemId) {
   return weaponSlotForItem(itemId) !== null;
 }
 
-// One-of-a-kind goods (weapon items) you already hold can't be re-bought.
-// Ownership is derived exactly as weaponSlots derives it — you hold the
-// granting item. Non-weapon goods are never "owned" (always re-buyable).
+// The equipment a pickup item grants: { slot, equipId } for a weapon item
+// (slot from entity_type) or an armour item (slot from the Armour species'
+// armor_slot), or null for a plain consumable/quest item. The single resolver
+// the grant + ownership paths share, so bought gear auto-equips like a weapon.
+export function gearForItem(itemId) {
+  const sp = getSpecies(itemId);
+  if (!sp) return null;
+  const weaponSlot = weaponSlotForItem(itemId);
+  if (weaponSlot) return { slot: weaponSlot, equipId: sp.associated_weapon };
+  const a = sp.associated_armour;
+  if (a) {
+    const asp = getSpecies(a);
+    if (asp?.entity_type === "Armour" && asp.armor_slot) return { slot: asp.armor_slot, equipId: a };
+  }
+  return null;
+}
+
+// One-of-a-kind goods (weapon + armour items) you already hold can't be
+// re-bought. Ownership is derived exactly as the slot lists derive it — you
+// hold the granting item. Plain goods are never "owned" (always re-buyable).
 export function isOwned(itemId, playerIndex = 0) {
-  if (!isWeaponItem(itemId)) return false;
+  if (!gearForItem(itemId)) return false;
   return getAmmo(itemId, playerIndex) > 0;
 }
 
@@ -129,8 +146,8 @@ function grant(itemId, qty, playerIndex) {
       addAmmo(itemId, 1, playerIndex);
     }
   }
-  const slot = weaponSlotForItem(itemId);
-  if (slot) setEquipped(slot, sp.associated_weapon, playerIndex);
+  const gear = gearForItem(itemId);
+  if (gear) setEquipped(gear.slot, gear.equipId, playerIndex);
 }
 
 // Execute a purchase after validation. Spends coins, then grants the goods.

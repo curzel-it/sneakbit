@@ -7,7 +7,7 @@
 // you already hold) and a quantity/confirm screen. All the rules live in
 // shopPurchase.js; this file is presentation + input only.
 
-import { TILE_SIZE } from "./constants.js";
+import { TILE_SIZE, SPRITE_SHEET_ARMOR } from "./constants.js";
 import { getSprite } from "./assets.js";
 import { getSpecies } from "./species.js";
 import { getCoins, onWalletChange } from "./wallet.js";
@@ -548,8 +548,11 @@ function toastIcon(speciesId) {
 function paintIcon(canvas, speciesId) {
   const sp = getSpecies(speciesId);
   if (!sp || !sp.inventory_texture_offset) return;
+  // Armour icons live on the armour sheet; everything else on the inventory
+  // sheet (the [row, col] tile-index system is identical either way).
+  const sheetName = sp.sprite_sheet_id === SPRITE_SHEET_ARMOR ? "armor" : "inventory";
   let sheet;
-  try { sheet = getSprite("inventory"); } catch { return; }
+  try { sheet = getSprite(sheetName); } catch { return; }
   if (!sheet || !sheet.complete) return;
   const [row, col] = sp.inventory_texture_offset;
   const ctx = canvas.getContext("2d");

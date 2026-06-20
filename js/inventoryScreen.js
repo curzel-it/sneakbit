@@ -20,10 +20,11 @@ import { getSpecies } from "./species.js";
 import { tr } from "./strings.js";
 import {
   setEquipped, clearEquipped, getEquipped,
-  SLOT_MELEE, SLOT_RANGED, onEquipmentChange,
+  SLOT_MELEE, SLOT_RANGED, ARMOR_SLOTS, onEquipmentChange,
 } from "./equipment.js";
 import { snapshotInventory, onInventoryChange } from "./inventory.js";
 import { weaponsInSlot } from "./weaponSlots.js";
+import { armorInSlot } from "./armorSlots.js";
 import { unlockedSkills, onSkillsChange } from "./skills.js";
 import { localPlayerCount } from "./coopMode.js";
 import {
@@ -86,18 +87,18 @@ function activeIdx() {
 // opens mid-game, so a single pass suffices.
 function paintIcons(host) {
   for (const c of host.querySelectorAll("canvas.inv-icon[data-icon-row]")) {
-    paintInventoryIcon(c, Number(c.dataset.iconRow), Number(c.dataset.iconCol));
+    paintInventoryIcon(c, Number(c.dataset.iconRow), Number(c.dataset.iconCol), c.dataset.iconSheet || "inventory");
   }
 }
 
 // A blank icon canvas for the given [row, col] inventory-sheet tile, painted
 // after insertion by paintIcons. Renders a same-sized spacer when the tile is
 // unknown (e.g. the Unarmed row) so names stay aligned.
-function iconHtml(offset) {
+function iconHtml(offset, sheet = "inventory") {
   if (!offset) return `<span class="inv-icon inv-icon-empty"></span>`;
   return `<canvas class="inv-icon" width="${ICON_RES}" height="${ICON_RES}"
     style="width:${ICON_PIXELS}px;height:${ICON_PIXELS}px"
-    data-icon-row="${offset[0] | 0}" data-icon-col="${offset[1] | 0}"></canvas>`;
+    data-icon-row="${offset[0] | 0}" data-icon-col="${offset[1] | 0}" data-icon-sheet="${sheet}"></canvas>`;
 }
 
 // A blank hero-portrait canvas for the given heroes-sheet column, painted after
@@ -115,13 +116,57 @@ function paintHeroPreviews(host) {
   }
 }
 
+// Display labels for the three armour body slots, in head-to-toe order.
+const ARMOR_SLOT_LABELS = {
+  helmet: "Helmet",
+  chest:  "Chest",
+  legs:   "Legs",
+};
+
 function sectionsHtml(playerIndex) {
+  const armorPanels = ARMOR_SLOTS
+    .map((slot) => armorPanelHtml(ARMOR_SLOT_LABELS[slot] || slot, slot, playerIndex))
+    .join("");
   return `${playerTabsHtml(playerIndex)}
     ${slotPanelHtml("Ranged", SLOT_RANGED, playerIndex, false)}
     ${slotPanelHtml("Melee",  SLOT_MELEE,  playerIndex, true)}
+    ${armorPanels}
     ${skinPanelHtml(playerIndex)}
     <hr class="inv-sep" />
     ${itemsHtml(playerIndex)}`;
+}
+
+// One armour slot panel: a "None" row (unequip) plus a single-select list of
+// the pieces you own for that body slot, the worn one marked. Mirrors the
+// weapon slot panel, but armour icons come from the armour sheet and there's
+// no ammo column. An empty slot (no armour worn) selects "None".
+function armorPanelHtml(title, slot, playerIndex) {
+  const list = armorInSlot(slot, playerIndex);
+  const worn = getEquipped(slot, playerIndex) != null;
+  const rows = [];
+
+  rows.push(rowHtml({
+    active: !worn,
+    name: "None",
+    attrs: `data-unequip-armor="${slot}" data-player="${playerIndex | 0}"`,
+  }));
+
+  for (const e of list) {
+    const name = tr(e.species?.name) || e.species?.name || `Species ${e.id}`;
+    rows.push(rowHtml({
+      active: e.isEquipped,
+      name: escapeHtml(name),
+      icon: e.species?.inventory_texture_offset,
+      iconSheet: "armor",
+      attrs: `data-equip="${e.id}" data-slot="${slot}" data-player="${playerIndex | 0}"`,
+      raw: true,
+    }));
+  }
+
+  return `<div class="inv-slot">
+    <h2 class="inv-slot-title">${title}</h2>
+    <ul class="inv-slot-list">${rows.join("")}</ul>
+  </div>`;
 }
 
 // In local co-op the panel can edit any player's dedicated inventory; a row of
@@ -198,13 +243,13 @@ function slotPanelHtml(title, slot, playerIndex, withUnarmed) {
   </div>`;
 }
 
-function rowHtml({ active, name, icon = null, ammo = null, attrs, raw = false }) {
+function rowHtml({ active, name, icon = null, iconSheet = "inventory", ammo = null, attrs, raw = false }) {
   const nameHtml = raw ? name : escapeHtml(name);
   const ammoHtml = ammo != null ? `<span class="inv-count">x${ammo}</span>` : "";
   return `<li>
     <button class="inv-slot-row${active ? " is-active" : ""}" ${attrs}>
       <span class="inv-radio">${active ? "◉" : "◯"}</span>
-      ${iconHtml(icon)}
+      ${iconHtml(icon, iconSheet)}
       <span class="inv-name">${nameHtml}</span>
       ${ammoHtml}
     </button>
@@ -220,7 +265,7 @@ function itemsHtml(playerIndex) {
     .map(([id, n]) => ({ id: Number(id), count: n | 0 }))
     .filter((r) => r.count > 0)
     .map((r) => ({ ...r, sp: getSpecies(r.id) }))
-    .filter((r) => r.sp && !isWeaponItem(r.sp))
+    .filter((r) => r.sp && !isWeaponItem(r.sp) && !isArmorItem(r.sp))
     .sort(byName);
 
   const sections = [
@@ -279,11 +324,28 @@ function actionHtml(speciesId, playerIndex) {
   </span>`;
 }
 
+// Map a data-slot string onto a real equipment slot, defaulting to ranged for
+// the weapon panels (whose rows carry melee/ranged) and passing armour slots
+// through unchanged.
+function equipSlotOf(slot) {
+  if (slot === SLOT_MELEE) return SLOT_MELEE;
+  if (ARMOR_SLOTS.includes(slot)) return slot;
+  return SLOT_RANGED;
+}
+
 function isWeaponItem(sp) {
   const w = sp.associated_weapon;
   if (!w) return false;
   const wsp = getSpecies(w);
   return wsp?.entity_type === "WeaponMelee" || wsp?.entity_type === "WeaponRanged";
+}
+
+// An armour-granting pickup (shown in the armour slot panels, not the plain
+// Items list).
+function isArmorItem(sp) {
+  const a = sp.associated_armour;
+  if (!a) return false;
+  return getSpecies(a)?.entity_type === "Armour";
 }
 
 function bindButtons(host, playerIndex) {
@@ -298,7 +360,7 @@ function bindButtons(host, playerIndex) {
   for (const btn of host.querySelectorAll("[data-equip]")) {
     btn.addEventListener("click", () => {
       const id = parseInt(btn.dataset.equip, 10);
-      const slot = btn.dataset.slot === SLOT_MELEE ? SLOT_MELEE : SLOT_RANGED;
+      const slot = equipSlotOf(btn.dataset.slot);
       const idx = parseInt(btn.dataset.player, 10) | 0;
       if (getEquipped(slot, idx) === id) return; // already active
       setEquipped(slot, id, idx); // re-render rides onEquipmentChange
@@ -308,6 +370,13 @@ function bindButtons(host, playerIndex) {
     btn.addEventListener("click", () => {
       const idx = parseInt(btn.dataset.unequipMelee, 10) | 0;
       clearEquipped(SLOT_MELEE, idx);
+    });
+  }
+  for (const btn of host.querySelectorAll("[data-unequip-armor]")) {
+    btn.addEventListener("click", () => {
+      const slot = equipSlotOf(btn.dataset.unequipArmor);
+      const idx = parseInt(btn.dataset.player, 10) | 0;
+      clearEquipped(slot, idx);
     });
   }
   for (const btn of host.querySelectorAll("[data-skin]")) {

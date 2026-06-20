@@ -18,10 +18,11 @@ import { addAmmo, getAmmo } from "./inventory.js";
 import { addCoins } from "./wallet.js";
 import { COIN_SPECIES_ID } from "./coinDrops.js";
 import { getValue, setValue } from "./storage.js";
-import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
+import { setEquipped, SLOT_MELEE, SLOT_RANGED, ARMOR_SLOTS } from "./equipment.js";
 import {
   setSessionLoadout,
   getSessionLoadout,
+  emptyArmor,
 } from "./sessionLoadouts.js";
 import { tr } from "./strings.js";
 import { shouldBeVisible } from "./entityVisibility.js";
@@ -30,6 +31,7 @@ import { isPlayerDead } from "./playerHealth.js";
 import { broadcastHostEvent } from "./hostEvents.js";
 import { isPvp } from "./gameMode.js";
 import { addPvpAmmo, setPvpRangedWeapon } from "./pvpLoadout.js";
+import { SPRITE_SHEET_ARMOR } from "./constants.js";
 
 // Bullet is here because in zone data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles
@@ -174,13 +176,13 @@ function trigger(e, kind, picker) {
   // they're scattered by the dozen like coins, so a toast each would spam.
   // The "kunai.x10" bundle still toasts — it has bundle_contents.
   const singleBullet = sp?.entity_type === "Bullet" && !sp?.bundle_contents?.length;
-  if (playerIndex === 0 && !sp?.associated_weapon && !singleBullet) {
+  if (playerIndex === 0 && !sp?.associated_weapon && !sp?.associated_armour && !singleBullet) {
     const name = tr(sp?.name) || sp?.name || "";
     showToast(tr("picked_up_item").replace("%s", name), "hint", {
       image: inventoryIconFor(sp),
     });
   }
-  maybeEquipWeapon(sp, picker);
+  maybeEquipGear(sp, picker);
   // Per-player inventory in online co-op: the picker.playerId tag lets
   // the matching guest's handler addAmmo into their own counts; other
   // clients see the event but skip the inventory side-effect.
@@ -214,44 +216,63 @@ function trigger(e, kind, picker) {
 //     host's, so we don't touch setEquipped here. guestLoadoutSync
 //     writes the new id into the guest's local storage when the event
 //     arrives, so the pickup persists past the session.
-function maybeEquipWeapon(pickupSp, picker) {
+function maybeEquipGear(pickupSp, picker) {
   if (!pickupSp) return;
-  const weaponId = pickupSp.associated_weapon;
-  if (!weaponId) return;
-  const weaponSp = getSpecies(weaponId);
-  if (!weaponSp) return;
-  let slot = null;
-  let hint = "";
-  if (weaponSp.entity_type === "WeaponMelee")  { slot = SLOT_MELEE;  hint = "Press G to swing"; }
-  if (weaponSp.entity_type === "WeaponRanged") { slot = SLOT_RANGED; hint = "Press F to shoot"; }
-  if (!slot) return;
+  // Resolve the equippable this pickup grants: a weapon (associated_weapon)
+  // or a piece of armour (associated_armour). Each maps to one slot.
+  const gear = resolveGear(pickupSp);
+  if (!gear) return;
+  const { id: gearId, slot, hint, species: gearSp } = gear;
+
   const playerIndex = picker?.index | 0;
   const pickerId = picker?.playerId || null;
   if (playerIndex === 0 || !pickerId) {
-    setEquipped(slot, weaponId, playerIndex);
+    setEquipped(slot, gearId, playerIndex);
   } else {
-    const prev = getSessionLoadout(pickerId) || { melee: null, ranged: null };
-    const next = {
-      melee: slot === SLOT_MELEE ? weaponId : prev.melee,
-      ranged: slot === SLOT_RANGED ? weaponId : prev.ranged,
-    };
-    setSessionLoadout(pickerId, next.melee, next.ranged);
+    // Guest pickup on the host: update the picker's session entry for the one
+    // slot and re-broadcast the whole loadout (weapons + armour).
+    const prev = getSessionLoadout(pickerId) || { melee: null, ranged: null, armor: emptyArmor() };
+    const flat = { melee: prev.melee, ranged: prev.ranged, ...(prev.armor || emptyArmor()) };
+    flat[slot] = gearId;
+    const armor = {};
+    for (const s of ARMOR_SLOTS) armor[s] = flat[s] ?? null;
+    setSessionLoadout(pickerId, flat.melee, flat.ranged, armor);
     broadcastHostEvent("loadout", {
       playerId: pickerId,
-      melee: next.melee,
-      ranged: next.ranged,
+      melee: flat.melee,
+      ranged: flat.ranged,
+      armor,
     });
   }
-  const name = tr(weaponSp.name) || weaponSp.name || "weapon";
-  // Local "you got a weapon" toast only fires on the host's machine for
-  // the host's own pickup — a guest's auto-equip surfaces on the guest's
-  // own client via guestLoadoutSync's write-through (which is what their
-  // user is looking at).
+  const name = tr(gearSp.name) || gearSp.name || "gear";
+  // Local "you got it" toast only fires on the host's machine for the host's
+  // own pickup — a guest's auto-equip surfaces on the guest's own client via
+  // guestLoadoutSync's write-through (which is what their user is looking at).
   if (playerIndex === 0) {
-    showToast(`Equipped: ${name}\n${hint}`, "longHint", {
-      image: inventoryIconFor(weaponSp),
+    showToast(`Equipped: ${name}${hint ? `\n${hint}` : ""}`, "longHint", {
+      image: inventoryIconFor(gearSp),
     });
   }
+}
+
+// The equippable a pickup grants: { id, slot, hint, species } or null. Weapons
+// pick their slot from entity_type; armour from the Armour species' armor_slot.
+function resolveGear(pickupSp) {
+  const weaponId = pickupSp.associated_weapon;
+  if (weaponId) {
+    const weaponSp = getSpecies(weaponId);
+    if (!weaponSp) return null;
+    if (weaponSp.entity_type === "WeaponMelee")  return { id: weaponId, slot: SLOT_MELEE,  hint: "Press G to swing", species: weaponSp };
+    if (weaponSp.entity_type === "WeaponRanged") return { id: weaponId, slot: SLOT_RANGED, hint: "Press F to shoot", species: weaponSp };
+    return null;
+  }
+  const armourId = pickupSp.associated_armour;
+  if (armourId) {
+    const armourSp = getSpecies(armourId);
+    if (!armourSp || !ARMOR_SLOTS.includes(armourSp.armor_slot)) return null;
+    return { id: armourId, slot: armourSp.armor_slot, hint: "", species: armourSp };
+  }
+  return null;
 }
 
 // Builds the ToastImage payload for a species' inventory icon. Returns
@@ -261,8 +282,13 @@ function inventoryIconFor(sp) {
   const off = sp?.inventory_texture_offset;
   if (!off) return null;
   const TILE = 16;
+  // Armour icons live on the armour sheet; everything else on the inventory
+  // sheet. The [row, col] offset is the same tile-index system either way.
+  const url = sp?.sprite_sheet_id === SPRITE_SHEET_ARMOR
+    ? "./assets/armour.png"
+    : "./assets/inventory.png";
   return {
-    url: "./assets/inventory.png",
+    url,
     // inventory_texture_offset is [row, col] in Rust.
     sx: (off[1] | 0) * TILE,
     sy: (off[0] | 0) * TILE,
