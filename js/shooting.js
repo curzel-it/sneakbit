@@ -22,6 +22,7 @@ import { pvpSlotCanAct } from "./pvpMatch.js";
 import { isPvp } from "./gameMode.js";
 import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 import { spawnLocalFlash } from "./localEffects.js";
+import { isIceActive } from "./iceMode.js";
 import { ANIMATIONS_FPS } from "./constants.js";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
@@ -313,6 +314,10 @@ function shoot(state, shooter) {
     _vy: dy * speed,
     _lifespan: lifespan,
     _playerIndex: idx,
+    // Ice buff: an icy bullet freezes the monsters it hits and renders a frost
+    // aura (freeze.js / iceMode.js). Tagged at spawn so it stays icy for its
+    // whole flight even if the buff lapses while it's in the air.
+    _icy: isIceActive(shooter) || undefined,
     species_id: bulletId,
     is_consumable: false,
     direction: capitalize(dir),

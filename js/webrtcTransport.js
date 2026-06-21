@@ -26,7 +26,7 @@ const GAME_OPS = new Set(["snapshot", "delta", "event", "input"]);
 // could legitimately send and drop everything else.
 const RECV_OPS = {
   // Host receives guest-originated game traffic.
-  host: new Set(["input", "move", "event", "guest.loadout", "guest.resync", "webrtc.signal"]),
+  host: new Set(["input", "move", "event", "guest.loadout", "guest.resync", "guest.ice", "webrtc.signal"]),
   // Guest receives the host's authoritative world frames.
   guest: new Set(["snapshot", "delta", "event", "webrtc.signal"]),
 };

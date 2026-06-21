@@ -29,6 +29,7 @@ import { installHostLoadoutSync, uninstallHostLoadoutSync } from "./hostLoadoutS
 import { installHostShop, uninstallHostShop } from "./hostShop.js";
 import { installGuestLoadoutSync, uninstallGuestLoadoutSync } from "./guestLoadoutSync.js";
 import { installGiantNet, uninstallGiantNet } from "./giantMode.js";
+import { installIceNet, uninstallIceNet } from "./iceMode.js";
 import { installGuestSelfHpSync, uninstallGuestSelfHpSync } from "./guestSelfHpSync.js";
 import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js";
 import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js";
@@ -130,6 +131,7 @@ async function teardownRole(role) {
     safe("uninstallHostLoadoutSync", uninstallHostLoadoutSync);
     safe("uninstallHostShop", uninstallHostShop);
     safe("uninstallGiantNet", uninstallGiantNet);
+    safe("uninstallIceNet", uninstallIceNet);
   } else if (role === "guest") {
     safe("guest.leave", () => getNet()?.send({ op: "guest.leave" }));
     safe("uninstallMirrorWorld", uninstallMirrorWorld);
@@ -138,6 +140,7 @@ async function teardownRole(role) {
     safe("uninstallGuestEvents", uninstallGuestEvents);
     safe("uninstallGuestLoadoutSync", uninstallGuestLoadoutSync);
     safe("uninstallGiantNet", uninstallGiantNet);
+    safe("uninstallIceNet", uninstallIceNet);
     safe("uninstallGuestSelfHpSync", uninstallGuestSelfHpSync);
     // Drop any in-flight local cosmetic flashes so a stale one can't paint
     // into the next world after the guest leaves.
@@ -197,6 +200,7 @@ async function setupRole(target, opts) {
     installHostLoadoutSync();
     installHostShop(stateHandlers.stateGetter);
     installGiantNet({ net: n });
+    installIceNet({ net: n });
     return;
   }
 
@@ -212,6 +216,7 @@ async function setupRole(target, opts) {
     installGuestEvents(n);
     installGuestLoadoutSync({ net: n });
     installGiantNet({ net: n });
+    installIceNet({ net: n });
     installGuestSelfHpSync({ net: n });
     if (isWelcomed()) dispatchHandshake();
     return;

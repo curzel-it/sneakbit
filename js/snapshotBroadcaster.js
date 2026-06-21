@@ -18,6 +18,7 @@ import { shouldBeVisible } from "./entityVisibility.js";
 import { getMeleeSwingProgress, getMeleeCooldown } from "./melee.js";
 import { getAuraAnimRemaining } from "./knockbackAura.js";
 import { GAME_FRAME_SCHEMA } from "./net.js";
+import { isFrozen } from "./freeze.js";
 
 export const BROADCAST_INTERVAL_MS = 50;
 
@@ -461,6 +462,13 @@ function serializeEntity(e) {
   // explicit boolean for AI entities — always present so a stop clears
   // the previous merged `moving:true` rather than leaving it stale.
   if (e._ai) out.moving = !!e._ai.step;
+  // Ice buff: a frozen monster renders a frost overlay on the guest (freeze.js).
+  // Always present for AI entities (like `moving`) so a thaw clears the
+  // previous merged `frozen:true` rather than leaving it stuck.
+  if (e._ai) out.frozen = isFrozen(e);
+  // Icy bullets carry their frost-aura flag so the guest renders it too. Set
+  // once at spawn and never cleared, so only-when-true is safe here.
+  if (e._icy) out._icy = true;
   return out;
 }
 
@@ -507,6 +515,8 @@ function sigEntity(e) {
     e._spawned ? 1 : 0,
     e.direction ?? "",
     e._ai?.step ? 1 : 0,
+    e.frozen ? 1 : 0,
+    e._icy ? 1 : 0,
   ].join("|");
 }
 

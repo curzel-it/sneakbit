@@ -1770,28 +1770,6 @@
   {
     "base_speed": 0.0,
     "entity_type": "StaticObject",
-    "id": 11004,
-    "inventory_texture_offset": [
-      7,
-      8
-    ],
-    "is_invulnerable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.magic_circle.blue",
-    "sprite_frame": {
-      "h": 3,
-      "w": 3,
-      "x": 10,
-      "y": 14
-    },
-    "sprite_number_of_frames": 4,
-    "sprite_sheet_id": 1012,
-    "z_index": -1
-  },
-  {
-    "base_speed": 0.0,
-    "entity_type": "StaticObject",
     "id": 11006,
     "inventory_texture_offset": [
       3,
@@ -6214,5 +6192,132 @@
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 11004,
+    "inventory_texture_offset": [
+      7,
+      8
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.freezing_aura",
+    "sprite_frame": {
+      "h": 3,
+      "w": 3,
+      "x": 10,
+      "y": 14
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": -1
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 260621191,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.freezing_effect_1x1",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 5,
+      "y": 19
+    },
+    "sprite_number_of_frames": 2,
+    "sprite_sheet_id": 1012
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 260621201,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.frozen_overlay_1x1",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 11,
+      "y": 8
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 260621202,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.frozen_overlay_1x2",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 12,
+      "y": 7
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 260621203,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.frozen_overlay_2x2",
+    "sprite_frame": {
+      "h": 2,
+      "w": 2,
+      "x": 13,
+      "y": 7
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 260621204,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.frozen_overlay_2x3",
+    "sprite_frame": {
+      "h": 3,
+      "w": 2,
+      "x": 13,
+      "y": 6
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
   }
 ]

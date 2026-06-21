@@ -27,6 +27,8 @@ import { isDying, DEATH_SPRITE } from "./deathAnimation.js";
 import { isVanishing, vanishAlpha, vanishOverlay } from "./vanishEffect.js";
 import { isDemandingAttention } from "./npcInterception.js";
 import { isGiant } from "./giantMode.js";
+import { isIceActive, ICE_AURA_SPECIES_ID } from "./iceMode.js";
+import { isFrozen, freezeOverlayId, BULLET_AURA_SPECIES_ID } from "./freeze.js";
 import { hasUnlocked as fastTravelUnlocked } from "./fastTravel.js";
 
 const Z_INDEX_OVERLAY = 99;
@@ -55,6 +57,37 @@ export function drawEntities(ctx, zone, camera, player) {
   for (const e of visible) {
     if (e._isPlayer) drawPlayer(ctx, e._player, camera);
     else draw(ctx, e, camera);
+  }
+  drawBulletAuras(ctx, zone, camera);
+}
+
+// Ice buff: a 1×1 frost aura (BULLET_AURA_SPECIES_ID) on top of every icy
+// bullet in flight, its 2 frames cycling on the shared animClock. Iterates
+// zone.entities directly (not the sorted draw list) so it also covers the
+// melee swing's _invisible cross-bullets — the frost reads as an ice-sword
+// burst even though the carrier bullets themselves never render.
+function drawBulletAuras(ctx, zone, camera) {
+  const sp = getSpecies(BULLET_AURA_SPECIES_ID);
+  if (!sp) return;
+  const sheet = getEntitySheet(sp);
+  if (!sheet) return;
+  const frames = Math.max(1, sp.frames);
+  const frameIdx = frames > 1 ? Math.floor(animClock * ANIMATIONS_FPS) % frames : 0;
+  const w = sp.width || 1;
+  const h = sp.height || 1;
+  const sx = (sp.texture_x + frameIdx * w) * TILE_SIZE;
+  const sy = sp.texture_y * TILE_SIZE;
+  const sw = w * TILE_SIZE;
+  const sh = h * TILE_SIZE;
+  for (const e of zone.entities) {
+    if (!e._spawned || !e._icy) continue;
+    const f = e.frame;
+    if (!f) continue;
+    if (f.x + f.w < camera.x || f.y + f.h < camera.y) continue;
+    if (f.x > camera.x + camera.w || f.y > camera.y + camera.h) continue;
+    const px = Math.round((f.x - camera.x) * TILE_SIZE);
+    const py = Math.round((f.y - camera.y) * TILE_SIZE);
+    ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
   }
 }
 
@@ -109,6 +142,9 @@ function drawPlayer(ctx, player, camera) {
   // each guest's actual gear instead of the local user's. In single-player
   // and local-coop the lookup falls back to local equipment by index.
   const idx = player.index | 0;
+  // Ice buff: a 3×3 frost aura under the hero's feet, drawn before the body so
+  // it reads as a floor decal the hero stands on (the sprite's z_index is -1).
+  drawIceAura(ctx, player, camera);
   // Giant mode swaps the hero for a dedicated 3×4 humanoid sprite. The
   // normal-size weapon overlay would float out of place at that scale, so
   // it's skipped for the duration (collision and everything else stay
@@ -215,6 +251,40 @@ function drawAuraEffect(ctx, player, camera) {
   const px = Math.round((wx - camera.x) * TILE_SIZE);
   const py = Math.round((wy - camera.y) * TILE_SIZE);
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+}
+
+// Ice buff aura: the 3×3 freezing_aura sprite (ICE_AURA_SPECIES_ID) centred on
+// the hero's feet, its 4 frames cycling on the shared animClock. Alpha breathes
+// on a gentle ~2s sine so the aura fades in and out for the buff's duration.
+// Works for every avatar (local self, co-op partner, mirrored peers) because
+// isIceActive keys on the player's playerId/index.
+function drawIceAura(ctx, player, camera) {
+  if (!isIceActive(player)) return;
+  const sp = getSpecies(ICE_AURA_SPECIES_ID);
+  if (!sp) return;
+  const sheet = getEntitySheet(sp);
+  if (!sheet) return;
+
+  const w = sp.width || 3;
+  const h = sp.height || 3;
+  const frames = Math.max(1, sp.frames);
+  const frameIdx = frames > 1 ? Math.floor(animClock * ANIMATIONS_FPS) % frames : 0;
+  const sx = (sp.texture_x + frameIdx * w) * TILE_SIZE;
+  const sy = sp.texture_y * TILE_SIZE;
+  const sw = w * TILE_SIZE;
+  const sh = h * TILE_SIZE;
+
+  // Hero feet sit at (player.x + 0.5, player.y + 0.5); centre the aura there.
+  const wx = player.x + 0.5 - w / 2;
+  const wy = player.y + 0.5 - h / 2;
+  const px = Math.round((wx - camera.x) * TILE_SIZE);
+  const py = Math.round((wy - camera.y) * TILE_SIZE);
+
+  const alpha = 0.6 + 0.3 * Math.sin(animClock * Math.PI);
+  const prev = ctx.globalAlpha;
+  ctx.globalAlpha = alpha;
+  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+  ctx.globalAlpha = prev;
 }
 
 // Absolute sprite-sheet rows used by Rust's
@@ -419,6 +489,36 @@ function draw(ctx, e, camera) {
     drawVanishOverlay(ctx, e, camera);
     return;
   }
+  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+  // Ice buff: a frost overlay sits on top of a frozen monster (freeze.js).
+  drawFreezeOverlay(ctx, e, camera);
+}
+
+// Blits the size-matched frost overlay on top of a frozen monster. The overlay
+// species is chosen from the monster's footprint (freezeOverlayId); its sprite
+// is bottom-centred on the monster like drawVanishOverlay so it lines up with
+// the body. Single-frame sprites, so no animation needed.
+function drawFreezeOverlay(ctx, e, camera) {
+  if (!isFrozen(e)) return;
+  const overlayId = freezeOverlayId(e._species, e.frame);
+  if (overlayId == null) return;
+  const osp = getSpecies(overlayId);
+  if (!osp) return;
+  const sheet = getEntitySheet(osp);
+  if (!sheet) return;
+  const w = osp.width || 1;
+  const h = osp.height || 1;
+  const frames = Math.max(1, osp.frames);
+  const frameIdx = frames > 1 ? Math.floor(animClock * ANIMATIONS_FPS) % frames : 0;
+  const sx = (osp.texture_x + frameIdx * w) * TILE_SIZE;
+  const sy = osp.texture_y * TILE_SIZE;
+  const sw = w * TILE_SIZE;
+  const sh = h * TILE_SIZE;
+  const f = e.frame;
+  const ex = f.x + (f.w - w) / 2;
+  const ey = f.y + (f.h - h);
+  const px = Math.round((ex - camera.x) * TILE_SIZE);
+  const py = Math.round((ey - camera.y) * TILE_SIZE);
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 }
 

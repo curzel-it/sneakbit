@@ -29,6 +29,7 @@ const ALLOWED_KINDS = new Set([
   "hostPause",
   "loadout",
   "giant",      // a peer turned giant (cosmetic) — fan to everyone (giantMode.js)
+  "ice",        // a peer drank an ice potion — fan to everyone (iceMode.js)
   "ammoSet",
   "coins",      // host credited a guest's coin wallet (real-game currency)
   "shopOpen",   // host tells a guest to open the clerk's buy screen on its own client

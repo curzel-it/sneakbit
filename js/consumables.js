@@ -13,6 +13,7 @@ import { tr } from "./strings.js";
 import { TILE_SIZE } from "./constants.js";
 import { triggerGiant, isGiantIndex } from "./giantMode.js";
 import { triggerSpeed, isSpeedActiveIndex } from "./speedMode.js";
+import { triggerIce, isIceActiveIndex } from "./iceMode.js";
 import { getNetRole } from "./onlineBootstrap.js";
 
 const HEALTH_POTION_HEAL = 50;
@@ -59,6 +60,17 @@ const CONSUMABLES = {
     sfx: "playerResurrected",
     canUse: (idx) => !getNetRole() && !isSpeedActiveIndex(idx),
     effect: (idx) => triggerSpeed(idx),
+  },
+  // Ice potion: for ICE_DURATION_MS every bullet the player fires freezes the
+  // monsters it hits for a beat (freeze.js), and a frost aura renders under the
+  // hero. Unlike the silver speed potion this is fully networked (iceMode.js
+  // syncs the aura + per-monster frozen state to all peers), so it's NOT gated
+  // online. Gated so it can't be re-drunk while already active.
+  2025: {
+    verb: "Drink",
+    sfx: "playerResurrected",
+    canUse: (idx) => !isIceActiveIndex(idx),
+    effect: (idx) => triggerIce(idx),
   },
 };
 

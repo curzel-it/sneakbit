@@ -14,6 +14,7 @@ import { getNetRole } from "./onlineBootstrap.js";
 import { isPlayerDead } from "./playerHealth.js";
 import { pvpSlotCanAct } from "./pvpMatch.js";
 import { isGiant } from "./giantMode.js";
+import { isIceActive } from "./iceMode.js";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -229,6 +230,10 @@ export function performMeleeSwing(state, opts = {}) {
 
   const dir = swinger.direction;
   const [vx, vy] = DIR_DELTA[dir] ?? [0, 1];
+  // Ice buff: tag the swing's cross-bullets so they freeze the monsters they
+  // hit and render a frost aura (freeze.js / iceMode.js). Resolved once per
+  // swing so every bullet in the cross shares the swinger's buff state.
+  const icy = isIceActive(swinger) || undefined;
 
   for (const [ox, oy] of offsets) {
     const bullet = {
@@ -241,6 +246,7 @@ export function performMeleeSwing(state, opts = {}) {
       _dpsOverride: dps,
       _melee: true,
       _playerIndex: idx,
+      _icy: icy,
       species_id: bulletId,
       is_consumable: false,
       direction: capitalize(dir),

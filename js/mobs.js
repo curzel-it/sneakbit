@@ -13,6 +13,7 @@
 import { getSpecies } from "./species.js";
 import { isWalkable } from "./zone.js";
 import { isCreativeMode } from "./creativeMode.js";
+import { isFrozen } from "./freeze.js";
 import { TILE_SIZE } from "./constants.js";
 
 const VISION_TILES = 6;            // chase trigger range (Manhattan)
@@ -58,6 +59,9 @@ export function tickMobs(zone, player, dt) {
     const sp = getSpecies(e.species_id);
     if (!sp) continue;
     if (!isMobAi(sp)) continue;
+    // A frozen monster (ice buff, freeze.js) holds in place: any in-flight step
+    // pauses and resumes when the freeze lapses, and it makes no new decisions.
+    if (isFrozen(e)) continue;
     ensureAi(e);
     if (e._ai.step) advanceStep(e, dt);
     else decideStep(e, sp, zone, players, dt);

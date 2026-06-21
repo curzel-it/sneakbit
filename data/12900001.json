@@ -195,6 +195,7 @@
         { "item": 2021, "price": 60, "stackable": true },
         { "item": 2024, "price": 50, "stackable": true },
         { "item": 2026, "price": 55, "stackable": true },
+        { "item": 2025, "price": 55, "stackable": true },
         { "item": 7001, "price": 10, "stackable": true },
         { "item": 1176, "price": 30, "stackable": true },
         { "item": 1173, "price": 250, "stackable": true },

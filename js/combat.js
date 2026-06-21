@@ -20,6 +20,7 @@ import { getSettings } from "./settings.js";
 import { startDeathAnimation, tickDeathAnimations } from "./deathAnimation.js";
 import { isPvp } from "./gameMode.js";
 import { maybeDropLoot } from "./lootDrops.js";
+import { freezeEntity, isFrozen } from "./freeze.js";
 
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;
@@ -169,6 +170,10 @@ function resolveBullets(zone, players, dt) {
 
       const dps = (b._dpsOverride != null ? b._dpsOverride : bsp.dps) || 0;
       t._hp = (t._hp ?? tsp.hp ?? 100) - dps * dmgMul * dt;
+      // Ice buff: an icy bullet briefly freezes the monster it hits (freeze.js).
+      // Only CloseCombatMonsters of a known footprint freeze — barrels and
+      // odd-sized targets are immune. Refreshed every overlapping frame.
+      if (b._icy && tsp.entity_type === "CloseCombatMonster") freezeEntity(t, tsp);
       if (t._hp <= 0) {
         playSfx(isExplosive(t.species_id) ? "smallExplosion" : "deathMonster");
         // Don't splice: turn the target into a fireball that lingers for a
@@ -250,6 +255,9 @@ function resolveMeleeMonsters(zone, players, dt) {
     const sp = getSpecies(e.species_id);
     if (!sp) continue;
     if (sp.entity_type !== "CloseCombatMonster") continue;
+    // A frozen monster is locked solid — it can't land contact damage while
+    // the freeze lasts (it still takes bullet damage and dies in resolveBullets).
+    if (isFrozen(e)) continue;
     const dps = sp.dps || 0;
     if (dps <= 0) continue;
     for (const p of players) {
