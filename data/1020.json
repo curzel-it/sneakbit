@@ -118,8 +118,8 @@
       "QQQ0QQ00Q0QQQQQQQjQQQQQQQ0QQQQQQQkQ00000Q0000QQ00QQk000QQQQ00QQQQQQQ0000000jQ0000QQQjQQQQQ",
       "QQQQQQQ0000000QQQfggggggg0gggggggeQ0QQQQQQ0QQQQQQQQk000QQQQ00QQQQQQQ0QQQQQQjQ0000QQQjQ0QQQ",
       "QQQQQQQ0QQ000000QQQQQQQQQ0QQQQQQQQQ0QQQQQQ0QQQQQQQQkQ000QQ000QQQ00000QchhhheQ000Qchhe000QQ",
-      "QQQQQQQQQQQQQQQ0QQQQQQQQQ0QQQQQQQQ00QQQQQQ0QQQQQQQQkQ000000Q00000QQQQQjQQQQQQ000Qj0000Q0QQ",
-      "QQQQQQQQQQQQQQQ00000000000000000000QQQQcgg0ggggggggeQQ000QQQQ000QQchhheQQQ0QQ00QQj0000QQQQ",
+      "QQQQQQQQQQQQQQQ0QQQQQQQQQ0QQQQQQQQ00QQQQQQ0QQQQQQQQkQ000000Q00000QQQQQjQQQQQQ000Qj000000QQ",
+      "QQQQQQQQQQQQQQQ00000000000000000000QQQQcgg0ggggggggeQQ000QQQQ000QQchhheQQQ0QQ00QQj000000QQ",
       "QQQQQQQcggggdQQQQQ0000000000000000QQQQQkQQ0QQQQQQQQQQQQ0QQQQQQ00QQj000000000000QQj000000QQ",
       "QQQQQQQkQQ0QjQQQQQQQQQQQQQQQQQQQQQQQQQQkQQ0QQQQQQQQQQQQ0QQQQQQ00QQfg0gd000000000Qfg0gd00QQ",
       "QQQQQQQk0QQQfgggdQQQQQQQQQQQQQQQQQQQQQQkQQ00QQQQQQQQQQ00000QQ000QQQQ0Qj00Q0Q0QQ00000Qj00QQ",
@@ -1109,6 +1109,47 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1185
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 5,
+        "w": 5,
+        "x": 83,
+        "y": 32
+      },
+      "id": 12950401,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 260620167
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": {
+        "direction": "None",
+        "world": 12950401,
+        "x": 0,
+        "y": 0
+      },
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 86,
+        "y": 36
+      },
+      "id": 12950402,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1019
     }
   ],
   "ephemeral_state": true,

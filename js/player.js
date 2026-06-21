@@ -125,7 +125,7 @@ export function updatePlayer(player, input, dt, zone) {
   if (player._frozen) input = FROZEN_INPUT;
   if (player.step) advanceStep(player, input, dt, zone);
   else handleIdle(player, input, dt, zone);
-  updateAnimation(player, dt);
+  updateAnimation(player, dt, zone);
 }
 
 // Stop the player dead on its current tile: drop any in-flight or queued step
@@ -181,7 +181,7 @@ export function updateGuestAvatar(player, dt, zone) {
       consumeQueuedStep(player, zone);
     }
   }
-  updateAnimation(player, dt);
+  updateAnimation(player, dt, zone);
 }
 
 function consumeQueuedStep(player, zone) {
@@ -386,8 +386,13 @@ function canEnter(player, tx, ty, zone, dir) {
   return true;
 }
 
-function updateAnimation(player, dt) {
-  player.moving = player.step != null;
+function updateAnimation(player, dt, zone) {
+  // A slide on ice carries the hero across tiles with a live step, but it
+  // should read as standing still (Pokémon-style) — so while the current
+  // step originates on a slippery tile we render the idle pose, not the walk
+  // cycle. The from-tile stays in tileX/tileY until the step snaps.
+  const sliding = player.step != null && isTileSlippery(zone, player.tileX, player.tileY);
+  player.moving = player.step != null && !sliding;
   if (!player.moving) {
     player.frameIndex = 0;
     player.frameTimer = 0;

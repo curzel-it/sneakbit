@@ -1,0 +1,301 @@
+{
+  "biome_tiles": {
+    "sheet_id": 1002,
+    "tiles": [
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "066666666660000000000000000000",
+      "066666666660000000000000000000",
+      "066666666660000000000000000000",
+      "066666666660000000000000000000",
+      "066666666660000000000000000000",
+      "066666666660000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000"
+    ]
+  },
+  "construction_tiles": {
+    "sheet_id": 1003,
+    "tiles": [
+      "444444444440000000000000000000",
+      "466664444660000000000000000000",
+      "466665005660000000000000000000",
+      "400005555000000000000000000000",
+      "400000000000000000000000000000",
+      "400000000000000000000000000000",
+      "400000000000000000000000000000",
+      "400000000000000000000000000000",
+      "444440044440000000000000000000",
+      "000000000000000000000000000000"
+    ]
+  },
+  "cutscenes": [],
+  "entities": [
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": {
+        "direction": "None",
+        "world": 1006,
+        "x": 0,
+        "y": 0
+      },
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 5,
+        "y": 8
+      },
+      "id": 12950003,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1019
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": {
+        "direction": "None",
+        "world": 1006,
+        "x": 0,
+        "y": 0
+      },
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 6,
+        "y": 8
+      },
+      "id": 12950004,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1019
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 2,
+        "x": 1,
+        "y": 4
+      },
+      "id": 12950005,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1016
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 1,
+        "y": 4
+      },
+      "id": 12950006,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1013
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 2,
+        "y": 4
+      },
+      "id": 12950007,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1013
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 1,
+        "y": 6
+      },
+      "id": 12950008,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1013
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 2,
+        "y": 6
+      },
+      "id": 12950009,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1013
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [
+        {
+          "expected_value": 0,
+          "key": "always",
+          "reward": null,
+          "text": "shop.greeting"
+        }
+      ],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 6,
+        "y": 1
+      },
+      "id": 12950010,
+      "is_consumable": false,
+      "lock_type": "None",
+      "shop_stock": [
+        {
+          "item": 2020,
+          "price": 30,
+          "stackable": true
+        },
+        {
+          "item": 2029,
+          "price": 10,
+          "stackable": true
+        },
+        {
+          "item": 7001,
+          "price": 10,
+          "stackable": true
+        },
+        {
+          "item": 1176,
+          "price": 30,
+          "stackable": true
+        },
+        {
+          "item": 1173,
+          "price": 250,
+          "stackable": true
+        },
+        {
+          "item": 1177,
+          "price": 400,
+          "stackable": true
+        },
+        {
+          "item": 1164,
+          "price": 99
+        },
+        {
+          "item": 1172,
+          "price": 150
+        },
+        {
+          "item": 1162,
+          "price": 450
+        },
+        {
+          "item": 1168,
+          "price": 999
+        },
+        {
+          "item": 1194,
+          "price": 1
+        },
+        {
+          "item": 1195,
+          "price": 1
+        },
+        {
+          "item": 1196,
+          "price": 1
+        },
+        {
+          "item": 1197,
+          "price": 1
+        },
+        {
+          "item": 1214,
+          "price": 1
+        },
+        {
+          "item": 1215,
+          "price": 1
+        },
+        {
+          "item": 1216,
+          "price": 1
+        },
+        {
+          "price": 150,
+          "skin": "outfit_red"
+        },
+        {
+          "price": 150,
+          "skin": "outfit_yellow"
+        },
+        {
+          "price": 150,
+          "skin": "outfit_blue"
+        },
+        {
+          "price": 400,
+          "skin": "tracksuit_black"
+        },
+        {
+          "price": 400,
+          "skin": "ninja_black"
+        },
+        {
+          "price": 1,
+          "skill": "aura"
+        }
+      ],
+      "species_id": 3008
+    }
+  ],
+  "ephemeral_state": false,
+  "id": 12950001,
+  "light_conditions": "Day",
+  "soundtrack": null,
+  "world_type": "HouseInterior"
+}

@@ -1259,6 +1259,47 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1185
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 5,
+        "w": 5,
+        "x": 48,
+        "y": 45
+      },
+      "id": 12950001,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 260620119
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": {
+        "direction": "None",
+        "world": 12950001,
+        "x": 0,
+        "y": 0
+      },
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 51,
+        "y": 49
+      },
+      "id": 12950002,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1019
     }
   ],
   "ephemeral_state": true,
