@@ -337,6 +337,7 @@
   "objects.desc.potion_yellow": "Tower over the world for a short while.",
   "objects.name.potion_ice": "Ice Potion",
   "objects.name.potion_silver": "Silver Potion",
+  "objects.desc.potion_silver": "Move at triple speed for 15 seconds.",
   "objects.name.potion_rainbow": "Rainbow Potion",
   "objects.name.red_pill": "Red Pill",
   "objects.desc.red_pill": "Restores all health.",

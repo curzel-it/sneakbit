@@ -12,6 +12,8 @@ import { showToast } from "./toast.js";
 import { tr } from "./strings.js";
 import { TILE_SIZE } from "./constants.js";
 import { triggerGiant, isGiantIndex } from "./giantMode.js";
+import { triggerSpeed, isSpeedActiveIndex } from "./speedMode.js";
+import { getNetRole } from "./onlineBootstrap.js";
 
 const HEALTH_POTION_HEAL = 50;
 
@@ -46,6 +48,17 @@ const CONSUMABLES = {
     sfx: "playerResurrected",
     canUse: (idx) => !isGiantIndex(idx),
     effect: (idx) => { triggerGiant(idx); applyPlayerHeal(getPlayerMaxHp(idx), idx); },
+  },
+  // Silver potion: move at SPEED_MULTIPLIER× for SPEED_DURATION_MS (speedMode.js).
+  // Online play is blocked — changing tile cadence desyncs networked peers, so
+  // the buff is single-player / local co-op only and the button stays disabled
+  // online (so the potion isn't wasted). Gated so it can't be re-drunk while
+  // already sped up.
+  2026: {
+    verb: "Drink",
+    sfx: "playerResurrected",
+    canUse: (idx) => !getNetRole() && !isSpeedActiveIndex(idx),
+    effect: (idx) => triggerSpeed(idx),
   },
 };
 

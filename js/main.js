@@ -52,6 +52,7 @@ import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealt
 import { tickKnockbackAura, resetKnockbackAura } from "./knockbackAura.js";
 import { installHealthHud, refreshHealthHud } from "./healthHud.js";
 import { installGiantTimerBar } from "./giantTimerBar.js";
+import { installSpeedTimerBar } from "./speedTimerBar.js";
 import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js";
 import { installShop, isShopOpen } from "./shop.js";
 import { installMessage, isMessageOpen } from "./message.js";
@@ -249,6 +250,7 @@ async function main() {
   seedStartingCoins();
   installHealthHud();
   installGiantTimerBar();
+  installSpeedTimerBar();
   installActiveInputDevice();
   installControllerPresence();
   // These listeners stay installed for the lifetime of the page,

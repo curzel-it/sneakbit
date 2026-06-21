@@ -24,6 +24,7 @@ import { findGateAt, tryUnlockGate } from "./gateUnlock.js";
 import { findLockedTeleporterAt } from "./transitions.js";
 import { showToast } from "./toast.js";
 import { isCreativeMode } from "./creativeMode.js";
+import { speedMultiplier } from "./speedMode.js";
 import { resolveSkinColumn } from "./skins.js";
 
 // Hero sprites live on the `heroes` sheet at columns (1, 5, 9, 13) — one
@@ -47,8 +48,14 @@ const ROTATE_COMMIT_DELAY = 0.06;  // seconds a key must be held to commit a ste
 // applies a 2.0 multiplier in creative). Halving the per-step duration
 // produces the same tiles-per-second result without changing the rest
 // of the tile-locked movement model.
-function stepDuration() {
-  return isCreativeMode() ? STEP_DURATION_BASE * 0.5 : STEP_DURATION_BASE;
+//
+// The Silver Potion buff (speedMode.js) divides the duration by its
+// multiplier for the buffed player. It's local-only — speedMultiplier reads
+// as 1 online (the buff is never armed there), so the network cadence stays
+// at base for every peer.
+function stepDuration(player) {
+  const base = isCreativeMode() ? STEP_DURATION_BASE * 0.5 : STEP_DURATION_BASE;
+  return base / speedMultiplier(player);
 }
 
 // Direction-state → sprite-row offset, multiplied by frame.h to get y.
@@ -264,7 +271,7 @@ function advanceStep(player, input, dt, zone) {
   }
 
   const step = player.step;
-  step.progress += dt / stepDuration();
+  step.progress += dt / stepDuration(player);
 
   if (step.progress < 1) {
     const t = step.progress;

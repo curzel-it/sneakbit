@@ -207,6 +207,11 @@
           "stackable": true
         },
         {
+          "item": 2026,
+          "price": 55,
+          "stackable": true
+        },
+        {
           "item": 7001,
           "price": 10,
           "stackable": true

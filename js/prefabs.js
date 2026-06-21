@@ -60,6 +60,7 @@ const DEFAULT_SHOP_STOCK = [
   { item: 2020, price: 30, stackable: true }, // health potion (+50 HP)
   { item: 2021, price: 60, stackable: true }, // purple potion (full heal)
   { item: 2024, price: 50, stackable: true }, // yellow potion (giant form)
+  { item: 2026, price: 55, stackable: true }, // silver potion (3x speed, 15s)
   { item: 7001, price: 10, stackable: true },
   { item: 1176, price: 30, stackable: true },
   { item: 1173, price: 250, stackable: true },

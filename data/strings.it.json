@@ -337,6 +337,7 @@
   "objects.desc.potion_yellow": "Diventa un gigante per un breve periodo.",
   "objects.name.potion_ice": "Pozione di Ghiaccio",
   "objects.name.potion_silver": "Pozione d'Argento",
+  "objects.desc.potion_silver": "Muoviti a velocità tripla per 15 secondi.",
   "objects.name.potion_rainbow": "Pozione Arcobaleno",
   "objects.name.red_pill": "Pillola Rossa",
   "objects.desc.red_pill": "Ripristina tutta la salute.",

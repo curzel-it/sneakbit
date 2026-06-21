@@ -4,12 +4,14 @@ import assert from "node:assert/strict";
 const inventory = await import("../js/inventory.js");
 const storage = await import("../js/storage.js");
 const health = await import("../js/playerHealth.js");
+const speed = await import("../js/speedMode.js");
 const {
   isConsumable, consumableVerb, canUseConsumable, useConsumable,
 } = await import("../js/consumables.js");
 
 const HEALTH_POTION = 2020;
 const PURPLE_POTION = 2021; // full heal (formerly the red pill)
+const SILVER_POTION = 2026; // 3x speed buff
 
 function reset() {
   storage._resetStorageForTesting();
@@ -50,6 +52,23 @@ test("the purple potion restores all health", () => {
   // The full heal is queued like a potion; drain it and we're back to max.
   health.tickPlayerHealth(10);
   assert.ok(Math.abs(health.getPlayerHp() - health.getPlayerMaxHp()) < 1e-6);
+});
+
+test("the silver potion arms the speed buff (offline) and can't be re-drunk", () => {
+  reset();
+  speed._clearSpeedForTesting();
+  inventory.addAmmo(SILVER_POTION, 2);
+  assert.equal(isConsumable(SILVER_POTION), true);
+  assert.equal(consumableVerb(SILVER_POTION), "Drink");
+  assert.equal(speed.isSpeedActiveIndex(0), false);
+  assert.equal(canUseConsumable(SILVER_POTION), true);
+  assert.equal(useConsumable(SILVER_POTION), true);
+  assert.equal(inventory.getAmmo(SILVER_POTION), 1); // one drunk
+  assert.equal(speed.speedMultiplier({ index: 0 }), speed.SPEED_MULTIPLIER);
+  // Already sped up → the button is gated so the second potion isn't wasted.
+  assert.equal(canUseConsumable(SILVER_POTION), false);
+  assert.equal(useConsumable(SILVER_POTION), false);
+  assert.equal(inventory.getAmmo(SILVER_POTION), 1);
 });
 
 test("can't drink at full HP — the potion isn't wasted", () => {
