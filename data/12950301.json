@@ -197,8 +197,13 @@
           "stackable": true
         },
         {
-          "item": 2029,
-          "price": 10,
+          "item": 2021,
+          "price": 60,
+          "stackable": true
+        },
+        {
+          "item": 2024,
+          "price": 50,
           "stackable": true
         },
         {

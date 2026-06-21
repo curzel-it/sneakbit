@@ -28,20 +28,20 @@ const CONSUMABLES = {
     canUse: (idx) => getPlayerHp(idx) < getPlayerMaxHp(idx),
     effect: (idx) => applyPlayerHeal(HEALTH_POTION_HEAL, idx),
   },
-  // Red pill: restores all health (heal clamps to the missing amount).
-  2028: {
-    verb: "Take",
+  // Purple potion: restores all health (heal clamps to the missing amount).
+  2021: {
+    verb: "Drink",
     sfx: "playerResurrected",
     canUse: (idx) => getPlayerHp(idx) < getPlayerMaxHp(idx),
     effect: (idx) => applyPlayerHeal(getPlayerMaxHp(idx), idx),
   },
-  // Giant pill: grow to a towering 3×4 silhouette for a short while. Collision
+  // Yellow potion: grow to a towering 3×4 silhouette for a short while. Collision
   // stays normal-sized, but the giant gets two combat buffs — triple max HP
   // (playerHealth.maxHp) and bare-handed melee (melee.js). giantMode networks
   // the transform to every peer. Gated so it can't be re-taken while already a
   // giant. Topping the bar off to the new tripled max makes the survivability
   // buff felt immediately (it drains in over ~2s, like a potion).
-  2029: {
+  2024: {
     verb: "Drink",
     sfx: "playerResurrected",
     canUse: (idx) => !isGiantIndex(idx),

@@ -9,7 +9,7 @@ const {
 } = await import("../js/consumables.js");
 
 const HEALTH_POTION = 2020;
-const RED_PILL = 2028;
+const PURPLE_POTION = 2021; // full heal (formerly the red pill)
 
 function reset() {
   storage._resetStorageForTesting();
@@ -19,7 +19,8 @@ function reset() {
 
 test("isConsumable: only items with a registered effect", () => {
   assert.equal(isConsumable(HEALTH_POTION), true);
-  assert.equal(isConsumable(2021), false); // purple potion: no effect yet
+  assert.equal(isConsumable(PURPLE_POTION), true); // full-heal potion
+  assert.equal(isConsumable(2022), false); // green potion: no effect yet
   assert.equal(consumableVerb(HEALTH_POTION), "Drink");
 });
 
@@ -37,15 +38,15 @@ test("drinking a potion consumes one and queues the heal", () => {
   assert.ok(Math.abs(health.getPlayerHp() - 100) < 1e-6);
 });
 
-test("the red pill restores all health", () => {
+test("the purple potion restores all health", () => {
   reset();
-  inventory.addAmmo(RED_PILL, 1);
+  inventory.addAmmo(PURPLE_POTION, 1);
   health.applyPlayerContinuousDamage(80); // hp = 20
   assert.equal(health.getPlayerHp(), 20);
-  assert.equal(consumableVerb(RED_PILL), "Take");
-  assert.equal(canUseConsumable(RED_PILL), true);
-  assert.equal(useConsumable(RED_PILL), true);
-  assert.equal(inventory.getAmmo(RED_PILL), 0); // one taken
+  assert.equal(consumableVerb(PURPLE_POTION), "Drink");
+  assert.equal(canUseConsumable(PURPLE_POTION), true);
+  assert.equal(useConsumable(PURPLE_POTION), true);
+  assert.equal(inventory.getAmmo(PURPLE_POTION), 0); // one drunk
   // The full heal is queued like a potion; drain it and we're back to max.
   health.tickPlayerHealth(10);
   assert.ok(Math.abs(health.getPlayerHp() - health.getPlayerMaxHp()) < 1e-6);
