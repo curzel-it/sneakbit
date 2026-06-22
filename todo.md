@@ -1,3 +1,7 @@
+❯ The system we have to handle shop items is a bit convoluted right now. what we want is a global price list, a function that applies regional price variation (none for now) and a functin that returns inventory amounts  
+  per regions. the last function should have random starting values each day. so that say, 3 poteions are available for that day, and if I buy 2 only 1 remains avaialble. the next day the values are reset. seeded random 
+  should do. existing prefab logic can be removed. just need somehwere with the default pricing that I can edit    
+
 # Co-op TODO — per-player parity with single-player ✅ done
 
 Goal: in co-op (offline split-screen **and** online), every player gets the same
