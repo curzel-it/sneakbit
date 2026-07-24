@@ -239,3 +239,20 @@ test("colored gate consumes a matching key on attempted entry", () => {
   assert.equal(tryUnlockGate(gate), true);
   assert.equal(inventory.getAmmo(2000), 1);
 });
+
+test("a key-unlocked gate (lock None) stays open across puzzle ticks", () => {
+  storage._resetStorageForTesting();
+  const zone = makeZone();
+  // A gate whose lock was cleared to None by a key. There is no matching
+  // plate in the zone, so the plate-based path would otherwise force a
+  // plain Gate closed every tick while collision still walked through it.
+  const gate = { species_id: 1040, id: 42, lock_type: "None",
+    frame: { x: 4, y: 3, w: 1, h: 1 } };
+  zone.entities.push(gate);
+  setupPuzzles(zone);
+
+  tickPuzzles(zone, { x: 0, y: 0, tileX: 0, tileY: 0 });
+  assert.equal(gate._open, true, "unlocked gate stays open");
+  assert.equal(gate._frameOffsetX, 1, "and renders in its open sprite");
+  assert.equal(isEntityBlocked(zone, 4, 3), false, "and is passable");
+});
