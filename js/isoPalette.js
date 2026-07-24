@@ -204,6 +204,18 @@ export function constructionSpec(id, mask) {
   return spec;
 }
 
+// Trees render as upright sprite billboards in the iso path, not stacked
+// trunk+canopy boxes: a dense forest is thousands of faces to sort per frame,
+// whereas a billboard is a single blit of the tile's own art. This keeps the
+// tree count cheap and reads consistently with the actor billboards.
+const TREE_CONSTRUCTIONS = new Set([
+  C.FOREST, C.SNOWY_FOREST, C.BROADLEAF, C.BROADLEAF_PURPLE, C.SPOILED_TREE, C.WINE_TREE,
+]);
+
+export function isTreeConstruction(id) {
+  return TREE_CONSTRUCTIONS.has(id);
+}
+
 const EMPTY_MASK = { u: false, r: false, d: false, l: false };
 
 // Darkness overlays and NOTHING build no geometry in the polygon world.

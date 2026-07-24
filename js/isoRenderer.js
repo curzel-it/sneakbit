@@ -8,7 +8,7 @@
 
 import { isoProject, isoX, isoY, isoDepth } from "./isoCamera.js";
 import { FLOOR_QUAD, shadedBox, faceDepth, shade, scaleColor } from "./isoGeometry.js";
-import { biomeFloorColor, biomeFloorZ, constructionSpec, isSkippedConstruction, darknessOpacity, darken } from "./isoPalette.js";
+import { biomeFloorColor, biomeFloorZ, constructionSpec, isSkippedConstruction, isTreeConstruction, darknessOpacity, darken } from "./isoPalette.js";
 import { elevationFor } from "./isoElevation.js";
 import { elevationMapFor } from "./isoElevationMap.js";
 import { rowToMask } from "./constructionTiles.js";
@@ -37,7 +37,7 @@ export function renderIso(renderer, zone, cam, players, tSec = 0) {
   // and a face-builder; sorted by footprint depth so nearer draws later.
   const items = [];
   collectConstructions(zone, items, elev);
-  collectActors(zone, players, items, elev, tSec);
+  collectActors(zone, players, items, elev, tSec, q);
   items.sort((a, b) => isoDepth(q, a.wx, a.wy) - isoDepth(q, b.wx, b.wy));
 
   // Build faces / sprite placement once and cache each item's screen bounding
@@ -159,11 +159,18 @@ function collectConstructions(zone, out, elev) {
     for (let c = 0; c < zone.cols; c++) {
       const id = crow[c];
       if (isSkippedConstruction(id)) continue;
+      const baseZ = elev[r][c];
+      // Trees are billboards, not massed boxes (§tree billboards): blit the
+      // tile's own art upright, feet planted at the tile centre.
+      if (isTreeConstruction(id)) {
+        const item = treeItem(c + 0.5, r + 0.5, baseZ, id, zone.constructionRow[r][c]);
+        if (item) out.push(item);
+        continue;
+      }
       const mask = rowToMask(zone.constructionRow[r][c]);
       const spec = constructionSpec(id, mask);
       if (!spec) continue;
       const wx = c + 0.5, wy = r + 0.5;
-      const baseZ = elev[r][c];
       out.push({ wx, wy, build: (q) => buildSpec(spec, wx, wy, baseZ) });
     }
   }
@@ -206,7 +213,7 @@ function rampFaces(ramp, wx, wy, baseZ = 0) {
 // NPCs, humanoids, mobs and players render as upright sprite billboards — the
 // actual game sprite, screen-aligned, feet planted on the tile it stands on —
 // instead of flat-shaded boxes. Constructions/floors stay polygons.
-function collectActors(zone, players, out, elev, tSec) {
+function collectActors(zone, players, out, elev, tSec, q) {
   const baseAt = (wx, wy) => {
     const r = Math.min(zone.rows - 1, Math.max(0, Math.floor(wy)));
     const c = Math.min(zone.cols - 1, Math.max(0, Math.floor(wx)));
@@ -226,7 +233,7 @@ function collectActors(zone, players, out, elev, tSec) {
       out.push({ wx, wy, build: () => buildingFaces(e, sp, baseAt(wx, wy)) });
       continue;
     }
-    const rect = entitySpriteRect(e, sp, tSec);
+    const rect = entitySpriteRect(e, sp, tSec, q);
     if (!rect) continue;
     // Feet: bottom-centre of the footprint.
     const wx = f.x + f.w / 2, wy = f.y + f.h;
@@ -248,14 +255,58 @@ function spriteItem(wx, wy, baseZ, rect, track = false) {
   return { wx, wy, baseZ, rect, track, sprite: true };
 }
 
+// A tree billboard. Trees carry dedicated upright art in their own construction
+// column (not the tiling connectivity cells): a small 1×1 sapling at row 0 and a
+// full 1×2 tree at rows 6–7. A tile with no same-tree neighbour is a lone
+// sapling; anything that continues a forest stands the tall tree.
+function treeItem(wx, wy, baseZ, id, row) {
+  let sheet;
+  try { sheet = getSprite("tilesConstructions"); } catch { return null; }
+  if (!sheet || !sheet.complete) return null;
+  const m = rowToMask(row);
+  const lone = !m.u && !m.r && !m.d && !m.l;
+  const sy = lone ? 0 : 6, h = lone ? 1 : 2;
+  const rect = {
+    sheet,
+    sx: id * TILE_SIZE, sy: sy * TILE_SIZE,
+    sw: TILE_SIZE, sh: h * TILE_SIZE, w: 1, h,
+  };
+  return { wx, wy, baseZ, rect, sprite: true };
+}
+
 const DIR_ROW_STILL  = { up: 1, right: 3, down: 5, left: 7 };
 const DIR_ROW_MOVING = { up: 0, right: 2, down: 4, left: 6 };
+
+// World facing vectors (sim space: +y is down/south, +x is right/east).
+const DIR_VEC = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+
+// How strongly to prefer the left/right sprite rows over up/down. The sprite's
+// world facing is projected into screen space; the vertical (toward/away from
+// camera) component must beat the horizontal one by this factor before an
+// up/down row is chosen. So up/down only wins when the actor faces almost
+// straight into or out of the screen — otherwise it reads as a side view.
+const BILLBOARD_HORIZONTAL_BIAS = 2.5;
+
+// Pick the billboard sprite row from the actor's world facing, projected into
+// screen space and biased toward the side (left/right) views.
+function billboardDir(dir, q) {
+  const v = DIR_VEC[dir];
+  if (!v) return "down";
+  const [dx, dy] = v;
+  // Screen-space facing: same coupling as isoX/isoY, without offsets/scale.
+  const sdx = (dx * q.cosA - dy * q.sinA) * q.Sx;
+  const sdy = (dx * q.sinA + dy * q.cosA) * q.Sy;
+  if (Math.abs(sdy) > Math.abs(sdx) * BILLBOARD_HORIZONTAL_BIAS) {
+    return sdy > 0 ? "down" : "up";
+  }
+  return sdx > 0 ? "right" : "left";
+}
 
 // Resolve an entity's sprite-sheet source rect + tile footprint at time tSec.
 // Handles animated frames and the 8-row directional layout, mirroring the
 // classic renderer's common path (special-case reskins/attacks are omitted —
 // the iso view is an experiment).
-function entitySpriteRect(e, sp, tSec) {
+function entitySpriteRect(e, sp, tSec, q) {
   const sheet = getEntitySheet(sp);
   if (!sheet) return null;
   const w = sp.width || 1, h = sp.height || 1;
@@ -264,7 +315,7 @@ function entitySpriteRect(e, sp, tSec) {
   let dirRow = 0;
   if (sp.directional) {
     const moving = !!(e._ai?.step || e.moving);
-    const dir = (e.direction || "down").toLowerCase();
+    const dir = billboardDir((e.direction || "down").toLowerCase(), q);
     dirRow = (moving ? DIR_ROW_MOVING : DIR_ROW_STILL)[dir] ?? DIR_ROW_STILL.down;
   }
   return {
@@ -294,7 +345,7 @@ function playerSpriteRect(p) {
 function spritePlacement(q, it) {
   const X = isoX(q, it.wx, it.wy);
   const Y = isoY(q, it.wx, it.wy, it.baseZ);
-  const unit = q.tierH * q.s;
+  const unit = q.tierH * q.s * (it.scale ?? 1);
   const dw = it.rect.w * unit;
   const dh = it.rect.h * unit;
   return { dx: Math.round(X - dw / 2), dy: Math.round(Y - dh), dw, dh };
