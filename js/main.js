@@ -15,6 +15,21 @@ import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress }
 import { createPlayer, updatePlayer, updateGuestAvatar } from "./player.js";
 import { createCamera, updateCamera, cameraRectFor } from "./camera.js";
 import { createRenderer, render, renderViewports } from "./renderer.js";
+import { renderIso } from "./isoRenderer.js";
+import { makeIsoCamera } from "./isoCamera.js";
+
+// Experimental polygon renderer, opt-in via ?iso=1. Rotate with [ / ], zoom -/=.
+const ISO_MODE = new URLSearchParams(location.search).get("iso") === "1";
+let isoCam = null;
+if (ISO_MODE) {
+  addEventListener("keydown", (e) => {
+    if (!isoCam) return;
+    if (e.key === "[") isoCam.rot -= 0.08;
+    else if (e.key === "]") isoCam.rot += 0.08;
+    else if (e.key === "-") isoCam.scale = Math.max(0.6, isoCam.scale - 0.15);
+    else if (e.key === "=") isoCam.scale = Math.min(6, isoCam.scale + 0.15);
+  });
+}
 import { startGameLoop } from "./gameLoop.js";
 import { createBiomeAnimation, tickBiomeAnimation } from "./biomeAnimation.js";
 import { tickEntities } from "./entities.js";
@@ -464,7 +479,13 @@ async function main() {
     // avatar, but the host's screen still needs to render the guests (or
     // "host can't see guests" lingers).
     const renderPlayers = livePlayersForRender(state);
-    if (sliceCount() > 1) {
+    if (ISO_MODE) {
+      if (!isoCam) isoCam = makeIsoCamera(state.zone);
+      // Follow the focus player smoothly in tile space.
+      const foc = state.player ?? renderPlayers[0];
+      if (foc) { isoCam.cx += (foc.x + 0.5 - isoCam.cx) * 0.15; isoCam.cy += (foc.y + 1 - isoCam.cy) * 0.15; }
+      renderIso(renderer, state.zone, isoCam, renderPlayers, performance.now() / 1000);
+    } else if (sliceCount() > 1) {
       renderViewports(renderer, state.zone, buildViewports(state), renderPlayers, biomeAnim.frame);
     } else {
       // Pin the darkness cone to state.player explicitly: renderPlayers drops
