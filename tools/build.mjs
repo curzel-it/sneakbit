@@ -35,6 +35,9 @@ const DENYLIST = new Set([
   ".gitignore", "package.json", "package-lock.json",
   // Desktop (Electron/Steam) wrapper — built separately, never part of the web bundle.
   "electron", "dist",
+  // iOS / Android app wrappers — built separately (npm run build-ios /
+  // build-android), never part of the web bundle.
+  "ios", "android",
   // Build scratch + Steam packaging scratch — never runtime assets.
   "temp", "build",
 ]);

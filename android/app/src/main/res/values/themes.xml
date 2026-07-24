@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.SneakBit" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Fullscreen, black, no action bar — it's a game. A black window
+         background avoids a white flash before the WebView's first paint.
+         The window is allowed to draw into the display cutout so the web
+         overlays can offset themselves via env(safe-area-inset-*). -->
+    <style name="Theme.SneakBit" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:colorBackground">@android:color/black</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
 </resources>

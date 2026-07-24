@@ -165,7 +165,16 @@ export function installTouchControls() {
     if (e.pointerType === "touch") show();
   }, { capture: true });
 
-  if (forcedTouch || matchMedia("(pointer: coarse)").matches) show();
+  // Reveal the overlay up-front on any touch-capable device. `pointer: coarse`
+  // is the usual signal, but it's unreliable in wrapped WebViews (e.g. the iOS
+  // app's WKWebView, or the iOS Simulator driven by a host mouse, report
+  // `fine`). maxTouchPoints / ontouchstart catch those — and the active-device
+  // model below still hides the pad the moment a key/controller is used, so a
+  // touchscreen laptop driven by mouse isn't stuck with it.
+  const touchCapable = matchMedia("(pointer: coarse)").matches
+    || (navigator.maxTouchPoints || 0) > 0
+    || "ontouchstart" in window;
+  if (forcedTouch || touchCapable) show();
 
   // Fold into the active-device model: the on-screen pad belongs to touch,
   // so hide it the moment a key or controller is used and bring it back on
@@ -528,7 +537,7 @@ function injectStyles() {
       pointer-events: none;
     }
     #touch-controls .touch-pad[data-side="left"] {
-      left: 4vw;
+      left: calc(4vw + env(safe-area-inset-left, 0px));
       display: grid;
       grid-template-columns: repeat(3, 52px);
       grid-template-rows: repeat(3, 52px);
@@ -539,7 +548,7 @@ function injectStyles() {
     #touch-controls .touch-pad[data-side="left"] .touch-btn[data-dir="right"] { grid-column: 3; grid-row: 2; }
     #touch-controls .touch-pad[data-side="left"] .touch-btn[data-dir="down"]  { grid-column: 2; grid-row: 3; }
     #touch-controls .touch-pad[data-side="right"] {
-      right: 4vw;
+      right: calc(4vw + env(safe-area-inset-right, 0px));
       bottom: 14vh;
       display: flex;
       flex-direction: column-reverse;

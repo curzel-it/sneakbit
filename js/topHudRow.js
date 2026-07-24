@@ -67,8 +67,11 @@ function injectStyles() {
   style.textContent = `
     #top-hud-row {
       position: fixed;
-      top: 12px;
-      left: 12px;
+      /* Offset by the device safe-area insets so the bar clears the notch /
+         Dynamic Island when the page runs full-bleed (iOS app, installed PWA).
+         In a normal browser tab the insets are 0, so this is a no-op there. */
+      top: calc(12px + env(safe-area-inset-top, 0px));
+      left: calc(12px + env(safe-area-inset-left, 0px));
       display: flex;
       align-items: center;
       gap: 12px;
@@ -128,7 +131,9 @@ function injectStyles() {
     /* Split-screen: the bar is a transparent shell, so float the menu button
        back to the top-right corner (clear of slice 0's top-left HP card). */
     body.touch-mode #top-hud-row.split .top-hud-menu {
-      position: fixed; top: 12px; right: 12px;
+      position: fixed;
+      top: calc(12px + env(safe-area-inset-top, 0px));
+      right: calc(12px + env(safe-area-inset-right, 0px));
       width: 44px; height: 44px;
       background: var(--sb-surface-bg);
       border: var(--sb-surface-border);
