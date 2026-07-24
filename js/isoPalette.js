@@ -48,9 +48,31 @@ const trees = (canopy, h = 2.2, trunkH = 0.8) => ({
     { inset: 0.06, z0: trunkH, z1: h, color: canopy, top: lighten(canopy) },
   ],
 });
-const solid = (color, h) => ({ parts: [{ inset: 0, z0: 0, z1: h, color }] });
-const fence = (color, h = 0.5) => ({ parts: [{ inset: 0.38, z0: 0, z1: h, color }] });
+
+// A solid barrier with a slightly-inset top course, so walls read as masonry
+// with a capstone instead of a flat monolith. cap defaults to a lighter body.
+const wall = (color, h = 1.4, cap = lighten(color)) => ({
+  parts: [
+    { inset: 0, z0: 0, z1: h - 0.16, color },
+    { inset: 0.05, z0: h - 0.16, z1: h, color: cap },
+  ],
+});
+
 const crate = (color, h = 0.7) => ({ parts: [{ inset: 0.12, z0: 0, z1: h, color, top: lighten(color) }] });
+
+// Symmetric post-and-rail cross: a centre post plus rails spanning both axes,
+// so it connects visually to any neighbour without needing the connectivity row.
+const fence = (color, h = 0.55, postH = 0.72, rail = lighten(color)) => ({
+  parts: [
+    { hx: 0.09, hy: 0.09, z0: 0, z1: postH, color },
+    { hx: 0.5, hy: 0.06, z0: h - 0.14, z1: h, color: rail },
+    { hx: 0.06, hy: 0.5, z0: h - 0.14, z1: h, color: rail },
+  ],
+});
+
+// A few offset clumps of one height range — used for foliage tufts and stalks.
+const clumps = (specs, color, top) =>
+  ({ parts: specs.map(([dx, dy, hx, z1]) => ({ dx, dy, hx, hy: hx, z0: 0, z1, color, top })) });
 
 const C = CONSTRUCTION;
 const SPEC = {
@@ -60,25 +82,62 @@ const SPEC = {
   [C.BROADLEAF_PURPLE]: trees("#8a5bbf", 2.4),
   [C.SPOILED_TREE]: trees("#6b6350", 2.0),
   [C.WINE_TREE]: trees("#7a2f4a", 1.8),
-  [C.BAMBOO]: { parts: [{ inset: 0.34, z0: 0, z1: 2.6, color: "#6f9c3a", top: "#8fb85a" }] },
-  [C.TALL_GRASS]: { parts: [{ inset: 0.22, z0: 0, z1: 0.45, color: "#5aa84e", top: "#79c76a" }] },
+  // Bamboo: a little grove of thin stalks at varied height, not one fat post.
+  [C.BAMBOO]: clumps(
+    [[-0.18, -0.1, 0.07, 2.4], [0.16, 0.12, 0.07, 2.8], [0.04, -0.2, 0.06, 2.1]],
+    "#6f9c3a", "#8fb85a",
+  ),
+  // Tall grass: three short tufts of foliage.
+  [C.TALL_GRASS]: clumps(
+    [[-0.18, -0.12, 0.11, 0.42], [0.16, 0.14, 0.12, 0.5], [0.14, -0.16, 0.09, 0.34]],
+    "#5aa84e", "#79c76a",
+  ),
 
-  [C.LIGHT_WALL]: solid("#b9bcc4", 1.4),
-  [C.STONE_WALL]: solid("#7c828c", 1.4),
-  [C.WOODEN_WALL]: solid("#8a6238", 1.4),
-  [C.DARK_ROCK]: solid("#4f555f", 1.2),
+  [C.LIGHT_WALL]: wall("#b9bcc4", 1.4),
+  [C.STONE_WALL]: wall("#7c828c", 1.4),
+  [C.WOODEN_WALL]: wall("#8a6238", 1.4),
+  // Dark rock: an irregular boulder — broad base with a smaller crown.
+  [C.DARK_ROCK]: { parts: [
+    { inset: 0.02, z0: 0, z1: 0.9, color: "#4f555f" },
+    { inset: 0.22, z0: 0.9, z1: 1.25, color: "#4f555f", top: lighten("#4f555f") },
+  ] },
   [C.STONE_BOX]: crate("#9aa0aa"),
   [C.BOX]: crate("#b98a4e"),
-  [C.COUNTER]: solid("#7a5a38", 0.9),
-  [C.LIBRARY]: solid("#6b4a2b", 1.6),
-  [C.SOLAR_PANEL]: { parts: [{ inset: 0.1, z0: 0, z1: 0.35, color: "#20304a", top: "#33507a" }] },
-  [C.PIPE]: solid("#9099a3", 0.6),
+  // Counter: a low body with a lighter overhanging top slab.
+  [C.COUNTER]: { parts: [
+    { inset: 0.08, z0: 0, z1: 0.72, color: "#7a5a38" },
+    { inset: 0.02, z0: 0.72, z1: 0.86, color: "#a2764a" },
+  ] },
+  // Library: a two-tier shelf block — wooden frame under a band of book spines.
+  [C.LIBRARY]: { parts: [
+    { inset: 0.05, z0: 0, z1: 0.85, color: "#6b4a2b" },
+    { inset: 0.09, z0: 0.85, z1: 1.6, color: "#8a4a3a", top: lighten("#6b4a2b") },
+  ] },
+  // Solar panel: two legs under a flat dark-blue slab. (True tilt isn't
+  // expressible with axis-aligned boxes; the slab reads as a panel head-on.)
+  [C.SOLAR_PANEL]: { parts: [
+    { dx: -0.28, hx: 0.05, hy: 0.05, z0: 0, z1: 0.3, color: "#3a4048" },
+    { dx: 0.28, hx: 0.05, hy: 0.05, z0: 0, z1: 0.45, color: "#3a4048" },
+    { inset: 0.08, z0: 0.34, z1: 0.44, color: "#20304a", top: "#33507a" },
+  ] },
+  // Pipe: a horizontal run sitting a little off the ground.
+  [C.PIPE]: { parts: [{ hx: 0.5, hy: 0.16, z0: 0.12, z1: 0.5, color: "#9099a3", top: lighten("#9099a3") }] },
 
   [C.WOODEN_FENCE]: fence("#8a6238"),
   [C.METAL_FENCE]: fence("#9aa0aa"),
-  [C.RAIL]: fence("#6b7079", 0.3),
-  [C.SNOW_PILE]: crate("#e6edf2", 0.5),
-  [C.BRIDGE]: { parts: [{ inset: 0, z0: 0, z1: 0.14, color: "#8a6238", top: "#a2764a" }] },
+  [C.RAIL]: fence("#6b7079", 0.28, 0.3),
+  // Snow pile: a rounded mound built from shrinking stacked tiers.
+  [C.SNOW_PILE]: { parts: [
+    { inset: 0.06, z0: 0, z1: 0.3, color: "#e6edf2", top: "#ffffff" },
+    { inset: 0.2, z0: 0.3, z1: 0.5, color: "#e6edf2", top: "#ffffff" },
+    { inset: 0.34, z0: 0.5, z1: 0.62, color: "#e6edf2", top: "#ffffff" },
+  ] },
+  // Bridge: a flat plank deck with a low rail down each long edge.
+  [C.BRIDGE]: { parts: [
+    { inset: 0, z0: 0, z1: 0.14, color: "#8a6238", top: "#a2764a" },
+    { dy: -0.46, hx: 0.5, hy: 0.04, z0: 0.14, z1: 0.4, color: "#6b4a2b" },
+    { dy: 0.46, hx: 0.5, hy: 0.04, z0: 0.14, z1: 0.4, color: "#6b4a2b" },
+  ] },
 };
 
 // Slope ramps. Corner order is TL,TR,BR,BL (matching FLOOR_QUAD). Each variant

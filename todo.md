@@ -167,6 +167,16 @@ Comprehensive (not exhaustive-detailed) gap list. Grouped by system.
 - Facing-based equipment z-order (in front / behind hero).
 - Giant mode (scaled hero); ice aura under the feet.
 
+### Occlusion / player visibility
+- Objects "in the way" (trees, walls, tall props between the camera and the
+  player) hide the hero — see the yellow player box behind a tree. The pixel
+  path never had this because it's top-down; the iso camera looks along a
+  ground-plane angle so anything closer to the camera and taller occludes the
+  hero. Need: detect geometry that overlaps the player's screen footprint AND
+  sorts in front of them, and draw it semi-transparent (fade its faces' alpha)
+  so the player stays visible. Applies to any tracked actor the camera follows,
+  not just the local hero.
+
 ### Combat / status effects
 - Freeze overlay + frozen state; ice buff aura + bullet auras; knockback aura.
 - Death animation; vanish effect (alpha + overlay); knockback hop offset.

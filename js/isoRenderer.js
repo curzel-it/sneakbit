@@ -27,7 +27,47 @@ export function renderIso(renderer, zone, cam, players, tSec = 0) {
   collectConstructions(zone, items);
   collectActors(zone, players, items);
   items.sort((a, b) => isoDepth(q, a.wx, a.wy) - isoDepth(q, b.wx, b.wy));
-  for (const it of items) drawShape(ctx, q, it);
+
+  // Build faces once and cache each item's screen bounding box, then draw.
+  // Anything that sorts in front of a tracked actor (drawn later) and overlaps
+  // its screen box is "in the way" — fade it so the actor stays visible.
+  for (const it of items) {
+    it.faces = it.build(q);
+    it.box = screenBox(q, it.faces);
+  }
+  const tracked = [];
+  for (let i = 0; i < items.length; i++) if (items[i].track) tracked.push(i);
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    let alpha = 1;
+    if (!it.track) {
+      for (const ti of tracked) {
+        if (i > ti && boxesOverlap(it.box, items[ti].box)) { alpha = OCCLUDER_ALPHA; break; }
+      }
+    }
+    drawShape(ctx, q, it.faces, alpha);
+  }
+}
+
+const OCCLUDER_ALPHA = 0.35;
+
+// Screen-space AABB of an item's projected faces.
+function screenBox(q, faces) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const f of faces) {
+    for (const p of f.pts) {
+      const X = isoX(q, p[0], p[1]), Y = isoY(q, p[0], p[1], p[2]);
+      if (X < minX) minX = X;
+      if (X > maxX) maxX = X;
+      if (Y < minY) minY = Y;
+      if (Y > maxY) maxY = Y;
+    }
+  }
+  return { minX, minY, maxX, maxY };
+}
+
+function boxesOverlap(a, b) {
+  return a.minX < b.maxX && a.maxX > b.minX && a.minY < b.maxY && a.maxY > b.minY;
 }
 
 function drawFloors(ctx, view, q, zone) {
@@ -79,9 +119,17 @@ function buildSpec(spec, wx, wy) {
   if (spec.ramp) return rampFaces(spec.ramp, wx, wy);
   const faces = [];
   for (const p of spec.parts) {
-    const h = 0.5 - p.inset;
+    // A part is a box centred at (wx+dx, wy+dy). Footprint half-extents come
+    // from hx/hy when given, else from the uniform `inset` (legacy). dx/dy let
+    // a part sit off-centre so a spec can build a real silhouette (posts, rails,
+    // overhangs) instead of one concentric block.
+    const inset = p.inset ?? 0;
+    const hx = p.hx ?? (0.5 - inset);
+    const hy = p.hy ?? (0.5 - inset);
+    const cx = wx + (p.dx ?? 0);
+    const cy = wy + (p.dy ?? 0);
     faces.push(...shadedBox(
-      [wx - h, wy - h, p.z0, wx + h, wy + h, p.z1],
+      [cx - hx, cy - hy, p.z0, cx + hx, cy + hy, p.z1],
       p.color, p.top ? { top: p.top } : {},
     ));
   }
@@ -106,22 +154,24 @@ function collectActors(zone, players, out) {
   }
   for (const p of players) {
     if (!p || p.dead) continue;
-    out.push(actorShape(p.x + 0.5, p.y + 1, 1, 2, "#e8c05a"));
+    out.push(actorShape(p.x + 0.5, p.y + 1, 1, 2, "#e8c05a", true));
   }
 }
 
 // A little character box: a footprint-sized column, height scaled by tile-height.
-function actorShape(wx, wy, tw, th, color) {
+// `track` marks the actor the camera follows — occluders in front of it fade.
+function actorShape(wx, wy, tw, th, color, track = false) {
   const half = Math.min(0.34, tw * 0.34);
   const z1 = Math.max(0.9, th * 0.8);
   return {
-    wx, wy,
+    wx, wy, track,
     build: () => shadedBox([wx - half, wy - half, 0, wx + half, wy + half, z1], color, { top: "#ffffff" }),
   };
 }
 
-function drawShape(ctx, q, it) {
-  const faces = it.build(q).sort((a, b) => faceDepth(q, a) - faceDepth(q, b));
+function drawShape(ctx, q, faces, alpha = 1) {
+  if (alpha !== 1) ctx.globalAlpha = alpha;
+  faces.sort((a, b) => faceDepth(q, a) - faceDepth(q, b));
   for (const f of faces) {
     ctx.fillStyle = f.c;
     ctx.beginPath();
@@ -133,6 +183,7 @@ function drawShape(ctx, q, it) {
     ctx.closePath();
     ctx.fill();
   }
+  if (alpha !== 1) ctx.globalAlpha = 1;
 }
 
 function triNormal(a, b, c) {
