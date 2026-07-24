@@ -11,6 +11,10 @@ import { FLOOR_QUAD, shadedBox, faceDepth, shade, scaleColor } from "./isoGeomet
 import { biomeFloorColor, biomeFloorZ, constructionSpec, isSkippedConstruction, darknessOpacity, darken } from "./isoPalette.js";
 import { elevationFor } from "./isoElevation.js";
 import { rowToMask } from "./constructionTiles.js";
+import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js";
+import { getSpecies, getEntitySheet } from "./species.js";
+import { getSprite } from "./assets.js";
+import { getPlayerSpriteFrame } from "./player.js";
 
 export function renderIso(renderer, zone, cam, players, tSec = 0) {
   const { ctx, canvas } = renderer;
@@ -29,15 +33,16 @@ export function renderIso(renderer, zone, cam, players, tSec = 0) {
   // and a face-builder; sorted by footprint depth so nearer draws later.
   const items = [];
   collectConstructions(zone, items, elev);
-  collectActors(zone, players, items, elev);
+  collectActors(zone, players, items, elev, tSec);
   items.sort((a, b) => isoDepth(q, a.wx, a.wy) - isoDepth(q, b.wx, b.wy));
 
-  // Build faces once and cache each item's screen bounding box, then draw.
-  // Anything that sorts in front of a tracked actor (drawn later) and overlaps
-  // its screen box is "in the way" — fade it so the actor stays visible.
+  // Build faces / sprite placement once and cache each item's screen bounding
+  // box, then draw. Anything that sorts in front of a tracked actor (drawn
+  // later) and overlaps its screen box is "in the way" — fade it so the actor
+  // stays visible.
   for (const it of items) {
-    it.faces = it.build(q);
-    it.box = screenBox(q, it.faces);
+    if (it.sprite) it.box = spriteScreenBox(q, it);
+    else { it.faces = it.build(q); it.box = screenBox(q, it.faces); }
   }
   const tracked = [];
   for (let i = 0; i < items.length; i++) if (items[i].track) tracked.push(i);
@@ -49,7 +54,8 @@ export function renderIso(renderer, zone, cam, players, tSec = 0) {
         if (i > ti && boxesOverlap(it.box, items[ti].box)) { alpha = OCCLUDER_ALPHA; break; }
       }
     }
-    drawShape(ctx, q, it.faces, alpha);
+    if (it.sprite) drawBillboard(ctx, it, alpha);
+    else drawShape(ctx, q, it.faces, alpha);
   }
 }
 
@@ -193,7 +199,10 @@ function rampFaces(ramp, wx, wy, baseZ = 0) {
   return [{ n, pts, c: shade(n, ramp.color) }];
 }
 
-function collectActors(zone, players, out, elev) {
+// NPCs, humanoids, mobs and players render as upright sprite billboards — the
+// actual game sprite, screen-aligned, feet planted on the tile it stands on —
+// instead of flat-shaded boxes. Constructions/floors stay polygons.
+function collectActors(zone, players, out, elev, tSec) {
   const baseAt = (wx, wy) => {
     const r = Math.min(zone.rows - 1, Math.max(0, Math.floor(wy)));
     const c = Math.min(zone.cols - 1, Math.max(0, Math.floor(wx)));
@@ -201,26 +210,100 @@ function collectActors(zone, players, out, elev) {
   };
   for (const e of zone.entities || []) {
     const f = e.frame;
-    if (!f) continue;
-    const cx = f.x + f.w / 2, cy = f.y + f.h / 2;
-    out.push(actorShape(cx, cy, f.w, f.h, actorColor(e.species_id), false, baseAt(cx, cy)));
+    if (!f || e._invisible) continue;
+    const sp = getSpecies(e.species_id);
+    if (!sp) continue;
+    // Teleporters + hints are invisible trigger tiles in play (editor-only art).
+    if (sp.entity_type === "Teleporter" || sp.entity_type === "Hint") continue;
+    const rect = entitySpriteRect(e, sp, tSec);
+    if (!rect) continue;
+    // Feet: bottom-centre of the footprint.
+    const wx = f.x + f.w / 2, wy = f.y + f.h;
+    out.push(spriteItem(wx, wy, baseAt(wx, f.y + f.h / 2), rect, false));
   }
   for (const p of players) {
     if (!p || p.dead) continue;
-    out.push(actorShape(p.x + 0.5, p.y + 1, 1, 2, "#e8c05a", true, baseAt(p.x + 0.5, p.y + 1)));
+    const rect = playerSpriteRect(p);
+    if (!rect) continue;
+    const wx = p.x + 0.5, wy = p.y + 1;
+    out.push(spriteItem(wx, wy, baseAt(wx, wy), rect, true));
   }
 }
 
-// A little character box: a footprint-sized column, height scaled by tile-height,
-// standing on baseZ (its tile's ground elevation).
-// `track` marks the actor the camera follows — occluders in front of it fade.
-function actorShape(wx, wy, tw, th, color, track = false, baseZ = 0) {
-  const half = Math.min(0.34, tw * 0.34);
-  const z1 = Math.max(0.9, th * 0.8);
+// A billboard item: its footprint feet-point (wx,wy) at ground elevation baseZ,
+// carrying the resolved sprite-sheet rect to blit. `track` marks the actor the
+// camera follows — occluders in front of it fade.
+function spriteItem(wx, wy, baseZ, rect, track = false) {
+  return { wx, wy, baseZ, rect, track, sprite: true };
+}
+
+const DIR_ROW_STILL  = { up: 1, right: 3, down: 5, left: 7 };
+const DIR_ROW_MOVING = { up: 0, right: 2, down: 4, left: 6 };
+
+// Resolve an entity's sprite-sheet source rect + tile footprint at time tSec.
+// Handles animated frames and the 8-row directional layout, mirroring the
+// classic renderer's common path (special-case reskins/attacks are omitted —
+// the iso view is an experiment).
+function entitySpriteRect(e, sp, tSec) {
+  const sheet = getEntitySheet(sp);
+  if (!sheet) return null;
+  const w = sp.width || 1, h = sp.height || 1;
+  const frames = Math.max(1, sp.frames);
+  const frame = frames > 1 ? Math.floor(tSec * ANIMATIONS_FPS) % frames : 0;
+  let dirRow = 0;
+  if (sp.directional) {
+    const moving = !!(e._ai?.step || e.moving);
+    const dir = (e.direction || "down").toLowerCase();
+    dirRow = (moving ? DIR_ROW_MOVING : DIR_ROW_STILL)[dir] ?? DIR_ROW_STILL.down;
+  }
   return {
-    wx, wy, track,
-    build: () => shadedBox([wx - half, wy - half, baseZ, wx + half, wy + half, baseZ + z1], color, { top: "#ffffff" }),
+    sheet,
+    sx: (sp.texture_x + frame * w) * TILE_SIZE,
+    sy: (sp.texture_y + dirRow * h) * TILE_SIZE,
+    sw: w * TILE_SIZE, sh: h * TILE_SIZE, w, h,
   };
+}
+
+// The hero's directional/animated frame off the heroes sheet.
+function playerSpriteRect(p) {
+  let sheet;
+  try { sheet = getSprite("heroes"); } catch { return null; }
+  if (!sheet || !sheet.complete) return null;
+  const f = getPlayerSpriteFrame(p);
+  return {
+    sheet,
+    sx: f.x * TILE_SIZE, sy: f.y * TILE_SIZE,
+    sw: f.w * TILE_SIZE, sh: f.h * TILE_SIZE, w: f.w, h: f.h,
+  };
+}
+
+// Where a billboard lands on screen: feet at the projected footprint point,
+// sized so one sprite tile is one height tier tall (keeps sprites proportionate
+// to the iso world at any scale). Bottom-centre anchored.
+function spritePlacement(q, it) {
+  const X = isoX(q, it.wx, it.wy);
+  const Y = isoY(q, it.wx, it.wy, it.baseZ);
+  const unit = q.tierH * q.s;
+  const dw = it.rect.w * unit;
+  const dh = it.rect.h * unit;
+  return { dx: Math.round(X - dw / 2), dy: Math.round(Y - dh), dw, dh };
+}
+
+function spriteScreenBox(q, it) {
+  const { dx, dy, dw, dh } = spritePlacement(q, it);
+  return { minX: dx, minY: dy, maxX: dx + dw, maxY: dy + dh };
+}
+
+function drawBillboard(ctx, it, alpha = 1) {
+  const b = it.box; // placement already computed into the screen box
+  const { rect } = it;
+  const prevSmoothing = ctx.imageSmoothingEnabled;
+  ctx.imageSmoothingEnabled = false; // crisp pixel-art sprites
+  if (alpha !== 1) ctx.globalAlpha = alpha;
+  ctx.drawImage(rect.sheet, rect.sx, rect.sy, rect.sw, rect.sh,
+    b.minX, b.minY, b.maxX - b.minX, b.maxY - b.minY);
+  if (alpha !== 1) ctx.globalAlpha = 1;
+  ctx.imageSmoothingEnabled = prevSmoothing;
 }
 
 function drawShape(ctx, q, faces, alpha = 1) {
@@ -247,11 +330,4 @@ function triNormal(a, b, c) {
   if (n[2] < 0) { n[0] = -n[0]; n[1] = -n[1]; n[2] = -n[2]; }
   const len = Math.hypot(n[0], n[1], n[2]) || 1;
   return [n[0] / len, n[1] / len, n[2] / len];
-}
-
-// Stable-ish colour from a species id, so entity types read distinctly.
-function actorColor(id) {
-  const h = ((id | 0) * 2654435761) >>> 0;
-  const r = 80 + (h & 127), g = 80 + ((h >> 8) & 127), b = 80 + ((h >> 16) & 127);
-  return "#" + ((r << 16) | (g << 8) | b).toString(16).padStart(6, "0");
 }
