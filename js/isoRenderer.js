@@ -7,8 +7,9 @@
 // near shapes correctly occlude far ones at any camera angle.
 
 import { isoProject, isoX, isoY, isoDepth } from "./isoCamera.js";
-import { FLOOR_QUAD, shadedBox, faceDepth, shade } from "./isoGeometry.js";
+import { FLOOR_QUAD, shadedBox, faceDepth, shade, scaleColor } from "./isoGeometry.js";
 import { biomeFloorColor, biomeFloorZ, constructionSpec, isSkippedConstruction, darknessOpacity, darken } from "./isoPalette.js";
+import { elevationFor } from "./isoElevation.js";
 import { rowToMask } from "./constructionTiles.js";
 
 export function renderIso(renderer, zone, cam, players, tSec = 0) {
@@ -16,17 +17,19 @@ export function renderIso(renderer, zone, cam, players, tSec = 0) {
   const view = { w: canvas.width, h: canvas.height };
   const q = isoProject(cam, view);
 
+  const elev = elevationFor(zone);
+
   ctx.imageSmoothingEnabled = true; // AA edges — the drawn (non-pixel) look
   ctx.fillStyle = "#12151a";
   ctx.fillRect(0, 0, view.w, view.h);
 
-  drawFloors(ctx, view, q, zone);
+  drawFloors(ctx, view, q, zone, elev);
 
   // One depth-sorted upright pass. Each item is a footprint (wx,wy in tiles)
   // and a face-builder; sorted by footprint depth so nearer draws later.
   const items = [];
-  collectConstructions(zone, items);
-  collectActors(zone, players, items);
+  collectConstructions(zone, items, elev);
+  collectActors(zone, players, items, elev);
   items.sort((a, b) => isoDepth(q, a.wx, a.wy) - isoDepth(q, b.wx, b.wy));
 
   // Build faces once and cache each item's screen bounding box, then draw.
@@ -71,7 +74,7 @@ function boxesOverlap(a, b) {
   return a.minX < b.maxX && a.maxX > b.minX && a.minY < b.maxY && a.maxY > b.minY;
 }
 
-function drawFloors(ctx, view, q, zone) {
+function drawFloors(ctx, view, q, zone, elev) {
   const cells = [];
   for (let r = 0; r < zone.rows; r++) {
     const brow = zone.biome[r];
@@ -82,14 +85,18 @@ function drawFloors(ctx, view, q, zone) {
       // Designer-placed darkness paint tints the floor beneath it (§8).
       const op = darknessOpacity(crow[c]);
       if (op) color = darken(color, op);
+      const base = elev[r][c];
       const wx = c + 0.5, wy = r + 0.5;
       const cx = isoX(q, wx, wy), cy = isoY(q, wx, wy);
       if (cx < -48 || cx > view.w + 48 || cy < -48 || cy > view.h + 48) continue;
-      cells.push([isoDepth(q, wx, wy), wx, wy, color, biomeFloorZ(brow[c])]);
+      cells.push([isoDepth(q, wx, wy), wx, wy, color, base + biomeFloorZ(brow[c]), base, r, c]);
     }
   }
   cells.sort((a, b) => a[0] - b[0]);
-  for (const [, wx, wy, color, z] of cells) {
+  for (const [, wx, wy, color, z, base, r, c] of cells) {
+    // Cliff skirts: where this tile stands above a 4-neighbour, drop a vertical
+    // face down to that neighbour so the plateau reads as solid, not floating.
+    drawSkirts(ctx, q, zone, elev, r, c, wx, wy, base, color);
     ctx.fillStyle = color;
     ctx.strokeStyle = color; // 1px stroke closes AA seams between tiles
     ctx.lineWidth = 1;
@@ -105,7 +112,38 @@ function drawFloors(ctx, view, q, zone) {
   }
 }
 
-function collectConstructions(zone, out) {
+// Shared-edge corner offsets (in FLOOR_QUAD space) per neighbour direction.
+const SKIRT_EDGE = {
+  "-1,0": [[-0.5, -0.5], [0.5, -0.5]], // north
+  "1,0":  [[0.5, 0.5], [-0.5, 0.5]],   // south
+  "0,-1": [[-0.5, 0.5], [-0.5, -0.5]], // west
+  "0,1":  [[0.5, -0.5], [0.5, 0.5]],   // east
+};
+
+function drawSkirts(ctx, q, zone, elev, r, c, wx, wy, base, color) {
+  const wall = scaleColor(color, 0.5); // shaded side face
+  for (const key in SKIRT_EDGE) {
+    const [dr, dc] = key.split(",").map(Number);
+    const nr = r + dr, nc = c + dc;
+    const below = (nr < 0 || nr >= zone.rows || nc < 0 || nc >= zone.cols) ? base : elev[nr][nc];
+    if (below >= base) continue;
+    const [a, b] = SKIRT_EDGE[key];
+    ctx.fillStyle = wall;
+    ctx.beginPath();
+    const corners = [
+      [a[0], a[1], base], [b[0], b[1], base], [b[0], b[1], below], [a[0], a[1], below],
+    ];
+    for (let i = 0; i < corners.length; i++) {
+      const p = corners[i];
+      const X = isoX(q, wx + p[0], wy + p[1]), Y = isoY(q, wx + p[0], wy + p[1], p[2]);
+      i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y);
+    }
+    ctx.closePath();
+    ctx.fill();
+  }
+}
+
+function collectConstructions(zone, out, elev) {
   for (let r = 0; r < zone.rows; r++) {
     const crow = zone.construction[r];
     for (let c = 0; c < zone.cols; c++) {
@@ -115,14 +153,16 @@ function collectConstructions(zone, out) {
       const spec = constructionSpec(id, mask);
       if (!spec) continue;
       const wx = c + 0.5, wy = r + 0.5;
-      out.push({ wx, wy, build: (q) => buildSpec(spec, wx, wy) });
+      const baseZ = elev[r][c];
+      out.push({ wx, wy, build: (q) => buildSpec(spec, wx, wy, baseZ) });
     }
   }
 }
 
-// Build the shaded faces for a construction spec centred at (wx,wy).
-function buildSpec(spec, wx, wy) {
-  if (spec.ramp) return rampFaces(spec.ramp, wx, wy);
+// Build the shaded faces for a construction spec centred at (wx,wy). baseZ lifts
+// the whole shape onto its tile's inferred ground elevation.
+function buildSpec(spec, wx, wy, baseZ = 0) {
+  if (spec.ramp) return rampFaces(spec.ramp, wx, wy, baseZ);
   const faces = [];
   for (const p of spec.parts) {
     // A part is a box centred at (wx+dx, wy+dy). Footprint half-extents come
@@ -135,43 +175,51 @@ function buildSpec(spec, wx, wy) {
     const cx = wx + (p.dx ?? 0);
     const cy = wy + (p.dy ?? 0);
     faces.push(...shadedBox(
-      [cx - hx, cy - hy, p.z0, cx + hx, cy + hy, p.z1],
+      [cx - hx, cy - hy, baseZ + p.z0, cx + hx, cy + hy, baseZ + p.z1],
       p.color, p.top ? { top: p.top } : {},
     ));
   }
   return faces;
 }
 
-// A slope tile as a single shaded quad whose corners are lifted per the ramp.
+// A slope tile as a single shaded quad whose corners are lifted per the ramp,
+// sitting on baseZ (the tile's low-edge elevation, so it bridges base -> base+1).
 // Corner order TL,TR,BR,BL matches FLOOR_QUAD.
-function rampFaces(ramp, wx, wy) {
+function rampFaces(ramp, wx, wy, baseZ = 0) {
   const hs = ramp.heights;
-  const pts = FLOOR_QUAD.map((p, i) => [wx + p[0], wy + p[1], hs[i]]);
+  const pts = FLOOR_QUAD.map((p, i) => [wx + p[0], wy + p[1], baseZ + hs[i]]);
   // Normal from two edge vectors for shading.
   const n = triNormal(pts[0], pts[1], pts[2]);
   return [{ n, pts, c: shade(n, ramp.color) }];
 }
 
-function collectActors(zone, players, out) {
+function collectActors(zone, players, out, elev) {
+  const baseAt = (wx, wy) => {
+    const r = Math.min(zone.rows - 1, Math.max(0, Math.floor(wy)));
+    const c = Math.min(zone.cols - 1, Math.max(0, Math.floor(wx)));
+    return elev[r][c];
+  };
   for (const e of zone.entities || []) {
     const f = e.frame;
     if (!f) continue;
-    out.push(actorShape(f.x + f.w / 2, f.y + f.h / 2, f.w, f.h, actorColor(e.species_id)));
+    const cx = f.x + f.w / 2, cy = f.y + f.h / 2;
+    out.push(actorShape(cx, cy, f.w, f.h, actorColor(e.species_id), false, baseAt(cx, cy)));
   }
   for (const p of players) {
     if (!p || p.dead) continue;
-    out.push(actorShape(p.x + 0.5, p.y + 1, 1, 2, "#e8c05a", true));
+    out.push(actorShape(p.x + 0.5, p.y + 1, 1, 2, "#e8c05a", true, baseAt(p.x + 0.5, p.y + 1)));
   }
 }
 
-// A little character box: a footprint-sized column, height scaled by tile-height.
+// A little character box: a footprint-sized column, height scaled by tile-height,
+// standing on baseZ (its tile's ground elevation).
 // `track` marks the actor the camera follows — occluders in front of it fade.
-function actorShape(wx, wy, tw, th, color, track = false) {
+function actorShape(wx, wy, tw, th, color, track = false, baseZ = 0) {
   const half = Math.min(0.34, tw * 0.34);
   const z1 = Math.max(0.9, th * 0.8);
   return {
     wx, wy, track,
-    build: () => shadedBox([wx - half, wy - half, 0, wx + half, wy + half, z1], color, { top: "#ffffff" }),
+    build: () => shadedBox([wx - half, wy - half, baseZ, wx + half, wy + half, baseZ + z1], color, { top: "#ffffff" }),
   };
 }
 
