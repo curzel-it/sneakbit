@@ -24,7 +24,7 @@ const MIN_TILES_W = 10;
 const MAX_TILES_W = 36;
 const TARGET_PHYS_TILE_PX = 32; // target tile size at DPR=1 (CSS px)
 
-export function applyAutoZoom(canvas, camera, hud, onApply) {
+export function applyAutoZoom(canvas, camera, hud, onApply, isoResolution = false) {
   // Prefer visualViewport when present: window.innerWidth/Height is stale
   // on mobile while the soft keyboard / address bar are mid-animation
   // (especially on iOS Safari, where `resize` fires once on keyboard-up
@@ -37,6 +37,28 @@ export function applyAutoZoom(canvas, camera, hud, onApply) {
   const dpr = Math.max(1, window.devicePixelRatio || 1);
   const pvW = vw * dpr; // viewport in physical pixels
   const pvH = vh * dpr;
+
+  // The polygon renderer (?iso=1) draws vector geometry, not pixel art, so the
+  // pixel-perfect quantization below is exactly wrong for it: a low-res backing
+  // store nearest-neighbour-upscaled by CSS turns every anti-aliased edge into
+  // fat blocks. Give iso a full physical-resolution backing (1 backing px = 1
+  // physical px) and a viewport-sized CSS box; the canvas CSS switches
+  // image-rendering back to `auto` in iso mode so the browser doesn't pixelate.
+  if (isoResolution) {
+    const backingW = Math.max(1, Math.round(pvW));
+    const backingH = Math.max(1, Math.round(pvH));
+    if (canvas.width !== backingW) canvas.width = backingW;
+    if (canvas.height !== backingH) canvas.height = backingH;
+    canvas.style.width = `${vw}px`;
+    canvas.style.height = `${vh}px`;
+    // Camera tile span is unused by the iso projection (it centres on the
+    // zone) but kept meaningful for any classic consumer still reading it.
+    camera.w = Math.max(1, Math.floor(vw / TARGET_PHYS_TILE_PX));
+    camera.h = Math.max(1, Math.floor(vh / TARGET_PHYS_TILE_PX));
+    if (hud) hud.dataset.tiles = `iso ${backingW}×${backingH} dpr=${dpr.toFixed(2)}`;
+    if (onApply) onApply();
+    return;
+  }
 
   // Pick the integer "physical px per source px" closest to the target tile
   // size on this display. SCALE >= 2 keeps tiles visible even on tiny screens.
@@ -98,8 +120,8 @@ export function applyAutoZoom(canvas, camera, hud, onApply) {
 
 let activeApply = null;
 
-export function installAutoZoom(canvas, camera, hud, onApply) {
-  const apply = () => applyAutoZoom(canvas, camera, hud, onApply);
+export function installAutoZoom(canvas, camera, hud, onApply, isoResolution = false) {
+  const apply = () => applyAutoZoom(canvas, camera, hud, onApply, isoResolution);
   activeApply = apply;
   apply();
   // Boot race: the synchronous apply() above can run before the browser has

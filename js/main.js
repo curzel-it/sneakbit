@@ -202,6 +202,10 @@ async function main() {
   hideLoadingScreen();
 
   const canvas = document.getElementById("game");
+  // The iso polygon renderer draws vector geometry: undo the pixel-art
+  // nearest-neighbour upscale so anti-aliased edges stay sharp (paired with
+  // the full-resolution backing store installAutoZoom gives iso mode).
+  if (ISO_MODE) canvas.style.imageRendering = "auto";
   const renderer = createRenderer(canvas);
   const biomeAnim = createBiomeAnimation();
   let suppressUnloadSave = false;
@@ -252,7 +256,7 @@ async function main() {
   // avatar spawner here.
   installPvpController(() => state, { setLocalPlayers });
   installOnlineDeathmatch(() => state);
-  installAutoZoom(canvas, state.camera, hud.el, () => recomputeSlices(canvas, state));
+  installAutoZoom(canvas, state.camera, hud.el, () => recomputeSlices(canvas, state), ISO_MODE);
   // Guests don't own the world, world-mutating logic, or the warp graph
   // — so the simulation modules (mapEditor, interact, shooting/melee,
   // fastTravel) stay gated. The HUDs (HP + ammo) DO run on guests: the
