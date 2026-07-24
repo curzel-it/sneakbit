@@ -10,6 +10,7 @@
 // laptop and a 3x phone.
 
 import { TILE_SIZE } from "./constants.js";
+import { TILT } from "./projection.js";
 
 // Lower bound on how many tiles span the viewport width. Kept deliberately
 // low so narrow phones keep the original app's tile size: the iOS build
@@ -81,7 +82,10 @@ export function applyAutoZoom(canvas, camera, hud, onApply) {
   canvas.style.height = `${(backingH * scale) / dpr}px`;
 
   camera.w = tilesW;
-  camera.h = tilesH;
+  // Each tile is TILE_SIZE * TILT backing-px tall under billboard tilt, so
+  // more world rows fit in the same canvas height. Grow the camera's vertical
+  // tile span by 1/TILT to fill the view (identity when TILT === 1).
+  camera.h = tilesH / TILT;
 
   if (hud) {
     hud.dataset.tiles = `${tilesW}×${tilesH} ${scale}× dpr=${dpr.toFixed(2)}`;

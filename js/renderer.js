@@ -2,6 +2,7 @@
 // Layer order: biome → construction → entities → player.
 
 import { TILE_SIZE } from "./constants.js";
+import { TILT, groundY } from "./projection.js";
 import { drawEntities } from "./entities.js";
 import { getZoneCache } from "./zoneCache.js";
 import { drawCutscenes } from "./cutscenes.js";
@@ -86,10 +87,15 @@ function drawZoneLayers(ctx, zone, camera, frame) {
   const cache = getZoneCache(zone);
   if (!cache) return;
   const ox = Math.round(-camera.x * TILE_SIZE);
-  const oy = Math.round(-camera.y * TILE_SIZE);
+  // Depth-compress the floor: the pre-baked biome + construction canvases blit
+  // at full width but TILT-scaled height, so the ground recedes. At TILT === 1
+  // this is the classic natural-size blit.
+  const oy = Math.round(groundY(0, camera));
   const biomeCanvas = cache.biomeFrames[frame % cache.biomeFrames.length];
-  ctx.drawImage(biomeCanvas, ox, oy);
-  ctx.drawImage(cache.construction, ox, oy);
+  const bw = biomeCanvas.width, bh = biomeCanvas.height;
+  ctx.drawImage(biomeCanvas, 0, 0, bw, bh, ox, oy, bw, Math.round(bh * TILT));
+  const cw = cache.construction.width, ch = cache.construction.height;
+  ctx.drawImage(cache.construction, 0, 0, cw, ch, ox, oy, cw, Math.round(ch * TILT));
 }
 
 // Applies a per-zone light-condition overlay. Mirrors Rust's three
@@ -109,7 +115,7 @@ function drawDarkness(ctx, vp, zone, camera, player) {
   if (!player) return;
   if (zone.lightConditions === "CantSeeShit") {
     const cx = (player.x + 0.5 - camera.x) * TILE_SIZE;
-    const cy = (player.y - camera.y) * TILE_SIZE;
+    const cy = groundY(player.y, camera);
     const inner = TILE_SIZE * 2.5;
     const outer = TILE_SIZE * 5.5;
     const grad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);

@@ -10,6 +10,7 @@
 //   - otherwise sort by bottom row, then by z_index as a tiebreaker.
 
 import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js";
+import { TILT, screenX, projectGround, projectBillboard, billboardFromFeet } from "./projection.js";
 import { getEntitySheet, getSpecies } from "./species.js";
 import { getSprite } from "./assets.js";
 import { getPlayerSpriteFrame } from "./player.js";
@@ -85,8 +86,9 @@ function drawBulletAuras(ctx, zone, camera) {
     if (!f) continue;
     if (f.x + f.w < camera.x || f.y + f.h < camera.y) continue;
     if (f.x > camera.x + camera.w || f.y > camera.y + camera.h) continue;
-    const px = Math.round((f.x - camera.x) * TILE_SIZE);
-    const py = Math.round((f.y - camera.y) * TILE_SIZE);
+    const b = projectBillboard(f.x, f.y, h, camera);
+    const px = Math.round(b.sx);
+    const py = Math.round(b.sy);
     ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
   }
 }
@@ -168,8 +170,12 @@ function drawPlayer(ctx, player, camera) {
     const sy = frame.y * TILE_SIZE;
     const sw = frame.w * TILE_SIZE;
     const sh = frame.h * TILE_SIZE;
-    const px = Math.round((player.x - camera.x) * TILE_SIZE);
-    const py = Math.round((player.y - camera.y - 1) * TILE_SIZE);
+    // Hero is a 1×`frame.h` sprite with feet at (player.x, player.y); top-left
+    // is player.y - (frame.h - 1). Billboard-anchor the feet to the ground.
+    const topY = player.y - (frame.h - 1);
+    const b = projectBillboard(player.x, topY, frame.h, camera);
+    const px = Math.round(b.sx);
+    const py = Math.round(b.sy);
     ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
   }
 
@@ -221,8 +227,9 @@ function drawGiant(ctx, player, camera) {
   const sh = GIANT_TILES_H * TILE_SIZE;
   const sx = frameIdx * sw;
   const sy = dirRow * sh;
-  const px = Math.round((player.x - 1 - camera.x) * TILE_SIZE);
-  const py = Math.round((player.y - 3 - camera.y) * TILE_SIZE);
+  const b = projectBillboard(player.x - 1, player.y - 3, GIANT_TILES_H, camera);
+  const px = Math.round(b.sx);
+  const py = Math.round(b.sy);
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 }
 
@@ -246,11 +253,14 @@ function drawAuraEffect(ctx, player, camera) {
   const sh = h * TILE_SIZE;
 
   // Hero feet sit at (player.x + 0.5, player.y + 0.5); centre the burst there.
+  // It lies on the floor, so project onto the ground plane and compress its
+  // height with the tilt.
   const wx = player.x + 0.5 - w / 2;
   const wy = player.y + 0.5 - h / 2;
-  const px = Math.round((wx - camera.x) * TILE_SIZE);
-  const py = Math.round((wy - camera.y) * TILE_SIZE);
-  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+  const g = projectGround(wx, wy, camera);
+  const px = Math.round(g.sx);
+  const py = Math.round(g.sy);
+  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, Math.round(sh * TILT));
 }
 
 // Ice buff aura: the 3×3 freezing_aura sprite (ICE_AURA_SPECIES_ID) centred on
@@ -275,15 +285,18 @@ function drawIceAura(ctx, player, camera) {
   const sh = h * TILE_SIZE;
 
   // Hero feet sit at (player.x + 0.5, player.y + 0.5); centre the aura there.
+  // A floor decal (z_index -1) — project onto the ground plane and compress
+  // its height with the tilt so it lies flat under the hero.
   const wx = player.x + 0.5 - w / 2;
   const wy = player.y + 0.5 - h / 2;
-  const px = Math.round((wx - camera.x) * TILE_SIZE);
-  const py = Math.round((wy - camera.y) * TILE_SIZE);
+  const g = projectGround(wx, wy, camera);
+  const px = Math.round(g.sx);
+  const py = Math.round(g.sy);
 
   const alpha = 0.6 + 0.3 * Math.sin(animClock * Math.PI);
   const prev = ctx.globalAlpha;
   ctx.globalAlpha = alpha;
-  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, Math.round(sh * TILT));
   ctx.globalAlpha = prev;
 }
 
@@ -346,11 +359,14 @@ function drawEquipment(ctx, player, camera, weaponId, slot) {
 
   // Player's top-left in zone coords is (player.x, player.y - 1) because
   // the hero is a 1×2 sprite with feet at (x, y). Equipment frame is offset
-  // (-1.5, -1.0) from that.
+  // (-1.5, -1.0) from that. The overlay rides the hero as a billboard: pin it
+  // to the hero's feet (player.y + 1) so it never drifts off the body under
+  // tilt, keeping its own top-left `feetY - wy` tiles above those feet.
   const wx = player.x - 1.5;
   const wy = player.y - 2.0;
-  const px = Math.round((wx - camera.x) * TILE_SIZE);
-  const py = Math.round((wy - camera.y) * TILE_SIZE);
+  const feetY = player.y + 1;
+  const px = Math.round(screenX(wx, camera));
+  const py = Math.round(billboardFromFeet(feetY, feetY - wy, camera));
   ctx.drawImage(sheet, sx, sourceY, sw, sh, px, py, sw, sh);
 }
 
@@ -477,19 +493,33 @@ function draw(ctx, e, camera) {
   if (coinOff) { rx += coinOff.x; ry += coinOff.y; }
   // A mob mid-knockback hops a couple pixels off the ground (recoil bounce).
   ry -= knockbackHopOffset(e);
-  const px = Math.round((rx - camera.x) * TILE_SIZE);
-  const py = Math.round((ry - camera.y) * TILE_SIZE);
+  // Underlay decals (z_index -1: magic circles, ice patches, shadows) lie IN
+  // the floor, so they project onto the ground plane and compress with the
+  // tilt. Everything else is a standing billboard: feet on the ground, full
+  // unscaled height rising above it.
+  let px, py, dh;
+  if (sp.z_index === Z_INDEX_UNDERLAY) {
+    const g = projectGround(rx, ry, camera);
+    px = Math.round(g.sx);
+    py = Math.round(g.sy);
+    dh = Math.round(sh * TILT);
+  } else {
+    const b = projectBillboard(rx, ry, h, camera);
+    px = Math.round(b.sx);
+    py = Math.round(b.sy);
+    dh = sh;
+  }
 
   // A vanishing NPC (afterDialogue VanishSmoke/VanishTeleport) fades its
   // body out while the effect strip plays on top of it.
   if (isVanishing(e)) {
     ctx.globalAlpha = vanishAlpha(e);
-    ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+    ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, dh);
     ctx.globalAlpha = 1;
     drawVanishOverlay(ctx, e, camera);
     return;
   }
-  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, dh);
   // Ice buff: a frost overlay sits on top of a frozen monster (freeze.js).
   drawFreezeOverlay(ctx, e, camera);
 }
@@ -517,8 +547,9 @@ function drawFreezeOverlay(ctx, e, camera) {
   const f = e.frame;
   const ex = f.x + (f.w - w) / 2;
   const ey = f.y + (f.h - h);
-  const px = Math.round((ex - camera.x) * TILE_SIZE);
-  const py = Math.round((ey - camera.y) * TILE_SIZE);
+  const b = projectBillboard(ex, ey, h, camera);
+  const px = Math.round(b.sx);
+  const py = Math.round(b.sy);
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 }
 
@@ -538,8 +569,9 @@ function drawVanishOverlay(ctx, e, camera) {
   const { x, y, w, h } = e.frame;
   const ex = x + (w - sp.w) / 2;
   const ey = y + (h - sp.h);
-  const px = Math.round((ex - camera.x) * TILE_SIZE);
-  const py = Math.round((ey - camera.y) * TILE_SIZE);
+  const b = projectBillboard(ex, ey, sp.h, camera);
+  const px = Math.round(b.sx);
+  const py = Math.round(b.sy);
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 }
 
@@ -555,7 +587,8 @@ function drawDeath(ctx, e, camera) {
   const frame = Math.floor(animClock * ANIMATIONS_FPS) % sprite.frames;
   const sx = (sprite.texX + frame) * TILE_SIZE;
   const sy = sprite.texY * TILE_SIZE;
-  const px = Math.round((x - camera.x) * TILE_SIZE);
-  const py = Math.round((y - camera.y) * TILE_SIZE);
+  const b = projectBillboard(x, y, 1, camera);
+  const px = Math.round(b.sx);
+  const py = Math.round(b.sy);
   ctx.drawImage(sheet, sx, sy, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
 }
