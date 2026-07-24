@@ -117,7 +117,7 @@ elevated ground.
 - Sand:     45-52
 - DarkRock: 53-60
 
-## 8. Darkness overlays — floor tint, NOT skipped  (Row: no)
+## 8. Darkness overlays — floor tint, NOT skipped  (Row: no) ✅ done
 Translucent black paint (~15/30/45% opacity) the level designer places on tiles
 to hand-shade the map — e.g. darkening water to fake depth. They tint whatever
 sits beneath, they are not objects. Iso equivalent: multiply the underlying floor
@@ -126,6 +126,9 @@ no separate geometry. Walkable, not solid.
 - Darkness15 (26)  — ~15% black
 - Darkness30 (27)  — ~30% black
 - Darkness45 (28)  — ~45% black
+Done: `darknessOpacity`/`darken` in isoPalette.js; drawFloors multiplies the
+floor colour by (1-opacity) per cell. Floor-only for now (objects not yet
+re-tinted).
 
 ## 9. Skip — not world geometry
 - Nothing (2)          — empty cell, nothing to draw
@@ -144,11 +147,15 @@ Comprehensive (not exhaustive-detailed) gap list. Grouped by system.
 - Missing biome floor colours: LIGHT_WOOD (5), ICE (9), FARMLAND (13) — render
   as default grey.
 - Darkness paint tint (ids 26-28) — designer-placed shading (e.g. water depth);
-  see section 8. Not yet applied in iso.
+  see section 8. ✅ applied to floors (objects not yet re-tinted).
 
 ### Constructions
-- Only 1 of up to 16 designs per id (no `(id, row)` connectivity) — see sections
-  1-9. Fences/walls don't junction; trees don't stack tall.
+- ✅ Now keys on the connectivity mask: `isoRenderer` reads
+  `zone.constructionRow`, `rowToMask` (constructionTiles.js) inverts it to
+  `{u,r,d,l}`, and `constructionSpec(id, mask)` dispatches mask-aware builders
+  for trees (crown height by same-below), walls (pillar+arms), fences (rail per
+  connected side) and bridge (rail the open edges). Props/slopes ignore the mask.
+  Remaining: tree height heuristic needs visual tuning on 2D forest blobs.
 - Colours/heights guessed from names, not sampled from `tiles_constructions.png`.
 
 ### Species / entities (all ~281)
@@ -201,10 +208,11 @@ Comprehensive (not exhaustive-detailed) gap list. Grouped by system.
   above the canvas and already appear over the iso view.
 
 ### Work implied by this list
-1. Geometry must key on `(id, row)`, reading `zone.constructionRow`. → unlocks
-   trees (1), walls (2), fences (3), bridge (6).
-2. Per-archetype geometry builder rather than one box: tree-stack, wall-junction,
-   fence-junction, ramp (already have), prop-box (already have).
+1. ✅ Geometry keys on `(id, row)` via `zone.constructionRow` + `rowToMask`. →
+   trees (1), walls (2), fences (3), bridge (6) all now connectivity-aware.
+2. ✅ Per-archetype geometry builders (tree crown/trunk, wall pillar+arms,
+   fence rail-per-side, bridge open-edge rails; ramp + prop-box already existed).
+   Left: tune tree heights on wide forest blobs.
 3. Colours/heights should be sampled from `tiles_constructions.png`, not guessed.
 
 Also missing three biome floor colours: LIGHT_WOOD (5), ICE (9), FARMLAND (13).

@@ -15,6 +15,13 @@ export function constructionTextureRow(self, up, right, down, left) {
   return SAME_PATTERN_TO_ROW[key];
 }
 
+// Inverse of the row table: sprite row (0..15) → same-neighbour mask.
+// The polygon renderer needs the connectivity itself (which sides match),
+// not the sheet row, so it inverts the bijection back to booleans.
+export function rowToMask(row) {
+  return ROW_TO_MASK[row] ?? { u: false, r: false, d: false, l: false };
+}
+
 // key bits: UP=8, RIGHT=4, DOWN=2, LEFT=1
 const SAME_PATTERN_TO_ROW = (() => {
   const t = new Array(16).fill(1);
@@ -36,5 +43,15 @@ const SAME_PATTERN_TO_ROW = (() => {
   set(true,  true,  false, true,  13);
   set(false, true,  true,  true,  14);
   set(true,  true,  true,  true,  15);
+  return t;
+})();
+
+const ROW_TO_MASK = (() => {
+  const t = new Array(16);
+  for (let key = 0; key < 16; key++) {
+    t[SAME_PATTERN_TO_ROW[key]] = {
+      u: !!(key & 8), r: !!(key & 4), d: !!(key & 2), l: !!(key & 1),
+    };
+  }
   return t;
 })();

@@ -41,33 +41,65 @@ export function biomeFloorZ(id) {
 // A part: { inset, z0, z1, color, top? } — inset shrinks the tile footprint
 // (0 = full tile), z in tiers. top recolours the +z face (foliage caps etc).
 
+// --- mask-aware archetypes -------------------------------------------------
+// These key on the same-neighbour mask {u,r,d,l} (from zone.constructionRow via
+// rowToMask) so a run, corner, junction or lone tile each build a matching
+// silhouette. Each returns a descriptor with make(mask) -> { parts }.
+
 const TRUNK = "#6b4a2b";
+// Trees stack in depth: a tile with a same tile "below" (mask.d, i.e. nearer the
+// camera in +y) is a BACK cell — its trunk is hidden by the front tile, so it
+// grows a taller canopy and the forest slopes up away from the viewer. A tile
+// with no same neighbour at all is a lone sapling (shorter, slimmer).
 const trees = (canopy, h = 2.2, trunkH = 0.8) => ({
-  parts: [
-    { inset: 0.34, z0: 0, z1: trunkH, color: TRUNK },
-    { inset: 0.06, z0: trunkH, z1: h, color: canopy, top: lighten(canopy) },
-  ],
+  make: (m) => {
+    const lone = !m.u && !m.r && !m.d && !m.l;
+    const top = lighten(canopy);
+    const th = lone ? h * 0.62 : (m.d ? h + 0.5 : h);
+    const tr = lone ? trunkH * 0.7 : trunkH;
+    return { parts: [
+      { inset: 0.34, z0: 0, z1: tr, color: TRUNK },
+      { inset: lone ? 0.14 : 0.06, z0: tr, z1: th, color: canopy, top },
+    ] };
+  },
 });
 
-// A solid barrier with a slightly-inset top course, so walls read as masonry
-// with a capstone instead of a flat monolith. cap defaults to a lighter body.
+// A solid barrier built as a central pillar plus a thick arm toward each
+// connected neighbour, so straight runs read as a bar, corners as an L, and a
+// lone wall as a single pillar. Each course carries an inset capstone.
 const wall = (color, h = 1.4, cap = lighten(color)) => ({
-  parts: [
-    { inset: 0, z0: 0, z1: h - 0.16, color },
-    { inset: 0.05, z0: h - 0.16, z1: h, color: cap },
-  ],
+  make: (m) => {
+    const capH = 0.16, bodyZ1 = h - capH, core = 0.3, arm = 0.28;
+    const parts = [
+      { hx: core, hy: core, z0: 0, z1: bodyZ1, color },
+      { hx: core, hy: core, z0: bodyZ1, z1: h, color: cap },
+    ];
+    const addArm = (dx, dy, hx, hy) => {
+      parts.push({ dx, dy, hx, hy, z0: 0, z1: bodyZ1, color });
+      parts.push({ dx, dy, hx, hy, z0: bodyZ1, z1: h, color: cap });
+    };
+    if (m.r) addArm(0.28, 0, 0.26, arm);
+    if (m.l) addArm(-0.28, 0, 0.26, arm);
+    if (m.u) addArm(0, -0.28, arm, 0.26);
+    if (m.d) addArm(0, 0.28, arm, 0.26);
+    return { parts };
+  },
 });
 
 const crate = (color, h = 0.7) => ({ parts: [{ inset: 0.12, z0: 0, z1: h, color, top: lighten(color) }] });
 
-// Symmetric post-and-rail cross: a centre post plus rails spanning both axes,
-// so it connects visually to any neighbour without needing the connectivity row.
+// A centre post plus a rail toward each connected neighbour only (a lone tile is
+// just a post). Rails overshoot the tile centre so they overlap the neighbour's.
 const fence = (color, h = 0.55, postH = 0.72, rail = lighten(color)) => ({
-  parts: [
-    { hx: 0.09, hy: 0.09, z0: 0, z1: postH, color },
-    { hx: 0.5, hy: 0.06, z0: h - 0.14, z1: h, color: rail },
-    { hx: 0.06, hy: 0.5, z0: h - 0.14, z1: h, color: rail },
-  ],
+  make: (m) => {
+    const z0 = h - 0.14, z1 = h;
+    const parts = [{ hx: 0.09, hy: 0.09, z0: 0, z1: postH, color }];
+    if (m.r) parts.push({ dx: 0.25, hx: 0.26, hy: 0.06, z0, z1, color: rail });
+    if (m.l) parts.push({ dx: -0.25, hx: 0.26, hy: 0.06, z0, z1, color: rail });
+    if (m.u) parts.push({ dy: -0.25, hx: 0.06, hy: 0.26, z0, z1, color: rail });
+    if (m.d) parts.push({ dy: 0.25, hx: 0.06, hy: 0.26, z0, z1, color: rail });
+    return { parts };
+  },
 });
 
 // A few offset clumps of one height range — used for foliage tufts and stalks.
@@ -132,12 +164,17 @@ const SPEC = {
     { inset: 0.2, z0: 0.3, z1: 0.5, color: "#e6edf2", top: "#ffffff" },
     { inset: 0.34, z0: 0.5, z1: 0.62, color: "#e6edf2", top: "#ffffff" },
   ] },
-  // Bridge: a flat plank deck with a low rail down each long edge.
-  [C.BRIDGE]: { parts: [
-    { inset: 0, z0: 0, z1: 0.14, color: "#8a6238", top: "#a2764a" },
-    { dy: -0.46, hx: 0.5, hy: 0.04, z0: 0.14, z1: 0.4, color: "#6b4a2b" },
-    { dy: 0.46, hx: 0.5, hy: 0.04, z0: 0.14, z1: 0.4, color: "#6b4a2b" },
-  ] },
+  // Bridge: a flat plank deck; rail only the edges that DON'T connect to another
+  // bridge tile, so the deck stays open along the span and railed on its sides.
+  [C.BRIDGE]: { make: (m) => {
+    const RAIL = "#6b4a2b";
+    const parts = [{ inset: 0, z0: 0, z1: 0.14, color: "#8a6238", top: "#a2764a" }];
+    if (!m.u) parts.push({ dy: -0.46, hx: 0.5, hy: 0.04, z0: 0.14, z1: 0.4, color: RAIL });
+    if (!m.d) parts.push({ dy: 0.46, hx: 0.5, hy: 0.04, z0: 0.14, z1: 0.4, color: RAIL });
+    if (!m.r) parts.push({ dx: 0.46, hx: 0.04, hy: 0.5, z0: 0.14, z1: 0.4, color: RAIL });
+    if (!m.l) parts.push({ dx: -0.46, hx: 0.04, hy: 0.5, z0: 0.14, z1: 0.4, color: RAIL });
+    return { parts };
+  } },
 };
 
 // Slope ramps. Corner order is TL,TR,BR,BL (matching FLOOR_QUAD). Each variant
@@ -156,14 +193,47 @@ const RAMP_HEIGHTS = {
   }
 })();
 
-export function constructionSpec(id) {
-  return SPEC[id] ?? null;
+// Returns a { parts } / { ramp } spec for the construction at this cell. Ids
+// whose shape depends on connectivity (trees, walls, fences, bridge) carry a
+// make(mask) builder; the rest are static. `mask` is the same-neighbour mask
+// {u,r,d,l} from rowToMask(zone.constructionRow[r][c]).
+export function constructionSpec(id, mask) {
+  const spec = SPEC[id];
+  if (!spec) return null;
+  if (spec.make) return spec.make(mask ?? EMPTY_MASK);
+  return spec;
 }
 
-// Darkness overlays and NOTHING draw nothing in the polygon world.
+const EMPTY_MASK = { u: false, r: false, d: false, l: false };
+
+// Darkness overlays and NOTHING build no geometry in the polygon world.
 export function isSkippedConstruction(id) {
   return id === C.NOTHING || id === C.INDICATOR_ARROW ||
     id === C.DARKNESS_15 || id === C.DARKNESS_30 || id === C.DARKNESS_45;
+}
+
+// Darkness ids are designer-placed translucent-black paint used to hand-shade
+// the map (e.g. faking water depth). They don't draw geometry; instead they
+// tint whatever floor sits beneath them. Returns the black opacity, or 0.
+const DARKNESS_OPACITY = {
+  [C.DARKNESS_15]: 0.15,
+  [C.DARKNESS_30]: 0.30,
+  [C.DARKNESS_45]: 0.45,
+};
+
+export function darknessOpacity(id) {
+  return DARKNESS_OPACITY[id] ?? 0;
+}
+
+// Multiply a floor colour toward black by `opacity` (the translucent-black
+// overlay compositing to a flat colour, since the iso path has no alpha layer).
+export function darken(hex, opacity) {
+  const f = 1 - opacity;
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.round((n >> 16) * f);
+  const g = Math.round(((n >> 8) & 255) * f);
+  const b = Math.round((n & 255) * f);
+  return "#" + ((r << 16) | (g << 8) | b).toString(16).padStart(6, "0");
 }
 
 function lighten(hex) {

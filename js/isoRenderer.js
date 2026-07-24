@@ -8,7 +8,8 @@
 
 import { isoProject, isoX, isoY, isoDepth } from "./isoCamera.js";
 import { FLOOR_QUAD, shadedBox, faceDepth, shade } from "./isoGeometry.js";
-import { biomeFloorColor, biomeFloorZ, constructionSpec, isSkippedConstruction } from "./isoPalette.js";
+import { biomeFloorColor, biomeFloorZ, constructionSpec, isSkippedConstruction, darknessOpacity, darken } from "./isoPalette.js";
+import { rowToMask } from "./constructionTiles.js";
 
 export function renderIso(renderer, zone, cam, players, tSec = 0) {
   const { ctx, canvas } = renderer;
@@ -74,9 +75,13 @@ function drawFloors(ctx, view, q, zone) {
   const cells = [];
   for (let r = 0; r < zone.rows; r++) {
     const brow = zone.biome[r];
+    const crow = zone.construction[r];
     for (let c = 0; c < zone.cols; c++) {
-      const color = biomeFloorColor(brow[c]);
+      let color = biomeFloorColor(brow[c]);
       if (!color) continue;
+      // Designer-placed darkness paint tints the floor beneath it (§8).
+      const op = darknessOpacity(crow[c]);
+      if (op) color = darken(color, op);
       const wx = c + 0.5, wy = r + 0.5;
       const cx = isoX(q, wx, wy), cy = isoY(q, wx, wy);
       if (cx < -48 || cx > view.w + 48 || cy < -48 || cy > view.h + 48) continue;
@@ -106,7 +111,8 @@ function collectConstructions(zone, out) {
     for (let c = 0; c < zone.cols; c++) {
       const id = crow[c];
       if (isSkippedConstruction(id)) continue;
-      const spec = constructionSpec(id);
+      const mask = rowToMask(zone.constructionRow[r][c]);
+      const spec = constructionSpec(id, mask);
       if (!spec) continue;
       const wx = c + 0.5, wy = r + 0.5;
       out.push({ wx, wy, build: (q) => buildSpec(spec, wx, wy) });
