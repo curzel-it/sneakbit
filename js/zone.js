@@ -92,6 +92,9 @@ export function buildZone(raw) {
     collision,
     entities,
     soundtrack: raw.soundtrack ?? null,
+    // Baked terrain height map for the iso renderer; ignored by the classic
+    // renderer. Null when a world predates the bake.
+    elevationTiles: raw.elevation_tiles?.tiles ?? null,
     lightConditions: raw.light_conditions ?? "Day",
     ephemeralState: !!raw.ephemeral_state,
     _cutscenesRaw: raw.cutscenes ?? [],

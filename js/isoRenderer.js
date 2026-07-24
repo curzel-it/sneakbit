@@ -10,6 +10,7 @@ import { isoProject, isoX, isoY, isoDepth } from "./isoCamera.js";
 import { FLOOR_QUAD, shadedBox, faceDepth, shade, scaleColor } from "./isoGeometry.js";
 import { biomeFloorColor, biomeFloorZ, constructionSpec, isSkippedConstruction, darknessOpacity, darken } from "./isoPalette.js";
 import { elevationFor } from "./isoElevation.js";
+import { elevationMapFor } from "./isoElevationMap.js";
 import { rowToMask } from "./constructionTiles.js";
 import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js";
 import { getSpecies, getEntitySheet } from "./species.js";
@@ -21,7 +22,9 @@ export function renderIso(renderer, zone, cam, players, tSec = 0) {
   const view = { w: canvas.width, h: canvas.height };
   const q = isoProject(cam, view);
 
-  const elev = elevationFor(zone);
+  // Baked height map is authoritative; slope-inference is only a fallback for
+  // worlds that predate the bake.
+  const elev = elevationMapFor(zone) ?? elevationFor(zone);
 
   ctx.imageSmoothingEnabled = true; // AA edges — the drawn (non-pixel) look
   ctx.fillStyle = "#12151a";
