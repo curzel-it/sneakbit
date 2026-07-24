@@ -252,9 +252,18 @@ export function chaseDirections(e, player) {
   return out;
 }
 
-function canEnter(zone, self, tileX, tileY) {
+// Exported for tests: can `self` (a mob with `_ai` footprint) occupy the tile
+// at (tileX, tileY) — walkability of its base row plus entity collisions.
+export function canEnter(zone, self, tileX, tileY) {
+  const selfW = Math.max(1, self._ai.w || 1);
+  // Collision is a "feet" test: the mover's bottom row is its ground contact,
+  // and its whole width along that row must clear — mirrors the player's
+  // fractional feet-rect (zone.isEntityBlocked). The rows above the feet are
+  // walk-behind, so only bottomY is checked, not the mover's full height.
   const bottomY = tileY + self._ai.h - 1;
-  if (!isWalkable(zone, tileX, bottomY)) return false;
+  for (let x = tileX; x < tileX + selfW; x++) {
+    if (!isWalkable(zone, x, bottomY)) return false;
+  }
   for (const other of zone.entities) {
     if (other === self) continue;
     if (other._spawned) continue;
@@ -272,8 +281,12 @@ function canEnter(zone, self, tileX, tileY) {
     const fh = sp.height || f.h || 1;
     const fx = Math.floor(f.x);
     const fy = Math.floor(f.y);
-    if (tileX < fx || tileX >= fx + fw) continue;
-    if (bottomY < fy || bottomY >= fy + fh) continue;
+    // A tall sprite blocks its body but not its top ("head") row — you walk
+    // behind it. A 1-tall obstacle has no head row and blocks its single row.
+    const blockTop = fh > 1 ? fy + 1 : fy;
+    if (bottomY < blockTop || bottomY >= fy + fh) continue;
+    // Column overlap between the mover's full-width feet and the obstacle.
+    if (tileX + selfW <= fx || tileX >= fx + fw) continue;
     return false;
   }
   return true;
