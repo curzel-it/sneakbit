@@ -16,6 +16,7 @@ import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js";
 import { getSpecies, getEntitySheet } from "./species.js";
 import { getSprite } from "./assets.js";
 import { getPlayerSpriteFrame } from "./player.js";
+import { buildingFaces } from "./isoBuildings.js";
 
 export function renderIso(renderer, zone, cam, players, tSec = 0) {
   const { ctx, canvas } = renderer;
@@ -218,6 +219,13 @@ function collectActors(zone, players, out, elev, tSec) {
     if (!sp) continue;
     // Teleporters + hints are invisible trigger tiles in play (editor-only art).
     if (sp.entity_type === "Teleporter" || sp.entity_type === "Hint") continue;
+    // Buildings are volumes, not upright cards — build them as massed geometry
+    // (walled body + pitched roof) so they occlude and rotate like real objects.
+    if (sp.entity_type === "Building") {
+      const wx = f.x + f.w / 2, wy = f.y + f.h / 2;
+      out.push({ wx, wy, build: () => buildingFaces(e, sp, baseAt(wx, wy)) });
+      continue;
+    }
     const rect = entitySpriteRect(e, sp, tSec);
     if (!rect) continue;
     // Feet: bottom-centre of the footprint.
