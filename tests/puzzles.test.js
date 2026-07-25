@@ -18,7 +18,6 @@ const { isEntityBlocked } = await import("../js/zone.js");
 const { findPushableAt, pushOneTile, pushableRenderOffset } = await import("../js/pushables.js");
 const { createPlayer, updatePlayer } = await import("../js/player.js");
 const { setupPuzzles, tickPuzzles } = await import("../js/puzzles.js");
-const { tryUnlockGate, findGateAt } = await import("../js/gateUnlock.js");
 const { isPressurePlateDown } = await import("../js/locks.js");
 const storage = await import("../js/storage.js");
 const inventory = await import("../js/inventory.js");
@@ -215,35 +214,42 @@ test("inverse gate is the mirror of a normal gate", () => {
   assert.equal(inv._open, false);
 });
 
-test("colored gate consumes a matching key on attempted entry", () => {
+test("a matching key does NOT open a closed gate", () => {
+  // Regression: gates used to burn a matching key and open permanently on
+  // contact, so anyone carrying the (purely collectible) colored keys walked
+  // straight through closed plate gates and wrecked the puzzle. Gates answer
+  // to pressure plates only, like Rust's update_gate.
   storage._resetStorageForTesting();
   inventory.clearInventory();
-  const zone = makeZone();
+  inventory.addAmmo(2000, 2); // yellow keys
+  const biome = [];
+  for (let r = 0; r < 6; r++) biome.push(new Array(6).fill(0));
+  const zone = makeZone({ biome });
   const gate = { species_id: 1040, id: 999, lock_type: "Yellow",
     frame: { x: 4, y: 3, w: 1, h: 1 } };
   zone.entities.push(gate);
   setupPuzzles(zone);
-  assert.equal(findGateAt(zone, 4, 3), gate);
+  tickPuzzles(zone, { x: 0, y: 0, tileX: 0, tileY: 0 });
 
-  // No key → unlock fails.
-  assert.equal(tryUnlockGate(gate), false);
+  const player = createPlayer();
+  player.x = 3; player.y = 3; player.tileX = 3; player.tileY = 3;
+  player.direction = "right";
+  updatePlayer(player, { events: ["right"], held: new Set() }, 0.001, zone);
+  let guard = 100;
+  while (player.step && guard-- > 0) {
+    updatePlayer(player, { events: [], held: new Set() }, 0.05, zone);
+  }
 
-  // Give the player a yellow key (species 2000).
-  inventory.addAmmo(2000, 2);
-  assert.equal(tryUnlockGate(gate), true);
-  assert.equal(inventory.getAmmo(2000), 1, "exactly one key consumed");
-  assert.equal(gate._open, true);
-  assert.equal(gate.lock_type, "None");
-
-  // Second call is a no-op (already open).
-  assert.equal(tryUnlockGate(gate), true);
-  assert.equal(inventory.getAmmo(2000), 1);
+  assert.equal(player.tileX, 3, "player is blocked by the closed gate");
+  assert.equal(gate._open, false);
+  assert.equal(gate.lock_type, "Yellow", "lock untouched");
+  assert.equal(inventory.getAmmo(2000), 2, "no key consumed");
 });
 
-test("a key-unlocked gate (lock None) stays open across puzzle ticks", () => {
+test("a lock-None gate stays open across puzzle ticks", () => {
   storage._resetStorageForTesting();
   const zone = makeZone();
-  // A gate whose lock was cleared to None by a key. There is no matching
+  // A gate with no lock. There is no matching
   // plate in the zone, so the plate-based path would otherwise force a
   // plain Gate closed every tick while collision still walked through it.
   const gate = { species_id: 1040, id: 42, lock_type: "None",

@@ -217,8 +217,8 @@ export function gateLock(gate) {
   return gate.dataLock;
 }
 
-// Open/closed per puzzles.js::updateGates + gateUnlock.js::tryUnlockGate:
-// a lock-None Gate opens on contact, a colored Gate opens while its plate
+// Open/closed per puzzles.js::updateGates:
+// a lock-None Gate is always open, a colored Gate opens while its plate
 // is down, Permanent never opens. InverseGate: open while the plate is up
 // (which makes lock-None inverse gates permanently open).
 export function gateIsOpen(gate, plateDown) {

@@ -77,12 +77,9 @@ function updateGates(zone) {
       e._frameOffsetX = 0;
       continue;
     }
-    // An unlocked gate (lock cleared to None by a key, per gateUnlock.js)
-    // is permanently open. Without this it would fall through to the plate
-    // logic below — which, finding no matching plate, forces a plain Gate
-    // closed every tick. That left the gate rendering shut while the
-    // player-collision path (checkTile → tryUnlockGate) still walked
-    // straight through it.
+    // A lock-None gate has no plate to answer to and stays open. Legacy
+    // saves can also hold a `lock_override` of None from the retired
+    // key-unlock path — those gates stay open too.
     if (lock === LOCK_NONE) {
       e._open = true;
       e._frameOffsetX = 1;

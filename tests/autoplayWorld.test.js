@@ -99,7 +99,7 @@ test("every discovered zone builds a model with coherent catalogs", () => {
 
 // The model's blocked-set must agree with the engine's ground truth
 // (isWalkable + isEntityBlocked) tile for tile. Gate tiles are excluded:
-// the engine only opens gates on contact (tryUnlockGate) or plate ticks,
+// the engine only opens gates on plate ticks,
 // while the model bakes the contact-open rule in — gate passability gets
 // its own assertions in the puzzle solver tests.
 test("model blocked-set matches engine walkability on sampled tiles", () => {
