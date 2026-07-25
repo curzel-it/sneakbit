@@ -258,6 +258,15 @@ function handleIdle(player, input, dt, zone) {
       }
     }
   }
+
+  // Held-key retry: a blocked step is a silent no-op, and key repeat produces
+  // no new press events, so without this the player stays frozen while holding
+  // the key even after the obstacle ahead is gone (e.g. a barrel we just blew
+  // up). Only retries the faced direction, and never while a rotate commit is
+  // pending, so tap-to-rotate keeps its delay.
+  if (!player.step && !player.pendingDir && input.held.has(player.direction)) {
+    startStep(player, player.direction, zone);
+  }
 }
 
 function advanceStep(player, input, dt, zone) {
