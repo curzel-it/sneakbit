@@ -517,7 +517,13 @@ function maybeFallBackToOffline() {
 // Module-level `state` is populated here; consumers that captured `()
 // => state` keep working because they read the binding lazily.
 async function initOfflineState() {
-  const urlZone = parseInt(new URLSearchParams(location.search).get("zone"), 10);
+  const urlParams = new URLSearchParams(location.search);
+  const urlZone = parseInt(urlParams.get("zone"), 10);
+  // ?x=&y= force the spawn tile (both required). Handy for debugging a spot
+  // without walking there; combine with ?zone= to pick the zone too.
+  const urlX = parseFloat(urlParams.get("x"));
+  const urlY = parseFloat(urlParams.get("y"));
+  const urlSpawn = Number.isFinite(urlX) && Number.isFinite(urlY) ? { x: urlX, y: urlY } : null;
   let saved = Number.isFinite(urlZone) ? null : loadProgress();
   // Guard against a save polluted by an older build that persisted a PvP
   // arena: never boot into one. Drop the save so we fall back to the starting
@@ -544,7 +550,9 @@ async function initOfflineState() {
   setupCutscenes(zone);
   getZoneCache(zone);
   const player = createPlayer();
-  if (saved && saved.x != null && saved.y != null) {
+  if (urlSpawn) {
+    applySavedSpawn(player, zone, urlSpawn);
+  } else if (saved && saved.x != null && saved.y != null) {
     applySavedSpawn(player, zone, saved);
   } else if (startId !== STARTING_ZONE_ID) {
     snapToEntry(player, zone);
