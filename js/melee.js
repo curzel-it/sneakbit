@@ -235,6 +235,14 @@ export function performMeleeSwing(state, opts = {}) {
   // swing so every bullet in the cross shares the swinger's buff state.
   const icy = isIceActive(swinger) || undefined;
 
+  // Anchor the cross on the *rendered* position, not tileX/tileY: during a
+  // step tileX/tileY still hold the from-tile, so anchoring there dragged the
+  // whole cross a tile backwards — the rear bullet then reached ~2 tiles
+  // behind the visible hero. Rendered position keeps the backward reach at
+  // the one tile it's meant to be.
+  const baseX = swinger.x ?? swinger.tileX;
+  const baseY = swinger.y ?? swinger.tileY;
+
   for (const [ox, oy] of offsets) {
     const bullet = {
       id: -(nextBulletId++),
@@ -251,8 +259,8 @@ export function performMeleeSwing(state, opts = {}) {
       is_consumable: false,
       direction: capitalize(dir),
       frame: {
-        x: swinger.tileX + ox,
-        y: swinger.tileY + oy,
+        x: baseX + ox,
+        y: baseY + oy,
         w: 1, h: 1,
       },
       dialogues: [],
