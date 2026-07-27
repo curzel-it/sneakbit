@@ -18,6 +18,7 @@ const SOURCES = {
   monsters: "./assets/monsters.png",
   inventory: "./assets/inventory.png",
   armor: "./assets/armour.png",
+  demon_lord_defeat: "./assets/demon_lord_defeat.png",
 };
 
 function loadImage(src) {

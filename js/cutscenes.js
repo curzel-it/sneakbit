@@ -4,9 +4,9 @@
 // `on_end` entities are inserted into the zone (typically dialogues
 // or a credits hint).
 //
-// Rendering degrades gracefully: cutscene sheet IDs are not in the
-// asset map (the PNGs aren't shipped with the HTML port yet), so when
-// the lookup fails we still tick the logic but skip painting.
+// Rendering degrades gracefully: if a cutscene sheet ID has no entry in
+// the asset map, the lookup fails and we still tick the logic but skip
+// painting.
 
 import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js";
 import { getValue, setValue } from "./storage.js";
@@ -150,12 +150,11 @@ export function drawCutscenes(ctx, zone, camera) {
   }
 }
 
-// Cutscene sprite sheets aren't part of assets.js (the demon-lord-defeat
-// PNG isn't shipped with the HTML port yet). When that changes, name the
-// asset here. For now anything we don't recognise returns null and the
-// renderer no-ops.
+// Cutscene sprite sheets map their Rust-core sheet_id to an asset name.
+// Anything we don't recognise returns null and the renderer no-ops, so the
+// cutscene logic still ticks and finishes even without art.
 const CUTSCENE_SHEETS = {
-  // 1020: "demon_lord_defeat",
+  1020: "demon_lord_defeat",
 };
 
 function sheetForId(id) {
