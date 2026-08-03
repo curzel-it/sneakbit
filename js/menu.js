@@ -18,6 +18,7 @@ import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDe
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { isCoopActive } from "./coopMode.js";
 import { exportSave, importSave } from "./saveBackup.js";
+import { pickAndImportLegacySave } from "./legacySave.js";
 import { initCreativeZoneTools, saveZoneNow, exportZone, reloadZoneFromDisk, connectDataFolder } from "./creativeZoneTools.js";
 import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
 import { openAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
@@ -129,6 +130,7 @@ export function installMenu(stateGetter) {
       <div class="menu-row menu-controls menu-stack">
         <button id="menu-open-controls">Key bindings…</button>
         <button id="menu-fullscreen">Fullscreen</button>
+        <button id="menu-import-legacy" data-guest-hidden>Import save from the old version…</button>
         <button id="menu-clear-cache" data-guest-hidden>Clear cache &amp; reload</button>
       </div>
       <div class="menu-row menu-controls">
@@ -434,6 +436,12 @@ function bindWidgets() {
     // the save we also need to drop the URL override or the player would
     // reload back into the same zone at the same tile.
     location.replace(location.pathname);
+  });
+  // Carries a save over from the pre-rewrite (Rust) builds — the desktop /
+  // iOS / Android storage.json. Owned by legacySave.js; the menu just opens it.
+  root.querySelector("#menu-import-legacy").addEventListener("click", () => {
+    closeMenu();
+    pickAndImportLegacySave().catch((e) => console.error("[menu] legacy import", e));
   });
   root.querySelector("#menu-clear-cache").addEventListener("click", () => {
     // Same identity-preservation as New game: clearing cached state shouldn't
