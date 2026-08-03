@@ -12,6 +12,7 @@
 
 import { getSpecies } from "./species.js";
 import { isWalkable } from "./zone.js";
+import { entityHittableFrame, rectOverlapsTile } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { isFrozen } from "./freeze.js";
 import { TILE_SIZE } from "./constants.js";
@@ -252,9 +253,19 @@ export function chaseDirections(e, player) {
   return out;
 }
 
-function canEnter(zone, self, tileX, tileY) {
+// Can `self` (a mob with an `_ai` footprint) stand with its top-left tile at
+// (tileX, tileY)? Only the FEET row collides — a mob's head row slides behind
+// tall sprites, same as the player — but the feet row is checked across the
+// mob's full width, so a 2-wide mob can't clip a wall with its right half.
+// Obstacles are tested against their hittable (feet) rect, the same geometry
+// zone.isEntityBlocked uses for the player, so a building's top row is
+// walk-behind for monsters too.
+export function canEnter(zone, self, tileX, tileY) {
+  const w = self._ai.w;
   const bottomY = tileY + self._ai.h - 1;
-  if (!isWalkable(zone, tileX, bottomY)) return false;
+  for (let dx = 0; dx < w; dx++) {
+    if (!isWalkable(zone, tileX + dx, bottomY)) return false;
+  }
   for (const other of zone.entities) {
     if (other === self) continue;
     if (other._spawned) continue;
@@ -266,15 +277,11 @@ function canEnter(zone, self, tileX, tileY) {
     if ((sp.entity_type === "Gate" || sp.entity_type === "InverseGate") && other._open) continue;
     if (sp.entity_type === "Teleporter") continue;
     if (!sp.is_rigid && !isMobAi(sp)) continue;
-    const f = other.frame;
-    if (!f) continue;
-    const fw = sp.width || f.w || 1;
-    const fh = sp.height || f.h || 1;
-    const fx = Math.floor(f.x);
-    const fy = Math.floor(f.y);
-    if (tileX < fx || tileX >= fx + fw) continue;
-    if (bottomY < fy || bottomY >= fy + fh) continue;
-    return false;
+    const hit = entityHittableFrame(other, sp);
+    if (!hit) continue;
+    for (let dx = 0; dx < w; dx++) {
+      if (rectOverlapsTile(hit, tileX + dx, bottomY)) return false;
+    }
   }
   return true;
 }
