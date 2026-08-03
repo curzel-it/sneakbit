@@ -70,6 +70,14 @@ const DEFAULT_SHOP_STOCK = [
   { item: 1172, price: 150 },
   { item: 1162, price: 450 },
   { item: 1168, price: 999 },
+  // Armour, priced against each piece's received_damage_reduction: iron is
+  // the mid-game set, dark the late-game one.
+  { item: 1194, price: 120 },
+  { item: 1195, price: 250 },
+  { item: 1196, price: 150 },
+  { item: 1214, price: 300 },
+  { item: 1215, price: 550 },
+  { item: 1216, price: 300 },
   // Cosmetic skins (skins.js) — one-of-a-kind, equipped from the inventory Skin slot.
   // Tiered by rarity: colored outfits common, tracksuit/ninja premium.
   { skin: "outfit_red", price: 150 },
@@ -77,8 +85,8 @@ const DEFAULT_SHOP_STOCK = [
   { skin: "outfit_blue", price: 150 },
   { skin: "tracksuit_black", price: 400 },
   { skin: "ninja_black", price: 400 },
-  // Knockback Aura skill — 1 coin while we test it (skills.js / shopPurchase.js).
-  { skill: "aura", price: 1 },
+  // The Knockback Aura skill (skills.js) is deliberately NOT stocked: it's a
+  // playtest toy, not a shipped purchase.
 ];
 
 // Editor-allocated zone ids must stay within int32 because js/storage.js

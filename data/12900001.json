@@ -204,19 +204,17 @@
         { "item": 1172, "price": 150 },
         { "item": 1162, "price": 450 },
         { "item": 1168, "price": 999 },
-        { "item": 1194, "price": 1 },
-        { "item": 1195, "price": 1 },
-        { "item": 1196, "price": 1 },
-        { "item": 1197, "price": 1 },
-        { "item": 1214, "price": 1 },
-        { "item": 1215, "price": 1 },
-        { "item": 1216, "price": 1 },
+        { "item": 1194, "price": 120 },
+        { "item": 1195, "price": 250 },
+        { "item": 1196, "price": 150 },
+        { "item": 1214, "price": 300 },
+        { "item": 1215, "price": 550 },
+        { "item": 1216, "price": 300 },
         { "skin": "outfit_red", "price": 150 },
         { "skin": "outfit_yellow", "price": 150 },
         { "skin": "outfit_blue", "price": 150 },
         { "skin": "tracksuit_black", "price": 400 },
-        { "skin": "ninja_black", "price": 400 },
-        { "skill": "aura", "price": 1 }
+        { "skin": "ninja_black", "price": 400 }
       ],
       "species_id": 3008
     }

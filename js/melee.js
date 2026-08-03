@@ -20,7 +20,8 @@ const DEFAULT_LIFESPAN = 0.4;
 const MAX_PLAYERS = 4;
 
 // Bullet offsets around the hero, mirroring Rust bullet_offsets():
-// center + 4 cardinals.
+// center + 4 cardinals. Built per-swing (crossOffsets) so the arm pointing
+// BEHIND the hero can be shortened — see BACK_REACH.
 const BULLET_OFFSETS = [
   [ 0,  0],
   [ 0, -1],
@@ -28,6 +29,23 @@ const BULLET_OFFSETS = [
   [-1,  0],
   [ 0,  1],
 ];
+
+// How far behind the hero the rear arm of the cross reaches, in tiles. The
+// sword is meant to catch someone right on your back, but a full tile of
+// backward reach anchored on the *rendered* position let a mid-step swing
+// (hero at x.6, rear bullet at x-0.4) still overlap the tile two behind the
+// hero's apparent position. Half a tile keeps the standing-still back hit and
+// drops the mid-step overreach.
+const BACK_REACH = 0.5;
+
+// The cross for a swing facing (dx, dy): centre, the two laterals and the
+// forward arm at a full tile, the rear arm pulled in to BACK_REACH.
+function crossOffsets(dx, dy) {
+  return BULLET_OFFSETS.map(([ox, oy]) => {
+    const isRear = ox === -dx && oy === -dy && (ox !== 0 || oy !== 0);
+    return isRear ? [ox * BACK_REACH, oy * BACK_REACH] : [ox, oy];
+  });
+}
 
 // Giant melee: while transformed (giantMode) the hero fights bare-handed.
 // The weapon overlay is hidden at giant scale (entities.drawGiant), so a
@@ -227,6 +245,7 @@ export function performMeleeSwing(state, opts = {}) {
 
   const dir = swinger.direction;
   const [vx, vy] = DIR_DELTA[dir] ?? [0, 1];
+  const cross = offsets === BULLET_OFFSETS ? crossOffsets(vx, vy) : offsets;
   // Ice buff: tag the swing's cross-bullets so they freeze the monsters they
   // hit and render a frost aura (freeze.js / iceMode.js). Resolved once per
   // swing so every bullet in the cross shares the swinger's buff state.
@@ -240,7 +259,7 @@ export function performMeleeSwing(state, opts = {}) {
   const baseX = swinger.x ?? swinger.tileX;
   const baseY = swinger.y ?? swinger.tileY;
 
-  for (const [ox, oy] of offsets) {
+  for (const [ox, oy] of cross) {
     const bullet = {
       id: -(nextBulletId++),
       _spawned: true,

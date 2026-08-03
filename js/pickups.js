@@ -30,6 +30,7 @@ import { isCreativeMode } from "./creativeMode.js";
 import { isPlayerDead } from "./playerHealth.js";
 import { broadcastHostEvent } from "./hostEvents.js";
 import { SPRITE_SHEET_ARMOR } from "./constants.js";
+import { isKeySpecies } from "./locks.js";
 
 // Bullet is here because in zone data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles
@@ -121,7 +122,8 @@ function trigger(e, kind, picker) {
   // event; the host's own pickup just credits index 0 locally.
   if (e.species_id === COIN_SPECIES_ID) {
     addCoins(1, playerIndex);
-    playSfx("keyCollected");
+    // A light blip, not the key fanfare — coins are picked up by the dozen.
+    playSfx("ammoCollected");
     broadcastHostEvent("coins", { playerId: picker?.playerId ?? null, amount: 1 });
     return;
   }
@@ -138,7 +140,9 @@ function trigger(e, kind, picker) {
     addAmmo(e.species_id, 1, playerIndex);
     items.push({ speciesId: e.species_id, amount: 1 });
   }
-  playSfx("ammoCollected");
+  // Keys get the triumph fanfare; everything else the light pickup blip.
+  // Mirrors Rust sound_effects.rs::handle_item_collection.
+  playSfx(isKeySpecies(e.species_id) ? "keyCollected" : "ammoCollected");
   // "Picked up X" toast for plain collectibles (ammo, keys, consumables).
   // Weapon pickups get their own "Equipped: …" toast in maybeEquipWeapon,
   // and coins are handled (toast-free) above — so skip both here. Local

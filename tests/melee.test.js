@@ -52,7 +52,8 @@ test("performMeleeSwing: spawns 5 bullets in cross pattern", () => {
     .map(b => [b.frame.x - s.player.tileX, b.frame.y - s.player.tileY])
     .map(([x, y]) => `${x},${y}`)
     .sort();
-  const expected = ["0,0", "0,-1", "0,1", "1,0", "-1,0"].sort();
+  // Facing right: the rear arm sits at -0.5 (see BACK_REACH in melee.js).
+  const expected = ["0,0", "0,-1", "0,1", "1,0", "-0.5,0"].sort();
   assert.deepEqual(offsets, expected);
 
   for (const b of s.zone.entities) {
@@ -85,4 +86,32 @@ test("performMeleeSwing: refuses non-melee species in melee slot", () => {
   const s = fakeState();
   assert.equal(melee.performMeleeSwing(s, { ignoreCooldown: true }), false);
   assert.equal(s.zone.entities.length, 0);
+});
+
+test("performMeleeSwing: the rear arm reaches half a tile back, the rest a full tile", () => {
+  storage._resetStorageForTesting();
+  loadSword();
+  equipment.setEquipped(equipment.SLOT_MELEE, 1159);
+  const s = fakeState();
+  s.player.direction = "right";
+  assert.equal(melee.performMeleeSwing(s, { ignoreCooldown: true }), true);
+  const at = (dx, dy) => s.zone.entities.some(
+    (e) => e.frame.x === 10 + dx && e.frame.y === 10 + dy);
+  assert.ok(at(0, 0), "centre");
+  assert.ok(at(1, 0), "forward arm a full tile out");
+  assert.ok(at(0, -1) && at(0, 1), "lateral arms a full tile out");
+  assert.ok(at(-0.5, 0), "rear arm pulled in to half a tile");
+  assert.ok(!at(-1, 0), "rear arm no longer reaches a full tile back");
+});
+
+test("performMeleeSwing: the rear arm follows the facing direction", () => {
+  storage._resetStorageForTesting();
+  loadSword();
+  equipment.setEquipped(equipment.SLOT_MELEE, 1159);
+  const s = fakeState();
+  s.player.direction = "up";
+  assert.equal(melee.performMeleeSwing(s, { ignoreCooldown: true }), true);
+  const ys = s.zone.entities.map((e) => e.frame.y).sort((a, b) => a - b);
+  // Facing up: forward (y-1) full, rear (y+1) pulled to +0.5.
+  assert.deepEqual(ys, [9, 10, 10, 10, 10.5]);
 });

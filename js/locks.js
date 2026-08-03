@@ -36,6 +36,15 @@ export function canonicaliseLock(name) {
   }
 }
 
+// Every key species, including the white key (2005) which opens no coloured
+// lock and so has no LOCK_TO_KEY_SPECIES entry. Mirrors Rust
+// known_species.rs::is_key, which drives the KeyCollected fanfare.
+const KEY_SPECIES = new Set([2000, 2001, 2002, 2003, 2004, 2005]);
+
+export function isKeySpecies(speciesId) {
+  return KEY_SPECIES.has(speciesId | 0);
+}
+
 export function keySpeciesIdForLock(lock) {
   return LOCK_TO_KEY_SPECIES[canonicaliseLock(lock)] ?? null;
 }
