@@ -11,6 +11,8 @@ const SOURCES = {
   humanoids_1x1: "./assets/humanoids_1x1.png",
   humanoids_1x2: "./assets/humanoids_1x2.png",
   humanoids_2x2: "./assets/humanoids_2x2.png",
+  humanoids_2x3: "./assets/humanoids_2x3.png",
+  tentacles: "./assets/tentacles.png",
   humanoids_3x4: "./assets/humanoids_3x4.png",
   static_objects: "./assets/static_objects.png",
   animated_objects: "./assets/animated_objects.png",
@@ -20,6 +22,12 @@ const SOURCES = {
   armor: "./assets/armour.png",
   demon_lord_defeat: "./assets/demon_lord_defeat.png",
 };
+
+// Every sprite name loadAssets() will provide. Exported so a test can assert
+// the species sheet map only ever points at names we actually load.
+export function spriteNames() {
+  return Object.keys(SOURCES);
+}
 
 function loadImage(src) {
   return new Promise((resolve, reject) => {

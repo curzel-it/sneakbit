@@ -10,6 +10,8 @@ import {
   SPRITE_SHEET_ANIMATED_OBJECTS,
   SPRITE_SHEET_HUMANOIDS_1X1,
   SPRITE_SHEET_HUMANOIDS_2X2,
+  SPRITE_SHEET_HUMANOIDS_2X3,
+  SPRITE_SHEET_TENTACLES,
   SPRITE_SHEET_WEAPONS,
   SPRITE_SHEET_MONSTERS,
   SPRITE_SHEET_HEROES,
@@ -23,6 +25,8 @@ const SHEET_NAMES = {
   [SPRITE_SHEET_HUMANOIDS_1X1]: "humanoids_1x1",
   [SPRITE_SHEET_HUMANOIDS_1X2]: "humanoids_1x2",
   [SPRITE_SHEET_HUMANOIDS_2X2]: "humanoids_2x2",
+  [SPRITE_SHEET_HUMANOIDS_2X3]: "humanoids_2x3",
+  [SPRITE_SHEET_TENTACLES]: "tentacles",
   [SPRITE_SHEET_STATIC_OBJECTS]: "static_objects",
   [SPRITE_SHEET_ANIMATED_OBJECTS]: "animated_objects",
   [SPRITE_SHEET_WEAPONS]: "weapons",
@@ -48,6 +52,14 @@ export function getSpecies(id) {
 // to enumerate stockable items; not in any hot path.
 export function allSpecies() {
   return Array.from(speciesById.values());
+}
+
+// The asset name for a sprite_sheet_id, or null when the sheet isn't
+// registered. Exported so a test can assert every sheet the shipped species
+// data references is actually mapped AND loaded (an unmapped sheet renders
+// nothing at all — that's how the tentacles went invisible).
+export function sheetNameFor(sheetId) {
+  return SHEET_NAMES[sheetId] ?? null;
 }
 
 export function getEntitySheet(species) {
