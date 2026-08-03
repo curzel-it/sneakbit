@@ -10,8 +10,6 @@
 
 import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js";
 import { getPlayerHp } from "./playerHealth.js";
-import { isPvp, getGameMode } from "./gameMode.js";
-import { getPvpRangedWeapon, getPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js";
 import { getLastSeqMap } from "./hostGuests.js";
 import { broadcastHostEvent } from "./hostEvents.js";
 import { shouldBeVisible } from "./entityVisibility.js";
@@ -169,7 +167,6 @@ function buildKeepalive(state) {
     v: GAME_FRAME_SCHEMA,
     t: tickCount++,
     zoneId: state.zone.id,
-    mode: getGameMode(),
     players: playersOf(state).map(serializePlayer).filter(Boolean),
     entities: [],
     lastSeq: getLastSeqMap(),
@@ -219,7 +216,6 @@ function buildDelta(state) {
     v: GAME_FRAME_SCHEMA,
     t: tickCount++,
     zoneId: state.zone.id,
-    mode: getGameMode(),
     players: all,
     entities,
     lastSeq: getLastSeqMap(),
@@ -253,7 +249,6 @@ function buildSnapshot(state) {
     v: GAME_FRAME_SCHEMA,
     t: tickCount++,
     zoneId: state.zone.id,
-    mode: getGameMode(),
     players,
     entities,
     lastSeq: getLastSeqMap(),
@@ -404,12 +399,6 @@ function serializePlayer({ player, slot, playerId }) {
   // progress on the render player. Omitted when idle.
   const auraRem = getAuraAnimRemaining(idx);
   if (auraRem > 0) out.aura = round3(auraRem);
-  // PvP: the host owns each player's per-caliber ammo (pvpLoadout). Ship the
-  // equipped weapon (pw) + its current ammo (pa) so a guest's own HUD is right.
-  if (isPvp()) {
-    out.pw = getPvpRangedWeapon(idx);
-    out.pa = getPvpAmmo(idx, bulletOfWeapon(out.pw));
-  }
   return out;
 }
 

@@ -27,9 +27,4 @@ export const SPRITE_SHEET_ARMOR = 1025;
 export const STARTING_ZONE_ID = 1001;
 export const STARTING_SPAWN = { x: 68, y: 23 };
 
-// The PvP deathmatch arena. Cross-cutting because both PvP controllers
-// (offline + online) travel here and the startup path must never restore
-// the player into it (transient, not a place you "live").
-export const PVP_ARENA_ZONE_ID = 1301;
-
 export const APP_VERSION = "0.4.0";

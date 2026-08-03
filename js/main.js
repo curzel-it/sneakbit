@@ -1,7 +1,6 @@
 // Entry point. Wires features together; holds no game logic itself.
 
 import { STARTING_ZONE_ID, STARTING_SPAWN } from "./constants.js";
-import { isPvpArenaZone } from "./pvpArenaPool.js";
 import { loadAssets } from "./assets.js";
 import { loadSpecies, loadStrings, loadZone } from "./data.js";
 import { loadStringsData, tr } from "./strings.js";
@@ -84,11 +83,6 @@ import { setHostPaused } from "./hostPauseState.js";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js";
 import { switchRole, setStateHandlers } from "./switchRole.js";
 import { installUiTokens } from "./uiTokens.js";
-import { isPvp, isPvpHostSetup } from "./gameMode.js";
-import {
-  installPvpController, pvpGateInput, tickPvpFrame,
-} from "./pvpController.js";
-import { installOnlineDeathmatch, tickHostFrame as tickOnlineDeathmatch } from "./onlineDeathmatch.js";
 
 // Live game state. Module-level so switchRole's state-handlers (and the
 // beforeunload listener / window.save shim) can read and mutate it
@@ -232,11 +226,6 @@ async function main() {
       })),
     };
   }
-  // PvP controller owns the match lifecycle + per-frame glue (and installs
-  // its own window.pvp debug hook). Wire it to the live state and the local
-  // avatar spawner here.
-  installPvpController(() => state, { setLocalPlayers });
-  installOnlineDeathmatch(() => state);
   installAutoZoom(canvas, state.camera, hud.el, () => recomputeSlices(canvas, state));
   // Guests don't own the world, world-mutating logic, or the warp graph
   // — so the simulation modules (mapEditor, interact, shooting/melee,
@@ -351,19 +340,13 @@ async function main() {
     // Hosting never freezes the shared world for a local overlay — that
     // would strand guests in a dead zone — so the gate is role-aware.
     const overlayOpen = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isShopOpen() || isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen() || isAccountPanelOpen();
-    const localPause = (overlayOpen || isControllerPaused()) && getRuntimeRole() !== "host";
-    // While a host is still setting up an Online PvP match (sending invite
-    // links, before "Start match"), freeze the host's own world so monsters
-    // don't roam during setup. This is host-local: setHostPaused stays tied to
-    // localPause so we don't flash a spurious "host paused" overlay to guests
-    // (who haven't joined the arena yet anyway).
-    const paused = localPause || isPvpHostSetup();
+    const paused = (overlayOpen || isControllerPaused()) && getRuntimeRole() !== "host";
     // Tell guests when our local sim is frozen so their overlay can
     // show "Host paused the game" instead of the generic "Host
     // lagging…" — the no-op-when-not-host gate in setHostPaused keeps
     // this cheap in offline / local-coop. With the host-online carve-out
     // above this only fires now on a genuine host stall, not a menu.
-    setHostPaused(localPause);
+    setHostPaused(paused);
     const input = pollInput();
     if (!paused) {
       // Online-host + overlay open: the sim keeps running (so guests
@@ -378,7 +361,7 @@ async function main() {
       // drains their event queue, so a held key doesn't flood the
       // player on revive. Without this gate a "dead-but-waiting" host
       // would silently walk around invisibly while spectating guests.
-      if (!isPlayerDead(0)) updatePlayer(state.player, pvpGateInput(0, hostInput), dt, state.zone);
+      if (!isPlayerDead(0)) updatePlayer(state.player, hostInput, dt, state.zone);
       // Network-guest avatars (playerId set) own their own tile path: the
       // host only animates committed steps via updateGuestAvatar — never
       // runs movement decisions for them (docs/multiplayer.md).
@@ -390,7 +373,7 @@ async function main() {
         } else {
           const input2 = pollInput(2);
           if (!isPlayerDead(state.player2.index | 0)) {
-            updatePlayer(state.player2, pvpGateInput(1, input2), dt, state.zone);
+            updatePlayer(state.player2, input2, dt, state.zone);
           }
         }
       }
@@ -400,7 +383,7 @@ async function main() {
         } else {
           const inputN = pollInput(s.slot);
           if (!isPlayerDead(s.player.index | 0)) {
-            updatePlayer(s.player, pvpGateInput(s.player.index | 0, inputN), dt, state.zone);
+            updatePlayer(s.player, inputN, dt, state.zone);
           }
         }
       }
@@ -434,18 +417,10 @@ async function main() {
       tickPushables(state.zone, dt);
       tickPlayerHealth(dt);
       tickFastTravel(dt);
-      // PvP runs its own death + win/lose path; co-op keeps the inline-toast /
-      // P1-game-over path. Online PvP is host-authoritative (onlineDeathmatch);
-      // the offline/local arena uses pvpController. Both are realtime.
-      if (isPvp()) {
-        if (getRuntimeRole() === "offline") tickPvpFrame();
-        else tickOnlineDeathmatch(dt);
-      } else {
-        // P2 death is handled inline (toast + hide bar). Only P1 death
-        // halts the game with the Game Over modal.
-        handleCoopDeaths(state);
-        handleHostState(state);
-      }
+      // P2 death is handled inline (toast + hide bar). Only P1 death
+      // halts the game with the Game Over modal.
+      handleCoopDeaths(state);
+      handleHostState(state);
     } else {
       // When paused, keep the camera tracking the player so on resume
       // there's no jolt, but don't bother re-running the visibility pass
@@ -511,15 +486,11 @@ async function initOfflineState() {
   const urlY = parseFloat(urlParams.get("y"));
   const urlSpawn = Number.isFinite(urlX) && Number.isFinite(urlY) ? { x: urlX, y: urlY } : null;
   let saved = Number.isFinite(urlZone) ? null : loadProgress();
-  // Guard against a save polluted by an older build that persisted a PvP
-  // arena: never boot into one. Drop the save so we fall back to the starting
-  // zone, as if no progress existed. (An explicit ?zone=1301 still works.)
-  if (isPvpArenaZone(saved?.zoneId)) saved = null;
   let startId = Number.isFinite(urlZone) ? urlZone : (saved?.zoneId ?? STARTING_ZONE_ID);
   // A save can point at a zone that no longer ships (e.g. a mode removed in a
   // later build). loadZone then throws rather than white-screening the boot;
-  // drop the stale save and fall back to the starting zone, same as the PvP
-  // guard above. saveProgress() at the end heals the persisted save.
+  // drop the stale save and fall back to the starting zone. saveProgress() at
+  // the end heals the persisted save.
   let zoneRaw;
   try {
     zoneRaw = await loadZone(startId);
@@ -1035,7 +1006,7 @@ function livePlayersForRender(state) {
 // Snap the camera(s) to follow the player(s). The followed player moves
 // slowly, so a snap-follow reads as smooth.
 function applyCamera() {
-  // Split-screen local multiplayer (co-op or PvP): each slice's camera
+  // Split-screen local co-op: each slice's camera
   // follows its own player (dead included — the slice holds on the corpse).
   if (sliceCount() > 1) {
     const players = orderedLocalPlayers(state);
@@ -1126,16 +1097,10 @@ function maybeTeleport(state) {
   }
 }
 
-// Persist the player's "home" position — but never while in a PvP match.
-// The arena (zone 1301) is transient: persisting it would boot the next
-// page load straight into the arena instead of the world the player
-// actually lives in. PvP exit travels back to the captured pre-match spot
-// (pvpController / onlineDeathmatch), so the save can stay frozen at the
-// real world through the whole match. Online guests don't reach here (their
+// Persist the player's "home" position. Online guests don't reach here (their
 // state is wiped); online co-op hosts DO save, so a host keeps the zone they
 // walked to during a session.
 function persistProgress() {
-  if (isPvp()) return;
   saveProgress(state);
 }
 
@@ -1151,7 +1116,6 @@ function persistProgress() {
 const POSITION_SAVE_THROTTLE_MS = 1000;
 let pendingSaveTimer = null;
 function persistProgressThrottled() {
-  if (isPvp()) return;
   if (pendingSaveTimer) return; // a save is already scheduled — coalesce into it
   pendingSaveTimer = setTimeout(() => {
     pendingSaveTimer = null;

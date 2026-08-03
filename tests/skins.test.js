@@ -4,15 +4,12 @@ import assert from "node:assert/strict";
 const skins = await import("../js/skins.js");
 const storage = await import("../js/storage.js");
 const coopMode = await import("../js/coopMode.js");
-const gameMode = await import("../js/gameMode.js");
 const sessionSkins = await import("../js/sessionSkins.js");
-const { GAME_MODE } = gameMode;
 
 function reset() {
   storage._resetStorageForTesting();
   sessionSkins._resetSessionSkinsForTesting();
   coopMode._setCoopModeForTesting(false);
-  gameMode.setGameMode(GAME_MODE.coop);
 }
 
 test("the default skin is always owned; others start unowned", () => {

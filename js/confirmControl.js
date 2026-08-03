@@ -4,7 +4,7 @@
 // as part of the surface, not a browser chrome interruption.
 //
 // `onConfirm` is read at click time, so callers can branch on live state
-// (co-op vs pvp, etc.) rather than capturing a decision up front.
+// rather than capturing a decision up front.
 //
 // Returns { root, reset }: `root` is the wrapper to mount; `reset()`
 // disarms it back to the single danger button — call it before a

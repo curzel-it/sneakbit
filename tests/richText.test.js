@@ -145,8 +145,8 @@ test("data: stonehenge monologue emphasizes *villagers* / *too big*", () => {
   assert.ok(segs.some((s) => s.bold && s.text === "too big"));
 });
 
-test("data: pvp arena bullet list is NOT emphasized, becomes • bullets", () => {
-  const line = STRINGS["pvp_arena.menu.text"];
+test("a leading-'* ' bullet list is NOT emphasized, becomes • bullets", () => {
+  const line = "* All players share this computer\n* One controller per player\n* Realtime combat";
   const segs = parseRichText(formatBullets(line));
   assert.equal(boldCount(segs), 0, "bullets must not be read as bold");
   assert.equal(italicCount(segs), 0);
@@ -156,7 +156,7 @@ test("data: pvp arena bullet list is NOT emphasized, becomes • bullets", () =>
 });
 
 test("data: %PLAYER_NAME% placeholder keeps its underscore (no stray italic)", () => {
-  const line = STRINGS["death_screen.player_won"];
+  const line = STRINGS["notification.player.died"];
   const segs = parseRichText(formatBullets(line));
   assert.equal(italicCount(segs), 0);
   assert.ok(richLineToHtml(line).includes("%PLAYER_NAME%"));

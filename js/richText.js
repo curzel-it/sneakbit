@@ -26,7 +26,7 @@ export function escapeHtml(s) {
     .replace(/>/g, "&gt;");
 }
 
-// Turn a leading "* " on any line into a real bullet so the PvP/info lists
+// Turn a leading "* " on any line into a real bullet so info lists
 // read as lists instead of stray asterisks. Emphasis ("*word*") is never
 // followed by a space, so this can't touch it.
 export function formatBullets(line) {

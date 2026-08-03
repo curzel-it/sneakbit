@@ -97,7 +97,7 @@ export function teleporterTiles(zone) {
 // `{ zone, player }`. We mutate `state.zone` and the player position.
 //
 // opts.skipFadeIn keeps the screen black after the load+placement instead
-// of fading back in. The caller then repositions players (e.g. PvP corner
+// of fading back in. The caller then repositions players (e.g. corner
 // scatter) and fades in itself via fadeOverlayIn(). Without this the arena
 // fades in showing everyone at the resolveSpawn fallback (map centre, since
 // the arena has no teleporters) for the fade duration before the scatter

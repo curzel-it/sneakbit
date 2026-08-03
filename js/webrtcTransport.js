@@ -20,7 +20,7 @@ const GAME_OPS = new Set(["snapshot", "delta", "event", "input"]);
 // this same trust boundary on the WS path by field-whitelisting every
 // op and server-stamping `from`; the DC bypasses the relay, so without
 // this gate a guest could emit relay-authoritative lifecycle frames
-// (`peer.left` to despawn/PvP-kill a victim, `peer.joined` to hijack a
+// (`peer.left` to despawn a victim, `peer.joined` to hijack a
 // slot, `peer.ghosted` to clear a peer's input) that the host's handlers
 // key off attacker-controlled ids. We re-emit only the ops the peer
 // could legitimately send and drop everything else.

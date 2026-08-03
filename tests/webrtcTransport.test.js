@@ -228,7 +228,7 @@ test("host receive path: forged `from` is overwritten, disallowed ops are droppe
 
   // Forged `from`: a guest pre-sets `from` to another player's id.
   guestDC.send(JSON.stringify({ op: "input", from: "p_victim", intent: "shoot", d: "up" }));
-  // Disallowed lifecycle op: guest tries to despawn/PvP-kill a victim.
+  // Disallowed lifecycle op: guest tries to despawn a victim.
   guestDC.send(JSON.stringify({ op: "peer.left", playerId: "p_victim" }));
   await wait(20);
 

@@ -10,10 +10,8 @@ import { tryShoot, getShootCooldownProgress } from "./shooting.js";
 import { tryMelee, getMeleeSwingProgress } from "./melee.js";
 import { getEquipped, onEquipmentChange, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { getAmmo } from "./inventory.js";
-import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { codesFor } from "./keyBindings.js";
-import { isPvp } from "./gameMode.js";
 import { onActiveInputDeviceChange } from "./activeInputDevice.js";
 import { getSettings } from "./settings.js";
 import { mountJoystick, unmountJoystick } from "./touchJoystick.js";
@@ -258,11 +256,9 @@ function localRangedBullet() {
   return sp?.bullet_species_id || KUNAI_BULLET_SPECIES_ID;
 }
 
-// True when the local hero can actually fire: PvP draws from the per-player
-// scavenge pool; story/co-op from the persisted inventory. Mirrors
-// shooting.js::shoot's ammo gate so the button matches what a tap would do.
+// True when the local hero can actually fire. Mirrors shooting.js::shoot's
+// ammo gate so the button matches what a tap would do.
 function hasRangedAmmo() {
-  if (isPvp()) return getPvpAmmo(0, bulletOfWeapon(getPvpRangedWeapon(0))) > 0;
   return getAmmo(localRangedBullet(), 0) > 0;
 }
 

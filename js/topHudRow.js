@@ -7,7 +7,7 @@
 // Single-slice (single-player / online) is the unified look: the bar hugs its
 // content (left-aligned, only as wide as the items need) and goes full-width on
 // a small phone-portrait screen. The HP bar is the elastic item there so it
-// fills the leftover width. Split-screen (local co-op / PvP) is different: the
+// fills the leftover width. Split-screen (local co-op) is different: the
 // HP cards and ammo chips anchor to their own slices, so the bar drops its
 // unified background (each chip keeps its own) and the menu button moves back to
 // the top-right corner. ammoHud drives that switch via setTopHudSplit().

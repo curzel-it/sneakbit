@@ -18,9 +18,6 @@ import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coop
 import { getNetRole } from "./onlineBootstrap.js";
 import { isPlayerDead } from "./playerHealth.js";
 import { rumble } from "./rumble.js";
-import { pvpSlotCanAct } from "./pvpMatch.js";
-import { isPvp } from "./gameMode.js";
-import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 import { spawnLocalFlash } from "./localEffects.js";
 import { isIceActive } from "./iceMode.js";
 import { ANIMATIONS_FPS } from "./constants.js";
@@ -167,15 +164,13 @@ export function tryShootForPlayer(player) {
 let lastPredictAt = 0;
 export function predictGuestShoot(player) {
   if (!player) return;
-  const weaponId = isPvp()
-    ? getPvpRangedWeapon(player.index | 0)
-    : resolveLoadout(player).ranged;
+  const weaponId = resolveLoadout(player).ranged;
   const weapon = weaponId ? getSpecies(weaponId) : null;
   // Mirror resolveRangedWeapon's fallback so the flash/sound still fire with
   // the default kunai when no ranged weapon is equipped/loaded.
   const bulletId = (weapon && weapon.entity_type === "WeaponRanged" && weapon.bullet_species_id)
     ? weapon.bullet_species_id
-    : (isPvp() ? bulletOfWeapon(weaponId) : KUNAI_BULLET_SPECIES_ID);
+    : KUNAI_BULLET_SPECIES_ID;
   const cd = (weapon?.cooldown_after_use > 0) ? weapon.cooldown_after_use : COOLDOWN;
   const now = Date.now();
   if (now - lastPredictAt < cd * 1000) return; // throttle to the weapon's rate
@@ -266,21 +261,12 @@ function shoot(state, shooter) {
   if (isPlayerDead(idx)) return;
   // A hero frozen by a demands-attention NPC can't act during the cutscene.
   if (shooter?._frozen) return;
-  // PvP: only the player whose turn is active may fire (no-op otherwise).
-  if (!pvpSlotCanAct(idx + 1)) return;
   if (cooldown[idx] > 0) return;
   const { weapon, bulletId } = resolveRangedWeapon(shooter);
   const bulletSp = getSpecies(bulletId);
   if (!bulletSp) return;
-  // PvP draws from a per-player, non-persisted ammo pool (pvpLoadout.js) so a
-  // fresh save can fight and P1's real inventory is never touched. Local
-  // co-op / single-player / online keep the persisted inventory.
-  if (isPvp()) {
-    if (!spendPvpAmmo(idx, bulletId)) { playSfx("noAmmo"); rumble(idx + 1, "noAmmo"); return; }
-  } else {
-    if (getAmmo(bulletId, idx) <= 0) { playSfx("noAmmo"); rumble(idx + 1, "noAmmo"); return; }
-    if (!removeAmmo(bulletId, 1, idx)) return;
-  }
+  if (getAmmo(bulletId, idx) <= 0) { playSfx("noAmmo"); rumble(idx + 1, "noAmmo"); return; }
+  if (!removeAmmo(bulletId, 1, idx)) return;
   // Per-player inventory in online co-op: tell the shooter's client about
   // their new authoritative count so their AmmoHud ticks down. We send
   // absolute counts (rather than -1 deltas) so a missed/reordered frame
@@ -340,12 +326,6 @@ function shoot(state, shooter) {
 // sessionLoadouts by playerId — the host needs each guest's actual gear,
 // not the shared index-0 fold.
 function resolveRangedWeapon(shooter) {
-  // PvP: the weapon comes from the per-player PvP loadout (starts as the
-  // kunai launcher; weapon crates swap it), never the saved story loadout.
-  if (isPvp()) {
-    const weaponId = getPvpRangedWeapon(shooter?.index | 0);
-    return { weapon: getSpecies(weaponId), bulletId: bulletOfWeapon(weaponId) };
-  }
   const weaponId = resolveLoadout(shooter).ranged;
   const weapon = weaponId ? getSpecies(weaponId) : null;
   if (weapon && weapon.entity_type === "WeaponRanged" && weapon.bullet_species_id) {

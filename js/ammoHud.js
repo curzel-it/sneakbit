@@ -5,7 +5,7 @@
 // matching the original game's HUD.
 //
 // Single-slice (single-player / online): one chip, top-right, for the local
-// hero. In split-screen local play (co-op or PvP) one chip per player is
+// hero. In split-screen local co-op one chip per player is
 // anchored to the top-right of THAT player's slice — mirroring the per-slice
 // HP bars — each showing that player's own count.
 
@@ -13,10 +13,8 @@ import { ICON_RES, paintInventoryIcon } from "./inventoryIcon.js";
 import { getAmmo, onInventoryChange } from "./inventory.js";
 import { getEquipped, SLOT_RANGED, onEquipmentChange } from "./equipment.js";
 import { getSpecies } from "./species.js";
-import { isPvp } from "./gameMode.js";
 import { localPlayerCount } from "./coopMode.js";
 import { sliceCount, getSlices } from "./splitScreen.js";
-import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 import { topHudRow, setTopHudSplit } from "./topHudRow.js";
 import { cycleWeapon } from "./weaponSelect.js";
 import { el } from "./dom.js";
@@ -67,7 +65,6 @@ function makeChip(index) {
 
 export function updateAmmoHud() {
   if (!root) return;
-  const pvp = isPvp();
   // Split-screen local play shows one chip per player, each anchored to its
   // own slice and reading its own count. Single-slice (single-player / online)
   // shows just the local hero's chip in the shared top-right corner.
@@ -76,18 +73,13 @@ export function updateAmmoHud() {
   setTopHudSplit(split);
   const slices = split ? getSlices() : null;
   const count = split ? localPlayerCount() : 1;
-  // Tag with the player number when more than one chip is on screen, or in
-  // PvP (where the chip tracks a specific player's scavenged loadout).
-  const tagged = pvp || count > 1;
+  // Tag with the player number when more than one chip is on screen.
+  const tagged = count > 1;
   for (const c of chips) {
     if (c.index >= count) { c.root.style.display = "none"; continue; }
-    // PvP draws from the per-player scavenge loadout and follows that player's
-    // equipped caliber; outside it, it's the persisted inventory pool.
-    const bulletId = pvp
-      ? bulletOfWeapon(getPvpRangedWeapon(c.index))
-      : rangedBulletFor(c.index);
+    const bulletId = rangedBulletFor(c.index);
     c.root.style.display = "";
-    const n = pvp ? getPvpAmmo(c.index, bulletId) : getAmmo(bulletId, c.index);
+    const n = getAmmo(bulletId, c.index);
     const label = tagged ? `P${c.index + 1}  x${n}` : `x${n}`;
     if (label !== c.lastLabel) {
       c.count.textContent = label;

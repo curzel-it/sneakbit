@@ -12,7 +12,6 @@ import { matchesAction } from "./keyBindings.js";
 import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { isPlayerDead } from "./playerHealth.js";
-import { pvpSlotCanAct } from "./pvpMatch.js";
 import { isGiant } from "./giantMode.js";
 import { isIceActive } from "./iceMode.js";
 
@@ -216,8 +215,6 @@ export function performMeleeSwing(state, opts = {}) {
   const swinger = opts.swinger || state.player;
   const idx = (swinger?.index | 0) || 0;
   if (isPlayerDead(idx)) return false;
-  // PvP: only the active player's turn may swing (no-op outside PvP).
-  if (!pvpSlotCanAct(idx + 1)) return false;
   if (cooldown[idx] > 0 && !opts.ignoreCooldown) return false;
 
   // While giant, the equipped melee weapon is bypassed for bare-handed fists.

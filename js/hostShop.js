@@ -10,7 +10,7 @@
 // if an unrelated frame raced the purchase.
 //
 // Trust: a co-op guest is trusted at the same level as its forwarded loadout
-// and movement (this is co-op, not PvP — PvP has no shop). We still bound each
+// and movement. We still bound each
 // line and require a known species so a tampered client can't inject a wild
 // pool. The relay applies a field whitelist on the WS path too (relay.js).
 

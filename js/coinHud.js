@@ -1,6 +1,6 @@
 // Coin HUD: a small chip showing the coin icon + a hero's balance. DOM, not
 // canvas (project rule). Mirrors ammoHud.js but reads the real-game wallet
-// (wallet.js) instead of ammo. Hidden in PvP (no coins).
+// (wallet.js) instead of ammo.
 //
 // Single-slice (single-player / online): one chip in the shared top row for
 // the local hero. In split-screen local play (co-op) one chip per player is
@@ -10,7 +10,6 @@
 import { ICON_RES, paintInventoryIcon } from "./inventoryIcon.js";
 import { getSpecies } from "./species.js";
 import { getCoins, onWalletChange } from "./wallet.js";
-import { isPvp } from "./gameMode.js";
 import { COIN_SPECIES_ID } from "./coinDrops.js";
 import { localPlayerCount } from "./coopMode.js";
 import { sliceCount, getSlices } from "./splitScreen.js";
@@ -50,10 +49,6 @@ function makeChip(index) {
 
 export function updateCoinHud() {
   if (!root) return;
-  // Real-game currency only — PvP has no coins.
-  const visible = !isPvp();
-  root.style.display = visible ? "" : "none";
-  if (!visible) return;
   // Split-screen local play shows one chip per player, each anchored to its
   // own slice and reading its own wallet. Single-slice (single-player /
   // online) shows just the local hero's chip in the shared top row.

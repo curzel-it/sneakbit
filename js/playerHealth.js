@@ -23,7 +23,6 @@
 import { getSpecies } from "./species.js";
 import { resolveLoadout } from "./sessionLoadouts.js";
 import { rumble } from "./rumble.js";
-import { isPvp, pvpPlayerHp } from "./gameMode.js";
 import { isGiantIndex } from "./giantMode.js";
 
 const MAX_HP = 100;
@@ -36,17 +35,11 @@ const MAX_HP = 100;
 // clamped back down in tickPlayerHealth, since expiry is lazy (no event).
 const GIANT_HP_MULT = 3;
 
-// Max HP depends on the game mode: PvP runs at 1000 (Rust
-// GameMode::player_hp) so matches actually last; co-op/creative stay at
-// 100 — then tripled while this player is giant. Every runtime cap (regen,
-// clamp, reset, HUD) goes through here, threading the player index so the
-// giant buff applies per-player.
-function baseMaxHp() {
-  return isPvp() ? pvpPlayerHp() : MAX_HP;
-}
+// The runtime max HP: 100, tripled while this player is giant. Every cap
+// (regen, clamp, reset, HUD) goes through here, threading the player index
+// so the giant buff applies per-player.
 function maxHp(index = 0) {
-  const base = baseMaxHp();
-  return isGiantIndex(index) ? base * GIANT_HP_MULT : base;
+  return isGiantIndex(index) ? MAX_HP * GIANT_HP_MULT : MAX_HP;
 }
 // Matches Rust HERO_RECOVERY_PS=1.0. Potion drops now provide a faster,
 // deliberate heal path, so passive regen is back to the original slow trickle.
@@ -63,11 +56,11 @@ const HEAL_PER_SEC = 100;
 // Up to 4 players (online co-op cap: host + 3 network guests).
 const MAX_PLAYERS = 4;
 
-// Uses baseMaxHp (not maxHp) so module-load never reaches into giantMode →
-// onlineBootstrap, which is still mid-evaluation in the import cycle (and no
-// one is giant at startup regardless).
+// Uses MAX_HP directly (not maxHp) so module-load never reaches into
+// giantMode → onlineBootstrap, which is still mid-evaluation in the import
+// cycle (and no one is giant at startup regardless).
 function makeRecord() {
-  return { hp: baseMaxHp(), invuln: 0, regenDelay: 0, pendingHeal: 0, hardImmune: 0 };
+  return { hp: MAX_HP, invuln: 0, regenDelay: 0, pendingHeal: 0, hardImmune: 0 };
 }
 
 const records = Array.from({ length: MAX_PLAYERS }, makeRecord);

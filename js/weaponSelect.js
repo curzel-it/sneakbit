@@ -15,7 +15,6 @@ import { nextWeaponInSlot } from "./weaponSlots.js";
 import { setEquipped, SLOT_RANGED, SLOT_MELEE } from "./equipment.js";
 import { resolveAction } from "./keyBindings.js";
 import { localPlayerCount } from "./coopMode.js";
-import { isPvp } from "./gameMode.js";
 import { isPlayerDead } from "./playerHealth.js";
 
 // action id → [slot, direction]
@@ -32,10 +31,9 @@ const ACTION_MAP = {
 let isBlocked = () => false;
 
 // Equip the next/previous weapon in `slot` for the given local player.
-// No-op in PvP, while dead, while an overlay is open, or when the slot has
-// fewer than 2 weapons.
+// No-op while dead, while an overlay is open, or when the slot has fewer
+// than 2 weapons.
 export function cycleWeapon(slot, playerIndex = 0, dir = +1) {
-  if (isPvp()) return;
   if (isBlocked()) return;
   if (isPlayerDead(playerIndex)) return;
   const id = nextWeaponInSlot(slot, playerIndex, dir);

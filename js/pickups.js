@@ -29,8 +29,6 @@ import { shouldBeVisible } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { isPlayerDead } from "./playerHealth.js";
 import { broadcastHostEvent } from "./hostEvents.js";
-import { isPvp } from "./gameMode.js";
-import { addPvpAmmo, setPvpRangedWeapon } from "./pvpLoadout.js";
 import { SPRITE_SHEET_ARMOR } from "./constants.js";
 
 // Bullet is here because in zone data, placed Bullets (speed=0) act as
@@ -125,31 +123,6 @@ function trigger(e, kind, picker) {
     addCoins(1, playerIndex);
     playSfx("keyCollected");
     broadcastHostEvent("coins", { playerId: picker?.playerId ?? null, amount: 1 });
-    return;
-  }
-
-  // PvP scavenging: weapon crates swap the picker's equipped ranged weapon;
-  // ammo crates fill the matching caliber in the picker's per-player pool
-  // (pvpLoadout.js). The persisted inventory is never touched.
-  if (isPvp()) {
-    const weaponId = sp?.associated_weapon;
-    const weaponSp = weaponId ? getSpecies(weaponId) : null;
-    if (weaponSp?.entity_type === "WeaponRanged") {
-      setPvpRangedWeapon(playerIndex, weaponId);
-      playSfx("ammoCollected");
-      if (playerIndex === 0) {
-        const name = tr(weaponSp.name) || weaponSp.name || "weapon";
-        showToast(`Equipped: ${name}`, "longHint", { image: inventoryIconFor(weaponSp) });
-      }
-    } else if (sp?.bundle_contents?.length) {
-      const counts = new Map();
-      for (const cid of sp.bundle_contents) counts.set(cid, (counts.get(cid) || 0) + 1);
-      for (const [cid, n] of counts) addPvpAmmo(playerIndex, cid, n);
-      playSfx("ammoCollected");
-    } else if (sp?.entity_type === "Bullet") {
-      addPvpAmmo(playerIndex, e.species_id, 1);
-      playSfx("ammoCollected");
-    }
     return;
   }
 

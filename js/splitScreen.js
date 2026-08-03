@@ -2,7 +2,7 @@
 // camera (one viewport that tried to keep every player on screen) with one
 // viewport slice per local player, laid out to fit the current window.
 //
-// Split-screen is a LOCAL concern, for both co-op and PvP: every player on
+// Split-screen is a LOCAL concern: every player on
 // this device gets their own follow-self slice. Online stays single-slice —
 // each client already renders its own follow-self window — so this module
 // reports a slice count of 1 for online and the rest of the engine renders
@@ -29,7 +29,7 @@ const WIDE = 4 / 3;
 const TALL = 3 / 4;
 
 // How many slices to draw. Online is always a single follow-self window;
-// local play (co-op or PvP) fans out one slice per player on this device.
+// local co-op fans out one slice per player on this device.
 export function sliceCount() {
   if (isOnline()) return 1;
   return clampCount(localPlayerCount());
@@ -113,7 +113,7 @@ export function getSlices() {
 // Rebuild state.cameras + the cached geometry to match the current layout.
 // Called after every auto-zoom apply (resize / orientation / role switch) and
 // whenever the local player count changes. Keeps state.cameras[0] === state.camera
-// so every single-camera consumer (PvP, online, map editor) is untouched.
+// so every single-camera consumer (online, map editor) is untouched.
 export function recomputeSlices(canvas, state) {
   if (!state || !canvas) return;
   const count = sliceCount();

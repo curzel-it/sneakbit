@@ -8,7 +8,6 @@ import assert from "node:assert/strict";
 const { computeLayout, sliceRectsPx, sliceCount } = await import("../js/splitScreen.js");
 const { TILE_SIZE } = await import("../js/constants.js");
 const coopMode = await import("../js/coopMode.js");
-const gameMode = await import("../js/gameMode.js");
 const onlineMode = await import("../js/onlineMode.js");
 
 // Aspect helpers: a clearly-wide, clearly-tall, and near-square surface.
@@ -85,28 +84,21 @@ test("sliceRectsPx tiles the surface with no gaps or overlaps", () => {
   }
 });
 
-test("sliceCount: local play (co-op or pvp) fans out; online stays single", () => {
+test("sliceCount: local co-op fans out; online stays single", () => {
   onlineMode._resetOnlineModeForTesting(); // runtime role null → offline
-  gameMode.setGameMode("coop");
   coopMode.setLocalPlayerCount(3);
   assert.equal(sliceCount(), 3);
 
   coopMode.setLocalPlayerCount(1);
   assert.equal(sliceCount(), 1);
 
-  // Local PvP fans out per player too — one slice per ninja on this device.
   coopMode.setLocalPlayerCount(4);
-  gameMode.setGameMode("pvp");
   assert.equal(sliceCount(), 4);
-  gameMode.setGameMode("coop");
 
   // Online (host/guest) is always a single follow-self window, regardless of
-  // mode or local player count.
+  // local player count.
   onlineMode._setOnlineModeForTesting({ mode: "host" });
   assert.equal(sliceCount(), 1);
-  gameMode.setGameMode("pvp");
-  assert.equal(sliceCount(), 1);
-  gameMode.setGameMode("coop");
   onlineMode._resetOnlineModeForTesting();
   coopMode.setLocalPlayerCount(1);
 });

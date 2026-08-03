@@ -2,9 +2,9 @@
 
 SneakBit has two flavours of multiplayer:
 
-- **Offline** — everyone on one machine. Split-screen co-op (one shared world,
-  one viewport per local player) and hotseat turn-based PvP. No netcode.
-- **Online** — **host-authoritative** co-op and PvP over WebSocket + WebRTC. One
+- **Offline** — everyone on one machine: split-screen co-op, one shared world,
+  one viewport per local player. No netcode.
+- **Online** — **host-authoritative** co-op over WebSocket + WebRTC. One
   player is the **host** and runs the normal single-player game unchanged; up to
   three **guests** join the host's world through a thin relay.
 
@@ -59,54 +59,6 @@ follow-self window, so there's no reason to show another player's POV.
 
 Status: **implemented**. Coverage: `tests/splitScreen.test.js` (pure layout math)
 + `tests/e2e/splitScreenLayout.test.mjs`.
-
-## Local turn-based PvP (hotseat)
-
-Turn-based, last-player-standing PvP on one machine, one controller per player.
-Entry is menu-driven (pause menu → "PvP (Beta)" → 2–4 players); "Exit PvP" returns
-to Duskhaven. The model is ported faithfully from the original Rust core
-(`game_core`, the shared source of truth for both delivery modes).
-
-**Canonical model.** PvP is one of three game modes (`RealTimeCoOp`, `Creative`,
-`TurnBasedPvp`). PvP-only knobs: `player_hp` **1000** (vs 100), friendly fire
-**on**, **only the current player** acts per frame, spawns **one per map corner**,
-camera **follows the current player**.
-
-**Turn machine** (`js/turns.js`, port of `turns.rs`). Constants:
-`TURN_PREP_DURATION = 3.0`, `TURN_DURATION = 10.0`,
-`TURN_DURATION_AFTER_ENEMY_PLAYER_DAMAGE = 2.0`, `MAX_PLAYERS = 4`. States:
-`RealTime` (co-op), `PlayerPrep(info)`, `Player(info)`.
-
-- `number_of_players == 1` **freezes** the machine (a one-participant match idles).
-- **Prep** counts down 3 s — a pure pause, nobody acts — then flips to **Player**
-  with 10 s.
-- **Player** counts down, then advances to the next index (wrapping last→P1) and
-  re-enters that player's prep. Only the current player's input is live.
-- **Hit-and-the-clock-cuts:** damaging an *enemy* player clamps the turn to
-  `min(remaining, 2.0)`. Land a hit → ~2 s to follow up → turn passes. Stops
-  poke-and-stall.
-- Rotation does **not** skip dead players (a dead slot still gets an idle
-  prep+turn); the only early skip is the **active** player's own death.
-- **Win/lose:** resolves to `Winner(survivor)` once `dead ≥ N−1`, or
-  `UnknownWinner` on a simultaneous wipe. `GameOver` is co-op-only; PvP never
-  produces it.
-- **Spawns:** corners (TopLeft/TopRight/BottomLeft/BottomRight), facing Down,
-  immobilised 0.2 s. **Exit:** back to `RealTimeCoOp`, teleport to Duskhaven
-  `(1011, 59, 57)`. Arena is world **1301** (the only map for now).
-
-**Loadout** (`js/pvpLoadout.js`) — per-player, non-persisted: equipped ranged
-weapon + a **per-caliber** ammo count, tracked by bullet species. Players spawn
-with the kunai launcher and zero ammo and **scavenge the arena** (world 1301 ships
-kunai / AR15 / cannon ammo crates and weapon crates): `pickups.js` routes PvP ammo
-into the matching caliber and weapon crates swap the equipped weapon, per player;
-`shooting.js` fires the equipped weapon and spends its caliber. Kept out of
-`inventory.js` so PvP never touches P1's saved story inventory; the arena reloads
-each match so pickups respawn and nothing leaks into the save. No melee in PvP.
-
-Code: `gameMode.js` (`isPvp`, `pvpPlayerHp`), `turns.js`, `pvpSpawn.js`,
-`pvpMatch.js` (turn state, dead set, win/lose, `pvpSlotCanAct` gate), `turnHud.js`
-(DOM countdown). Status: **implemented** — unit tests (`turns`, `gameMode`,
-`pvpSpawn`, `pvpMatch`) + `tests/e2e/pvp.test.mjs`; debug hook `window.pvp`.
 
 ---
 
@@ -335,7 +287,7 @@ Both frames carry `v` (game-frame schema), `t` (host tick counter), `zoneId`,
 - **Players** — every snapshot/delta/keepalive ships **all** players (`playerId`,
   `slot`, `index`, `x`/`y` rounded to 3dp, `tileX`/`tileY`, `direction`, `moving`,
   `hp`). Optional per-player: `sw`/`swd` (melee swing cooldown + duration while
-  swinging), `aura` (knockback-aura anim seconds), `pw`/`pa` (PvP equipped weapon +
+  swinging), `aura` (knockback-aura anim seconds)
   ammo). Whether a delta *fires* is gated by a per-player change signature
   (`sigPlayer`: tile/direction/moving/hp/slot/swing-edge/aura — deliberately
   **not** x/y), but when anything fires the payload is always *all* players. This
@@ -404,8 +356,8 @@ its own avatar (`predictedSelf`). A committed tile-step is an *already-made
 decision*, not a sampled input the host must re-time — so the guest ships
 decisions, not inputs, and the host stops guessing the path between edges. This
 deletes the whole speculation-race bug class (junctions, late stops, multi-key
-holds) and makes reconciliation exact. Applies to **both co-op and PvP** (uniform
-path; in PvP the host can reject illegal moves but cannot stop pure lag-timing —
+holds) and makes reconciliation exact. (Uniform path; the host can reject illegal
+moves but cannot stop pure lag-timing —
 accepted tradeoff).
 
 ## Wire format (guest → host)
@@ -506,7 +458,7 @@ range/alive/in-bounds check before dispatch.
 - **Zone change** — full snapshot resets mirror + predicted-self; step-log cleared.
 - **Reconnect** — re-emit current move/face from `getPredictedSelf()`; clear the
   step-log; pending action intents flushed sub-TTL.
-- **Dead guest** — host rejects moves; predicted-self frozen while dead; PvP respawn
+- **Dead guest** — host rejects moves; predicted-self frozen while dead; respawn
   reposition is a host displacement → caught by reconcile.
 
 Code anchors: `js/predictedSelf.js` (emit + reconcile), `js/guestInputForwarder.js`
@@ -688,7 +640,7 @@ Discrete one-shots, stamped with a monotonic `eid` (so a duplicate delivery of a
 Guests silently ignore unknown kinds. Allowed `kind`s (`hostEvents.js`):
 `pickup`, `death`, `respawn`, `dialogueOpen`, `dialogueAdvance`, `dialogueClose`,
 `cutsceneStart`, `cutsceneEnd`, `zoneChange`, `toast`, `hostPause`, `loadout`,
-`giant`, `ammoSet`, `coins`, `pvpStart`, `pvpResult`, `pvpEnd`.
+`giant`, `ammoSet`, `coins`.
 ```jsonc
 { "op":"event","kind":"pickup","playerId":"p_b1d2e3","speciesId":5,"amount":1,"eid":42 }
 { "op":"event","kind":"death","playerId":"p_b1d2e3","eid":43 }
@@ -754,73 +706,6 @@ frame/transport errors (oversize frame, inflate failure, abnormal close).
 
 ---
 
-# Online PvP
-
-## Realtime deathmatch — shipped
-
-"Current PvP, but realtime + online." The host picks **Realtime PvP (Beta)** in the
-Party panel (needs ≥1 guest). On start the host sets the realtime PvP mode,
-broadcasts a **`pvpStart`** event (guests enter PvP rendering — 1000-HP bar, PvP
-ammo HUD), travels everyone to arena 1301 (the normal `zoneChange` + full snapshot
-carry the guests), corner-spawns host + every guest at 1000 HP, and runs
-`pvpMatch.startMatch(n, /*turnBased*/ false)`. Each frame the host
-(`tickHostFrame`) notices deaths → `notifyPlayerDied` → `handleWinLose`; the
-terminal result broadcasts as **`pvpResult`** and shows via the shared
-`gameOver.showMatchResult` on every client. **`pvpEnd`** dismisses the overlay when
-the host leaves.
-
-Combat, damage, HP, and positions all ride the unchanged co-op sync;
-**follow-self camera is already what online co-op does** (host → own avatar, guest
-→ `predictedSelf`). The one bespoke sync: each player's equipped weapon (`pw`) +
-current ammo (`pa`) ride the snapshot player record so a guest's own scavenge ammo
-HUD is correct (`guestSelfHpSync` applies the self values into `pvpLoadout`).
-Host-only controller: `onlineDeathmatch.js`; `isRealtimePvp()`/`isTurnBasedPvp()`
-split the variants. Deferred: frags/respawn scoring, spectator host, mixed
-local+online, a richer end-of-match lobby return.
-
-## Turn-based — delta on the co-op design (not yet built)
-
-Online turn-based PvP **reuses the host-authoritative model verbatim** — host
-simulates (including the turn machine + hit resolution), guests forward input and
-render the mirror. What carries over unchanged: lobby/invite/identity/session
-lifetime, WebRTC + WS-relay transport, snapshot broadcast + interpolation,
-predicted-self. What changes:
-
-1. **Mode is chosen in the lobby**, not by walking into a link. On start the host
-   sets `GameMode = pvp`, corner-spawns, teleports everyone into 1301.
-2. **One guest = one fixed `player_index`.** Host is P1.
-3. **Friendly fire is always on.**
-4. **Turn ownership is host-enforced** — the host drops forwarded input unless that
-   guest owns the current turn; an off-turn guest's prediction is disabled (they
-   spectate).
-5. **Turn state is on the wire**, host→all, on every change + a low-rate heartbeat
-   so a late/reconnecting guest resyncs the countdown. Authoritative — guests render
-   it, never compute it.
-6. **Camera follows the active player for everyone** — a shared spectator view with
-   control passing around.
-7. **Match result is host-authoritative** (`handle_win_lose` → terminal
-   `matchResult`). Rematch is a host action; a guest's confirm is a request.
-8. **Disconnect = death** for `handle_win_lose` (so the match resolves), turn
-   skipped; the 30 s grace still applies before the slot is finalized.
-
-Protocol additions (delta on the catalogue — no new transport):
-
-| Direction | Message | Purpose |
-|-----------|---------|---------|
-| host → all | `mode:"pvp"` in the start frame | clients enter PvP rendering (turn HUD, spectator camera, FF on) |
-| host → all | `turn { phase:"prep"\|"active", playerIndex, timeRemaining, reducedAfterHit }` | authoritative turn state (on change + heartbeat) |
-| host → all | `matchResult { kind:"winner"\|"unknown", playerIndex? }` | end-of-match screen |
-| guest → host | existing `input`/`move` | host **ignores** unless the guest owns the current turn |
-| guest → host | `rematchRequest` | host may honor to restart |
-
-**Open product decisions:** host-as-player vs neutral referee (simplest: host is
-P1); local+online mixed (input gating must key on `(peer, localSlot)`); turn-length
-tuning (10/3/2 s may feel long with interpolation latency — kept configurable);
-reconnect mid-turn (spec'd default: forfeit, turn already advanced on drop); more
-maps (beta ships 1301 only; lobby map vote later).
-
----
-
 # Ops
 
 - **Production** lives at <https://sneakbit.curzel.it> on a shared Ubuntu VPS:
@@ -840,16 +725,13 @@ maps (beta ships 1301 only; lobby map vote later).
 
 ## Status
 
-Online co-op + realtime PvP are **shipped and live in production** over WebRTC
-(WS-relay fallback), with `permessage-deflate`, STUN + TURN-credential endpoint,
+Online co-op is **shipped and live in production** over WebRTC (WS-relay
+fallback), with `permessage-deflate`, STUN + TURN-credential endpoint,
 discrete-event hooks (pickup/death/respawn/dialogue/cutscene/toast end-to-end),
 guest role gates, structured logging, `/metrics` + `/version`, and SIGTERM drain.
-Offline split-screen co-op and local turn-based PvP are shipped. Online turn-based
-PvP is specced above (not built).
+Offline split-screen co-op is shipped.
 
-Deferred: PvP frags/respawn scoring, spectator host, mixed local+online sessions, a
-richer end-of-match lobby, dedicated arena soundtrack + more arenas, full intent
-cheat-resistance hardening.
+Deferred: mixed local+online sessions, full intent cheat-resistance hardening.
 
 ## Out of scope
 

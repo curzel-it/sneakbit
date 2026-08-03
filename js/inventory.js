@@ -56,7 +56,7 @@ function key(playerIndex, speciesId) {
 
 // Inventories are never folded: each player index addresses its own pool.
 // (Kept as a named seam so the read/write paths below read uniformly and a
-// future remap — e.g. PvP scratch pools — has one place to hook.)
+// future remap has one place to hook.)
 function effectiveIndex(playerIndex) {
   return playerIndex | 0;
 }

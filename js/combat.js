@@ -18,7 +18,6 @@ import { isExplosive } from "./explosives.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { getSettings } from "./settings.js";
 import { startDeathAnimation, tickDeathAnimations } from "./deathAnimation.js";
-import { isPvp } from "./gameMode.js";
 import { maybeDropLoot } from "./lootDrops.js";
 import { freezeEntity, isFrozen } from "./freeze.js";
 
@@ -89,9 +88,7 @@ function spawnDamageIndicator(zone, hittable, parentId) {
 
 function resolveBullets(zone, players, dt) {
   const ents = zone.entities;
-  // PvP forces friendly fire on regardless of the user setting (Rust
-  // allows_pvp() gates the player-bullet-hits-player path).
-  const friendlyFire = !!getSettings().friendlyFire || isPvp();
+  const friendlyFire = !!getSettings().friendlyFire;
   for (let i = ents.length - 1; i >= 0; i--) {
     const b = ents[i];
     if (!b._spawned) continue;
@@ -129,7 +126,7 @@ function resolveBullets(zone, players, dt) {
             // It must keep damaging while it overlaps, mirroring the Rust core
             // where melee is plain dt-scaled continuous damage with no i-frame
             // gate. The single-hit burst path below would let a sword chip only
-            // one frame (~dps*dt ≈ 7.5) off a 1000-HP PvP player and then
+            // one frame (~dps*dt ≈ 7.5) off a player and then
             // despawn — i.e. no damage. Tick continuously and pass through (the
             // entity loop + wall check below still stop it on barrels/walls).
             applyPlayerContinuousDamage(dps * damageMultiplier(b) * dt, victim);
@@ -181,7 +178,7 @@ function resolveBullets(zone, players, dt) {
         // so it stops blocking, fusing, attacking and taking further hits.
         startDeathAnimation(t);
         // Real-game loot: one mutually-exclusive roll → nothing / coins / ammo
-        // (no-op in PvP/creative — see lootDrops.js). The killing bullet's
+        // (no-op in creative — see lootDrops.js). The killing bullet's
         // owner drives weapon-aware ammo type. Monsters and barrels use
         // different odds.
         maybeDropLoot(zone, t, b._playerIndex | 0);

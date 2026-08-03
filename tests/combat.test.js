@@ -322,14 +322,14 @@ test("friendly fire ON: a P1-owned bullet damages P2 but not P1", async () => {
   saveSettings({ friendlyFire: false });
 });
 
-test("PvP melee hits an enemy player continuously and passes through (not a one-frame burst)", async () => {
-  // Regression: in PvP players have 1000 HP and the bullet-vs-player path is a
-  // single dt-scaled burst that despawns the bullet + sets a 0.4s invuln. A
-  // sword swing (5 short-lived bullets, dps 450) would chip only ~one frame
-  // (~7.5) and then be gone — i.e. "no damage". Melee bullets must instead
-  // deal continuous dps*dt every frame and pass through (mirrors the Rust core).
-  const gm = await import("../js/gameMode.js");
-  gm.setGameMode(gm.GAME_MODE.pvp, { realtime: true });
+test("melee hits another player continuously and passes through (not a one-frame burst)", async () => {
+  // Regression: the bullet-vs-player path is a single dt-scaled burst that
+  // despawns the bullet + sets a 0.4s invuln. A sword swing (5 short-lived
+  // bullets, dps 450) would chip only ~one frame and then be gone — i.e. "no
+  // damage". Melee bullets must instead deal continuous dps*dt every frame and
+  // pass through (mirrors the Rust core).
+  const { saveSettings } = await import("../js/settings.js");
+  saveSettings({ friendlyFire: true });
   playerHealth.resetPlayerHealth();
   const zone = makeZone();
   const attacker = { index: 0, x: 0, y: 0, tileX: 0, tileY: 0 };
@@ -345,7 +345,7 @@ test("PvP melee hits an enemy player continuously and passes through (not a one-
   const hp0 = playerHealth.getPlayerHp(1);
   combat.tickCombat(zone, [attacker, victim], 1 / 60);
   const hp1 = playerHealth.getPlayerHp(1);
-  assert.ok(hp1 < hp0, "melee damages the enemy player");
+  assert.ok(hp1 < hp0, "melee damages the other player");
   assert.ok(zone.entities.includes(bullet), "melee bullet passes through (not despawned on a player hit)");
 
   // Continuous: a second frame keeps biting — the burst path's 0.4s invuln
@@ -355,5 +355,5 @@ test("PvP melee hits an enemy player continuously and passes through (not a one-
 
   // ...and it never touches the swinger.
   assert.equal(playerHealth.getPlayerHp(0), playerHealth.getPlayerMaxHp(), "swinger is unharmed");
-  gm.setGameMode(gm.GAME_MODE.coop);
+  saveSettings({ friendlyFire: false });
 });

@@ -15,7 +15,7 @@
 // Scope: only locally-driven players are intercepted (offline solo, local
 // co-op, and a host's own avatar). A remote guest owns its own movement
 // (docs/multiplayer.md) so the host can't freeze it; the "!" still
-// renders for everyone. Creative / PvP / Tower-Defense are skipped.
+// renders for everyone. Creative mode is skipped.
 
 import { isWalkable } from "./zone.js";
 import { shouldBeVisible } from "./entityVisibility.js";
@@ -24,7 +24,6 @@ import { findPathToNearest } from "./pathfinding.js";
 import { getValue, setValue } from "./storage.js";
 import { openDialogueWithEntity } from "./interact.js";
 import { isCreativeMode } from "./creativeMode.js";
-import { isPvp } from "./gameMode.js";
 import { isDialogueOpen } from "./dialogue.js";
 import { isShopOpen } from "./shop.js";
 import { isPlayerDead } from "./playerHealth.js";
@@ -79,8 +78,7 @@ export function tickNpcInterception(state, dt) {
 
   // Always advance an in-flight approach so a started cutscene completes, but
   // only ARM new ones during live, non-modal play.
-  const canArm = !isCreativeMode() && !isPvp()
-    && !isDialogueOpen() && !isShopOpen();
+  const canArm = !isCreativeMode() && !isDialogueOpen() && !isShopOpen();
   const players = canArm ? localTargets(state) : null;
 
   for (const e of zone.entities) {

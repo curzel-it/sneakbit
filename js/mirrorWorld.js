@@ -11,7 +11,6 @@
 
 import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js";
 import { AURA_ANIM_DURATION } from "./knockbackAura.js";
-import { setGameMode } from "./gameMode.js";
 import { loadZone } from "./data.js";
 import { buildZone } from "./zone.js";
 import { setupCutscenes } from "./cutscenes.js";
@@ -182,15 +181,6 @@ export function getMirrorPlayerById(playerId, at = nowMs()) {
 // Internal: synchronously apply a snapshot. Loads the zone first if
 // needed; reads of getMirrorZone()/isMirrorReady() flip to true once the
 // loader resolves and the snapshot is replayed.
-// Mirror the host's game mode (co-op / pvp) from every frame so a guest's
-// HP-bar scale, ammo HUD and PvP gating follow the host — and stay correct
-// across late-join, rematch and the host leaving PvP (self-healing, unlike
-// the one-shot pvpStart event).
-function applyMode(msg) {
-  if (typeof msg.mode !== "string") return;
-  setGameMode(msg.mode);
-}
-
 // A host on a different build than this guest must not corrupt our world:
 // reject any game frame whose schema version we can't interpret rather
 // than merging it. Every push to main is a release, so an old tab and a
@@ -209,7 +199,6 @@ function schemaMatches(msg) {
 export function handleSnapshot(msg, opts = {}) {
   if (!msg || msg.zoneId == null) return;
   if (!schemaMatches(msg)) return;
-  applyMode(msg);
   if (!zone || zone.id !== msg.zoneId) {
     return loadZoneAndApplySnapshot(msg, opts);
   }
@@ -224,7 +213,6 @@ export function handlePeerLeft(msg) {
 export function handleDelta(msg, opts = {}) {
   if (!msg) return;
   if (!schemaMatches(msg)) return;
-  applyMode(msg);
   if (!zone || zone.id !== msg.zoneId) return;
   const t = opts.at ?? nowMs();
   for (const p of msg.players || []) ingestPlayer(p, t);

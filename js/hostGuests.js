@@ -17,9 +17,6 @@ import { tryShootForSlot } from "./shooting.js";
 import { tryMeleeForSlot } from "./melee.js";
 import { tryInteractForSlot } from "./interact.js";
 import { isPlayerDead } from "./playerHealth.js";
-import { isPvp } from "./gameMode.js";
-import { cornerSpawnTile } from "./pvpSpawn.js";
-import { notifyPlayerDied } from "./pvpMatch.js";
 import { applyNetStep, setGuestAckSink } from "./player.js";
 
 let stateGetter = null;
@@ -127,19 +124,10 @@ function spawnSlot2(state, m) {
   }
   if (!p2Factory) return;
   const p2 = p2Factory(state.player, state.zone, { index: 1 });
-  pvpCornerPlace(state, p2, 1);
   p2.playerId = m.playerId;
   p2.slot = 2;
   state.player2 = p2;
   state.lastTile2 = { x: p2.tileX, y: p2.tileY };
-}
-
-// In PvP a guest spawns at its own map corner instead of next to the host
-// (a match start re-scatters everyone anyway; this covers a late joiner).
-function pvpCornerPlace(state, player, idx0) {
-  if (!isPvp()) return;
-  const tile = cornerSpawnTile(state.zone, idx0);
-  player.tileX = tile.x; player.tileY = tile.y; player.x = tile.x; player.y = tile.y;
 }
 
 function spawnExtraSlot(state, m, slot) {
@@ -153,7 +141,6 @@ function spawnExtraSlot(state, m, slot) {
   }
   if (!p2Factory) return;
   const p = p2Factory(state.player, state.zone, { index: slot - 1 });
-  pvpCornerPlace(state, p, slot - 1);
   p.playerId = m.playerId;
   p.slot = slot;
   state.players.push({
@@ -171,9 +158,6 @@ function onPeerLeft(m) {
   if (slot == null) return;
   clearInputState(slot);
   delete lastSeqOut[m.playerId];
-  // PvP: a mid-match drop counts as a death so last-player-standing can still
-  // resolve (otherwise numberOfPlayers stays N and the match hangs).
-  if (isPvp()) notifyPlayerDied(slot - 1);
   const state = stateGetter?.();
   if (!state) return;
   if (slot === 2) {
