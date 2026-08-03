@@ -43,9 +43,9 @@ export function stageRuntime(destDir) {
     cpSync(join(SITE_DIR, tree), join(destDir, tree), { recursive: true });
   }
 
-  // Every hashed JS file at the site root: the player bundle (main-*.js), its
-  // shared/lazy chunks (chunk-*.js) and the autoplay solver worker
-  // (solverWorker.js). Skip .map files — they're a dev aid, not shipped.
+  // Every hashed JS file at the site root: the player bundle (main-*.js) and
+  // its shared/lazy chunks (chunk-*.js). Skip .map files — they're a dev aid,
+  // not shipped.
   let jsCount = 0;
   for (const name of readdirSync(SITE_DIR)) {
     if (name.endsWith(".js")) {

@@ -17,7 +17,7 @@
 // is node: built-ins.
 
 import * as esbuild from "esbuild";
-import { rmSync, cpSync, readFileSync, writeFileSync, existsSync, renameSync } from "node:fs";
+import { rmSync, cpSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -66,18 +66,13 @@ async function build() {
   rmSync(OUT_DIR, { recursive: true, force: true });
 
   const result = await esbuild.build({
-    // Entries: the game shell (js/main.js, loaded by /play/), the marketing-
-    // site account UI (js/siteAccount.js, loaded by / and /account/), and the
-    // autoplay solver Web Worker. All must be bundled because js/ is denylisted
-    // from _site/ — raw module loads would 404 in production. The worker is a
-    // separate entry because esbuild doesn't auto-bundle `new Worker(new URL
-    // (...))`; it's renamed to a stable /solverWorker.js below so the runtime
-    // `new URL("./solverWorker.js", import.meta.url)` resolves from the bot
-    // chunk (which, like the worker, sits at the site root in prod).
+    // Entries: the game shell (js/main.js, loaded by /play/) and the
+    // marketing-site account UI (js/siteAccount.js, loaded by / and
+    // /account/). Both must be bundled because js/ is denylisted from _site/ —
+    // raw module loads would 404 in production.
     entryPoints: [
       join(REPO_ROOT, "js/main.js"),
       join(REPO_ROOT, "js/siteAccount.js"),
-      join(REPO_ROOT, "js/autoplay/solverWorker.js"),
     ],
     bundle: true,
     format: "esm",
@@ -85,11 +80,9 @@ async function build() {
     sourcemap: true,
     target: "es2022",
     entryNames: "[name]-[hash]",
-    // Code-splitting so the opt-in autoplay bot (dynamically imported by
-    // main.js under ?autoplay) lands in its OWN lazy chunk instead of the
-    // player bundle, while still sharing the engine's module instances via
-    // shared chunks (the bot must drive the same input/storage/state
-    // singletons the game reads). Chunk filenames are content-hashed.
+    // Code-splitting so the two entries share one copy of the modules they
+    // both pull in (and any dynamic import lands in its own lazy chunk)
+    // instead of duplicating them. Chunk filenames are content-hashed.
     splitting: true,
     chunkNames: "chunk-[hash]",
     outdir: OUT_DIR,
@@ -106,33 +99,6 @@ async function build() {
   };
   const bundleName = bundleFor("js/main.js");
   const siteBundle = bundleFor("js/siteAccount.js");
-
-  // Bundle guard: the opt-in autoplay bot must stay OUT of the player entry
-  // bundles (it's a lazy chunk fetched only under ?autoplay) yet still be
-  // emitted as a chunk that shares the engine modules. Assert both, so a
-  // refactor that accidentally static-imports the bot — shipping it to every
-  // player, or worse splitting it into a dead second copy of the engine
-  // singletons — fails the build loudly.
-  const outputs = Object.entries(result.metafile.outputs);
-  const inputsOf = (file) => Object.keys(outputs.find(([f]) => f === file)?.[1]?.inputs ?? {});
-  const isAutoplay = (i) => i.includes("js/autoplay/");
-  for (const entry of ["js/main.js", "js/siteAccount.js"]) {
-    const file = outputs.find(([, o]) => o.entryPoint === entry)?.[0];
-    if (file && inputsOf(file).some(isAutoplay)) {
-      throw new Error(`build: autoplay bot leaked into the ${entry} player bundle — keep it behind the dynamic import()`);
-    }
-  }
-  const botChunk = outputs.find(([, o]) => Object.keys(o.inputs || {}).some((i) => i.endsWith("js/autoplay/bot.js")));
-  if (!botChunk) throw new Error("build: autoplay bot chunk missing — the dynamic import() was dropped");
-
-  // Rename the hashed solver-worker entry to the stable /solverWorker.js the
-  // runtime asks for. Its own imports are by their hashed chunk names and it
-  // stays at the site root, so only the entry file's name changes.
-  const workerHashed = bundleFor("js/autoplay/solverWorker.js");
-  renameSync(join(OUT_DIR, workerHashed), join(OUT_DIR, "solverWorker.js"));
-  if (existsSync(join(OUT_DIR, `${workerHashed}.map`))) {
-    renameSync(join(OUT_DIR, `${workerHashed}.map`), join(OUT_DIR, "solverWorker.js.map"));
-  }
 
   // Copy every shippable top-level entry into _site/ verbatim — including the
   // landing page (root index.html) and the game shell (play/index.html). The

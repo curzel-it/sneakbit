@@ -138,10 +138,9 @@ export function keyMatches(key, expectedValue) {
   return false;
 }
 
-// Snapshot the entire kv namespace into a plain object. Used by the
-// autoplay bot to dry-run the route planner (which writes flags as it
-// simulates) against a COPY of the live save without mutating it. Pairs
-// with restoreStorage.
+// Snapshot the entire kv namespace into a plain object, so a caller can
+// mutate flags against a COPY of the live save and put it back afterwards.
+// Pairs with restoreStorage.
 export function snapshotStorage() {
   hydrate();
   const snap = {};

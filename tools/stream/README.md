@@ -1,5 +1,10 @@
 # SneakBit 24/7 livestream
 
+> **Dormant.** The autoplay bot this stream broadcast has been removed from the
+> game, so `?autoplay=1` is now a no-op and the capture would show an idle
+> menu. The pipeline below still works and is kept for reference; point
+> `STREAM_URL` at something worth watching before deploying it again.
+
 Streams the game — played by the autoplay AI — to YouTube and Twitch, 24/7,
 from the same Ubuntu VPS that serves `sneakbit.curzel.it`.
 

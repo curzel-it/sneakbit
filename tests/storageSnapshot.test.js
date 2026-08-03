@@ -1,7 +1,6 @@
-// snapshotStorage/restoreStorage: the seam that lets the autoplay bot
-// dry-run the route planner against a COPY of the live save. A round-trip
-// must leave the kv namespace byte-for-byte unchanged — including clearing
-// keys the dry-run added.
+// snapshotStorage/restoreStorage: the seam that lets a caller mutate flags
+// against a COPY of the live save. A round-trip must leave the kv namespace
+// byte-for-byte unchanged — including clearing keys the dry-run added.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
