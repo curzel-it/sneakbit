@@ -13,7 +13,6 @@ const SOURCES = {
   humanoids_2x2: "./assets/humanoids_2x2.png",
   humanoids_2x3: "./assets/humanoids_2x3.png",
   tentacles: "./assets/tentacles.png",
-  humanoids_3x4: "./assets/humanoids_3x4.png",
   static_objects: "./assets/static_objects.png",
   animated_objects: "./assets/animated_objects.png",
   weapons: "./assets/weapons.png",

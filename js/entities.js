@@ -145,10 +145,10 @@ function drawPlayer(ctx, player, camera) {
   // Ice buff: a 3×3 frost aura under the hero's feet, drawn before the body so
   // it reads as a floor decal the hero stands on (the sprite's z_index is -1).
   drawIceAura(ctx, player, camera);
-  // Giant mode swaps the hero for a dedicated 3×4 humanoid sprite. The
-  // normal-size weapon overlay would float out of place at that scale, so
-  // it's skipped for the duration (collision and everything else stay
-  // normal-sized — only the rendered sprite changes).
+  // Giant mode draws the hero's own sprite at GIANT_SCALE×. The normal-size
+  // weapon overlay would float out of place at that scale, so it's skipped
+  // for the duration (collision and everything else stay normal-sized — only
+  // the rendered sprite changes).
   const giant = isGiant(player);
   const { melee, ranged, armor } = resolveLoadout(player);
   const equipInFront = player.direction === "up"
@@ -199,31 +199,35 @@ function drawArmorOverlays(ctx, player, camera, armor) {
   }
 }
 
-// Giant mode renders from a dedicated 3×4 humanoid sheet (humanoids_3x4):
-// one humanoid (no skin columns), 8 frames per directional strip, laid out
-// in the standard 8-row directional order (DIR_ROW_MOVING/STILL). The sprite
-// is kept centred on the hero's 1-wide tile and feet-aligned (bottom at
-// player.y + 1) so the unchanged collision tile still sits under the giant's
-// feet. Frames ride the shared animClock like any other directional sprite.
-const GIANT_TILES_W = 3;
-const GIANT_TILES_H = 4;
-const GIANT_FRAMES = 8;
+// Giant mode draws the hero's OWN sprite — same sheet, same skin, same
+// directional frame — scaled up. Using the hero's real sprite (rather than a
+// separate stand-in humanoid sheet) means skins, facing and the walk cycle all
+// come along for free, and there's no second set of art to keep in sync.
+//
+// The blit is centred on the hero's 1-wide tile and feet-aligned (bottom edge
+// at player.y + 1), so the unchanged collision tile still sits under the
+// giant's feet. Coordinates are rounded after scaling — the source is pixel
+// art and the context has smoothing off, so an integer 2× is a clean
+// nearest-neighbour blow-up.
+const GIANT_SCALE = 2;
 
 function drawGiant(ctx, player, camera) {
   let sheet;
-  try { sheet = getSprite("humanoids_3x4"); } catch { return; }
+  try { sheet = getSprite("heroes"); } catch { return; }
   if (!sheet || !sheet.complete) return;
-  const moving = !!player.moving;
-  const dir = player.direction || "down";
-  const dirRow = (moving ? DIR_ROW_MOVING : DIR_ROW_STILL)[dir] ?? DIR_ROW_STILL.down;
-  const frameIdx = moving ? Math.floor(animClock * ANIMATIONS_FPS) % GIANT_FRAMES : 0;
-  const sw = GIANT_TILES_W * TILE_SIZE;
-  const sh = GIANT_TILES_H * TILE_SIZE;
-  const sx = frameIdx * sw;
-  const sy = dirRow * sh;
-  const px = Math.round((player.x - 1 - camera.x) * TILE_SIZE);
-  const py = Math.round((player.y - 3 - camera.y) * TILE_SIZE);
-  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+  const frame = getPlayerSpriteFrame(player);
+  const sx = frame.x * TILE_SIZE;
+  const sy = frame.y * TILE_SIZE;
+  const sw = frame.w * TILE_SIZE;
+  const sh = frame.h * TILE_SIZE;
+  const dw = sw * GIANT_SCALE;
+  const dh = sh * GIANT_SCALE;
+  // Horizontally centred on the hero's tile; bottom edge on the feet line.
+  const wx = player.x + frame.w / 2 - (frame.w * GIANT_SCALE) / 2;
+  const wy = player.y + 1 - frame.h * GIANT_SCALE;
+  const px = Math.round((wx - camera.x) * TILE_SIZE);
+  const py = Math.round((wy - camera.y) * TILE_SIZE);
+  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, dw, dh);
 }
 
 // The aura's activation animation: a w×h sprite from the weapons sheet
