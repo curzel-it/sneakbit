@@ -6,6 +6,13 @@
          The core game is fully offline and needs none of this. -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Haptics on the on-screen touch controls (js/haptics.js). WebView's
+         Vibration API calls straight through to the system Vibrator, so
+         navigator.vibrate() is a silent no-op without this — the setting would
+         be on and nothing would buzz. Normal-level, so it's granted at install
+         with no runtime prompt. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
