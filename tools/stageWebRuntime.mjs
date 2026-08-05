@@ -6,10 +6,10 @@
 // the "what does the game actually need at runtime" decision lives once.
 //
 // We copy a subset, not all of _site/: the game runtime only needs the shell
-// (play/index.html), the hashed JS bundle + its chunks at the root, and the
-// asset/data trees it fetches at runtime. The marketing landing, account UI,
-// source art (aseprite/), trailer media/ and *.map files never run inside the
-// app, so they're left out to keep the package small.
+// (index.html), the hashed JS bundle + its chunks at the root, and the
+// asset/data trees it fetches at runtime. The account UI, the /play/ redirect
+// stub, source art (aseprite/), trailer media/ and *.map files never run
+// inside the app, so they're left out to keep the package small.
 
 import { execFileSync } from "node:child_process";
 import { rmSync, cpSync, mkdirSync, readdirSync, statSync } from "node:fs";
@@ -34,9 +34,8 @@ export function stageRuntime(destDir) {
   rmSync(destDir, { recursive: true, force: true });
   mkdirSync(destDir, { recursive: true });
 
-  // The game shell — play/index.html only (showcase.html is a dev page).
-  mkdirSync(join(destDir, "play"), { recursive: true });
-  cpSync(join(SITE_DIR, "play", "index.html"), join(destDir, "play", "index.html"));
+  // The game shell — the site root index.html.
+  cpSync(join(SITE_DIR, "index.html"), join(destDir, "index.html"));
 
   // Directory trees fetched at runtime.
   for (const tree of ["assets", "data"]) {

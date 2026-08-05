@@ -29,7 +29,7 @@ import WebKit
 /// same in every shipped build.
 let kAppScheme = "app"
 let kAppHost = "sneakbit.curzel.it"
-let kAppEntryURL = "app://sneakbit.curzel.it/play/index.html"
+let kAppEntryURL = "app://sneakbit.curzel.it/index.html"
 
 final class BundleSchemeHandler: NSObject, WKURLSchemeHandler {
     // Root of the bundled web tree (the `web/` folder reference). Resolved once.
@@ -65,7 +65,7 @@ final class BundleSchemeHandler: NSObject, WKURLSchemeHandler {
 
         // Map the request path onto the bundled tree. "/" → the game shell.
         var path = url.path
-        if path.isEmpty || path == "/" { path = "/play/index.html" }
+        if path.isEmpty || path == "/" { path = "/index.html" }
         let relative = String(path.drop(while: { $0 == "/" }))
 
         let rangeHeader = task.request.value(forHTTPHeaderField: "Range")

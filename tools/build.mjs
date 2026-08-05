@@ -12,9 +12,8 @@
 //
 // Runtime asset/data loads (./data/*.json, assets/*) are fetched against the
 // document base, not bundled — so they're copied verbatim into _site/
-// alongside the static landing page (root index.html) and the rewritten game
-// shell (play/index.html). The only devDependency is esbuild; everything else
-// is node: built-ins.
+// alongside the rewritten game shell (root index.html) and the account page.
+// The only devDependency is esbuild; everything else is node: built-ins.
 
 import * as esbuild from "esbuild";
 import { rmSync, cpSync, readFileSync, writeFileSync } from "node:fs";
@@ -66,10 +65,10 @@ async function build() {
   rmSync(OUT_DIR, { recursive: true, force: true });
 
   const result = await esbuild.build({
-    // Entries: the game shell (js/main.js, loaded by /play/) and the
-    // marketing-site account UI (js/siteAccount.js, loaded by / and
-    // /account/). Both must be bundled because js/ is denylisted from _site/ —
-    // raw module loads would 404 in production.
+    // Entries: the game shell (js/main.js, loaded by /) and the account UI
+    // (js/siteAccount.js, loaded by /account/). Both must be bundled because
+    // js/ is denylisted from _site/ — raw module loads would 404 in
+    // production.
     entryPoints: [
       join(REPO_ROOT, "js/main.js"),
       join(REPO_ROOT, "js/siteAccount.js"),
@@ -101,8 +100,8 @@ async function build() {
   const siteBundle = bundleFor("js/siteAccount.js");
 
   // Copy every shippable top-level entry into _site/ verbatim — including the
-  // landing page (root index.html) and the game shell (play/index.html). The
-  // game shell is rewritten in place below; the landing ships as-is.
+  // game shell (root index.html), the account page, and the /play/ redirect
+  // stub. The two pages with module scripts are rewritten in place below.
   const { readdirSync } = await import("node:fs");
   for (const name of readdirSync(REPO_ROOT)) {
     if (isDenied(name)) continue;
@@ -110,13 +109,12 @@ async function build() {
   }
 
   // Rewrite each page's raw module <script src> to its hashed bundle. The game
-  // shell and the account page carry <base href="/">, so `./<bundle>` resolves
-  // to root where esbuild wrote it; the landing is served at root already.
-  rewriteScript(join(OUT_DIR, "play", "index.html"), "./js/main.js", `./${bundleName}`);
-  rewriteScript(join(OUT_DIR, "index.html"), "./js/siteAccount.js", `./${siteBundle}`);
+  // shell is served at root; the account page carries <base href="/">, so
+  // `./<bundle>` resolves to root where esbuild wrote it either way.
+  rewriteScript(join(OUT_DIR, "index.html"), "./js/main.js", `./${bundleName}`);
   rewriteScript(join(OUT_DIR, "account", "index.html"), "./js/siteAccount.js", `./${siteBundle}`);
 
-  console.log(`\nbuilt _site/ — game ${bundleName}, site ${siteBundle}`);
+  console.log(`\nbuilt _site/ — game ${bundleName}, account ${siteBundle}`);
 }
 
 build().catch((err) => {

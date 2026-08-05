@@ -24,7 +24,7 @@ set -euo pipefail
 
 MODE="${1:-master}"
 
-STREAM_URL="${STREAM_URL:-https://sneakbit.curzel.it/play/?autoplay=1}"
+STREAM_URL="${STREAM_URL:-https://sneakbit.curzel.it/?autoplay=1}"
 STREAM_RES="${STREAM_RES:-1280x720}"
 STREAM_FPS="${STREAM_FPS:-30}"
 STREAM_BITRATE="${STREAM_BITRATE:-3000k}"

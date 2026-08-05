@@ -1,15 +1,15 @@
-// The marketing site's account-facing UI — the website counterpart to the
+// The web account UI at /account/ — the out-of-game counterpart to the
 // in-game accountPanel.js. Two mount points, both self-wiring on load:
 //
 //   #account-link  -> mountAuthLink()    the "Sign in" / "Account · Name" chip
-//                                         in the landing + account-page headers
+//                                         in the page header
 //   #account-app   -> mountAccountPage()  the full /account/ page (sign in,
 //                                         register, forgot/reset, profile edits,
 //                                         delete, and a view-only purchase list)
 //
 // It reuses ONLY the framework-free data layer — accountSession.js (the shared
 // localStorage session, same KEY the game uses, so a sign-in here is a sign-in
-// in /play/ and vice versa), accountApi.js, storeApi.js, and dom.js's el(). It
+// in the game at / and vice versa), accountApi.js, storeApi.js, and dom.js's el(). It
 // deliberately does NOT pull in the game runtime that accountPanel.js depends on
 // (menuNav, skins/heroPreview sprite rendering, strings/data) — purchases are
 // listed as plain text rows, and status is shown inline instead of via toast.js.
@@ -29,9 +29,8 @@ import { el, showOnly } from "./dom.js";
 
 // — Public mounts ————————————————————————————————————————————————————————
 
-// The header chip. Reflects sign-in state and links to the account page. Lives
-// on every marketing page (landing + account) so the entry point is always one
-// click away and updates live via onAccountChange (incl. cross-tab storage sync).
+// The header chip. Reflects sign-in state and links to the account page, and
+// updates live via onAccountChange (incl. cross-tab storage sync).
 export function mountAuthLink(container) {
   injectStyles();
   const render = (user) => {
@@ -519,7 +518,7 @@ function stripResetParam() {
   } catch { /* ignore */ }
 }
 
-// Account-page + header-chip styling, injected once. Matches the landing's
+// Account-page + header-chip styling, injected once. Matches site.css's
 // monospace dark aesthetic (literal colors, not the game's --sb-* tokens).
 function injectStyles() {
   if (typeof document === "undefined") return;

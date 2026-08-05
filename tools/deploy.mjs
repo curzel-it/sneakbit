@@ -229,6 +229,13 @@ server {
         proxy_send_timeout 1d;
     }
 
+    # The game used to live at /play/. Real 301s for the two canonical URLs so
+    # links minted back then — invites (?join=CODE), Stripe returns, bookmarks
+    # — land on the shell with their query string intact. Exact matches, so
+    # /play/showcase.html and the static stub are still reachable.
+    location = /play  { return 301 /$is_args$args; }
+    location = /play/ { return 301 /$is_args$args; }
+
     # Static game client (hashed bundle, assets/, data/, index.html).
     location / {
         try_files $uri $uri/ /index.html;
@@ -756,16 +763,17 @@ async function stepHealth(env) {
     `systemctl is-active ${APP_NAME} && ` +
     `curl -fsS -o /dev/null -w 'local:%{http_code}\\n' http://${APP_BIND}/ && ` +
     `curl -fsS -o /dev/null -w 'local-health:%{http_code}\\n' http://${APP_BIND}/health && ` +
-    // `/` is the marketing landing (links to /play); the game shell lives at
-    // /play/ and carries the canvas + hashed bundle. Probe both so a regression
-    // in either the landing or the game-move is caught.
-    `landing=$(curl -fsSk https://${SERVER_NAME}/) && ` +
-    `echo "$landing" | grep -q 'href="/play"' && ` +
-    `echo 'landing:ok' && ` +
-    `game=$(curl -fsSk https://${SERVER_NAME}/play/) && ` +
+    // `/` is the game shell — canvas + hashed bundle. `/play/` is the legacy
+    // path and must 301 back to it; probe both so a regression in either the
+    // shell or the redirect is caught.
+    `game=$(curl -fsSk https://${SERVER_NAME}/) && ` +
     `echo "$game" | grep -q 'canvas id=' && ` +
     `echo "$game" | grep -qE 'main-[A-Za-z0-9]+\\.js' && ` +
     `echo 'client:ok' && ` +
+    `legacy=$(curl -sk -o /dev/null -w '%{http_code} %{redirect_url}' https://${SERVER_NAME}/play/) && ` +
+    `echo "legacy:$legacy" && ` +
+    `echo "$legacy" | grep -q '^301 https://${SERVER_NAME}/$' && ` +
+    `echo 'legacy-redirect:ok' && ` +
     versionCheck +
     `curl -fsSk https://${SERVER_NAME}/metrics | ` +
     `  grep -q '"connections"' && ` +

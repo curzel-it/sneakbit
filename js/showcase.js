@@ -1,4 +1,4 @@
-// Design-system showcase. A dev-only reference page (play/showcase.html, not
+// Design-system showcase. A dev-only reference page (/play/showcase.html, not
 // linked from the game, not in the production bundle) that lays the whole HTML
 // UI layer out in one place: the shared tokens from uiTokens.js as labelled
 // swatches, a static gallery of the common chrome built from those same

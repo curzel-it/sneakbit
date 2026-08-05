@@ -7,7 +7,7 @@
 //   node tools/genDungeon.mjs --id 9100 --rooms 5 --return 1001 --out /tmp/d.json
 //
 // Then serve the repo (node tools/serve.mjs) and open
-//   http://127.0.0.1:8000/play/index.html?zone=9100
+//   http://127.0.0.1:8000/index.html?zone=9100
 // to drop straight into the dungeon (the ?zone= boot param spawns you on the
 // entrance teleporter). The doors lead back to the return zone (default 1001).
 
@@ -55,4 +55,4 @@ writeFileSync(out, JSON.stringify(zone, null, 1) + "\n");
 const roomCount = zone.entities.filter((e) => e.species_id >= 1050 && e.species_id <= 1055).length;
 console.log(`Wrote ${out}`);
 console.log(`  dungeon ${id}: ${roomCount} room(s), seed ${seed}, doors -> zone ${returnZone}`);
-console.log(`  play: http://127.0.0.1:8000/play/index.html?zone=${id}`);
+console.log(`  play: http://127.0.0.1:8000/index.html?zone=${id}`);

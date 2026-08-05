@@ -19,7 +19,7 @@ server round-trip.
   scheme (instead of `file://`) is what makes the game's relative `fetch()`es for
   `./data/*.json` and its `./assets/*` loads work. It honours HTTP `Range`
   requests so `<audio>` playback works.
-- The document is loaded from `app://sneakbit.curzel.it/play/index.html`, so the
+- The document is loaded from `app://sneakbit.curzel.it/index.html`, so the
   game's own host resolution (`js/net.js`, `js/apiBase.js`) points opt-in online
   co-op at production — exactly like the desktop build. The core game needs no
   network; only opt-in online co-op does.

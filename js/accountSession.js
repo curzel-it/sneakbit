@@ -74,7 +74,7 @@ export function onAccountChange(fn) {
 }
 
 // — Cross-tab sync ————————————————————————————————————————————————————————
-// Same origin + same KEY means the game (/play/) and the website (/ , /account/)
+// Same origin + same KEY means the game (/) and the account page (/account/)
 // share one localStorage. A sign-in/out in one tab fires a `storage` event in
 // every OTHER same-origin tab — re-read from storage and notify so the in-game
 // menu and the site header update live, not just on the next page load. (load()

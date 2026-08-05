@@ -9,8 +9,8 @@
     <link rel="icon" href="/favicon.ico">
     <!-- Served from /account/, but the bundle, stylesheet, and the auth chip's
          /account/ link all reference root-absolute paths, so <base href="/">
-         keeps the build-rewritten "./<bundle>" script src resolving to root
-         (same trick as /play/index.html). -->
+         keeps the build-rewritten "./<bundle>" script src resolving to root,
+         where esbuild writes it. -->
     <base href="/">
     <link rel="stylesheet" href="/site.css">
     <style>

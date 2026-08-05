@@ -33,7 +33,7 @@ import java.io.IOException
 //     traffic to sneakbit.curzel.it (a different host) is never intercepted, so
 //     it goes out to the network normally.
 private const val ASSET_HOST = "appassets.androidplatform.net"
-private const val ENTRY_URL = "https://appassets.androidplatform.net/play/index.html"
+private const val ENTRY_URL = "https://appassets.androidplatform.net/index.html"
 
 class MainActivity : ComponentActivity() {
 
@@ -124,7 +124,7 @@ private class BundleWebViewClient : WebViewClient() {
         if (!url.host.equals(ASSET_HOST, ignoreCase = true)) return null
 
         var path = url.path ?: "/"
-        if (path == "/" || path.isEmpty()) path = "/play/index.html"
+        if (path == "/" || path.isEmpty()) path = "/index.html"
         // Path-traversal guard: reject anything that tries to climb out of web/.
         if (path.contains("..")) return notFound()
 

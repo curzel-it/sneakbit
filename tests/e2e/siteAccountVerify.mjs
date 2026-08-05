@@ -2,7 +2,7 @@
 // Not a .test.mjs (kept out of the suite) — run it directly:
 //   node tests/e2e/siteAccountVerify.mjs
 // Registers on the /account/ page, proves the session persists across reload,
-// shows in the landing header, AND is seen by the game at /play/ (the shared
+// shows in that page's nav chip, AND is seen by the game at / (the shared
 // login guarantee). Writes a screenshot to /tmp/sb-site-account.png.
 
 import { tmpdir } from "node:os";
@@ -80,16 +80,15 @@ try {
   await waitFor(s, `getComputedStyle(document.querySelector('[data-view=account]')).display!=='none'`);
   console.log("✓ session persists across reload");
 
-  // 5. Landing header reflects the signed-in state.
-  await navigate(s, `${servers.appUrl}/?api=${api}`);
+  // 5. The nav chip reflects the signed-in state.
   await waitFor(s, `(document.querySelector('#account-link')||{}).textContent?.includes('Account')`);
-  console.log(`✓ landing header: "${(await text('#account-link')).trim()}"`);
+  console.log(`✓ nav chip: "${(await text('#account-link')).trim()}"`);
 
-  // 6. The GAME at /play/ sees the same session — the cross-surface guarantee.
-  await navigate(s, `${servers.appUrl}/play/?api=${api}`);
+  // 6. The GAME at / sees the same session — the cross-surface guarantee.
+  await navigate(s, `${servers.appUrl}/?api=${api}`);
   const signedInGame = await waitFor(s, `window.account && window.account.isSignedIn()`, { timeoutMs: 20000 });
-  if (!signedInGame) fail("/play/ did not see the website session");
-  console.log(`✓ /play/ is signed in as ${(await evalExpr(s, `window.account.user().email`))}`);
+  if (!signedInGame) fail("/ did not see the website session");
+  console.log(`✓ / is signed in as ${(await evalExpr(s, `window.account.user().email`))}`);
 
   console.log("\nALL CHECKS PASSED");
   cleanup();

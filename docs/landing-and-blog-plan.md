@@ -1,6 +1,12 @@
 # Landing page + static devlog — plan (Option A)
 
-Status: **planning** · Owner: Federico · Last updated: 2026-06-12
+> **Superseded, 2026-08-05.** Option A shipped, then got reversed: the landing
+> now lives at <https://curzel.it/sneakbit> (in the `curzel-it.github.io` repo,
+> next to the BELT NINE page), the game is back at the domain root, and `/play`
+> 301s to `/`. The devlog never landed here either — it's `curzel.it/blog`.
+> Kept as a record of why the split happened and what it touched.
+
+Status: **superseded** (was: planning) · Owner: Federico · Last updated: 2026-06-12
 
 ## Goal
 

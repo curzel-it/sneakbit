@@ -43,7 +43,7 @@ test("shop: opens the shipped clerk stock and a kunai purchase moves coins → i
     errors.push(p?.exceptionDetails?.exception?.description || p?.exceptionDetails?.text || "unknown");
   });
 
-  await navigate(s, `${servers.appUrl}/play/`);
+  await navigate(s, `${servers.appUrl}/`);
   // Coin HUD mounting is our "game booted, data loaded" signal.
   await waitFor(s, "!!document.getElementById('coin-hud')");
 

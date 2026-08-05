@@ -28,7 +28,7 @@ test("controller connect/disconnect drives device + pause overlay", async (t) =>
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
 
-  await navigate(s, `${servers.appUrl}/play/`);
+  await navigate(s, `${servers.appUrl}/`);
   await waitFor(s, "!!window.__activeInputDevice");
 
   // Default on desktop: keyboard.

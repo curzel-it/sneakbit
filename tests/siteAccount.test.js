@@ -1,6 +1,6 @@
-// Two pure-node concerns behind the website account UI:
+// Two pure-node concerns behind the web account UI:
 //   1. accountSession.reloadSessionFromStorage — the cross-tab sync path. The
-//      site (/) and game (/play/) share one localStorage key, so a sign-in/out
+//      game (/) and account page (/account/) share one localStorage key, so a sign-in/out
 //      in one tab must surface in the other. No `window` in the node runner, so
 //      we drive the reload directly instead of dispatching a storage event.
 //   2. siteAccount.formatPurchase — the entitlement → label/date formatter.

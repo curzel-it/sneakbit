@@ -12,7 +12,7 @@ Pipeline (one `master` process + N `relay` processes, each its own systemd
 unit so one dead RTMP endpoint can't take the others down):
 
 ```
-Xvfb :99 ──> Google Chrome (kiosk, /play/?autoplay=1)
+Xvfb :99 ──> Google Chrome (kiosk, /?autoplay=1)
                  │  video (X11)        │ audio (PulseAudio null sink)
                  ▼                     ▼
               ffmpeg  ── x11grab + pulse → libx264/aac, encode ONCE
@@ -42,7 +42,7 @@ back to a silent track so video never breaks.
    YOUTUBE_STREAM_KEY=xxxx-xxxx-xxxx-xxxx-xxxx
    TWITCH_STREAM_KEY=live_xxxxxxxxxxxxxxxxxxxx
    # optional overrides (defaults shown):
-   # STREAM_URL=https://sneakbit.curzel.it/play/?autoplay=1
+   # STREAM_URL=https://sneakbit.curzel.it/?autoplay=1
    # STREAM_RES=1280x720
    # STREAM_FPS=30
    # STREAM_BITRATE=3000k
@@ -78,7 +78,7 @@ ffprobe /tmp/sneakbit-stream-debug.flv     # expect one video + one aac audio st
   → restart) may loop. That's expected; it self-heals once the bot keeps the
   canvas moving. Use `debug` mode (no watchdog) to verify the pipeline before
   the bot exists.
-- **Build dependency.** The autoplay module must be reachable under `/play/`
+- **Build dependency.** The autoplay module must be reachable at the site root
   in the deployed `_site`. The plan is a *computed* dynamic import from
   `main.js` so esbuild leaves it as a separate file — that wiring is part of
   phase 2; confirm `npm run build` ships it before relying on `?autoplay=1`.

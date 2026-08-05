@@ -174,7 +174,7 @@ async function stepScript(env) {
 async function stepEnvFile(env) {
   console.log("[4/6] write streamer env");
   const lines = [
-    `STREAM_URL=${env.STREAM_URL || "https://sneakbit.curzel.it/play/?autoplay=1"}`,
+    `STREAM_URL=${env.STREAM_URL || "https://sneakbit.curzel.it/?autoplay=1"}`,
     `STREAM_RES=${env.STREAM_RES || "1280x720"}`,
     `STREAM_FPS=${env.STREAM_FPS || "30"}`,
     `STREAM_BITRATE=${env.STREAM_BITRATE || "3000k"}`,

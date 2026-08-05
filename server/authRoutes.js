@@ -165,7 +165,8 @@ export function createAuthHandler({ db, env = process.env } = {}) {
           tokenHash, userId: user.id, expiresAt: Date.now() + RESET_TTL_MS,
         });
         // The account page (/account/) handles the ?reset=<token> deep link.
-        // (The bare site root is the marketing landing — it would silently no-op.)
+        // Deliberately not the site root: that's the game shell, and a password
+        // reset shouldn't have to boot the whole game to be actionable.
         const link = `${baseUrl()}/account/?reset=${token}`;
         // Fire-and-forget: awaiting the email's network round-trip made the
         // user-exists path measurably slower than the unknown-email path,
