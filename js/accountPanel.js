@@ -20,18 +20,12 @@ import {
 } from "./accountApi.js";
 import { el, showOnly } from "./dom.js";
 import { guardTextInput } from "./textInputGuard.js";
-import { fetchEntitlements } from "./storeApi.js";
-import { cachedEntitledRefIds } from "./entitlements.js";
-import { getSkin, defaultColumn } from "./skins.js";
-import { tr } from "./strings.js";
-import { paintHeroPreview, PREVIEW_W, PREVIEW_H } from "./heroPreview.js";
 
 let overlay = null;
 let card = null;
 let installed = false;
 let lastFocusedView = null;
 let currentView = null; // "signin" | "register" | "forgot" | "reset" | "account" | "editName" | "editPassword"
-let purchasesReqId = 0; // guards stale entitlement fetches from clobbering a newer render
 let resetToken = null;  // captured from ?reset=… for the reset view
 
 // View subtrees, built once and toggled by display.
@@ -228,12 +222,6 @@ function buildAccountView() {
   root.appendChild(el("button", { class: "account-action", text: "Change password", on: { click: () => showView("editPassword") } }));
   w.accountError = errorEl(root);
 
-  // Purchased items — real-money entitlements (currently skins), each shown
-  // with its hero portrait and localized name. Populated by renderPurchases().
-  root.appendChild(el("p", { class: "account-hint", text: "Purchased items" }));
-  w.accountPurchases = el("div", { class: "account-purchases" });
-  root.appendChild(w.accountPurchases);
-
   root.appendChild(el("button", { class: "account-danger", text: "Sign out", on: { click: onSignOut } }));
 
   // Danger zone: delete account. Hidden behind a reveal + password confirm so
@@ -322,7 +310,6 @@ function renderAccountView() {
   if (!user) { showView("signin"); return; }
   w.accountEmail.textContent = user.email;
   showDeleteConfirm(false);
-  renderPurchases();
 }
 
 function renderEditNameView() {
@@ -332,60 +319,6 @@ function renderEditNameView() {
 function renderEditPasswordView() {
   w.editCurrentPw.value = "";
   w.editNewPw.value = "";
-}
-
-// Fetch the signed-in user's entitlements (real-money purchases) and list
-// them. Live fetch is authoritative; offline we fall back to the local
-// entitled-set cache. A request id guards against a slow fetch overwriting a
-// newer render (e.g. account switched, or the view was reopened).
-async function renderPurchases() {
-  const host = w.accountPurchases;
-  if (!host) return;
-  const reqId = ++purchasesReqId;
-  host.textContent = "";
-  host.appendChild(el("p", { class: "account-purchases-empty", text: "Loading…" }));
-
-  let refIds = null;
-  const r = await fetchEntitlements(getTokenOrNull()).catch(() => null);
-  if (reqId !== purchasesReqId) return; // superseded by a newer render
-  if (r && r.ok && Array.isArray(r.data?.entitlements)) {
-    refIds = r.data.entitlements
-      .filter((e) => e && e.kind === "skin" && typeof e.refId === "string")
-      .map((e) => e.refId);
-  } else {
-    refIds = cachedEntitledRefIds(); // offline / error: best-effort from cache
-  }
-  paintPurchaseList(host, refIds);
-}
-
-function paintPurchaseList(host, refIds) {
-  host.textContent = "";
-  const owned = [...new Set(refIds)].map(getSkin).filter(Boolean);
-  if (!owned.length) {
-    host.appendChild(el("p", { class: "account-purchases-empty", text: "No purchases yet." }));
-    return;
-  }
-  const list = el("ul", { class: "account-purchases-list" });
-  for (const skin of owned) {
-    const canvas = el("canvas", {
-      class: "account-purchase-icon", width: PREVIEW_W, height: PREVIEW_H,
-    });
-    list.appendChild(el("li", { class: "account-purchase-row" }, [
-      canvas,
-      el("span", { class: "account-purchase-name", text: tr(skin.nameKey) || skin.id }),
-    ]));
-    paintWhenReady(canvas, skin.column == null ? defaultColumn(0) : skin.column);
-  }
-  host.appendChild(list);
-}
-
-// paintHeroPreview returns false until the heroes sheet has loaded. The panel
-// opens mid-game so the sheet is usually ready, but retry on the next frame a
-// few times to cover a cold open (e.g. a ?reset deep link before assets land).
-function paintWhenReady(canvas, column, tries = 5) {
-  if (paintHeroPreview(canvas, column)) return;
-  if (tries <= 0 || typeof requestAnimationFrame !== "function") return;
-  requestAnimationFrame(() => paintWhenReady(canvas, column, tries - 1));
 }
 
 // — Handlers ————————————————————————————————————————————————————————————
@@ -624,16 +557,6 @@ function injectStyles() {
       background: var(--sb-accent-danger-bg); border-color: var(--sb-accent-danger-border);
     }
     .account-card button.account-danger:hover { background: #4a2828; }
-    .account-purchases { margin: 4px 0 0; }
-    .account-purchases-empty { color: var(--sb-text-dim); font-size: 12px; margin: 4px 0 0; }
-    .account-purchases-list { list-style: none; margin: 4px 0 0; padding: 0; }
-    .account-purchase-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 4px 0; font-size: 13px;
-    }
-    .account-purchase-icon {
-      width: 24px; height: 48px; image-rendering: pixelated; flex: 0 0 auto;
-    }
     .account-links { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0 0; }
     .account-card button.account-link {
       background: none; border: none; padding: 0; color: #9ab1ff;

@@ -62,13 +62,11 @@ try {
   await setVal("[data-view=register] input[autocomplete=new-password]", pass);
   await click("[data-view=register] button.account-primary");
 
-  // 3. Lands on the account view, signed in, with an (empty) purchase list.
+  // 3. Lands on the account view, signed in.
   await waitFor(s, `getComputedStyle(document.querySelector('[data-view=account]')).display!=='none'`);
   const shownEmail = await text(".account-email");
   if (shownEmail !== email) fail(`account email mismatch: ${shownEmail}`);
-  const purchases = await text(".account-purchases");
-  if (!/No purchases yet|Loading/.test(purchases || "")) fail(`unexpected purchases text: ${purchases}`);
-  console.log(`✓ registered + landed on account view (${shownEmail}); purchases: "${(purchases||'').trim()}"`);
+  console.log(`✓ registered + landed on account view (${shownEmail})`);
 
   // Screenshot the signed-in account page.
   const shot = await s.send("Page.captureScreenshot", { format: "png" });

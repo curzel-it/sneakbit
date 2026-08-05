@@ -77,7 +77,6 @@ import { getSelfPlayerId } from "./onlineBootstrap.js";
 import { installPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
 import { installAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
 import { installCloudSave, bootRestoreFromCloud } from "./cloudSave.js";
-import { installStore } from "./storeBoot.js";
 import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js";
 import { setHostPaused } from "./hostPauseState.js";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js";
@@ -103,9 +102,6 @@ async function main() {
   // Cloud saves: lazy + offline-tolerant. Pulls on sign-in, debounced-pushes
   // on progress change. No-op while signed out; never blocks boot.
   installCloudSave();
-  // Real-money store: reconcile entitlements on sign-in/boot and handle the
-  // ?purchase= return from Stripe Checkout. Offline-tolerant; never blocks boot.
-  installStore();
   installHostLaggingOverlay();
   // `?join=CODE` tabs with a *well-formed* code are guests for the
   // lifetime of the page — they never own a local save and shouldn't

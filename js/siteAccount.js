@@ -5,14 +5,14 @@
 //                                         in the page header
 //   #account-app   -> mountAccountPage()  the full /account/ page (sign in,
 //                                         register, forgot/reset, profile edits,
-//                                         delete, and a view-only purchase list)
+//                                         and delete)
 //
 // It reuses ONLY the framework-free data layer — accountSession.js (the shared
 // localStorage session, same KEY the game uses, so a sign-in here is a sign-in
-// in the game at / and vice versa), accountApi.js, storeApi.js, and dom.js's el(). It
+// in the game at / and vice versa), accountApi.js, and dom.js's el(). It
 // deliberately does NOT pull in the game runtime that accountPanel.js depends on
-// (menuNav, skins/heroPreview sprite rendering, strings/data) — purchases are
-// listed as plain text rows, and status is shown inline instead of via toast.js.
+// (menuNav, skins/heroPreview sprite rendering, strings/data) — status is shown
+// inline instead of via toast.js.
 //
 // Behavior (validation, error-code messages, offline/401 handling) mirrors
 // accountPanel.js so the two surfaces stay consistent.
@@ -24,7 +24,6 @@ import {
 import {
   registerAccount, loginAccount, updateMe, forgotPassword, resetPassword, deleteAccount,
 } from "./accountApi.js";
-import { fetchEntitlements } from "./storeApi.js";
 import { el, showOnly } from "./dom.js";
 
 // — Public mounts ————————————————————————————————————————————————————————
@@ -70,7 +69,6 @@ const views = {};
 const w = {};            // per-view widget refs (inputs, error <p>, …)
 let currentView = null;
 let resetToken = null;
-let purchasesReqId = 0;  // guards a slow entitlement fetch from clobbering a newer render
 
 // — Build ————————————————————————————————————————————————————————————————
 
@@ -190,10 +188,6 @@ function buildAccountView() {
   root.appendChild(el("button", { class: "account-action", text: "Change password", on: { click: () => showView("editPassword") } }));
   w.accountError = errorEl(root);
 
-  root.appendChild(el("p", { class: "account-hint", text: "Purchased items" }));
-  w.accountPurchases = el("div", { class: "account-purchases" });
-  root.appendChild(w.accountPurchases);
-
   root.appendChild(el("button", { class: "account-danger", text: "Sign out", on: { click: onSignOut } }));
 
   // Danger zone: delete behind a reveal + password confirm, same as in-game.
@@ -267,7 +261,6 @@ function renderAccountView() {
   if (!user) { showView("signin"); return; }
   w.accountEmail.textContent = user.email;
   showDeleteConfirm(false);
-  renderPurchases();
 }
 
 function renderEditNameView() {
@@ -277,59 +270,6 @@ function renderEditNameView() {
 function renderEditPasswordView() {
   w.editCurrentPw.value = "";
   w.editNewPw.value = "";
-}
-
-// Fetch and list the signed-in user's real-money entitlements. View-only on the
-// site (buying lives in the in-game shop, which has the animated skin previews),
-// so this is a plain text list — no sprite rendering, no game-asset coupling. A
-// request id guards a slow fetch from overwriting a newer render.
-async function renderPurchases() {
-  const host = w.accountPurchases;
-  if (!host) return;
-  const reqId = ++purchasesReqId;
-  host.textContent = "";
-  host.appendChild(el("p", { class: "account-purchases-empty", text: "Loading…" }));
-
-  const r = await fetchEntitlements(getToken()).catch(() => null);
-  if (reqId !== purchasesReqId) return; // superseded
-  host.textContent = "";
-
-  if (r && r.status === 401) { handleExpired(); return; }
-  const items = (r && r.ok && Array.isArray(r.data?.entitlements)) ? r.data.entitlements : null;
-  if (items === null) {
-    // When the store is switched off entirely (no payments configured) there
-    // simply are no purchases — say so, matching the in-game panel's benign
-    // degradation. Only a genuine transient failure gets the error message.
-    const disabled = r && (r.status === 503 || r.data?.error === "payments_disabled");
-    host.appendChild(el("p", { class: "account-purchases-empty",
-      text: disabled ? "No purchases yet." : "Couldn't load your purchases right now." }));
-    return;
-  }
-  if (!items.length) {
-    host.appendChild(el("p", { class: "account-purchases-empty", text: "No purchases yet." }));
-    return;
-  }
-  const list = el("ul", { class: "account-purchases-list" });
-  for (const e of items) {
-    const { name, when } = formatPurchase(e);
-    list.appendChild(el("li", { class: "account-purchase-row" }, [
-      el("span", { class: "account-purchase-name", text: name }),
-      when && el("span", { class: "account-purchase-when", text: when }),
-    ]));
-  }
-  host.appendChild(list);
-}
-
-// Pure (no DOM) so it's unit-testable: turn a raw entitlement into a friendly
-// label + granted date. Entitlement shape: { sku, kind, refId, grantedAt }.
-export function formatPurchase(e = {}) {
-  const base = (typeof e.refId === "string" && e.refId) || (typeof e.sku === "string" && e.sku) || "Item";
-  const name = base.replace(/^skin\./, "").replace(/[_.]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-  let when = "";
-  if (typeof e.grantedAt === "number" && e.grantedAt > 0) {
-    try { when = new Date(e.grantedAt).toLocaleDateString(); } catch { when = ""; }
-  }
-  return { name, when };
 }
 
 // — Handlers (mirror accountPanel.js) ————————————————————————————————————
@@ -570,15 +510,6 @@ function injectStyles() {
       background: #2a1818; border-color: #5a2a2a; color: #e0b0b0;
     }
     .account-card button.account-danger:hover { background: #3a2020; }
-    .account-purchases { margin: 4px 0 0; }
-    .account-purchases-empty { color: #888; font-size: 12px; margin: 4px 0 0; }
-    .account-purchases-list { list-style: none; margin: 4px 0 0; padding: 0; }
-    .account-purchase-row {
-      display: flex; align-items: baseline; justify-content: space-between;
-      gap: 10px; padding: 5px 0; font-size: 13px; border-bottom: 1px solid #1d1d1d;
-    }
-    .account-purchase-name { color: #ddd; }
-    .account-purchase-when { color: #777; font-size: 11px; flex: 0 0 auto; }
     .account-links { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0 0; }
     .account-card button.account-link {
       background: none; border: none; padding: 0; color: #9ab1ff;

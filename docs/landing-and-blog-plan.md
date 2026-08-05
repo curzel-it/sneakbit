@@ -33,7 +33,7 @@ Steam hub (zero infra). Not built here.
 | `/play` | (404 → fell back to game) | **the game** |
 | `/blog`, `/blog/<slug>` | (fell back to game) | **devlog** |
 | `/privacy.html`, `/terms.html` | static | static (unchanged) |
-| `/ws`, `/health`, `/auth/…`, `/saves`, `/store`, `/webhooks/stripe`, … | Node | Node (unchanged) |
+| `/ws`, `/health`, `/auth/…`, `/saves`, … | Node | Node (unchanged) |
 | any unknown path | fell back to **game** | falls back to **landing** |
 
 Note the nice side effect: with the landing as the SPA fallback, an unknown URL
@@ -61,7 +61,7 @@ path the game is served from:
 Verified safe — a `<base>` tag only affects relative URL *resolution* in markup
 and one-arg `fetch`/`new URL`. It does **not** touch:
 
-- `location.*` derivations (`new URL(location.href)` in clipboard.js, storeBoot.js,
+- `location.*` derivations (`new URL(location.href)` in clipboard.js,
   switchRole.js, accountPanel.js) — explicit base, unaffected.
 - `new WebSocket(...)` (net.js) and the API base (`apiBase.js` → absolute
   `https://sneakbit.curzel.it` or query-param override) — absolute, unaffected.
@@ -231,7 +231,7 @@ returning players, that's a product call, not a technical one.)
   - [x] Real landing at `/` (hero, badges, gallery, credits) — folded Phase 2 in
         since store links were ready and an existing screenshot served as hero.
   - [x] Repointed game-at-root assumers: e2e tests + coop fixture, screenshot
-        tool, Electron `APP_URL`, Stripe success/cancel URLs, deploy health gate.
+        tool, Electron `APP_URL`, deploy health gate.
   - [x] Unit 970/970, e2e 29/29 green; prod health gate + TLS smoke green.
 - [x] Phase 2 (real landing) — done as part of Phase 1.
 - [ ] Phase 3 (blog): `tools/buildBlog.mjs`, template, first post; decide URL style.

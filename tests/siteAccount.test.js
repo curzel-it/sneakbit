@@ -1,9 +1,8 @@
-// Two pure-node concerns behind the web account UI:
-//   1. accountSession.reloadSessionFromStorage — the cross-tab sync path. The
-//      game (/) and account page (/account/) share one localStorage key, so a sign-in/out
-//      in one tab must surface in the other. No `window` in the node runner, so
-//      we drive the reload directly instead of dispatching a storage event.
-//   2. siteAccount.formatPurchase — the entitlement → label/date formatter.
+// accountSession.reloadSessionFromStorage — the cross-tab sync path behind the
+// web account UI. The game (/) and account page (/account/) share one
+// localStorage key, so a sign-in/out in one tab must surface in the other. No
+// `window` in the node runner, so we drive the reload directly instead of
+// dispatching a storage event.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -25,7 +24,6 @@ const {
   reloadSessionFromStorage, _resetAccountSessionForTesting,
 } = await import("../js/accountSession.js");
 
-const { formatPurchase } = await import("../js/siteAccount.js");
 
 function writeSession(token, user) {
   store.set(KEY, JSON.stringify({ token, user }));
@@ -64,19 +62,3 @@ test("reloadSessionFromStorage signs out when another tab cleared the key", () =
   assert.equal(seen[0], null);
 });
 
-test("formatPurchase prettifies a refId", () => {
-  assert.equal(formatPurchase({ refId: "outfit_red", kind: "skin" }).name, "Outfit Red");
-});
-
-test("formatPurchase strips the skin. prefix from the sku fallback", () => {
-  assert.equal(formatPurchase({ sku: "skin.ninja_black" }).name, "Ninja Black");
-});
-
-test("formatPurchase falls back to Item for an empty entitlement", () => {
-  assert.equal(formatPurchase({}).name, "Item");
-});
-
-test("formatPurchase formats a positive grantedAt and omits a zero one", () => {
-  assert.notEqual(formatPurchase({ refId: "x", grantedAt: 1_700_000_000_000 }).when, "");
-  assert.equal(formatPurchase({ refId: "x", grantedAt: 0 }).when, "");
-});

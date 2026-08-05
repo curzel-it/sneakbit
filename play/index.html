@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <!-- The game moved back to the site root; /play/ only exists so links minted
-         while it lived here keep working — invite URLs (?join=CODE), Stripe
-         returns (?purchase=success), bookmarks. Production redirects these with
-         a real 301 in nginx (see tools/deploy.mjs); this page is the fallback
+         while it lived here keep working — invite URLs (?join=CODE), bookmarks.
+         Production redirects these with a real 301 in nginx (see
+         tools/deploy.mjs); this page is the fallback
          for dev and for /play/index.html itself, and it carries the query
          string and hash across, which a bare meta-refresh cannot. -->
     <title>SneakBit</title>
