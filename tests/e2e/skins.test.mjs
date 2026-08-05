@@ -22,7 +22,7 @@ const CHROME_PORT = 9279;
 const SHOP_ZONE = 12900001;
 const CLERK_ID = 12900010;
 const SKIN_ID = "ninja_black";
-const SKIN_PRICE = 400;
+const SKIN_PRICE = 1000;
 const SKIN_COLUMN = 21; // ninja_black's heroes-sheet column (skins.js)
 
 const key = (s, code) =>
