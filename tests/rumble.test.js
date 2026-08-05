@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { rumble, _resetRumbleForTesting } = await import("../js/rumble.js");
+const { rumble, isRumbleAvailable, _resetRumbleForTesting } = await import("../js/rumble.js");
 const { saveSettings } = await import("../js/settings.js");
 
 // A pad with a vibrationActuator that records playEffect calls.
@@ -76,6 +76,29 @@ test("the Vibration setting silences the pad too", () => {
   saveSettings({ haptics: true });
   rumble(1, "hurt");
   assert.equal(calls.length, 1);
+});
+
+// — availability (drives whether the menu offers the Vibration row) ————
+
+test("a pad with an actuator counts as available", () => {
+  setPads(padWithActuator(0, []));
+  assert.equal(isRumbleAvailable(), true);
+});
+
+test("a pad without an actuator does not count", () => {
+  setPads(padNoActuator(0));
+  assert.equal(isRumbleAvailable(), false);
+});
+
+test("no pads at all is not available", () => {
+  setPads();
+  assert.equal(isRumbleAvailable(), false);
+});
+
+test("empty slots between pads don't break the scan", () => {
+  // getGamepads() returns a sparse array with nulls for disconnected slots.
+  setPads(null, padWithActuator(1, []));
+  assert.equal(isRumbleAvailable(), true);
 });
 
 test("unknown rumble kind is ignored", () => {

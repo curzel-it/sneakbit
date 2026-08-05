@@ -33,7 +33,8 @@ import { showConfirm, isConfirmOpen } from "./confirmDialog.js";
 import { getRuntimeRole, onRoleChange } from "./onlineMode.js";
 import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js";
 import { setTouchControlStyle } from "./touch.js";
-import { hapticTap } from "./haptics.js";
+import { hapticTap, isTouchHapticsAvailable } from "./haptics.js";
+import { isRumbleAvailable } from "./rumble.js";
 import { el } from "./dom.js";
 
 // Modals that own the keyboard while they're up. If any is open we treat
@@ -109,7 +110,7 @@ export function installMenu(stateGetter) {
         <label for="opt-fps">Show FPS</label>
         <input id="opt-fps" type="checkbox" class="menu-toggle" />
       </div>
-      <div class="menu-row menu-toggle-row">
+      <div class="menu-row menu-toggle-row" id="opt-haptics-row">
         <label for="opt-haptics">Vibration</label>
         <input id="opt-haptics" type="checkbox" class="menu-toggle" />
       </div>
@@ -539,6 +540,14 @@ function syncSettingsWidgets() {
     let forced = false;
     try { forced = new URLSearchParams(location.search).has("touch"); } catch { /* ignore */ }
     tcRow.style.display = (!isDesktop() || forced) ? "" : "none";
+  }
+  // Vibration only makes sense where something can act on it: a phone with a
+  // motor, the iOS taptic bridge, or a pad in use. A desktop with no
+  // controller has neither, and a dead knob is worse than no knob. Re-read on
+  // every open, so plugging in a pad brings the row back.
+  const hapticsRow = root.querySelector("#opt-haptics-row");
+  if (hapticsRow) {
+    hapticsRow.style.display = (isTouchHapticsAvailable() || isRumbleAvailable()) ? "" : "none";
   }
   // Friendly fire is meaningless without a second hero in the world —
   // hide the row entirely unless local co-op is on or a network guest

@@ -24,6 +24,24 @@ const PRESETS = {
 // doesn't restart the effect every frame — one pulse per effect duration.
 const lastRumbleAt = new Map();
 
+// True when a connected pad can actually play an effect. The menu pairs this
+// with haptics.js's touch check to decide whether the Vibration setting has
+// anything to act on at all.
+//
+// Pads only surface in getGamepads() once the player has touched them, so this
+// flips to true the moment a controller is in use — which is exactly when the
+// setting starts to matter. It's re-read every time the settings panel opens.
+export function isRumbleAvailable() {
+  if (typeof navigator === "undefined" || !navigator.getGamepads) return false;
+  const pads = navigator.getGamepads();
+  if (!pads) return false;
+  for (const pad of pads) {
+    const actuator = pad?.vibrationActuator;
+    if (actuator && typeof actuator.playEffect === "function") return true;
+  }
+  return false;
+}
+
 export function rumble(slot, kind) {
   const preset = PRESETS[kind];
   if (!preset) return;
