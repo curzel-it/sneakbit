@@ -11,12 +11,52 @@
 import SwiftUI
 import WebKit
 
+/// Name js/haptics.js posts to: `window.webkit.messageHandlers.haptics`.
+/// Its presence is also what tells the web build it's running inside this
+/// shell and should prefer the bridge over navigator.vibrate.
+let kHapticsHandler = "haptics"
+
+/// Turns a haptic request from the web build into taptic-engine feedback.
+///
+/// The message body is the kind js/haptics.js sends — "tap" for a d-pad step
+/// or the menu button, "action" for melee/throw/interact. Durations don't
+/// cross the bridge: they're a Vibration-API concept and mean nothing here,
+/// so the style is chosen on this side.
+///
+/// WKScriptMessageHandler callbacks arrive on the main thread, which is where
+/// UIFeedbackGenerator must be used.
+final class HapticsHandler: NSObject, WKScriptMessageHandler {
+    private let light = UIImpactFeedbackGenerator(style: .light)
+    private let medium = UIImpactFeedbackGenerator(style: .medium)
+
+    override init() {
+        super.init()
+        // Warm the engine so the very first tap of a session isn't late.
+        light.prepare()
+        medium.prepare()
+    }
+
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage) {
+        let generator = (message.body as? String) == "action" ? medium : light
+        generator.impactOccurred()
+        // Taps come in bursts (a thumb on the d-pad); keep it warm for the next.
+        generator.prepare()
+    }
+}
+
 struct WebGameView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let config = WKWebViewConfiguration()
 
         // Serve the bundled web/ tree over app:// (offline, real host).
         config.setURLSchemeHandler(BundleSchemeHandler(), forURLScheme: kAppScheme)
+
+        // Haptics for the on-screen touch controls. WebKit ships neither the
+        // Vibration API nor gamepad rumble, so js/haptics.js posts here instead
+        // and we drive the taptic engine — impact feedback rather than a buzz,
+        // which is the better control on this hardware anyway.
+        config.userContentController.add(HapticsHandler(), name: kHapticsHandler)
 
         // Games autoplay music/SFX and render the canvas inline — never use the
         // native fullscreen media UI or require a tap before audio.

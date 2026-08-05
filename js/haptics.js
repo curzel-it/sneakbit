@@ -2,10 +2,16 @@
 // physical confirmation that it hit a virtual button, so every press on
 // the touch overlay fires a short vibration.
 //
-// A silent no-op when the Vibration API is missing (iOS Safari / WKWebView
-// never shipped it, so this is Android/Chrome-only in practice), when the
-// device has no motor, or when the player turned Vibration off — so call
-// sites never need to guard.
+// Two backends, in preference order:
+//   1. The iOS shell's native bridge (WebGameView.swift). WebKit never
+//      shipped the Vibration API, so the app exposes a message handler that
+//      drives the taptic engine — real impact feedback, not a buzz, which is
+//      why it wins even where both exist.
+//   2. navigator.vibrate — Android WebView (needs the manifest's VIBRATE
+//      permission) and mobile web.
+//
+// A silent no-op when neither is reachable, when the device has no motor, or
+// when the player turned Vibration off — so call sites never need to guard.
 //
 // Only presses vibrate, never releases, and never damage: the phone buzzes
 // for input the player made, nothing else. Controller rumble is a separate
@@ -26,14 +32,44 @@ const MIN_INTERVAL_MS = 30;
 
 let lastTapAt = 0;
 
+// The iOS shell's message handler, or null everywhere else.
+function nativeBridge() {
+  if (typeof window === "undefined") return null;
+  return window.webkit?.messageHandlers?.haptics || null;
+}
+
+// Does anything actually buzz on this device? Desktop Chromium exposes
+// navigator.vibrate with no motor behind it, so the API alone proves nothing
+// — only a touch device can act on it. The menu uses this to avoid offering
+// a setting that does nothing.
+export function isTouchHapticsAvailable() {
+  if (nativeBridge()) return true;
+  if (typeof navigator === "undefined" || typeof navigator.vibrate !== "function") return false;
+  // Same touch-capability probe as touch.js: `pointer: coarse` alone is
+  // unreliable inside wrapped WebViews.
+  return (navigator.maxTouchPoints || 0) > 0
+    || (typeof window !== "undefined" && "ontouchstart" in window)
+    || (typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches);
+}
+
 export function hapticTap(kind = "tap") {
   const ms = PATTERNS[kind];
   if (!ms) return;
   if (getSettings().haptics === false) return;
-  if (typeof navigator === "undefined" || typeof navigator.vibrate !== "function") return;
 
   const now = Date.now();
   if (now - lastTapAt < MIN_INTERVAL_MS) return;
+
+  const native = nativeBridge();
+  if (native) {
+    // The Swift side picks the impact style from the kind — durations are a
+    // Vibration-API concept and mean nothing to the taptic engine.
+    lastTapAt = now;
+    try { native.postMessage(kind); } catch { /* handler torn down */ }
+    return;
+  }
+
+  if (typeof navigator === "undefined" || typeof navigator.vibrate !== "function") return;
   lastTapAt = now;
   try { navigator.vibrate(ms); } catch { /* blocked by the browser */ }
 }
