@@ -15,6 +15,7 @@ import { codesFor } from "./keyBindings.js";
 import { onActiveInputDeviceChange } from "./activeInputDevice.js";
 import { getSettings } from "./settings.js";
 import { mountJoystick, unmountJoystick } from "./touchJoystick.js";
+import { hapticTap } from "./haptics.js";
 import { getSpecies } from "./species.js";
 import { getSprite } from "./assets.js";
 import { TILE_SIZE } from "./constants.js";
@@ -398,6 +399,9 @@ function onPress(e, btn) {
   btn.classList.add("active");
   const dir = btn.dataset.dir;
   const action = btn.dataset.action;
+  // Every button on the overlay buzzes on press (the joystick doesn't —
+  // it has no discrete press to confirm). Attacks read heavier than a step.
+  hapticTap(dir ? "tap" : "action");
   if (dir) {
     // Release implicit pointer capture so pointermove on the document
     // fires for the *element under the finger* rather than always for
@@ -500,6 +504,9 @@ function directionButtonAt(x, y, current) {
 function pressDir(btn, pointerId) {
   const dir = btn.dataset.dir;
   if (!dir) return;
+  // Drag-to-switch doesn't go through onPress, so buzz here too — a slide
+  // onto a new direction is as much a press as a fresh tap.
+  hapticTap("tap");
   btn.classList.add("active");
   heldBindings.set(dir, pointerId);
   dirPointerHeld.set(pointerId, btn);

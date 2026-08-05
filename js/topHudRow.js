@@ -17,6 +17,7 @@
 // did — which menu.js listens for. It only shows in touch mode.
 
 import { el } from "./dom.js";
+import { hapticTap } from "./haptics.js";
 
 const MENU_ICON =
   `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"` +
@@ -55,7 +56,9 @@ export function setTopHudSplit(split) {
 }
 
 // The old touch menu button dispatched Escape; menu.js opens/closes on it.
+// Touch-only, so it buzzes like the rest of the on-screen controls.
 function openMenu() {
+  hapticTap("tap");
   window.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", bubbles: true }));
 }
 
