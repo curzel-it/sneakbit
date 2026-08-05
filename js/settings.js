@@ -29,6 +29,10 @@ const DEFAULTS = {
   // Co-op friendly fire — off by default. When on, a bullet whose
   // playerIndex doesn't match the player it overlaps applies damage.
   friendlyFire: false,
+  // Vibration, on by default. One knob for every motor: the phone buzzing
+  // under the on-screen controls (haptics.js) and the controller rumbling
+  // on damage (rumble.js). A player who turns vibration off means all of it.
+  haptics: true,
   // On-screen mobile movement input: "buttons" (the 4-way d-pad) or
   // "joystick" (the floating analog stick ported from the original).
   // Touch-only; ignored on desktop. Joystick by default — it matches the

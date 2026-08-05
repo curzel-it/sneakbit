@@ -33,6 +33,7 @@ import { showConfirm, isConfirmOpen } from "./confirmDialog.js";
 import { getRuntimeRole, onRoleChange } from "./onlineMode.js";
 import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js";
 import { setTouchControlStyle } from "./touch.js";
+import { hapticTap } from "./haptics.js";
 import { el } from "./dom.js";
 
 // Modals that own the keyboard while they're up. If any is open we treat
@@ -107,6 +108,10 @@ export function installMenu(stateGetter) {
       <div class="menu-row menu-toggle-row">
         <label for="opt-fps">Show FPS</label>
         <input id="opt-fps" type="checkbox" class="menu-toggle" />
+      </div>
+      <div class="menu-row menu-toggle-row">
+        <label for="opt-haptics">Vibration</label>
+        <input id="opt-haptics" type="checkbox" class="menu-toggle" />
       </div>
       <div class="menu-row menu-select-row" id="opt-touch-controls-row">
         <label for="opt-touch-controls">Touch controls</label>
@@ -463,6 +468,7 @@ function bindWidgets() {
   const musicVal = root.querySelector("#opt-music-volume-val");
   const muted = root.querySelector("#opt-muted");
   const fps = root.querySelector("#opt-fps");
+  const haptics = root.querySelector("#opt-haptics");
 
   sfx.addEventListener("input", () => {
     saveSettings({ sfxVolume: parseInt(sfx.value, 10) / 100 });
@@ -475,6 +481,12 @@ function bindWidgets() {
   });
   muted.addEventListener("change", () => saveSettings({ muted: muted.checked }));
   fps.addEventListener("change", () => saveSettings({ showFps: fps.checked }));
+  // One knob for every motor: touch haptics and controller rumble both read it.
+  // Buzz on the way on so the player feels what they just enabled.
+  haptics.addEventListener("change", () => {
+    saveSettings({ haptics: haptics.checked });
+    if (haptics.checked) hapticTap("action");
+  });
 
   const ff = root.querySelector("#opt-friendly-fire");
   ff.addEventListener("change", () => saveSettings({ friendlyFire: ff.checked }));
@@ -515,6 +527,7 @@ function syncSettingsWidgets() {
   root.querySelector("#opt-music-volume-val").textContent = `${music}%`;
   root.querySelector("#opt-muted").checked = !!s.muted;
   root.querySelector("#opt-fps").checked = !!s.showFps;
+  root.querySelector("#opt-haptics").checked = s.haptics !== false;
   root.querySelector("#opt-friendly-fire").checked = !!s.friendlyFire;
   root.querySelector("#opt-touch-controls").value = s.touchControls === "joystick" ? "joystick" : "buttons";
   root.querySelector("#opt-language").value = s.language ?? "auto";

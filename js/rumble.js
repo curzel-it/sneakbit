@@ -8,8 +8,12 @@
 // click. Because slots without a local pad resolve to a no-op, call sites
 // can pass any slot freely: a remote guest's damage/no-ammo (resolved on
 // the host for slots 3/4) simply finds no host-local pad and stays quiet.
+//
+// Shares the Vibration setting with touch haptics (haptics.js) — one toggle
+// silences every motor.
 
 import { getPadIndexForSlot } from "./gamepad.js";
+import { getSettings } from "./settings.js";
 
 const PRESETS = {
   hurt:   { duration: 200, strongMagnitude: 0.85, weakMagnitude: 0.6 },
@@ -23,6 +27,7 @@ const lastRumbleAt = new Map();
 export function rumble(slot, kind) {
   const preset = PRESETS[kind];
   if (!preset) return;
+  if (getSettings().haptics === false) return;
   if (typeof navigator === "undefined" || !navigator.getGamepads) return;
   const now = Date.now();
   if (now - (lastRumbleAt.get(slot) || 0) < preset.duration) return;

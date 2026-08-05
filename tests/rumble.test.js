@@ -7,6 +7,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { rumble, _resetRumbleForTesting } = await import("../js/rumble.js");
+const { saveSettings } = await import("../js/settings.js");
 
 // A pad with a vibrationActuator that records playEffect calls.
 function padWithActuator(index, calls) {
@@ -63,6 +64,18 @@ test("no-op when the pad has no vibration actuator", () => {
   // Just shouldn't throw.
   rumble(1, "hurt");
   assert.ok(true);
+});
+
+test("the Vibration setting silences the pad too", () => {
+  _resetRumbleForTesting();
+  const calls = [];
+  setPads(padWithActuator(0, calls));
+  saveSettings({ haptics: false });
+  rumble(1, "hurt");
+  assert.equal(calls.length, 0);
+  saveSettings({ haptics: true });
+  rumble(1, "hurt");
+  assert.equal(calls.length, 1);
 });
 
 test("unknown rumble kind is ignored", () => {
