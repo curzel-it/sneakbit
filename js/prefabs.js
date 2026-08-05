@@ -78,13 +78,13 @@ const DEFAULT_SHOP_STOCK = [
   { item: 1214, price: 300 },
   { item: 1215, price: 550 },
   { item: 1216, price: 300 },
-  // Cosmetic skins (skins.js) — one-of-a-kind, equipped from the inventory Skin slot.
-  // Tiered by rarity: colored outfits common, tracksuit/ninja premium.
-  { skin: "outfit_red", price: 150 },
-  { skin: "outfit_yellow", price: 150 },
-  { skin: "outfit_blue", price: 150 },
-  { skin: "tracksuit_black", price: 400 },
-  { skin: "ninja_black", price: 400 },
+  // Cosmetic skins (skins.js) — one-of-a-kind, equipped from the inventory Skin
+  // slot. Flat 1000 coins each: a long-game goal, not a rarity ladder.
+  { skin: "outfit_red", price: 1000 },
+  { skin: "outfit_yellow", price: 1000 },
+  { skin: "outfit_blue", price: 1000 },
+  { skin: "tracksuit_black", price: 1000 },
+  { skin: "ninja_black", price: 1000 },
   // The Knockback Aura skill (skills.js) is deliberately NOT stocked: it's a
   // playtest toy, not a shipped purchase.
 ];

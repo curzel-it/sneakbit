@@ -35,11 +35,11 @@ const HERO_COLUMN_STRIDE = 4;
 // column 25 is empty, so there is no 7th skin.
 export const SKINS = [
   { id: "default",         key: 0, nameKey: "skins.name.default",         column: null, rarity: "default", price: 0 },
-  { id: "outfit_red",      key: 1, nameKey: "skins.name.outfit_red",      column: 5,    rarity: "common",  price: 150 },
-  { id: "outfit_yellow",   key: 2, nameKey: "skins.name.outfit_yellow",   column: 9,    rarity: "common",  price: 150 },
-  { id: "outfit_blue",     key: 3, nameKey: "skins.name.outfit_blue",     column: 13,   rarity: "common",  price: 150 },
-  { id: "tracksuit_black", key: 4, nameKey: "skins.name.tracksuit_black", column: 17,   rarity: "rare",    price: 400 },
-  { id: "ninja_black",     key: 5, nameKey: "skins.name.ninja_black",     column: 21,   rarity: "rare",    price: 400 },
+  { id: "outfit_red",      key: 1, nameKey: "skins.name.outfit_red",      column: 5,    rarity: "common",  price: 1000 },
+  { id: "outfit_yellow",   key: 2, nameKey: "skins.name.outfit_yellow",   column: 9,    rarity: "common",  price: 1000 },
+  { id: "outfit_blue",     key: 3, nameKey: "skins.name.outfit_blue",     column: 13,   rarity: "common",  price: 1000 },
+  { id: "tracksuit_black", key: 4, nameKey: "skins.name.tracksuit_black", column: 17,   rarity: "rare",    price: 1000 },
+  { id: "ninja_black",     key: 5, nameKey: "skins.name.ninja_black",     column: 21,   rarity: "rare",    price: 1000 },
 ];
 
 const byId = new Map(SKINS.map((s) => [s.id, s]));

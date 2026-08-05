@@ -210,11 +210,11 @@
         { "item": 1214, "price": 300 },
         { "item": 1215, "price": 550 },
         { "item": 1216, "price": 300 },
-        { "skin": "outfit_red", "price": 150 },
-        { "skin": "outfit_yellow", "price": 150 },
-        { "skin": "outfit_blue", "price": 150 },
-        { "skin": "tracksuit_black", "price": 400 },
-        { "skin": "ninja_black", "price": 400 }
+        { "skin": "outfit_red", "price": 1000 },
+        { "skin": "outfit_yellow", "price": 1000 },
+        { "skin": "outfit_blue", "price": 1000 },
+        { "skin": "tracksuit_black", "price": 1000 },
+        { "skin": "ninja_black", "price": 1000 }
       ],
       "species_id": 3008
     }

@@ -277,23 +277,23 @@
           "price": 300
         },
         {
-          "price": 150,
+          "price": 1000,
           "skin": "outfit_red"
         },
         {
-          "price": 150,
+          "price": 1000,
           "skin": "outfit_yellow"
         },
         {
-          "price": 150,
+          "price": 1000,
           "skin": "outfit_blue"
         },
         {
-          "price": 400,
+          "price": 1000,
           "skin": "tracksuit_black"
         },
         {
-          "price": 400,
+          "price": 1000,
           "skin": "ninja_black"
         }
       ],
