@@ -16,17 +16,13 @@ import {
 } from "./fixtures/chrome.mjs";
 import { startServers } from "./fixtures/servers.mjs";
 
-const STATIC_PORT = 8014;
-const RELAY_PORT = 8104;
-const CHROME_PORT = 9274;
-
 test("coins: species loads, HUD mounts and tracks the wallet, no exceptions", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const servers = await startServers({ staticPort: STATIC_PORT, relayPort: RELAY_PORT });
+  const servers = await startServers();
   t.after(() => servers.stop());
-  const chrome = await launchChrome({ port: CHROME_PORT, dataDir: "/tmp/sb-e2e-coins" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-coins" });
   t.after(() => chrome.kill());
-  const targets = await getTargets(CHROME_PORT);
+  const targets = await getTargets(chrome.port);
   const page = targets.find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());

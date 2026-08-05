@@ -44,10 +44,10 @@ async function driveMoving(session) {
 
 async function main() {
   if (!findChrome()) throw new Error("Chrome not found (set CHROME_PATH)");
-  const servers = await startServers({ staticPort: 8011, relayPort: 8101 });
-  const chrome = await launchChrome({ port: 9281, dataDir: "/tmp/sb-alloc-profile" });
+  const servers = await startServers();
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-alloc-profile" });
   try {
-    const targets = await getTargets(9281);
+    const targets = await getTargets(chrome.port);
     const page = targets.find((x) => x.type === "page");
     const s = await connectSession(page.webSocketDebuggerUrl);
     s.on("Runtime.exceptionThrown", (p) =>

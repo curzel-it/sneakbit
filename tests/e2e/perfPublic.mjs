@@ -126,7 +126,6 @@ async function main() {
   const rtcSession = await startCoopSession({
     appUrl: APP_URL, relayWs: RELAY_WS,
     zone: 1001, entry: "deeplink", disableWebrtc: false,
-    hostPort: 9243, guestPort: 9244,
     hostDir: "/tmp/sb-perf-host-rtc", guestDir: "/tmp/sb-perf-guest-rtc",
   });
   captureConsole(rtcSession.host, "rtc-host");
@@ -144,7 +143,6 @@ async function main() {
   const wsSession = await startCoopSession({
     appUrl: APP_URL, relayWs: RELAY_WS,
     zone: 1001, entry: "deeplink", disableWebrtc: true,
-    hostPort: 9245, guestPort: 9246,
     hostDir: "/tmp/sb-perf-host-ws", guestDir: "/tmp/sb-perf-guest-ws",
   });
   let ws;
@@ -167,7 +165,6 @@ async function main() {
   const rtcStut = await startCoopSession({
     appUrl: APP_URL, relayWs: RELAY_WS,
     zone: 1001, entry: "deeplink", disableWebrtc: false,
-    hostPort: 9247, guestPort: 9248,
     hostDir: "/tmp/sb-perf-host-stut-rtc", guestDir: "/tmp/sb-perf-guest-stut-rtc",
   });
   let rtcStutter;
@@ -181,7 +178,6 @@ async function main() {
   const wsStut = await startCoopSession({
     appUrl: APP_URL, relayWs: RELAY_WS,
     zone: 1001, entry: "deeplink", disableWebrtc: true,
-    hostPort: 9249, guestPort: 9250,
     hostDir: "/tmp/sb-perf-host-stut-ws", guestDir: "/tmp/sb-perf-guest-stut-ws",
   });
   let wsStutter;

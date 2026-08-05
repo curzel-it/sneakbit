@@ -18,7 +18,7 @@ const KUNAI = 7000;
 let servers;
 before(async () => {
   if (!findChrome()) return; // test self-skips
-  servers = await startServers({ staticPort: 8003, relayPort: 8093 });
+  servers = await startServers();
 });
 after(() => { if (servers) servers.stop(); });
 
@@ -28,7 +28,6 @@ test("guest opens the clerk shop on its own client and a purchase credits the ho
     appUrl: servers.appUrl,
     relayWs: servers.relayWs,
     zone: 1001,
-    hostPort: 9233, guestPort: 9234,
     hostDir: "/tmp/sb-e2e-shop-host",
     guestDir: "/tmp/sb-e2e-shop-guest",
   });

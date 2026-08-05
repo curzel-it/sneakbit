@@ -13,9 +13,6 @@ import {
 } from "./fixtures/chrome.mjs";
 import { startServers } from "./fixtures/servers.mjs";
 
-const STATIC_PORT = 8007;
-const RELAY_PORT = 8097;
-const CHROME_PORT = 9264;
 const q = (s) => JSON.stringify(s);
 
 if (!findChrome()) { console.error("Chrome not found (set CHROME_PATH)"); process.exit(2); }
@@ -24,8 +21,8 @@ const dbPath = join(tmpdir(), `sb-verify-site-${process.pid}-${Date.now()}.db`);
 process.env.JWT_SECRET = "verify-secret-0123456789abcdef0123456789";
 process.env.DATABASE_PATH = dbPath;
 
-const servers = await startServers({ staticPort: STATIC_PORT, relayPort: RELAY_PORT });
-const chrome = await launchChrome({ port: CHROME_PORT, dataDir: "/tmp/sb-verify-site" });
+const servers = await startServers();
+const chrome = await launchChrome({ dataDir: "/tmp/sb-verify-site" });
 let s;
 const fail = (m) => { console.error("FAIL:", m); cleanup(); process.exit(1); };
 function cleanup() {
@@ -36,10 +33,10 @@ function cleanup() {
 }
 
 try {
-  const page = (await getTargets(CHROME_PORT)).find((x) => x.type === "page");
+  const page = (await getTargets(chrome.port)).find((x) => x.type === "page");
   s = await connectSession(page.webSocketDebuggerUrl);
 
-  const api = `http://127.0.0.1:${RELAY_PORT}`;
+  const api = `http://127.0.0.1:${servers.relayPort}`;
   const email = `site-${Date.now()}@sneakbit.test`;
   const pass = "password1";
 

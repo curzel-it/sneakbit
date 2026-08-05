@@ -20,7 +20,7 @@ import { startCoopSession, readGuestRtcStats, dispatchKey, KEYS } from "./fixtur
 let servers;
 before(async () => {
   if (!findChrome()) return; // tests below will self-skip
-  servers = await startServers({ staticPort: 8001, relayPort: 8091 });
+  servers = await startServers();
 });
 after(() => { if (servers) servers.stop(); });
 
@@ -40,7 +40,6 @@ test("deep-link guest entry brings up a WebRTC DataChannel", async (t) => {
     relayWs: servers.relayWs,
     zone: 1001,
     entry: "deeplink",
-    hostPort: 9223, guestPort: 9224,
     hostDir: "/tmp/sb-e2e-lifts-deeplink-host",
     guestDir: "/tmp/sb-e2e-lifts-deeplink-guest",
   });
@@ -64,7 +63,6 @@ test("menu-driven guest entry brings up a WebRTC DataChannel", async (t) => {
     relayWs: servers.relayWs,
     zone: 1001,
     entry: "menu",
-    hostPort: 9225, guestPort: 9226,
     hostDir: "/tmp/sb-e2e-lifts-menu-host",
     guestDir: "/tmp/sb-e2e-lifts-menu-guest",
   });
@@ -91,7 +89,6 @@ test("disableWebrtc forces all traffic onto the WS relay", async (t) => {
     zone: 1001,
     entry: "deeplink",
     disableWebrtc: true,
-    hostPort: 9227, guestPort: 9228,
     hostDir: "/tmp/sb-e2e-lifts-wsonly-host",
     guestDir: "/tmp/sb-e2e-lifts-wsonly-guest",
   });

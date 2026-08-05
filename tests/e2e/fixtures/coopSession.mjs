@@ -55,111 +55,129 @@ export async function startCoopSession({
   entry = "deeplink",      // "deeplink" or "menu"
   disableWebrtc = false,   // force WS-only path
   hostSeedKv = null,       // { "item_collected.123": 1 } seeded into the host's storage.js KV before its boot
-  hostPort = 9223,
-  guestPort = 9224,
   hostDir = "/tmp/sb-e2e-host",
   guestDir = "/tmp/sb-e2e-guest",
 } = {}) {
-  const hostChrome = await launchChrome({ port: hostPort, dataDir: hostDir });
-  const guestChrome = await launchChrome({ port: guestPort, dataDir: guestDir });
+  const hostChrome = await launchChrome({ dataDir: hostDir });
+  const guestChrome = await launchChrome({ dataDir: guestDir });
 
   const [hostT, guestT] = await Promise.all([
-    getTargets(hostPort).then((ts) => ts.find((t) => t.type === "page")),
-    getTargets(guestPort).then((ts) => ts.find((t) => t.type === "page")),
+    getTargets(hostChrome.port).then((ts) => ts.find((t) => t.type === "page")),
+    getTargets(guestChrome.port).then((ts) => ts.find((t) => t.type === "page")),
   ]);
-  if (!hostT || !guestT) throw new Error("missing page targets");
 
-  const host = await connectSession(hostT.webSocketDebuggerUrl);
-  const guest = await connectSession(guestT.webSocketDebuggerUrl);
-
-  // Pre-document scripts: PC wrap, plus optionally a hard rtc disable.
-  await guest.send("Page.addScriptToEvaluateOnNewDocument", {
-    source: disableWebrtc ? (DISABLE_WEBRTC_SCRIPT + WRAP_PC_SCRIPT) : WRAP_PC_SCRIPT,
-  });
-  if (disableWebrtc) {
-    await host.send("Page.addScriptToEvaluateOnNewDocument", { source: DISABLE_WEBRTC_SCRIPT });
+  let host = null;
+  let guest = null;
+  // Everything past this point can fail (a boot that never produces an
+  // invite code, a guest whose mirror never appears). If it does, tear
+  // the whole session down before rethrowing: the caller registers its
+  // t.after AFTER we return, so on a throw nobody else will ever close
+  // these sockets or kill these browsers. Leaking them used to turn a
+  // 30 s timeout into a test FILE that hung for ~18 minutes, and left
+  // orphan Chromes that then poisoned every later test in the run.
+  try {
+    if (!hostT || !guestT) throw new Error("missing page targets");
+    host = await connectSession(hostT.webSocketDebuggerUrl);
+    guest = await connectSession(guestT.webSocketDebuggerUrl);
+    return await bringUp();
+  } catch (err) {
+    try { host?.close(); } catch { /* ignore */ }
+    try { guest?.close(); } catch { /* ignore */ }
+    hostChrome.kill();
+    guestChrome.kill();
+    throw err;
   }
 
-  const hostUuid = uuidv4();
-  const guestUuid = uuidv4();
-
-  // Host: seed UUID on the right origin, then navigate to the deep-link
-  // host URL (zone optional). Menu-mode doesn't apply on the host side —
-  // it'd be redundant; the user's question was specifically about the
-  // *guest* deep-link vs menu paths.
-  await navigate(host, `${appUrl}/`);
-  await evalExpr(host, `localStorage.setItem("sneakbit.online.uuid", ${JSON.stringify(hostUuid)})`);
-  // Seed the host's persistent KV (storage.js) before the host boot so
-  // initOfflineState's buildZone hydrates with these flags already set —
-  // e.g. item_collected.<id>=1 models "the host picked this up in an
-  // earlier single-player session, then started hosting". storage.js
-  // namespaces every key under the "sneakbit.kv.v1." prefix.
-  if (hostSeedKv) {
-    for (const [k, v] of Object.entries(hostSeedKv)) {
-      await evalExpr(host, `localStorage.setItem(${JSON.stringify("sneakbit.kv.v1." + k)}, ${JSON.stringify(String(v))})`);
+  async function bringUp() {
+    // Pre-document scripts: PC wrap, plus optionally a hard rtc disable.
+    await guest.send("Page.addScriptToEvaluateOnNewDocument", {
+      source: disableWebrtc ? (DISABLE_WEBRTC_SCRIPT + WRAP_PC_SCRIPT) : WRAP_PC_SCRIPT,
+    });
+    if (disableWebrtc) {
+      await host.send("Page.addScriptToEvaluateOnNewDocument", { source: DISABLE_WEBRTC_SCRIPT });
     }
-  }
-  const hostUrl = zone != null
-    ? `${appUrl}/?host=1&zone=${zone}&server=${encodeURIComponent(relayWs)}`
-    : `${appUrl}/?host=1&server=${encodeURIComponent(relayWs)}`;
-  await navigate(host, hostUrl);
 
-  // Pick up the host's invite code via the existing getter.
-  const inviteCode = await waitFor(host, `
-    (async () => {
-      const o = await import('./js/onlineBootstrap.js');
-      return o.getInviteCode && o.getInviteCode();
-    })()
-  `, { timeoutMs: 30000 });
+    const hostUuid = uuidv4();
+    const guestUuid = uuidv4();
 
-  // Guest navigation, deep-link or menu-driven.
-  await navigate(guest, `${appUrl}/`);
-  await evalExpr(guest, `localStorage.setItem("sneakbit.online.uuid", ${JSON.stringify(guestUuid)})`);
-  if (entry === "deeplink") {
-    await navigate(guest, `${appUrl}/?join=${encodeURIComponent(inviteCode)}&server=${encodeURIComponent(relayWs)}`);
-  } else if (entry === "menu") {
-    // Boot offline, then drive a switchRole("guest", { code }) in-page —
-    // the same call the party-panel "Join" button makes. This exercises
-    // the menu code path (offline → guest at runtime) without having to
-    // simulate clicks.
-    await navigate(guest, `${appUrl}/?server=${encodeURIComponent(relayWs)}`);
-    await waitFor(guest, `(typeof window !== 'undefined' && !!document.querySelector('#game'))`, { timeoutMs: 10000 });
-    await evalExpr(guest, `
+    // Host: seed UUID on the right origin, then navigate to the deep-link
+    // host URL (zone optional). Menu-mode doesn't apply on the host side —
+    // it'd be redundant; the user's question was specifically about the
+    // *guest* deep-link vs menu paths.
+    await navigate(host, `${appUrl}/`);
+    await evalExpr(host, `localStorage.setItem("sneakbit.online.uuid", ${JSON.stringify(hostUuid)})`);
+    // Seed the host's persistent KV (storage.js) before the host boot so
+    // initOfflineState's buildZone hydrates with these flags already set —
+    // e.g. item_collected.<id>=1 models "the host picked this up in an
+    // earlier single-player session, then started hosting". storage.js
+    // namespaces every key under the "sneakbit.kv.v1." prefix.
+    if (hostSeedKv) {
+      for (const [k, v] of Object.entries(hostSeedKv)) {
+        await evalExpr(host, `localStorage.setItem(${JSON.stringify("sneakbit.kv.v1." + k)}, ${JSON.stringify(String(v))})`);
+      }
+    }
+    const hostUrl = zone != null
+      ? `${appUrl}/?host=1&zone=${zone}&server=${encodeURIComponent(relayWs)}`
+      : `${appUrl}/?host=1&server=${encodeURIComponent(relayWs)}`;
+    await navigate(host, hostUrl);
+
+    // Pick up the host's invite code via the existing getter.
+    const inviteCode = await waitFor(host, `
       (async () => {
-        const sr = await import('./js/switchRole.js');
-        await sr.switchRole('guest', { code: ${JSON.stringify(inviteCode)} });
-        return true;
+        const o = await import('./js/onlineBootstrap.js');
+        return o.getInviteCode && o.getInviteCode();
       })()
-    `);
-  } else {
-    throw new Error(`unknown entry mode: ${entry}`);
+    `, { timeoutMs: 30000 });
+
+    // Guest navigation, deep-link or menu-driven.
+    await navigate(guest, `${appUrl}/`);
+    await evalExpr(guest, `localStorage.setItem("sneakbit.online.uuid", ${JSON.stringify(guestUuid)})`);
+    if (entry === "deeplink") {
+      await navigate(guest, `${appUrl}/?join=${encodeURIComponent(inviteCode)}&server=${encodeURIComponent(relayWs)}`);
+    } else if (entry === "menu") {
+      // Boot offline, then drive a switchRole("guest", { code }) in-page —
+      // the same call the party-panel "Join" button makes. This exercises
+      // the menu code path (offline → guest at runtime) without having to
+      // simulate clicks.
+      await navigate(guest, `${appUrl}/?server=${encodeURIComponent(relayWs)}`);
+      await waitFor(guest, `(typeof window !== 'undefined' && !!document.querySelector('#game'))`, { timeoutMs: 10000 });
+      await evalExpr(guest, `
+        (async () => {
+          const sr = await import('./js/switchRole.js');
+          await sr.switchRole('guest', { code: ${JSON.stringify(inviteCode)} });
+          return true;
+        })()
+      `);
+    } else {
+      throw new Error(`unknown entry mode: ${entry}`);
+    }
+
+    // Wait until the guest's mirror and predicted-self both exist.
+    await waitFor(guest, `
+      (async () => {
+        const m = await import('./js/mirrorWorld.js');
+        const p = await import('./js/predictedSelf.js');
+        const o = await import('./js/onlineBootstrap.js');
+        window.__sb = { m, p, o };
+        const selfId = o.getSelfPlayerId && o.getSelfPlayerId();
+        const mp = selfId && m.getMirrorPlayerById(selfId);
+        const ps = p.getPredictedSelf && p.getPredictedSelf();
+        return !!(selfId && mp && ps) || null;
+      })()
+    `, { timeoutMs: 30000 });
+
+    return {
+      host, guest,
+      inviteCode,
+      appUrl, relayWs,
+      stop: () => {
+        try { host.close(); } catch { /* ignore */ }
+        try { guest.close(); } catch { /* ignore */ }
+        hostChrome.kill();
+        guestChrome.kill();
+      },
+    };
   }
-
-  // Wait until the guest's mirror and predicted-self both exist.
-  await waitFor(guest, `
-    (async () => {
-      const m = await import('./js/mirrorWorld.js');
-      const p = await import('./js/predictedSelf.js');
-      const o = await import('./js/onlineBootstrap.js');
-      window.__sb = { m, p, o };
-      const selfId = o.getSelfPlayerId && o.getSelfPlayerId();
-      const mp = selfId && m.getMirrorPlayerById(selfId);
-      const ps = p.getPredictedSelf && p.getPredictedSelf();
-      return !!(selfId && mp && ps) || null;
-    })()
-  `, { timeoutMs: 30000 });
-
-  return {
-    host, guest,
-    inviteCode,
-    appUrl, relayWs,
-    stop: () => {
-      try { host.close(); } catch { /* ignore */ }
-      try { guest.close(); } catch { /* ignore */ }
-      hostChrome.kill();
-      guestChrome.kill();
-    },
-  };
 }
 
 // Read the live RTCPeerConnection stats from the guest's wrapped pcs.

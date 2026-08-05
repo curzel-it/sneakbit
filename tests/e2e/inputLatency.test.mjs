@@ -28,7 +28,7 @@ import { startCoopSession, dispatchKey, KEYS } from "./fixtures/coopSession.mjs"
 let servers;
 before(async () => {
   if (!findChrome()) return;
-  servers = await startServers({ staticPort: 8002, relayPort: 8092 });
+  servers = await startServers();
 });
 after(() => { if (servers) servers.stop(); });
 
@@ -152,7 +152,6 @@ test("input round-trip and step-cadence comparison: WS vs WebRTC", async (t) => 
   const wsSession = await startCoopSession({
     appUrl: servers.appUrl, relayWs: servers.relayWs,
     zone: 1001, entry: "deeplink", disableWebrtc: true,
-    hostPort: 9233, guestPort: 9234,
     hostDir: "/tmp/sb-e2e-host-ws", guestDir: "/tmp/sb-e2e-guest-ws",
   });
   let ws;
@@ -165,7 +164,6 @@ test("input round-trip and step-cadence comparison: WS vs WebRTC", async (t) => 
   const rtcSession = await startCoopSession({
     appUrl: servers.appUrl, relayWs: servers.relayWs,
     zone: 1001, entry: "deeplink", disableWebrtc: false,
-    hostPort: 9235, guestPort: 9236,
     hostDir: "/tmp/sb-e2e-host-rtc", guestDir: "/tmp/sb-e2e-guest-rtc",
   });
   let rtc;

@@ -28,7 +28,7 @@ const CONTROL_KUNAI_ID = 10754446;    // kunai     @ (73,31) — left visible
 let servers;
 before(async () => {
   if (!findChrome()) return; // tests below self-skip
-  servers = await startServers({ staticPort: 8002, relayPort: 8092 });
+  servers = await startServers();
 });
 after(() => { if (servers) servers.stop(); });
 
@@ -64,7 +64,6 @@ test("guest never mirrors an object the host has already collected", async (t) =
     zone: 1001,
     entry: "deeplink",
     hostSeedKv: { [`item_collected.${COLLECTED_BUNDLE_ID}`]: 1 },
-    hostPort: 9229, guestPort: 9230,
     hostDir: "/tmp/sb-e2e-vis-host",
     guestDir: "/tmp/sb-e2e-vis-guest",
   });

@@ -31,7 +31,7 @@ const MOVING_CEIL = 1200;
 let servers;
 before(async () => {
   if (!findChrome()) return;
-  servers = await startServers({ staticPort: 8015, relayPort: 8105 });
+  servers = await startServers();
 });
 after(() => { if (servers) servers.stop(); });
 
@@ -51,9 +51,9 @@ async function driveMoving(session) {
 
 test("per-frame heap allocation stays low (idle + moving)", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const chrome = await launchChrome({ port: 9285, dataDir: "/tmp/sb-e2e-alloc" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-alloc" });
   t.after(() => chrome.kill());
-  const targets = await getTargets(9285);
+  const targets = await getTargets(chrome.port);
   const page = targets.find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());

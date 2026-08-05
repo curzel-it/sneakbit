@@ -18,13 +18,6 @@ import {
 } from "./fixtures/chrome.mjs";
 import { startServers } from "./fixtures/servers.mjs";
 
-const STATIC_PORT = 8007;
-const RELAY_PORT = 8098;
-const CHROME_A = 9264;
-const CHROME_B = 9265;
-const CHROME_C = 9266;
-const CHROME_D = 9267;
-const CHROME_E = 9268;
 const EMAIL = "cloud-e2e@sneakbit.test";
 const EMAIL2 = "cloud-conflict-e2e@sneakbit.test";
 const EMAIL3 = "cloud-clearcache-e2e@sneakbit.test";
@@ -39,7 +32,7 @@ before(async () => {
   // >=32 bytes so it clears the boot-time JWT_SECRET strength check.
   process.env.JWT_SECRET = "e2e-cloud-secret-0123456789abcdef0123456789";
   process.env.DATABASE_PATH = dbPath;
-  servers = await startServers({ staticPort: STATIC_PORT, relayPort: RELAY_PORT });
+  servers = await startServers();
 });
 
 after(() => {
@@ -58,10 +51,10 @@ const clickConflictBtn = (s, text) =>
     + `const b=[...o.querySelectorAll('button')].find(x=>x.textContent.includes(${q(text)}));`
     + `if(!b)return false;b.click();return true;})()`);
 
-async function openDevice(port, dataDir, t) {
-  const chrome = await launchChrome({ port, dataDir });
+async function openDevice(dataDir, t) {
+  const chrome = await launchChrome({ dataDir });
   t.after(() => chrome.kill());
-  const targets = await getTargets(port);
+  const targets = await getTargets(chrome.port);
   const page = targets.find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
@@ -70,10 +63,10 @@ async function openDevice(port, dataDir, t) {
 
 test("two devices on one account: progress syncs across them", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const url = `${servers.appUrl}/?api=http://127.0.0.1:${RELAY_PORT}`;
+  const url = `${servers.appUrl}/?api=http://127.0.0.1:${servers.relayPort}`;
 
   // — Device A: register, make progress, push to cloud —————————————————
-  const a = await openDevice(CHROME_A, "/tmp/sb-e2e-cloud-a", t);
+  const a = await openDevice("/tmp/sb-e2e-cloud-a", t);
   await navigate(a, url);
   await waitFor(a, "!!window.account && !!window.coop && !!window.cloudSave");
   await evalExpr(a, "window.account.open('register')");
@@ -91,7 +84,7 @@ test("two devices on one account: progress syncs across them", async (t) => {
   assert.equal(await evalExpr(a, "window.skills.get().piercing"), true);
 
   // — Device B: sign in, adopt the account's progress (first pull) ———————
-  const b = await openDevice(CHROME_B, "/tmp/sb-e2e-cloud-b", t);
+  const b = await openDevice("/tmp/sb-e2e-cloud-b", t);
   await navigate(b, url);
   await waitFor(b, "!!window.account && !!window.coop && !!window.cloudSave");
   assert.equal(await evalExpr(b, "window.skills.get().piercing"), false, "B starts fresh");
@@ -116,10 +109,10 @@ test("two devices on one account: progress syncs across them", async (t) => {
 
 test("Clear cache on a signed-in device restores the cloud save instead of starting a new game", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const url = `${servers.appUrl}/?api=http://127.0.0.1:${RELAY_PORT}`;
+  const url = `${servers.appUrl}/?api=http://127.0.0.1:${servers.relayPort}`;
 
   // — Register, make progress, push it to the cloud ————————————————————————
-  const e = await openDevice(CHROME_E, "/tmp/sb-e2e-cloud-e", t);
+  const e = await openDevice("/tmp/sb-e2e-cloud-e", t);
   await navigate(e, url);
   await waitFor(e, "!!window.account && !!window.cloudSave && !!window.save");
   await evalExpr(e, "window.account.open('register')");
@@ -159,10 +152,10 @@ test("Clear cache on a signed-in device restores the cloud save instead of start
 
 test("first sign-in with genuine offline progress prompts; 'Keep this device' pushes local over the account", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const url = `${servers.appUrl}/?api=http://127.0.0.1:${RELAY_PORT}`;
+  const url = `${servers.appUrl}/?api=http://127.0.0.1:${servers.relayPort}`;
 
   // — Device C: register an account and seed it with 'piercing' ————————————
-  const c = await openDevice(CHROME_C, "/tmp/sb-e2e-cloud-c", t);
+  const c = await openDevice("/tmp/sb-e2e-cloud-c", t);
   await navigate(c, url);
   await waitFor(c, "!!window.account && !!window.cloudSave");
   await evalExpr(c, "window.account.open('register')");
@@ -176,7 +169,7 @@ test("first sign-in with genuine offline progress prompts; 'Keep this device' pu
   await waitFor(c, "(window.cloudSave.meta().rev || 0) >= 2");
 
   // — Device D: make DIFFERENT genuine offline progress BEFORE signing in ——
-  const d = await openDevice(CHROME_D, "/tmp/sb-e2e-cloud-d", t);
+  const d = await openDevice("/tmp/sb-e2e-cloud-d", t);
   await navigate(d, url);
   await waitFor(d, "!!window.account && !!window.cloudSave");
   // Real offline progress on this device — a skill the account doesn't have.

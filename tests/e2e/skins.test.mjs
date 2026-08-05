@@ -15,10 +15,6 @@ import {
 } from "./fixtures/chrome.mjs";
 import { startServers } from "./fixtures/servers.mjs";
 
-const STATIC_PORT = 8019;
-const RELAY_PORT = 8109;
-const CHROME_PORT = 9279;
-
 const SHOP_ZONE = 12900001;
 const CLERK_ID = 12900010;
 const SKIN_ID = "ninja_black";
@@ -30,11 +26,11 @@ const key = (s, code) =>
 
 test("skins: buy a skin in the shop, then equip it from the inventory", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const servers = await startServers({ staticPort: STATIC_PORT, relayPort: RELAY_PORT });
+  const servers = await startServers();
   t.after(() => servers.stop());
-  const chrome = await launchChrome({ port: CHROME_PORT, dataDir: "/tmp/sb-e2e-skins" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-skins" });
   t.after(() => chrome.kill());
-  const targets = await getTargets(CHROME_PORT);
+  const targets = await getTargets(chrome.port);
   const page = targets.find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());

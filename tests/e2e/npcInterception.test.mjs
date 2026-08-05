@@ -17,12 +17,12 @@ import { startServers } from "./fixtures/servers.mjs";
 // Boot the offline game in a fresh Chrome + static server, returning a CDP
 // session and a live array of any uncaught browser exceptions. Cleanup is
 // registered on the test context.
-async function boot(t, { staticPort, relayPort, chromePort, dataDir }) {
-  const servers = await startServers({ staticPort, relayPort });
+async function boot(t, dataDir) {
+  const servers = await startServers();
   t.after(() => servers.stop());
-  const chrome = await launchChrome({ port: chromePort, dataDir });
+  const chrome = await launchChrome({ dataDir });
   t.after(() => chrome.kill());
-  const targets = await getTargets(chromePort);
+  const targets = await getTargets(chrome.port);
   const page = targets.find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
@@ -37,9 +37,7 @@ async function boot(t, { staticPort, relayPort, chromePort, dataDir }) {
 
 test("interception: spotted hero freezes, NPC walks over, dialogue opens", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const { s, errors } = await boot(t, {
-    staticPort: 8071, relayPort: 8171, chromePort: 9371, dataDir: "/tmp/sb-e2e-intercept",
-  });
+  const { s, errors } = await boot(t, "/tmp/sb-e2e-intercept");
 
   const result = await evalExpr(s, `(async () => {
     const { tickNpcInterception, isInterceptionActive, isDemandingAttention } = await import('./js/npcInterception.js');
@@ -108,9 +106,7 @@ test("interception: spotted hero freezes, NPC walks over, dialogue opens", async
 
 test("interception: holding the key stops the hero on the line-of-sight tile (no overshoot)", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const { s, errors } = await boot(t, {
-    staticPort: 8072, relayPort: 8172, chromePort: 9372, dataDir: "/tmp/sb-e2e-intercept2",
-  });
+  const { s, errors } = await boot(t, "/tmp/sb-e2e-intercept2");
 
   // Drives the REAL updatePlayer (tile-locked chaining) plus tickNpcInterception
   // in main-loop order, walking the hero up a clear column toward an NPC 8 tiles

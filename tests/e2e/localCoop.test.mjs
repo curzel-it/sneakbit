@@ -18,7 +18,7 @@ import { startServers } from "./fixtures/servers.mjs";
 let servers;
 before(async () => {
   if (!findChrome()) return;
-  servers = await startServers({ staticPort: 8004, relayPort: 8094 });
+  servers = await startServers();
 });
 after(() => { if (servers) servers.stop(); });
 
@@ -33,9 +33,9 @@ function posOf(list, index) {
 
 test("local co-op spawns and independently drives 2, 3, and 4 players", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const chrome = await launchChrome({ port: 9261, dataDir: "/tmp/sb-e2e-localcoop" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-localcoop" });
   t.after(() => chrome.kill());
-  const targets = await getTargets(9261);
+  const targets = await getTargets(chrome.port);
   const page = targets.find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());

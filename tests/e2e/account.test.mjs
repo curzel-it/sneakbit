@@ -14,9 +14,6 @@ import {
 } from "./fixtures/chrome.mjs";
 import { startServers } from "./fixtures/servers.mjs";
 
-const STATIC_PORT = 8006;
-const RELAY_PORT = 8096;
-const CHROME_PORT = 9263;
 const EMAIL = "e2e@sneakbit.test";
 const PASS = "password1";
 const NEWNAME = "Trinity";
@@ -31,7 +28,7 @@ before(async () => {
   dbPath = join(tmpdir(), `sb-e2e-account-${process.pid}-${Date.now()}.db`);
   process.env.JWT_SECRET = "e2e-test-secret-0123456789abcdef0123456789";
   process.env.DATABASE_PATH = dbPath;
-  servers = await startServers({ staticPort: STATIC_PORT, relayPort: RELAY_PORT });
+  servers = await startServers();
 });
 
 after(() => {
@@ -49,14 +46,14 @@ async function clickSel(s, selector) {
 
 test("register, persist across reload, sign out, sign in, and stay playable offline", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const chrome = await launchChrome({ port: CHROME_PORT, dataDir: "/tmp/sb-e2e-account" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-account" });
   t.after(() => chrome.kill());
-  const targets = await getTargets(CHROME_PORT);
+  const targets = await getTargets(chrome.port);
   const page = targets.find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
 
-  const liveUrl = `${servers.appUrl}/?api=http://127.0.0.1:${RELAY_PORT}`;
+  const liveUrl = `${servers.appUrl}/?api=http://127.0.0.1:${servers.relayPort}`;
 
   // — Boot, then register —————————————————————————————————————————————
   await navigate(s, liveUrl);
@@ -113,15 +110,15 @@ test("register, persist across reload, sign out, sign in, and stay playable offl
 
 test("change display name through the editName sub-view", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const chrome = await launchChrome({ port: 9268, dataDir: "/tmp/sb-e2e-account-name" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-account-name" });
   t.after(() => chrome.kill());
-  const targets = await getTargets(9268);
+  const targets = await getTargets(chrome.port);
   const page = targets.find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
 
   const email = "e2e-name@sneakbit.test";
-  const liveUrl = `${servers.appUrl}/?api=http://127.0.0.1:${RELAY_PORT}`;
+  const liveUrl = `${servers.appUrl}/?api=http://127.0.0.1:${servers.relayPort}`;
   const clickText = (scope, text) =>
     evalExpr(s, `(()=>{const el=[...document.querySelectorAll(${q(scope)})].find(e=>e.textContent.trim()===${q(text)});if(!el)return false;el.click();return true;})()`);
   const shown = (view) =>
@@ -151,15 +148,15 @@ test("change display name through the editName sub-view", async (t) => {
 
 test("delete account removes it server-side and signs the user out", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const chrome = await launchChrome({ port: 9266, dataDir: "/tmp/sb-e2e-account-del" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-account-del" });
   t.after(() => chrome.kill());
-  const targets = await getTargets(9266);
+  const targets = await getTargets(chrome.port);
   const page = targets.find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
 
   const email = "e2e-del@sneakbit.test";
-  const liveUrl = `${servers.appUrl}/?api=http://127.0.0.1:${RELAY_PORT}`;
+  const liveUrl = `${servers.appUrl}/?api=http://127.0.0.1:${servers.relayPort}`;
   const clickText = (scope, text) =>
     evalExpr(s, `(()=>{const el=[...document.querySelectorAll(${q(scope)})].find(e=>e.textContent.trim()===${q(text)});if(!el)return false;el.click();return true;})()`);
 

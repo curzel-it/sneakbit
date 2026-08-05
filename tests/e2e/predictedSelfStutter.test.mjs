@@ -21,7 +21,7 @@ import { startCoopSession, runStutterWorkload } from "./fixtures/coopSession.mjs
 let servers;
 before(async () => {
   if (!findChrome()) return;
-  servers = await startServers({ staticPort: 8003, relayPort: 8093 });
+  servers = await startServers();
 });
 after(() => { if (servers) servers.stop(); });
 
@@ -39,7 +39,6 @@ test("guest predicted-self snap-jumps during up/down cycles (WebRTC)", async (t)
   const session = await startCoopSession({
     appUrl: servers.appUrl, relayWs: servers.relayWs,
     zone: 1001, entry: "deeplink",
-    hostPort: 9253, guestPort: 9254,
     hostDir: "/tmp/sb-e2e-host-stutter-rtc", guestDir: "/tmp/sb-e2e-guest-stutter-rtc",
   });
   t.after(() => session.stop());
@@ -59,7 +58,6 @@ test("guest predicted-self snap-jumps during up/down cycles (WS-only)", async (t
   const session = await startCoopSession({
     appUrl: servers.appUrl, relayWs: servers.relayWs,
     zone: 1001, entry: "deeplink", disableWebrtc: true,
-    hostPort: 9255, guestPort: 9256,
     hostDir: "/tmp/sb-e2e-host-stutter-ws", guestDir: "/tmp/sb-e2e-guest-stutter-ws",
   });
   t.after(() => session.stop());

@@ -16,10 +16,6 @@ import {
 } from "./fixtures/chrome.mjs";
 import { startServers } from "./fixtures/servers.mjs";
 
-const STATIC_PORT = 8016;
-const RELAY_PORT = 8106;
-const CHROME_PORT = 9276;
-
 // The zone-1001 shop interior, its clerk entity, and the kunai-bundle good.
 const SHOP_ZONE = 12900001;
 const CLERK_ID = 12900010;
@@ -29,11 +25,11 @@ const BUNDLE_PRICE = 10;
 
 test("shop: opens the shipped clerk stock and a kunai purchase moves coins → inventory", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const servers = await startServers({ staticPort: STATIC_PORT, relayPort: RELAY_PORT });
+  const servers = await startServers();
   t.after(() => servers.stop());
-  const chrome = await launchChrome({ port: CHROME_PORT, dataDir: "/tmp/sb-e2e-shop" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-shop" });
   t.after(() => chrome.kill());
-  const targets = await getTargets(CHROME_PORT);
+  const targets = await getTargets(chrome.port);
   const page = targets.find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());

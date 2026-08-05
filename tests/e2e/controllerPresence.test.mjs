@@ -12,7 +12,7 @@ import { startServers } from "./fixtures/servers.mjs";
 let servers;
 before(async () => {
   if (!findChrome()) return;
-  servers = await startServers({ staticPort: 8005, relayPort: 8095 });
+  servers = await startServers();
 });
 after(() => { if (servers) servers.stop(); });
 
@@ -22,9 +22,9 @@ const overlayVisible = (s) =>
 
 test("controller connect/disconnect drives device + pause overlay", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const chrome = await launchChrome({ port: 9271, dataDir: "/tmp/sb-e2e-ctrlpresence" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-ctrlpresence" });
   t.after(() => chrome.kill());
-  const page = (await getTargets(9271)).find((x) => x.type === "page");
+  const page = (await getTargets(chrome.port)).find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
 

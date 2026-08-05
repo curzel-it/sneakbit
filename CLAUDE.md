@@ -14,11 +14,12 @@ This repo *is* that game. The original Rust source is preserved in this reposito
 
 ## Testing, committing, shipping
 - **Unit tests** use Node's built-in test runner — no framework. Tests live in `tests/` and end in `.test.js`. They are pure node, no DOM, ~2 s to run, and need no install. (The repo's one devDependency, esbuild, is for the production build only — see "No build step" below.)
-- **E2E tests** live in `tests/e2e/*.test.mjs`. They drive headless Chrome via raw CDP and exercise the live game end-to-end (co-op host + guest, snapshot flow, WebRTC DC, predicted-self timing). They self-skip if Chrome isn't on the path; set `CHROME_PATH` to point at a non-default install. Slower (~26 s total) — that's why they're a separate npm script.
+- **E2E tests** live in `tests/e2e/*.test.mjs`. They drive headless Chrome via raw CDP and exercise the live game end-to-end (co-op host + guest, snapshot flow, WebRTC DC, predicted-self timing). They self-skip if Chrome isn't on the path; set `CHROME_PATH` to point at a non-default install. Slower (~135 s total) — that's why they're a separate npm script.
+  - Ports are never hard-coded: `launchChrome` lets Chrome pick its debugger port (read back from `DevToolsActivePort`) and `startServers()` takes free ports from the OS. Keep it that way — hand-picked ports collided between files, and a stale browser answering on one silently hijacked whole runs.
 - Commands:
   ```bash
   npm run test:unit   # fast inner loop (~2 s)
-  npm run test:e2e    # full e2e suite (~26 s; needs Chrome)
+  npm run test:e2e    # full e2e suite (~135 s; needs Chrome)
   npm test            # both, sequential
   ```
   Run `test:unit` often — at minimum before each commit. Run `test:e2e` before any push that touches `onlineBootstrap.js`, `webrtcTransport.js`, `webrtcChannel.js`, `predictedSelf.js`, `mirrorWorld.js`, or `snapshotBroadcaster.js`.

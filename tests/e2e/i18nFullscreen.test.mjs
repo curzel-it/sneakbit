@@ -9,7 +9,7 @@ import { startServers } from "./fixtures/servers.mjs";
 let servers;
 before(async () => {
   if (!findChrome()) return;
-  servers = await startServers({ staticPort: 8007, relayPort: 8097 });
+  servers = await startServers();
 });
 after(() => { if (servers) servers.stop(); });
 
@@ -17,9 +17,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 test("localization loads English by default and Italian when selected; fullscreen button present", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const chrome = await launchChrome({ port: 9282, dataDir: "/tmp/sb-e2e-i18n" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-i18n" });
   t.after(() => chrome.kill());
-  const page = (await getTargets(9282)).find((x) => x.type === "page");
+  const page = (await getTargets(chrome.port)).find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
 

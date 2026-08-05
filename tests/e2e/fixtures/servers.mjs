@@ -9,16 +9,32 @@
 // built-in Node static server if neither binds. The fallback lives in
 // `nodeStaticServer.mjs`. Set STATIC_SERVER=node to force it directly.
 //
-// Ports are configurable per call so multiple tests could in theory run
-// in parallel — though as of writing the test runner is serial.
+// Ports default to whatever the OS has free; callers can still pin them
+// explicitly, but nothing in the suite does. That's what lets tests run
+// back-to-back (or in parallel) without tripping over each other.
 
 import { spawn } from "node:child_process";
+import { createServer } from "node:net";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, "..", "..", "..");
+
+// Ask the OS for an unused port by binding :0 and reading it back. There
+// is a small window between closing here and the child binding, but it
+// beats a fixed number that is guaranteed to clash with the next test.
+function freePort() {
+  return new Promise((res, rej) => {
+    const srv = createServer();
+    srv.on("error", rej);
+    srv.listen(0, "127.0.0.1", () => {
+      const { port } = srv.address();
+      srv.close(() => res(port));
+    });
+  });
+}
 
 async function isPortListening(port, timeoutMs = 4000) {
   const start = Date.now();
@@ -69,7 +85,15 @@ async function startStaticServer(staticPort) {
   return spawnNode();
 }
 
-export async function startServers({ staticPort = 8000, relayPort = 8090 } = {}) {
+export async function startServers({ staticPort, relayPort } = {}) {
+  // Default to ports the OS says are free rather than numbers picked by
+  // hand. Hand-picked ports collided between test files (and with a dev
+  // server on the same machine), and the failure was silent: startServers
+  // probes "is this port listening?", which a stranger's server answers
+  // just as happily as ours, so the test proceeded against the wrong
+  // backend and failed much later for reasons that looked unrelated.
+  staticPort = staticPort ?? await freePort();
+  relayPort = relayPort ?? await freePort();
   const procs = [];
 
   const staticProc = await startStaticServer(staticPort);

@@ -12,7 +12,7 @@ import { startServers } from "./fixtures/servers.mjs";
 let servers;
 before(async () => {
   if (!findChrome()) return;
-  servers = await startServers({ staticPort: 8006, relayPort: 8096 });
+  servers = await startServers();
 });
 after(() => { if (servers) servers.stop(); });
 
@@ -25,9 +25,9 @@ const menuOpen = (s) => evalExpr(s, `(() => { const m = document.getElementById(
 
 test("keyboard + controller navigate the pause menu", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const chrome = await launchChrome({ port: 9281, dataDir: "/tmp/sb-e2e-menunav" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-menunav" });
   t.after(() => chrome.kill());
-  const page = (await getTargets(9281)).find((x) => x.type === "page");
+  const page = (await getTargets(chrome.port)).find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
 
@@ -68,9 +68,9 @@ test("keyboard + controller navigate the pause menu", async (t) => {
 
 test("navigation carries into a second surface (party panel)", async (t) => {
   if (!skipIfNoChrome(t)) return;
-  const chrome = await launchChrome({ port: 9282, dataDir: "/tmp/sb-e2e-menunav2" });
+  const chrome = await launchChrome({ dataDir: "/tmp/sb-e2e-menunav2" });
   t.after(() => chrome.kill());
-  const page = (await getTargets(9282)).find((x) => x.type === "page");
+  const page = (await getTargets(chrome.port)).find((x) => x.type === "page");
   const s = await connectSession(page.webSocketDebuggerUrl);
   t.after(() => s.close());
 

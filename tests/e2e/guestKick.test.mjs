@@ -18,7 +18,7 @@ import { startCoopSession } from "./fixtures/coopSession.mjs";
 let servers;
 before(async () => {
   if (!findChrome()) return; // tests below self-skip
-  servers = await startServers({ staticPort: 8016, relayPort: 8106 });
+  servers = await startServers();
 });
 after(() => { if (servers) servers.stop(); });
 
@@ -30,8 +30,6 @@ test("host kicks guest → guest drops to offline and stays playable", async (t)
     appUrl: servers.appUrl,
     relayWs: servers.relayWs,
     zone: 1001,
-    hostPort: 9281,
-    guestPort: 9282,
     hostDir: "/tmp/sb-e2e-kick-host",
     guestDir: "/tmp/sb-e2e-kick-guest",
   });
