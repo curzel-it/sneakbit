@@ -1,9 +1,13 @@
 package it.curzel.sneakbit
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
@@ -16,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import java.io.ByteArrayInputStream
 import java.io.IOException
+import java.util.concurrent.Executors
 
 // The Android app is a thin native shell: a full-screen WebView that runs the
 // exact same HTML/JS game that ships to the web and to Steam (Electron). No game
@@ -34,6 +39,16 @@ import java.io.IOException
 //     it goes out to the network normally.
 private const val ASSET_HOST = "appassets.androidplatform.net"
 private const val ENTRY_URL = "https://appassets.androidplatform.net/index.html"
+
+// Reserved namespace that isn't part of the bundle: the save bridge the web
+// build reads at boot (js/nativeBridge.js). WebResourceRequest carries no body,
+// so this is the read half only — the mirror is written back over the
+// SneakBitNative JS interface below.
+private const val NATIVE_STATE_PATH = "/__native/state.json"
+private const val NATIVE_PREFIX = "/__native/"
+
+// Name js/nativeBridge.js calls: `window.SneakBitNative.writeMirror(json)`.
+private const val NATIVE_BRIDGE_NAME = "SneakBitNative"
 
 class MainActivity : ComponentActivity() {
 
@@ -58,7 +73,12 @@ class MainActivity : ComponentActivity() {
         webView = WebView(this).apply {
             setBackgroundColor(Color.BLACK)
             configureSettings(settings)
-            webViewClient = BundleWebViewClient()
+            webViewClient = BundleWebViewClient(applicationContext)
+            // Lets the game persist its save to a real file as well as to
+            // localStorage (NativeState). addJavascriptInterface is global to
+            // whatever page is loaded, which is why BundleWebViewClient keeps
+            // navigation pinned to the asset host.
+            addJavascriptInterface(NativeBridge(applicationContext), NATIVE_BRIDGE_NAME)
             loadUrl(ENTRY_URL)
         }
         setContentView(webView)
@@ -76,6 +96,8 @@ class MainActivity : ComponentActivity() {
     private fun configureSettings(s: WebSettings) {
         s.javaScriptEnabled = true
         // localStorage holds the game's saves — must survive across launches.
+        // It's keyed by the page origin, so ASSET_HOST must never change or
+        // every save that isn't mirrored to a file (NativeState) is orphaned.
         s.domStorageEnabled = true
         // Autoplay music/SFX without a user gesture — the game manages its own
         // audio lifecycle.
@@ -108,13 +130,50 @@ class MainActivity : ComponentActivity() {
 }
 
 /**
+ * Bridge exposed to the page as `window.SneakBitNative`. Write-only, and only
+ * the one method: the game hands over a serialized save and we put it on disk.
+ *
+ * Calls arrive on the WebView's JS thread, so the file write is pushed onto a
+ * worker — this fires on every zone change and shouldn't block script
+ * execution. Holds the application context, never the activity.
+ */
+private class NativeBridge(private val context: Context) {
+    private val io = Executors.newSingleThreadExecutor()
+
+    @JavascriptInterface
+    fun writeMirror(text: String) {
+        io.execute { NativeState.writeMirror(context, text) }
+    }
+}
+
+/**
  * Serves the bundled web build (src/main/assets/web/) for requests to
  * https://appassets.androidplatform.net/…, with the right MIME type and HTTP
  * Range support (the game plays audio via HTMLAudioElement, which seeks with
  * byte-range requests). Any other host falls through to the network so opt-in
  * online co-op (wss/https to sneakbit.curzel.it) works.
  */
-private class BundleWebViewClient : WebViewClient() {
+private class BundleWebViewClient(private val appContext: Context) : WebViewClient() {
+
+    /**
+     * Keep the WebView on the bundled origin. The game never legitimately
+     * navigates away from it, and `SneakBitNative` is reachable from whatever
+     * page is loaded — so a stray link must open in a real browser rather than
+     * land somewhere with a bridge to the player's save. Mirrors the guards the
+     * other two shells already have (WebGameView.swift, electron/main.js).
+     */
+    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+        val url = request.url
+        if (url.host.equals(ASSET_HOST, ignoreCase = true)) return false
+        return try {
+            view.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url.toString())))
+            true
+        } catch (e: Exception) {
+            // No browser to hand it to — swallow the navigation rather than
+            // letting it load in here.
+            true
+        }
+    }
 
     override fun shouldInterceptRequest(
         view: WebView,
@@ -127,6 +186,20 @@ private class BundleWebViewClient : WebViewClient() {
         if (path == "/" || path.isEmpty()) path = "/index.html"
         // Path-traversal guard: reject anything that tries to climb out of web/.
         if (path.contains("..")) return notFound()
+
+        // Reserved, non-bundle namespace — handled before the asset lookup so
+        // nothing in web/ can shadow it.
+        if (path.startsWith(NATIVE_PREFIX)) {
+            if (path != NATIVE_STATE_PATH) return notFound()
+            // shouldInterceptRequest runs off the UI thread, so use the
+            // injected application context rather than reaching into the view.
+            val body = NativeState.envelopeJson(appContext)
+            return WebResourceResponse(
+                "application/json", "utf-8", 200, "OK",
+                linkedMapOf("Cache-Control" to "no-store"),
+                ByteArrayInputStream(body.toByteArray(Charsets.UTF_8))
+            )
+        }
 
         val assetPath = "web$path"
         val mime = mimeFor(path)

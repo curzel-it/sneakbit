@@ -31,6 +31,12 @@ let kAppScheme = "app"
 let kAppHost = "sneakbit.curzel.it"
 let kAppEntryURL = "app://sneakbit.curzel.it/index.html"
 
+/// Reserved, non-bundle paths. WebKit strips request bodies from
+/// WKURLSchemeHandler tasks, so this is the read half only — the mirror is
+/// written back over the `saveMirror` message handler (WebGameView.swift).
+let kNativePrefix = "/__native/"
+let kNativeStatePath = "/__native/state.json"
+
 final class BundleSchemeHandler: NSObject, WKURLSchemeHandler {
     // Root of the bundled web tree (the `web/` folder reference). Resolved once.
     private let webRoot: URL
@@ -38,7 +44,7 @@ final class BundleSchemeHandler: NSObject, WKURLSchemeHandler {
     // mid-read (navigation away), so we track live tasks and never message a
     // stopped one. Guarded by `lock` since start/stop arrive on the main thread
     // while reads finish on `ioQueue`.
-    private let ioQueue = DispatchQueue(label: "it.curzel.SneakBit.scheme", qos: .userInitiated, attributes: .concurrent)
+    private let ioQueue = DispatchQueue(label: "it.curzel.bitscape.scheme", qos: .userInitiated, attributes: .concurrent)
     private let lock = NSLock()
     private var liveTasks = Set<ObjectIdentifier>()
 
@@ -66,6 +72,24 @@ final class BundleSchemeHandler: NSObject, WKURLSchemeHandler {
         // Map the request path onto the bundled tree. "/" → the game shell.
         var path = url.path
         if path.isEmpty || path == "/" { path = "/index.html" }
+
+        // Reserved namespace that isn't part of the bundle: the save bridge the
+        // web build reads at boot (js/nativeBridge.js). Handled before the file
+        // lookup so nothing in web/ can shadow it.
+        if path.hasPrefix(kNativePrefix) {
+            guard path == kNativeStatePath else {
+                finishWithError(task, id, code: NSURLErrorFileDoesNotExist)
+                return
+            }
+            ioQueue.async { [weak self] in
+                guard let self else { return }
+                let data = NativeState.envelopeData()
+                self.respond(task, id, url: url, mime: "application/json; charset=utf-8",
+                             data: data, full: data.count, range: nil)
+            }
+            return
+        }
+
         let relative = String(path.drop(while: { $0 == "/" }))
 
         let rangeHeader = task.request.value(forHTTPHeaderField: "Range")

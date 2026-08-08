@@ -16,6 +16,9 @@ import WebKit
 /// shell and should prefer the bridge over navigator.vibrate.
 let kHapticsHandler = "haptics"
 
+/// Name js/nativeBridge.js posts the save mirror to.
+let kSaveMirrorHandler = "saveMirror"
+
 /// Turns a haptic request from the web build into taptic-engine feedback.
 ///
 /// The message body is the kind js/haptics.js sends — "tap" for a d-pad step
@@ -45,6 +48,24 @@ final class HapticsHandler: NSObject, WKScriptMessageHandler {
     }
 }
 
+/// Persists the save the web build hands over, so the playthrough survives a
+/// cleared or corrupted WebKit store. Fire-and-forget by design: the mirror is
+/// a backup, localStorage stays authoritative, and a failed write must never
+/// interrupt play.
+///
+/// The body is a serialized saveBlob envelope. Message-handler callbacks arrive
+/// on the main thread, so the file write is pushed off it — this fires on every
+/// zone change and would otherwise hitch the frame.
+final class SaveMirrorHandler: NSObject, WKScriptMessageHandler {
+    private let queue = DispatchQueue(label: "it.curzel.bitscape.saveMirror", qos: .utility)
+
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage) {
+        guard let text = message.body as? String else { return }
+        queue.async { NativeState.writeMirror(text) }
+    }
+}
+
 struct WebGameView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let config = WKWebViewConfiguration()
@@ -58,14 +79,22 @@ struct WebGameView: UIViewRepresentable {
         // which is the better control on this hardware anyway.
         config.userContentController.add(HapticsHandler(), name: kHapticsHandler)
 
+        // Save mirror. BundleSchemeHandler serves the game its saved state at
+        // boot, but WebKit drops request bodies from scheme-handler tasks, so
+        // the write half comes back over a message handler instead.
+        config.userContentController.add(SaveMirrorHandler(), name: kSaveMirrorHandler)
+
         // Games autoplay music/SFX and render the canvas inline — never use the
         // native fullscreen media UI or require a tap before audio.
         config.allowsInlineMediaPlayback = true
         config.mediaTypesRequiringUserActionForPlayback = []
         config.suppressesIncrementalRendering = false
 
-        // No data persistence story beyond the game's own localStorage saves,
-        // which the default persistent store already provides.
+        // The default persistent store keeps the game's localStorage saves
+        // across launches and app updates. It's still opaque and keyed by the
+        // page origin, so NativeState mirrors the save to Documents as well —
+        // which also means kAppScheme/kAppHost must never change, or every
+        // unmirrored save is orphaned.
 
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = context.coordinator

@@ -1,19 +1,22 @@
 // Importing a save from the pre-rewrite (Rust core) builds. The old engine
-// wrote a flat { key: u32 } JSON object; this asserts the key translation and
-// the all-or-nothing apply.
+// wrote a flat { key: u32 } JSON object to save.json; this asserts the key
+// translation, the settings carried alongside it, the one-shot import decision
+// and the all-or-nothing apply.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   translateLegacySave, legacySaveHasProgress, applyLegacySave, importLegacySave,
+  legacyImportDecision, legacySettingsPatch,
 } from "../js/legacySave.js";
 import { getValue, setValue, _resetStorageForTesting } from "../js/storage.js";
 
-// A realistic slice of a Rust storage.json.
+// A realistic slice of a Rust save.json.
 const LEGACY = {
   build_number: 7,
   latest_world: 1011,
   previous_world: 1001,
+  always: 1,
   is_mobile: 0,
   fullscreen: 1,
   language: 1,
@@ -58,11 +61,19 @@ test("keys that already match are copied through untouched", () => {
 
 test("device-local and engine-private keys are dropped", () => {
   const { kv, skipped } = translateLegacySave(LEGACY);
-  for (const k of ["build_number", "previous_world", "is_mobile", "fullscreen",
+  for (const k of ["build_number", "previous_world", "always", "is_mobile", "fullscreen",
                    "language", "desktop_only.game_settings.music_disabled"]) {
     assert.equal(kv[k], undefined, `${k} must not be imported`);
   }
-  assert.equal(skipped, 6);
+  assert.equal(skipped, 7);
+});
+
+test("the `always` key the old iOS build seeded files with is not progress", () => {
+  // A player who installed the old game and never played still has a save.json
+  // — RustConfig.swift wrote {"always": 1} on first launch. Importing that as a
+  // real key would be harmless but wrong; treating the file as progress would
+  // not be, so it must translate to nothing importable.
+  assert.throws(() => translateLegacySave({ always: 1 }), /no importable progress/);
 });
 
 test("importing build_number would skip our own migration ladder", () => {
@@ -119,4 +130,77 @@ test("importLegacySave takes raw file text", () => {
   assert.equal(getValue("latest_zone"), 1011);
   assert.ok(stats.imported > 10);
   assert.throws(() => importLegacySave("{not json"), /valid JSON/);
+});
+
+// — the one-shot decision ——————————————————————————————————————————————————
+
+test("a fresh install with a legacy save imports it", () => {
+  assert.equal(
+    legacyImportDecision({ hasLocalSave: false, legacyHasProgress: true }),
+    "import",
+  );
+});
+
+test("a save in this build always wins over the old one", () => {
+  assert.equal(
+    legacyImportDecision({ hasLocalSave: true, legacyHasProgress: true }),
+    "skip",
+  );
+});
+
+test("nothing to import is a decision too", () => {
+  // "skip" tells the caller to stamp the marker, so the boot stops looking.
+  // That is what keeps a later New Game — which clears latest_zone and would
+  // otherwise read as "no local save" — from resurrecting the old playthrough.
+  assert.equal(
+    legacyImportDecision({ hasLocalSave: false, legacyHasProgress: false }),
+    "skip",
+  );
+  assert.equal(
+    legacyImportDecision({ hasLocalSave: true, legacyHasProgress: false }),
+    "skip",
+  );
+});
+
+// — settings carried across ————————————————————————————————————————————————
+
+test("desktop audio toggles come out of the save file itself", () => {
+  // The old desktop build stored them inverted: 1 means disabled.
+  const patch = legacySettingsPatch({
+    "desktop_only.game_settings.music_disabled": 1,
+    "desktop_only.game_settings.sound_effects_disabled": 0,
+  }, null);
+  assert.equal(patch.musicVolume, 0);
+  assert.equal(patch.sfxVolume, undefined, "sfx was on; keep this build's default");
+  assert.equal(patch.muted, false);
+});
+
+test("mobile audio toggles come from the shell's native prefs", () => {
+  const patch = legacySettingsPatch({ latest_world: 1011 }, { sfx: false, music: true });
+  assert.equal(patch.sfxVolume, 0);
+  assert.equal(patch.musicVolume, undefined);
+  assert.equal(patch.muted, false);
+});
+
+test("a player who had all sound off stays muted", () => {
+  const patch = legacySettingsPatch({}, { sfx: false, music: false });
+  assert.equal(patch.sfxVolume, 0);
+  assert.equal(patch.musicVolume, 0);
+  assert.equal(patch.muted, true);
+});
+
+test("a returning player with sound on gets unmuted", () => {
+  // This build starts muted and firstLaunch.js persists that. Without the
+  // explicit false, everyone importing a save would come back to silence.
+  assert.equal(legacySettingsPatch({}, null).muted, false);
+  assert.equal(legacySettingsPatch({}, { sfx: true, music: true }).muted, false);
+});
+
+test("language maps off the old enum", () => {
+  assert.equal(legacySettingsPatch({ language: 0 }, null).language, "auto");
+  assert.equal(legacySettingsPatch({ language: 1 }, null).language, "en");
+  assert.equal(legacySettingsPatch({ language: 2 }, null).language, "it");
+  assert.equal(legacySettingsPatch({ language: 9 }, null).language, undefined,
+    "a language we don't ship leaves the setting alone");
+  assert.equal(legacySettingsPatch({}, null).language, undefined);
 });

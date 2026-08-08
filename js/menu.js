@@ -18,7 +18,8 @@ import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDe
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { isCoopActive } from "./coopMode.js";
 import { exportSave, importSave } from "./saveBackup.js";
-import { pickAndImportLegacySave } from "./legacySave.js";
+import { pickAndImportLegacySave, markLegacyImportDone } from "./legacySave.js";
+import { clearMirror } from "./saveMirror.js";
 import { initCreativeZoneTools, saveZoneNow, exportZone, reloadZoneFromDisk, connectDataFolder } from "./creativeZoneTools.js";
 import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
 import { openAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
@@ -438,13 +439,22 @@ function bindWidgets() {
     try { localStorage.clear(); } catch {}
     restoreSession(savedSession);
     clearProgress();
+    // On the native shells the save also exists as a file. Both copies have to
+    // go, or the next boot would see an empty localStorage and restore the
+    // player right back into the game they just deleted: the mirror holds the
+    // whole save, and the legacy-import marker was wiped by the clear() above,
+    // which would re-open the door to the old Rust save.
+    clearMirror();
+    markLegacyImportDone();
     // A `?zone=X` query overrides saved progress in main.js. After wiping
     // the save we also need to drop the URL override or the player would
     // reload back into the same zone at the same tile.
     location.replace(location.pathname);
   });
   // Carries a save over from the pre-rewrite (Rust) builds — the desktop /
-  // iOS / Android storage.json. Owned by legacySave.js; the menu just opens it.
+  // iOS / Android save.json. The native shells import it automatically at boot;
+  // this is the manual route for the web and for a save moved by hand. Owned by
+  // legacySave.js; the menu just opens it.
   root.querySelector("#menu-import-legacy").addEventListener("click", () => {
     closeMenu();
     pickAndImportLegacySave().catch((e) => console.error("[menu] legacy import", e));

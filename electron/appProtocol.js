@@ -11,6 +11,7 @@
 import { readFile } from "node:fs/promises";
 import { join, normalize, sep, extname } from "node:path";
 import { app } from "electron";
+import { buildNativeState, writeMirrorFile } from "./nativeState.js";
 
 // Extension → MIME. ES modules and JSON must carry the right Content-Type or
 // the browser refuses to execute / parse them; the rest keep asset loads sane.
@@ -67,10 +68,40 @@ function siteRoot() {
   return join(app.getAppPath(), "_site");
 }
 
+// Reserved namespace that isn't part of the bundled site: the save bridge the
+// renderer talks to (js/nativeBridge.js). Routed before the file lookup, so
+// nothing under _site/ can shadow it.
+//
+// The POST is why this lives on the protocol handler rather than an IPC
+// channel: protocol.handle() hands us the request body, so the renderer keeps
+// its own origin, no preload script and no contextBridge, and stays sandboxed.
+const NATIVE_PREFIX = "/__native/";
+
+async function handleNativeRequest(request, pathname) {
+  const json = (body, status = 200) =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
+    });
+
+  if (pathname === "/__native/state.json" && request.method === "GET") {
+    return json(await buildNativeState());
+  }
+  if (pathname === "/__native/mirror" && request.method === "POST") {
+    const ok = await writeMirrorFile(await request.text());
+    return new Response(null, { status: ok ? 204 : 400 });
+  }
+  return new Response("Not found", { status: 404 });
+}
+
 export async function handleAppRequest(request) {
   const url = new URL(request.url);
   let pathname = decodeURIComponent(url.pathname);
   if (pathname === "/" || pathname === "") pathname = "/index.html";
+
+  if (pathname.startsWith(NATIVE_PREFIX)) {
+    return handleNativeRequest(request, pathname);
+  }
 
   const root = siteRoot();
   // Path-traversal guard: the resolved file must stay inside _site/.

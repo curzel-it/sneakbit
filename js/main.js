@@ -77,6 +77,9 @@ import { getSelfPlayerId } from "./onlineBootstrap.js";
 import { installPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
 import { installAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
 import { installCloudSave, bootRestoreFromCloud } from "./cloudSave.js";
+import { initNativeBridge } from "./nativeBridge.js";
+import { installSaveMirror, restoreFromNativeMirror } from "./saveMirror.js";
+import { importLegacyFromNative } from "./legacySave.js";
 import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js";
 import { setHostPaused } from "./hostPauseState.js";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js";
@@ -126,6 +129,20 @@ async function main() {
   // up until the reload navigates) and let the reloaded boot start from the
   // restored save. Best-effort + bounded; offline/no-save proceeds normally.
   if (!bootGuest && await bootRestoreFromCloud()) return;
+  // Ask the native shell (Steam/iOS/Android) what it has on disk: this build's
+  // own save mirror, and the save.json the Rust build left behind. One fetch,
+  // answered off a local file inside a shell; on the web it 404s once and the
+  // verdict is remembered, so it costs nothing on later loads.
+  await initNativeBridge();
+  // Both of these reload when they act, exactly like bootRestoreFromCloud, and
+  // both stand down the moment localStorage holds a save. The mirror goes first
+  // because it's this build's own progress and therefore never older than a
+  // save left by the previous one.
+  if (!bootGuest && await restoreFromNativeMirror()) return;
+  if (!bootGuest && await importLegacyFromNative()) return;
+  // Nothing reloaded, so this page owns the save from here on: start keeping
+  // the shell's on-disk copy in step with it. A guest never owns a local save.
+  if (!bootGuest) installSaveMirror();
   if (!bootGuest) runMigrations();
   initInput();
   loadSettings();

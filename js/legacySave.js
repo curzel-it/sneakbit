@@ -2,8 +2,8 @@
 // iOS, Android.
 //
 // Those builds persist a single flat JSON object of `{ "key": u32 }` to
-// `storage.json` (game_core/src/features/storage.rs). That is the same shape
-// as this port's kv namespace, so an import is mostly a straight copy; only a
+// `save.json` (game_core/src/features/storage.rs). That is the same shape as
+// this port's kv namespace, so an import is mostly a straight copy; only a
 // handful of keys were renamed on the way over. Everything else — dialogue
 // answers, collected items, npc interactions, lock overrides, pressure
 // plates, per-player inventory amounts — already matches key for key.
@@ -11,15 +11,22 @@
 // Pure: translateLegacySave takes the parsed JSON and returns what to write,
 // so the mapping is unit-testable without a DOM. importLegacySave applies it.
 //
-// Where to find storage.json on the old builds:
-//   macOS    ~/Library/Application Support/SneakBit/storage.json
-//   Windows  %APPDATA%\SneakBit\storage.json
-//   Linux    ~/.local/share/SneakBit/storage.json
-//   iOS/Android — inside the app's private data dir (needs a backup export)
+// Where the old builds keep save.json:
+//   Steam/desktop  <install dir>/data/save.json — beside the executable, NOT
+//                  in AppData / Application Support (game/src/features/paths.rs)
+//   iOS            <container>/Documents/save.json
+//   Android        <filesDir>/save.json (internal storage)
+//
+// Two ways in. On a native shell the boot imports it automatically, once, from
+// whatever the shell found on disk (importLegacyFromNative). Everywhere else —
+// and as a manual escape hatch — the pause menu opens a file picker
+// (pickAndImportLegacySave).
 
 import { setValue, snapshotStorage, restoreStorage } from "./storage.js";
 import { showMessage } from "./message.js";
 import { showConfirm } from "./confirmDialog.js";
+import { hasLocalProgress } from "./saveBlob.js";
+import { getNativeState } from "./nativeBridge.js";
 
 // Keys renamed between the Rust core and this port.
 const RENAMES = {
@@ -44,9 +51,17 @@ const EQUIPPED_RE = /^player\.(\d+)\.currently_equipped_(ranged|melee)_weapon$/;
 //                      it would mark our save as already-migrated and skip the
 //                      ladder that does the latest_world → latest_zone work.
 //   previous_world   — transient travel bookkeeping the port doesn't keep.
+//   always           — a *virtual* key in the Rust core (get_value_for_global_key
+//                      answers 1 without ever storing it), but the old iOS build
+//                      seeded the file with `{"always": 1}` on first run, so real
+//                      save.jsons out there do contain it.
 //   is_mobile / fullscreen / language / desktop_only.* — per-device settings,
-//                      owned by settings.js on this build.
-const DROPPED = new Set(["build_number", "previous_world", "is_mobile", "fullscreen", "language"]);
+//                      owned by settings.js on this build. The audio and
+//                      language ones are carried across separately, as settings
+//                      rather than progress — see legacySettingsPatch.
+const DROPPED = new Set([
+  "build_number", "previous_world", "always", "is_mobile", "fullscreen", "language",
+]);
 const DROPPED_PREFIXES = ["desktop_only."];
 
 function translateKey(key) {
@@ -61,7 +76,7 @@ function translateKey(key) {
   return key;
 }
 
-// Turn a parsed legacy storage.json into the kv entries this build wants.
+// Turn a parsed legacy save.json into the kv entries this build wants.
 // Returns { kv, imported, skipped, invalid }:
 //   kv       — { ourKey: intValue } ready to write
 //   imported — how many source keys made it through
@@ -155,10 +170,133 @@ export function importLegacySave(text) {
   return result;
 }
 
+// — Automatic import on the native shells ——————————————————————————————————
+// Steam, iOS and Android ship this build as an *update* to the Rust game, so
+// the old save.json is already sitting in the same install dir / container.
+// The shell reads it and hands it over at boot (js/nativeBridge.js); nobody
+// has to find a file.
+
+// Device-local, one-shot. Deliberately outside the `sneakbit.kv.v1.` namespace:
+// applyLegacySave prunes every kv key absent from the import, and cloudSave
+// syncs that namespace between devices — a marker in there would be wiped by
+// the very import it guards, then travel to devices it says nothing about.
+const IMPORT_MARKER_KEY = "sneakbit.legacyImport.v1";
+const SETTINGS_KEY = "sneakbit.settings.v1";
+
+// Old `language` key: 0 = follow the system, 1 = English, 2 = Italian.
+const LEGACY_LANGUAGES = ["auto", "en", "it"];
+
+// The old audio toggles. Desktop kept them in save.json, inverted (1 = off).
+const LEGACY_SFX_DISABLED = "desktop_only.game_settings.sound_effects_disabled";
+const LEGACY_MUSIC_DISABLED = "desktop_only.game_settings.music_disabled";
+
+function alreadyImported() {
+  try { return localStorage.getItem(IMPORT_MARKER_KEY) != null; } catch { return false; }
+}
+
+// Exported because "New game" wipes localStorage wholesale, marker included —
+// without re-stamping it, the next boot would find no marker and no local save
+// and hand the player back the very progress they just deleted.
+export function markLegacyImportDone() {
+  try { localStorage.setItem(IMPORT_MARKER_KEY, "1"); } catch { /* ignore */ }
+}
+
+// Pure. Given whether this build already holds a save and whether the legacy
+// file carries progress, decide what the boot should do.
+//
+// "skip" means more than "do nothing now": the caller stamps the marker, so we
+// never look again. That is what stops a later "New game" — which clears
+// latest_zone and would otherwise read as "no local save" — from resurrecting
+// the imported progress on the next boot.
+export function legacyImportDecision({ hasLocalSave, legacyHasProgress }) {
+  if (hasLocalSave) return "skip";
+  if (!legacyHasProgress) return "skip";
+  return "import";
+}
+
+// Map the old build's settings onto this one's. Returns a patch for
+// sneakbit.settings.v1; `audio` is the mobile shells' native prefs
+// (UserDefaults / SharedPreferences), null on desktop where the toggles live
+// in save.json instead.
+export function legacySettingsPatch(save, audio) {
+  const raw = (save && typeof save === "object") ? save : {};
+  const patch = {};
+
+  const lang = Number(raw.language);
+  if (Number.isFinite(lang) && LEGACY_LANGUAGES[lang]) patch.language = LEGACY_LANGUAGES[lang];
+
+  // Absent means enabled — the old build defaulted both to on and only wrote a
+  // key once the player toggled it off.
+  const sfxEnabled = audio ? audio.sfx : Number(raw[LEGACY_SFX_DISABLED] ?? 0) === 0;
+  const musicEnabled = audio ? audio.music : Number(raw[LEGACY_MUSIC_DISABLED] ?? 0) === 0;
+  if (!sfxEnabled) patch.sfxVolume = 0;
+  if (!musicEnabled) patch.musicVolume = 0;
+  // This build starts muted and firstLaunch.js persists that — right for a new
+  // player, wrong for one who had sound on in the old game. Unmute unless they
+  // really had turned everything off.
+  patch.muted = !sfxEnabled && !musicEnabled;
+
+  return patch;
+}
+
+// Merge into the settings blob directly rather than through settings.js: this
+// runs before loadSettings(), and saveSettings() would push the patch at an
+// audio runtime that hasn't been built yet. The reload right after is what
+// makes it take effect. Writing the blob at all also consumes isFirstLaunch(),
+// which correctly suppresses the "Audio muted by default" onboarding toast for
+// a returning player.
+function mergeSettings(patch) {
+  try {
+    let settings = {};
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (raw) { try { settings = JSON.parse(raw) || {}; } catch { settings = {}; } }
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify({ ...settings, ...patch }));
+  } catch { /* ignore — a save without its settings still beats no save */ }
+}
+
+// Boot step. Returns true when a reload is in flight, so main() can stop and
+// let the reloaded boot build state from the imported save — same contract as
+// bootRestoreFromCloud().
+export async function importLegacyFromNative() {
+  const native = getNativeState();
+  if (!native || alreadyImported()) return false;
+
+  let translated = null;
+  if (native.legacy?.save) {
+    try {
+      translated = translateLegacySave(native.legacy.save);
+    } catch (e) {
+      // A save file we can't read is not worth a player-facing error at boot —
+      // there's nothing they could do about it. Fall through to "skip".
+      console.warn("[legacySave] unusable legacy save:", e?.message);
+    }
+  }
+
+  const decision = legacyImportDecision({
+    hasLocalSave: hasLocalProgress(),
+    legacyHasProgress: !!translated && legacySaveHasProgress(translated.kv),
+  });
+  if (decision === "skip") { markLegacyImportDone(); return false; }
+
+  try {
+    applyLegacySave(translated.kv);
+  } catch (e) {
+    // applyLegacySave already rolled back. Leave the marker unset so a boot
+    // with more room (quota) retries instead of silently losing the save.
+    console.error("[legacySave] native import failed", e);
+    return false;
+  }
+  mergeSettings(legacySettingsPatch(native.legacy.save, native.legacy.audio));
+  markLegacyImportDone();
+  console.log(`[legacySave] imported ${translated.imported} entries from the previous build`);
+  location.reload();
+  return true;
+}
+
 // — UI entry point ————————————————————————————————————————————————————————
-// Pause menu → Settings. Opens a file picker for the old build's
-// storage.json, confirms the overwrite, imports, and reloads so every module
-// rehydrates from the imported values.
+// Pause menu → Settings. Opens a file picker for the old build's save.json,
+// confirms the overwrite, imports, and reloads so every module rehydrates from
+// the imported values.
 
 function readFile(file) {
   return new Promise((resolve, reject) => {
