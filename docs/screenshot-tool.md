@@ -48,6 +48,7 @@ Two facts in the current code make this a seed-and-snap job, not an automation j
 | `w`, `h` | viewport size in tiles (overridable per shot) |
 | `direction` | facing: `down`/`up`/`left`/`right` (cosmetic) |
 | `settle` | ms to wait after spawn before capturing (lets the zone cache bake + a couple of frames run) |
+| `kv` | extra storage.js keys to seed, unprefixed — e.g. `{"player.0.inventory.amount.2000": 1}` captures a spot as it looks once the yellow key is held |
 
 **Constraint from auto-zoom:** `w` is clamped to `[16, 36]` and `h ≥ 10` by
 `zoom.js` (`MIN_TILES_W`/`MAX_TILES_W`). Asking for fewer/more tiles silently snaps
@@ -62,6 +63,9 @@ Reuses the existing CDP harness — no puppeteer, matching the no-deps rule:
 Per run:
 
 1. Start a static server on the repo root; launch headless Chrome; connect a session.
+   Both ports come from the OS, never from a hand-picked constant: the static server
+   takes a free port (override with `SHOT_STATIC_PORT`), and Chrome picks its own
+   debugger port, which `launchChrome` reads back out of `DevToolsActivePort`.
 2. For each shot:
    1. **Set the window size** to `clamp(w,16,36)·32 × max(h,10)·32` at
       `deviceScaleFactor = 1` via CDP `Emulation.setDeviceMetricsOverride`.
@@ -73,6 +77,7 @@ Per run:
       | `sneakbit.kv.v1.player.0.spawn.tileX` | `x` |
       | `sneakbit.kv.v1.player.0.spawn.tileY` | `y` |
       | `sneakbit.kv.v1.player.0.spawn.direction` | `0`=down `1`=up `2`=left `3`=right |
+      | `sneakbit.kv.v1.<k>` for each entry of `kv` | that entry's value |
 
       Seed it on the page origin *before* the ES modules run — navigate to a blank
       doc on the same origin, `localStorage.setItem(...)`, then `navigate` to

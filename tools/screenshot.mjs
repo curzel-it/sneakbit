@@ -13,6 +13,7 @@
 // non-default install.
 
 import { spawn } from "node:child_process";
+import { createServer } from "node:net";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -35,11 +36,25 @@ const MIN_W = 16, MAX_W = 36, MIN_H = 10;
 
 const DIR_TO_INT = { down: 0, up: 1, left: 2, right: 3 };
 
-const STATIC_PORT = Number(process.env.SHOT_STATIC_PORT || 8021);
-const CDP_PORT = Number(process.env.SHOT_CDP_PORT || 9333);
+// Ports come from the OS, like the e2e fixtures (tests/e2e/fixtures/servers.mjs):
+// a hand-picked number is silently answered by whatever else already holds it,
+// and Chrome picks its own debugger port anyway (launchChrome reads it back from
+// DevToolsActivePort). `staticPort` is filled in by main() before any capture.
+let staticPort = 0;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+
+function freePort() {
+  return new Promise((res, rej) => {
+    const srv = createServer();
+    srv.on("error", rej);
+    srv.listen(0, "127.0.0.1", () => {
+      const { port } = srv.address();
+      srv.close(() => res(port));
+    });
+  });
+}
 
 async function waitForPort(port, timeoutMs = 5000) {
   const start = Date.now();
@@ -57,9 +72,17 @@ async function waitForPort(port, timeoutMs = 5000) {
 // boot reads. Runs before the page's ES modules (CDP addScriptToEvaluate-
 // OnNewDocument), so js/storage.js hydrates from it. See the key tables in
 // docs/screenshot-tool.md.
+//
+// A shot's optional `kv` object seeds extra storage.js keys (unprefixed, e.g.
+// "player.0.inventory.amount.2000"). That's what lets a shot capture a spot as
+// it looks *after* some story flag — an entity whose display_conditions hide it
+// once a key is held renders differently with and without that flag.
 function seedScript(shot) {
   const dir = DIR_TO_INT[shot.direction ?? "down"] ?? 0;
   const kv = "sneakbit.kv.v1.";
+  const extra = Object.entries(shot.kv ?? {}).map(
+    ([k, v]) => `localStorage.setItem(${JSON.stringify(kv + k)}, ${JSON.stringify(String(v))});`,
+  ).join("\n      ");
   return `
     try { localStorage.clear(); } catch (e) {}
     try {
@@ -69,6 +92,7 @@ function seedScript(shot) {
       localStorage.setItem(${JSON.stringify(kv + "player.0.spawn.direction")}, ${JSON.stringify(String(dir))});
       localStorage.setItem(${JSON.stringify(kv + "build_number")}, "3");
       localStorage.setItem("sneakbit.settings.v1", '{"showFps":false,"muted":true}');
+      ${extra}
     } catch (e) {}
   `;
 }
@@ -88,7 +112,7 @@ async function captureShot(s, shot) {
   // Seed before boot, navigate, then drop the injected script so it can't
   // leak into the next shot.
   const { identifier } = await s.send("Page.addScriptToEvaluateOnNewDocument", { source: seedScript(shot) });
-  await navigate(s, `http://127.0.0.1:${STATIC_PORT}/`);
+  await navigate(s, `http://127.0.0.1:${staticPort}/`);
   await s.send("Page.removeScriptToEvaluateOnNewDocument", { identifier });
 
   // Confirm the seeded spawn landed (proves the zone built and the player
@@ -143,16 +167,17 @@ async function main() {
 
   await mkdir(OUT_DIR, { recursive: true });
 
+  staticPort = Number(process.env.SHOT_STATIC_PORT) || await freePort();
   const staticProc = spawn(
     process.execPath,
-    [join(REPO_ROOT, "tests", "e2e", "fixtures", "nodeStaticServer.mjs"), String(STATIC_PORT), REPO_ROOT],
+    [join(REPO_ROOT, "tests", "e2e", "fixtures", "nodeStaticServer.mjs"), String(staticPort), REPO_ROOT],
     { stdio: "ignore" },
   );
   let chrome, s;
   try {
-    await waitForPort(STATIC_PORT);
-    chrome = await launchChrome({ port: CDP_PORT, dataDir: "/tmp/sb-screenshots" });
-    const targets = await getTargets(CDP_PORT);
+    await waitForPort(staticPort);
+    chrome = await launchChrome({ dataDir: "/tmp/sb-screenshots" });
+    const targets = await getTargets(chrome.port);
     const page = targets.find((x) => x.type === "page");
     s = await connectSession(page.webSocketDebuggerUrl);
 
