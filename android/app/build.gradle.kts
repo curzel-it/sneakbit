@@ -12,11 +12,16 @@ android {
     }
 
     defaultConfig {
-        applicationId = "it.curzel.sneakbit"
+        // The store identity of the shipped Rust build (1.7.3 / versionCode 73).
+        // It must stay `it.curzel.bitscape` or Play won't take this as an update
+        // — and the old save in /data/data/it.curzel.bitscape/files/ would be in
+        // a sandbox this app can't read. `namespace` above is just the Kotlin
+        // package and is independent of it.
+        applicationId = "it.curzel.bitscape"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 74
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
