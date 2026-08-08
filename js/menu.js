@@ -444,7 +444,11 @@ function bindWidgets() {
     // player right back into the game they just deleted: the mirror holds the
     // whole save, and the legacy-import marker was wiped by the clear() above,
     // which would re-open the door to the old Rust save.
-    clearMirror();
+    //
+    // Awaited, not fired and forgotten: on Steam the write is a fetch racing
+    // the navigation below, and losing that race hands the save back. Bounded
+    // inside clearMirror, so a wedged shell can't hang the menu.
+    await clearMirror();
     markLegacyImportDone();
     // A `?zone=X` query overrides saved progress in main.js. After wiping
     // the save we also need to drop the URL override or the player would

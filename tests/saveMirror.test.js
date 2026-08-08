@@ -31,6 +31,18 @@ globalThis.localStorage = fakeLS;
 const writes = [];
 globalThis.SneakBitNative = { writeMirror(text) { writes.push(text); } };
 
+// Electron's channel is a POST — the only one of the three where a write can
+// still be in flight when the caller wants to navigate away. `holdPosts` keeps
+// one open so a test can prove the caller really waits for it.
+const posts = [];
+let holdPosts = false;
+let releasePost = null;
+globalThis.fetch = (url, init) => {
+  posts.push({ url, body: init?.body });
+  if (!holdPosts) return Promise.resolve({ ok: true, status: 204 });
+  return new Promise((resolve) => { releasePost = () => resolve({ ok: true, status: 204 }); });
+};
+
 let reloads = 0;
 globalThis.location = { reload() { reloads++; }, pathname: "/" };
 globalThis.window = { addEventListener() {} };
@@ -52,6 +64,9 @@ const MIRROR = {
 function reset({ native = { platform: "android", mirror: null, legacy: null } } = {}) {
   fakeLS.clear();
   writes.length = 0;
+  posts.length = 0;
+  holdPosts = false;
+  releasePost = null;
   reloads = 0;
   delete globalThis.window.saveMirror;
   _resetSaveMirrorForTesting();
@@ -90,6 +105,22 @@ test("off the native shells there is nothing to restore from", async () => {
   reset({ native: null });
   assert.equal(await restoreFromNativeMirror(), false);
   assert.equal(reloads, 0);
+});
+
+test("a restore that never reaches localStorage does not reload", async () => {
+  // saveBlob's writeKv rolls back and swallows a failed write rather than
+  // throwing, so applyBlob returning is not proof the save landed. Reloading
+  // anyway would come straight back to the same empty store and the same
+  // mirror — a boot loop under the loading screen, with no way out.
+  reset({ native: { platform: "android", mirror: MIRROR, legacy: null } });
+  const realSetItem = fakeLS.setItem;
+  fakeLS.setItem = () => { throw new Error("QuotaExceededError"); };
+  try {
+    assert.equal(await restoreFromNativeMirror(), false);
+    assert.equal(reloads, 0, "a boot that can't write must not reload forever");
+  } finally {
+    fakeLS.setItem = realSetItem;
+  }
 });
 
 // — write ——————————————————————————————————————————————————————————————————
@@ -151,7 +182,7 @@ test("New game clears the mirror, so the wiped save cannot come back", async () 
   // What the menu's New game handler does: wipe localStorage, then drop the
   // shell's copy too.
   fakeLS.clear();
-  clearMirror();
+  await clearMirror();
 
   const cleared = JSON.parse(writes.at(-1));
   assert.deepEqual(cleared.kv, {}, "the shell is told the save is gone");
@@ -161,4 +192,27 @@ test("New game clears the mirror, so the wiped save cannot come back", async () 
   assert.equal(await restoreFromNativeMirror(), false,
     "without this the player gets back the game they just deleted");
   assert.equal(reloads, 0);
+});
+
+test("clearing the mirror on Steam waits for the write to land", async () => {
+  // On Electron the write is a POST and New game navigates the moment
+  // clearMirror() returns, so the two race. `keepalive` does win that race
+  // today, but this is the one write whose loss hands the player back the save
+  // they just deleted — so the caller waits for it rather than trusting a
+  // best-effort browser affordance to keep winning.
+  reset({ native: { platform: "electron", mirror: null, legacy: null } });
+  holdPosts = true;
+
+  let settled = false;
+  const clearing = clearMirror().then(() => { settled = true; });
+
+  assert.equal(posts.length, 1, "the write goes out immediately");
+  assert.equal(posts[0].url, "/__native/mirror");
+  await Promise.resolve();
+  assert.equal(settled, false, "clearMirror must not resolve while the write is in flight");
+
+  releasePost();
+  await clearing;
+  assert.equal(settled, true);
+  assert.deepEqual(JSON.parse(posts[0].body).kv, {}, "the shell is told the save is gone");
 });

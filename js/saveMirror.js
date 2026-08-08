@@ -56,6 +56,17 @@ export async function restoreFromNativeMirror() {
     console.error("[saveMirror] restore failed", e);
     return false;
   }
+  // applyBlob's writes are best-effort — saveBlob's writeKv rolls back and
+  // swallows a failed write rather than throwing, so "it returned" is not
+  // "it landed". Reloading on a restore that didn't land would come straight
+  // back here to the same empty store and the same mirror, and loop forever
+  // under the loading screen. Only reload once the save is really in
+  // localStorage; otherwise let the boot carry on as a new game, which the
+  // player can at least see and act on.
+  if (!hasLocalProgress()) {
+    console.error("[saveMirror] the restore did not reach localStorage — not reloading");
+    return false;
+  }
   console.log("[saveMirror] restored the save from the native mirror");
   location.reload();
   return true;
@@ -63,13 +74,20 @@ export async function restoreFromNativeMirror() {
 
 function write({ keepalive = false } = {}) {
   let blob;
-  try { blob = serializeBlob(); } catch { return; }
+  try { blob = serializeBlob(); } catch { return Promise.resolve(false); }
   // Never mirror an empty save over a real one. A boot that hasn't built state
   // yet, or a page mid-wipe, would otherwise erase the backup.
-  if (!blobHasProgress(blob)) return;
+  if (!blobHasProgress(blob)) return Promise.resolve(false);
   const text = JSON.stringify(blob);
-  if (text === lastWritten) return;
-  if (writeMirror(text, { keepalive })) lastWritten = text;
+  if (text === lastWritten) return Promise.resolve(false);
+  // Marked on dispatch rather than on completion, so a change landing while
+  // the write is in flight isn't collapsed into it. A write that fails drops
+  // the mark again, and the next change retries.
+  lastWritten = text;
+  return writeMirror(text, { keepalive }).then((ok) => {
+    if (!ok && lastWritten === text) lastWritten = null;
+    return ok;
+  });
 }
 
 function schedule() {
@@ -79,7 +97,7 @@ function schedule() {
 
 function flush({ keepalive = false } = {}) {
   if (timer !== null) { clearTimeout(timer); timer = null; }
-  write({ keepalive });
+  return write({ keepalive });
 }
 
 export function installSaveMirror() {
@@ -104,7 +122,15 @@ export function installSaveMirror() {
 // progress", restore it, and hand the player back the game they just deleted.
 // "Clear cache" deliberately does NOT call this — restoring the save there is
 // the entire point of having a mirror.
-export function clearMirror() {
+//
+// Await this before navigating. Every caller reloads the page immediately
+// afterwards, and on Electron the write is a fetch racing that navigation.
+// `keepalive` does win the race — measured on a real build, the empty envelope
+// lands about a second after the page is gone — but it's a best-effort browser
+// affordance with its own body-size limit, and this is the one write whose loss
+// silently un-deletes the save on the next boot. Waiting for it costs a few
+// milliseconds on a screen that's already tearing the game down.
+export async function clearMirror() {
   if (timer !== null) { clearTimeout(timer); timer = null; }
   lastWritten = null;
   if (!isNativeShell()) return;
@@ -112,10 +138,12 @@ export function clearMirror() {
   // implement one write path, and a truncated file reads back as "no mirror"
   // through blobHasProgress either way.
   //
-  // keepalive because every caller reloads the page immediately afterwards. On
-  // Electron this is a fetch, and the navigation would cancel it in flight —
-  // leaving the mirror holding the save the player just deleted.
-  writeMirror(JSON.stringify({ v: 1, kv: {}, bindings: {}, language: null }), { keepalive: true });
+  // keepalive as well as the await, so a caller that forgets to wait still gets
+  // the old best-effort behaviour rather than a silently dropped write.
+  await writeMirror(
+    JSON.stringify({ v: 1, kv: {}, bindings: {}, language: null }),
+    { keepalive: true },
+  );
 }
 
 // Test-only.

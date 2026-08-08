@@ -288,6 +288,15 @@ export async function importLegacyFromNative() {
   }
   mergeSettings(legacySettingsPatch(native.legacy.save, native.legacy.audio));
   markLegacyImportDone();
+  // The marker is what stops the next boot importing all over again, and it's
+  // written best-effort. If it didn't stick, localStorage isn't holding
+  // anything — including the import we just wrote — and reloading would land
+  // right back here and loop under the loading screen. Carry on with this boot
+  // instead; the player sees a running game rather than a hang.
+  if (!alreadyImported()) {
+    console.error("[legacySave] the import marker did not persist — not reloading");
+    return false;
+  }
   console.log(`[legacySave] imported ${translated.imported} entries from the previous build`);
   location.reload();
   return true;

@@ -99,6 +99,13 @@ never older than a save the previous build left behind. Both steps stand down
 the moment `hasLocalProgress()` is true — localStorage is always authoritative,
 and the files only ever follow it.
 
+Neither reloads until it can see that its write actually landed: the mirror
+restore re-checks `hasLocalProgress()`, and the import re-reads its own marker.
+`saveBlob`'s `writeKv` rolls back and swallows a failed write rather than
+throwing, so "the call returned" is not "the save is on disk" — and a reload on
+a restore that didn't land comes straight back to the same empty store and the
+same file, looping under the loading screen with no way out for the player.
+
 ## The one-shot marker
 
 `sneakbit.legacyImport.v1` in `localStorage`, deliberately *outside* the
@@ -113,6 +120,12 @@ case matters: without it, a player who starts a New Game (which clears
 the old Rust save back. For the same reason the menu's New Game handler calls
 `clearMirror()` and re-stamps the marker after its `localStorage.clear()`.
 "Clear cache" deliberately does neither — restoring the save there is the point.
+
+`clearMirror()` is awaited before the handler navigates. On Electron that write
+is a `fetch` racing the reload; `keepalive` does win the race in practice, but
+it is the one write whose loss silently un-deletes the save, so the handler
+waits for it instead of trusting a best-effort browser affordance. The wait is
+bounded (`MIRROR_WRITE_TIMEOUT_MS`) so a wedged shell can't hang the menu.
 
 ## What comes across
 

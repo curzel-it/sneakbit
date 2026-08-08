@@ -29,6 +29,10 @@ const PLATFORMS = new Set(["ios", "android", "electron"]);
 // request — it must never sit in front of the loading screen on a bad network.
 const BOOT_FETCH_TIMEOUT_MS = 2000;
 
+// Bounds the one mirror write anybody waits on (clearMirror, before New game
+// navigates away). The others are fire-and-forget and never reach it.
+const MIRROR_WRITE_TIMEOUT_MS = 3000;
+
 // Remembers a *definitive* "no shell here" so the web pays for the discovery
 // once per browser rather than once per page load. Safe to cache forever: an
 // origin doesn't grow a shell later.
@@ -120,11 +124,20 @@ export function getNativeState() {
   return state;
 }
 
-// Hand the shell a serialized save to mirror to a real file. Fire-and-forget:
-// the mirror is a safety net, so a failed write must never surface to the
-// player or interrupt play. `keepalive` is for the unload flush, where a
-// normal fetch would be cancelled by the navigation.
-export function writeMirror(text, { keepalive = false } = {}) {
+// Hand the shell a serialized save to mirror to a real file. Resolves true once
+// the shell has the bytes: immediately on iOS and Android, where the call is a
+// synchronous hop into native code, and when the POST completes on Electron.
+//
+// Almost every caller ignores the result — the mirror is a safety net, so a
+// failed write must never surface to the player or interrupt play. Awaiting
+// matters in one place: clearMirror() runs immediately before a navigation, and
+// that write is the one whose loss would hand a deleted save back. See the note
+// there.
+//
+// The request is dispatched synchronously (before the first await), so the
+// unload path still gets its shot even though nothing awaits it; `keepalive`
+// is what carries it past the navigation.
+export async function writeMirror(text, { keepalive = false } = {}) {
   if (!state || typeof text !== "string") return false;
   try {
     if (state.platform === "ios") {
@@ -142,13 +155,17 @@ export function writeMirror(text, { keepalive = false } = {}) {
     // Electron: protocol.handle() receives the body, so the write rides the
     // same origin as the read and needs no IPC bridge. The renderer stays
     // sandboxed with no preload.
-    fetch(MIRROR_URL, {
+    const res = await fetch(MIRROR_URL, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: text,
       keepalive,
-    }).catch(() => {});
-    return true;
+      // A local file write behind a protocol handler; a bound this generous
+      // only ever catches a wedged shell, and it keeps New game — which waits
+      // on this — from hanging on the menu.
+      signal: AbortSignal.timeout(MIRROR_WRITE_TIMEOUT_MS),
+    });
+    return res.ok;
   } catch (e) {
     console.error("[nativeBridge] mirror write failed", e);
     return false;
