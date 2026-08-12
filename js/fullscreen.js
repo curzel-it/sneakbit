@@ -62,6 +62,7 @@ let restorePending = false;
 
 export function installFullscreenRestore() {
   if (typeof window === "undefined") return;
+  installEscapeCapture();
   try { restorePending = sessionStorage.getItem(RESTORE_KEY) === "1"; } catch { /* ignore */ }
   window.addEventListener("pagehide", () => {
     try {
@@ -103,6 +104,34 @@ function armGestureRetry() {
   };
   window.addEventListener("keydown", onGesture, true);
   window.addEventListener("pointerdown", onGesture, true);
+}
+
+// Escape is the pause-menu key (menu.js), but in fullscreen the browser
+// claims it for itself: the player pressing Esc to open the menu dropped
+// out of fullscreen instead, and the menu never showed. The Keyboard Lock
+// API routes Esc to the page while we're fullscreen; the browser keeps
+// press-and-hold Esc as the escape hatch, so there's no way to trap
+// someone. Chromium-only — where navigator.keyboard is missing (Safari,
+// Firefox) nothing changes and Esc keeps exiting fullscreen.
+//
+// The lock only applies while the document is fullscreen, so it's taken
+// and released off fullscreenchange rather than held for the session.
+function installEscapeCapture() {
+  if (!navigator?.keyboard?.lock) return;
+  onFullscreenChange(syncEscapeLock);
+  syncEscapeLock();
+}
+
+function syncEscapeLock() {
+  const kb = navigator?.keyboard;
+  if (!kb?.lock) return;
+  try {
+    // lock() rejects when the request can't be honoured (no user
+    // activation, not a top-level context) — that just leaves Esc on its
+    // default behaviour, which is what we had before.
+    if (isFullscreen()) Promise.resolve(kb.lock(["Escape"])).catch(() => {});
+    else kb.unlock();
+  } catch { /* ignore — best-effort */ }
 }
 
 // Subscribe to enter/exit so the menu label can stay in sync. Returns an
