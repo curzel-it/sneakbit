@@ -51,8 +51,17 @@ test("a door entered on a held key doesn't bounce the player back out", async (t
   })()`);
   assert.equal(await currentZone(), ZONE, "spawned below the door");
 
-  // Hold "up" and keep holding it — no release, no second press.
-  await evalExpr(s, `(async () => { (await import('/js/input.js')).pushInputPress(1, 'up'); return true; })()`);
+  // Hold "up" and keep holding it — no release. The press is repeated only
+  // until the hero actually turns: on a loaded machine the first one can be
+  // drained during the boot frame, and a press that never registered would
+  // look like the fix working. Once it has taken, the key just stays down,
+  // which is the state the bug needs.
+  const holdUp = `(async () => { (await import('/js/input.js')).pushInputPress(1, 'up'); return true; })()`;
+  await evalExpr(s, holdUp);
+  await waitFor(s, `(() => {
+    const p = window.coop.positions()[0];
+    return p && (p.direction === 'up' || p.tileY < ${DOOR.y + 1});
+  })()`, { timeoutMs: 5000 }).catch(async () => { await evalExpr(s, holdUp); });
   await waitFor(s, `(() => {
     const m = /Zone (\\d+)/.exec(document.getElementById('hud')?.textContent || '');
     return m && Number(m[1]) !== ${ZONE};
@@ -62,20 +71,31 @@ test("a door entered on a held key doesn't bounce the player back out", async (t
 
   // Still holding. Without the gate the return door under the player's feet
   // fires again within a frame or two and we'd be back where we started —
-  // then in again, then out, for as long as the key is down.
-  await sleep(1500);
-  assert.equal(await currentZone(), DEST, "held input must not walk back out");
+  // then in again, then out, for as long as the key is down. Sampled across
+  // the window rather than checked at the end: the bounce oscillates, so a
+  // single late look can catch it on either side.
+  const samples = [];
+  for (let i = 0; i < 15; i++) {
+    samples.push(await currentZone());
+    await sleep(100);
+  }
+  assert.deepEqual(
+    [...new Set(samples)], [DEST],
+    `held input must not walk back out (saw ${[...new Set(samples)].join(", ")})`,
+  );
 
-  // A fresh press is all it takes to go back — the door still works.
-  await evalExpr(s, `(async () => {
+  // A deliberate press still goes back through — the gate stops the bounce,
+  // it doesn't shut the door. Re-pressed while waiting because a press that
+  // lands during the fade has nothing to act on yet.
+  const pressUp = `(async () => {
     const input = await import('/js/input.js');
     input.releaseInputHeld(1, 'up');
     input.pushInputPress(1, 'up');
     return true;
-  })()`);
-  await waitFor(s, `(() => {
-    const m = /Zone (\\d+)/.exec(document.getElementById('hud')?.textContent || '');
-    return m && Number(m[1]) === ${ZONE};
-  })()`);
-  assert.equal(await currentZone(), ZONE, "one deliberate press goes back through");
+  })()`;
+  for (let i = 0; i < 10 && (await currentZone()) !== ZONE; i++) {
+    await evalExpr(s, pressUp);
+    await sleep(400);
+  }
+  assert.equal(await currentZone(), ZONE, "a deliberate press goes back through");
 });
