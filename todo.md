@@ -9,7 +9,7 @@
 - [x] Il secondo giocatore non può nemmeno sparare kunai (controller)
 
 ## Could be performed by Opus-level coding agent
-- [ ] world 1006 some houses are empty, we can probably fill them up
+- [x] world 1006 some houses are empty, we can probably fill them up
 
 ## Must be performed by a human
 - [ ] world 1003 shop sprite is missing shadowing around the door
