@@ -137,11 +137,12 @@ function drawPlayer(ctx, player, camera) {
   // facing Up draws weapons in front of the hero (handle/barrel visible past
   // the shoulder); facing Left/Right/Down draws them behind so the hero's
   // body occludes the part of the weapon that should be on the far side.
+  // isEquipmentInFront applies that per slot — see there.
   //
   // Loadout sourced via resolveLoadout(player), so online co-op renders
   // each guest's actual gear instead of the local user's. In single-player
   // and local-coop the lookup falls back to local equipment by index.
-  const idx = player.index | 0;
+
   // Ice buff: a 3×3 frost aura under the hero's feet, drawn before the body so
   // it reads as a floor decal the hero stands on (the sprite's z_index is -1).
   drawIceAura(ctx, player, camera);
@@ -151,13 +152,10 @@ function drawPlayer(ctx, player, camera) {
   // the rendered sprite changes).
   const giant = isGiant(player);
   const { melee, ranged, armor } = resolveLoadout(player);
-  const equipInFront = player.direction === "up"
-    || getMeleeSwingProgress(idx) != null
-    || getShootAnimProgress(idx) != null;
-  if (!giant && !equipInFront) {
-    drawEquipment(ctx, player, camera, ranged, SLOT_RANGED);
-    drawEquipment(ctx, player, camera, melee, SLOT_MELEE);
-  }
+  const meleeInFront = isEquipmentInFront(player, SLOT_MELEE);
+  const rangedInFront = isEquipmentInFront(player, SLOT_RANGED);
+  if (!giant && !rangedInFront) drawEquipment(ctx, player, camera, ranged, SLOT_RANGED);
+  if (!giant && !meleeInFront) drawEquipment(ctx, player, camera, melee, SLOT_MELEE);
 
   if (giant) {
     drawGiant(ctx, player, camera);
@@ -179,13 +177,26 @@ function drawPlayer(ctx, player, camera) {
   // mode, like the weapon overlays.
   if (!giant) drawArmorOverlays(ctx, player, camera, armor);
 
-  if (!giant && equipInFront) {
-    drawEquipment(ctx, player, camera, ranged, SLOT_RANGED);
-    drawEquipment(ctx, player, camera, melee, SLOT_MELEE);
-  }
+  if (!giant && rangedInFront) drawEquipment(ctx, player, camera, ranged, SLOT_RANGED);
+  if (!giant && meleeInFront) drawEquipment(ctx, player, camera, melee, SLOT_MELEE);
 
   // Knockback-aura activation burst, drawn over the hero while it plays.
   drawAuraEffect(ctx, player, camera);
+}
+
+// Whether one equipment slot draws in FRONT of the hero this frame.
+// Decided per slot, not once for the whole loadout: facing Up shows both
+// weapons past the shoulder, but an in-use animation only lifts the weapon
+// that's actually being used. Sharing a single flag meant firing the ranged
+// weapon (or swinging) also yanked the *other*, sheathed weapon in front —
+// the sword floating over the hero's chest on every kunai throw.
+// Exported for tests; the draw path is canvas-bound, this rule isn't.
+export function isEquipmentInFront(player, slot) {
+  if (player?.direction === "up") return true;
+  const idx = player?.index | 0;
+  if (slot === SLOT_MELEE) return getMeleeSwingProgress(idx) != null;
+  if (slot === SLOT_RANGED) return getShootAnimProgress(idx) != null;
+  return false;
 }
 
 // Equipped armour, drawn feet-to-head so upper pieces layer over lower ones
