@@ -4,16 +4,32 @@
 // fires on fullscreen enter/exit, so there's nothing to do here but flip
 // the state.
 //
-// Not every browser exposes element fullscreen (notably iOS Safari, which
-// only fullscreens <video>). isFullscreenSupported() lets the menu hide the
-// button rather than show one that does nothing.
+// Not every browser will give us one — iOS Safari only fullscreens <video>,
+// and an embedded page can be refused outright. isFullscreenSupported() is
+// what the menu asks so the button is absent rather than present and inert.
 
 const docEl = () => document.documentElement;
 
+// Whether there is anything to offer. A request method is necessary and not
+// sufficient — three ways a browser can have one and still never give us a
+// screen, and all three have to reach the menu as *no button* rather than a
+// button that does nothing when pressed:
+//
+//   - no element API at all (iOS Safari, which only fullscreens <video>);
+//   - a screen we couldn't give back — an exit path is half the feature, and
+//     stranding someone in a fullscreen they can't leave is worse than never
+//     offering it;
+//   - a page inside an iframe without allow="fullscreen", which has the method
+//     and is refused on every single call. `fullscreenEnabled` is how the
+//     browser says so up front instead of once per press. Absent on engines
+//     old enough to still need the prefix, and absent means allowed.
 export function isFullscreenSupported() {
   if (typeof document === "undefined") return false;
   const el = docEl();
-  return !!(el.requestFullscreen || el.webkitRequestFullscreen);
+  if (!el.requestFullscreen && !el.webkitRequestFullscreen) return false;
+  if (!document.exitFullscreen && !document.webkitExitFullscreen) return false;
+  const allowed = document.fullscreenEnabled ?? document.webkitFullscreenEnabled;
+  return allowed !== false;
 }
 
 export function isFullscreen() {
