@@ -72,7 +72,7 @@ import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loa
 import { runMigrations } from "./migrations.js";
 import { installMapEditor } from "./mapEditor.js";
 import { bootstrapOnline, onAnyClose } from "./onlineBootstrap.js";
-import { getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead, refreshMirrorEntities } from "./mirrorWorld.js";
+import { getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead, isMirrorPlayerDead, refreshMirrorEntities } from "./mirrorWorld.js";
 import { tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js";
 import { tickLocalEffects } from "./localEffects.js";
 import { getSelfPlayerId } from "./onlineBootstrap.js";
@@ -366,15 +366,26 @@ async function main() {
     // this cheap in offline / local-coop. With the host-online carve-out
     // above this only fires now on a genuine host stall, not a menu.
     setHostPaused(paused);
+    // …with one exception: a dialogue is the only overlay that's mirrored
+    // to every guest (event:dialogueOpen), and each guest freezes its own
+    // predicted self while it's up. So the host freezes the shared sim
+    // with it — otherwise monsters keep chewing on avatars nobody is
+    // allowed to move, which is how a co-op chat with an NPC could kill
+    // the whole party. Deliberately NOT folded into setHostPaused above:
+    // guests are already looking at the dialogue and don't need a "Host
+    // paused the game" overlay on top of it.
+    const simPaused = paused || isDialogueOpen();
     const input = pollInput();
-    if (!paused) {
+    if (!simPaused) {
       // Online-host + overlay open: the sim keeps running (so guests
       // aren't stranded in a frozen zone), but the host's OWN avatar must
       // not wander off behind the dialog — feed it a neutral input. The
       // network-driven guest slots below keep their live wire input, so
       // guests can still move around while the host sits in a menu.
       // Offline / local co-op never reaches here with an overlay open
-      // (that's `paused` → the else branch), so this is host-online only.
+      // (that's `paused` → the else branch), so this is host-online only —
+      // a menu, the party panel, a shop; a dialogue freezes the sim
+      // outright (simPaused) and never gets here either.
       const hostInput = overlayOpen ? { events: [], held: new Set() } : input;
       // Skip the per-player update for dead avatars — pollInput still
       // drains their event queue, so a held key doesn't flood the
@@ -684,10 +695,17 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
   // Falls back to the averaged-live list until the predicted self exists
   // (early session) so the camera never snaps to nowhere.
   const self = getPredictedSelf();
-  const camTarget = self ? [self] : liveGuestCameraPlayers(renderPlayers, mPlayers);
+  const camTarget = self ? [self] : liveGuestCameraPlayers(renderPlayers);
   updateCamera(state.camera, camTarget, mZone);
   updateVisibleEntities(mZone, state.camera);
-  render(renderer, mZone, state.camera, renderPlayers, biomeAnim.frame);
+  // Dead avatars drop out of the picture until the host revives them —
+  // the same rule the host renders by (livePlayersForRender). Without it
+  // a downed teammate stood around as a live-looking body for the rest of
+  // the zone. focusPlayer keeps the darkness cone on the guest's own
+  // avatar even once that list is empty (i.e. while the guest is dead).
+  render(renderer, mZone, state.camera, liveMirrorPlayers(renderPlayers), biomeAnim.frame, {
+    focusPlayer: self ?? renderPlayers[0],
+  });
   updateHud(hud, {
     zoneId: mZone.id,
     fps: 1 / dt,
@@ -723,19 +741,19 @@ function buildGuestRenderPlayers(mPlayers) {
   return out;
 }
 
+// The guest's render list minus dead players. Deadness is the mirror's
+// per-player hp (host-synced) looked up by playerId — the predicted self
+// carries no hp of its own, so it resolves the same way as everyone else.
+function liveMirrorPlayers(renderPlayers) {
+  return renderPlayers.filter((p) => !isMirrorPlayerDead(p.playerId));
+}
+
 // Camera input for the guest: the render list minus dead players, so a
 // downed co-op partner stops dragging the shared centre toward its
-// tombstone. Deadness comes from the mirror's per-player hp (synced by
-// the host). The predicted self carries no hp, so we read the self's hp
-// from the matching mirror entry by playerId. If everyone's dead we fall
-// back to the full list so the camera doesn't snap to nowhere.
-function liveGuestCameraPlayers(renderPlayers, mPlayers) {
-  const deadIds = new Set();
-  for (const p of mPlayers) {
-    if (typeof p.hp === "number" && p.hp <= 0) deadIds.add(p.playerId);
-  }
-  if (!deadIds.size) return renderPlayers;
-  const live = renderPlayers.filter((p) => !deadIds.has(p.playerId));
+// tombstone. If everyone's dead we fall back to the full list so the
+// camera doesn't snap to nowhere.
+function liveGuestCameraPlayers(renderPlayers) {
+  const live = liveMirrorPlayers(renderPlayers);
   return live.length ? live : renderPlayers;
 }
 

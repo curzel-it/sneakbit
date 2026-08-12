@@ -480,3 +480,84 @@ test("installMirrorWorld wires snapshot + delta handlers off a net", async () =>
   assert.equal(getMirrorZone().id, 2222);
   reset();
 });
+
+// --- Melee swings and deaths ---------------------------------------------
+// Both are host-authoritative facts the guest can't derive: its local sim
+// never runs anyone else's swing, and hp only exists on the wire. The
+// mirror is where each lands — the swing in melee's per-player cooldown
+// (which drives the equipment overlay), the hp in isMirrorPlayerDead
+// (which drops corpses out of the guest's render list).
+
+const { getMeleeSwingProgress, tickMelee } = await import("../js/melee.js");
+const { isMirrorPlayerDead } = await import("../js/mirrorWorld.js");
+
+const swinger = (over = {}) => ({
+  playerId: "p_host", slot: 1, index: 0,
+  x: 5, y: 5, tileX: 5, tileY: 5, direction: "down", hp: 100,
+  ...over,
+});
+
+test("a player's swing (sw/swd) drives the melee animation for the guest", async () => {
+  reset();
+  tickMelee(10_000); // drain every cooldown → idle
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [swinger({ sw: 0.35, swd: 0.35 })],
+    entities: [],
+  });
+  assert.equal(getMeleeSwingProgress(0), 1, "swing starts at full");
+
+  // The host's next delta says the swing is half spent — re-sync to it.
+  handleDelta({
+    op: "delta", zoneId: 1001,
+    players: [swinger({ sw: 0.175, swd: 0.35 })],
+    entities: [],
+  });
+  const mid = getMeleeSwingProgress(0);
+  assert.ok(mid > 0.4 && mid < 0.6, `expected ~0.5 mid-swing, got ${mid}`);
+
+  // Once the swing ends the host stops shipping the pair; the guest's own
+  // tickMelee (main.tickGuestFrame) drains what's left so it finishes.
+  handleDelta({ op: "delta", zoneId: 1001, players: [swinger()], entities: [] });
+  tickMelee(0.35);
+  assert.equal(getMeleeSwingProgress(0), null, "swing must finish, not freeze");
+  reset();
+});
+
+test("an idle player never arms a swing animation", async () => {
+  reset();
+  tickMelee(10_000);
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001, players: [swinger()], entities: [],
+  });
+  assert.equal(getMeleeSwingProgress(0), null);
+  reset();
+});
+
+test("isMirrorPlayerDead tracks the host's hp; unknown players read as alive", async () => {
+  reset();
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [swinger(), swinger({ playerId: "p_guest", slot: 2, index: 1 })],
+    entities: [],
+  });
+  assert.equal(isMirrorPlayerDead("p_host"), false);
+  assert.equal(isMirrorPlayerDead("nobody"), false, "a peer we've never seen isn't a corpse");
+
+  handleDelta({
+    op: "delta", zoneId: 1001,
+    players: [swinger({ hp: 0 })],
+    entities: [],
+  });
+  assert.equal(isMirrorPlayerDead("p_host"), true);
+  assert.equal(isMirrorPlayerDead("p_guest"), false, "only the dead player is dead");
+
+  // Revive (host respawn) puts them back in the render list.
+  handleDelta({
+    op: "delta", zoneId: 1001,
+    players: [swinger({ hp: 100 })],
+    entities: [],
+  });
+  assert.equal(isMirrorPlayerDead("p_host"), false);
+  reset();
+});

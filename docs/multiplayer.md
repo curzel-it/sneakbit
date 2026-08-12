@@ -287,8 +287,13 @@ Both frames carry `v` (game-frame schema), `t` (host tick counter), `zoneId`,
 - **Players** — every snapshot/delta/keepalive ships **all** players (`playerId`,
   `slot`, `index`, `x`/`y` rounded to 3dp, `tileX`/`tileY`, `direction`, `moving`,
   `hp`). Optional per-player: `sw`/`swd` (melee swing cooldown + duration while
-  swinging), `aura` (knockback-aura anim seconds)
-  ammo). Whether a delta *fires* is gated by a per-player change signature
+  swinging), `aura` (knockback-aura anim seconds). Both are animation state the
+  guest's sim can't derive for anyone but itself: `mirrorWorld.ingestPlayer`
+  replays `sw`/`swd` through `melee.setSwingAnimation` (and `tickMelee` drains it
+  between deltas) so a teammate's sword actually swings on the guest's screen.
+  `hp` doubles as the guest's liveness check — a player at 0 drops out of the
+  render list (`isMirrorPlayerDead`), the way the host drops its own dead
+  avatars. Whether a delta *fires* is gated by a per-player change signature
   (`sigPlayer`: tile/direction/moving/hp/slot/swing-edge/aura — deliberately
   **not** x/y), but when anything fires the payload is always *all* players. This
   is load-bearing: an avatar jammed on a blocker has a frozen signature and would
@@ -447,6 +452,17 @@ share a tile, uniformly across all modes).
 Actions get a light cheat-resistance pass on the host: a per-guest, per-intent
 cooldown (`ACTION_COOLDOWN_MS`: shoot/melee 180 ms, interact 250 ms) and a
 range/alive/in-bounds check before dispatch.
+
+`interact` does double duty: with no dialogue open it starts one (or opens the
+guest's own shop for a clerk), and with one already open it **advances** it
+(`interact.tryInteractForSlot` → `dialogue.advanceOpenDialogue`). The modal is
+shared — the host resolves the lines and broadcasts `dialogueOpen/Advance/Close`
+— so a guest who walks up to an NPC has to be able to page through and close the
+conversation they started, not just watch it. The host's sim freezes for the
+duration (`main`'s `simPaused`): every guest already freezes its predicted self
+while a dialogue is up, so leaving the mobs running meant monsters chewing on
+avatars nobody was allowed to move. Every other host overlay (menu, party panel,
+shop) keeps the shared world ticking, as before.
 
 ## Edge cases
 

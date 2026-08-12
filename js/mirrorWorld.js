@@ -17,6 +17,7 @@ import { setupCutscenes } from "./cutscenes.js";
 import { evictZoneCache } from "./zoneCache.js";
 import { GAME_FRAME_SCHEMA } from "./net.js";
 import { isPushable, SLIDE_DURATION } from "./pushables.js";
+import { setSwingAnimation } from "./melee.js";
 
 // Render remote players/entities this far in the past so interpolation
 // always has two real samples to blend between (the host broadcasts at
@@ -172,6 +173,16 @@ export function getMirrorPlayers(at = nowMs()) {
   return out;
 }
 
+// Authoritative "is this avatar down?" for a mirrored player. Reads the
+// last hp the host sent rather than an interpolated sample — hp is a
+// discrete number on the wire, never blended. Unknown players count as
+// alive: a peer whose first frame hasn't landed yet shouldn't be treated
+// as a corpse.
+export function isMirrorPlayerDead(playerId) {
+  const hp = players.get(playerId)?.curr?.hp;
+  return typeof hp === "number" && hp <= 0;
+}
+
 export function getMirrorPlayerById(playerId, at = nowMs()) {
   const slot = players.get(playerId);
   if (!slot) return null;
@@ -274,6 +285,15 @@ function applySnapshotToCurrentZone(msg, t = nowMs()) {
 
 function ingestPlayer(p, t) {
   if (!p || !p.playerId) return;
+  // Melee swing. The guest's local sim never runs anyone else's swing, so
+  // without replaying the host's cooldown here the sword overlay stays on
+  // its idle row and a teammate's attack looks like nothing at all. The
+  // host ships `sw` (remaining) + `swd` (duration) only while the swing
+  // animates; tickMelee (main.tickGuestFrame) drains it between deltas and
+  // finishes it after the host stops sending the pair. Applied to the
+  // guest's own avatar too — the local prediction armed it a round-trip
+  // ago, so this just re-syncs it to the authoritative remaining.
+  if (p.swd > 0) setSwingAnimation(p.index | 0, p.sw ?? p.swd, p.swd);
   const prev = players.get(p.playerId);
   if (prev) {
     const merged = { ...prev.curr, ...p };

@@ -148,8 +148,16 @@ export function installDialogue() {
     if (!active) return;
     // Guest mirror is read-only — the host drives advance/close via
     // event:dialogueAdvance/Close, and the guest's local keypresses
-    // would advance only their own copy, desyncing immediately.
-    if (active.isNetwork) return;
+    // would advance only their own copy, desyncing immediately. The one
+    // thing the press may do locally is snap our own typewriter to full:
+    // it changes no state the host owns, and it keeps the familiar
+    // "show it all now" beat on the side that pressed the key (the press
+    // is already on the wire as an interact intent, which is what
+    // actually pages the shared dialogue forward).
+    if (active.isNetwork) {
+      if (isDialogueAdvanceKey(e.code) && !active.revealed) finishReveal();
+      return;
+    }
     // Space, or any active local player's interact key: the dialogue is
     // modal for the whole shared screen, so whoever started it (often P2,
     // talking to an NPC with their own key) has to be able to close it too.
@@ -229,6 +237,20 @@ export function speakerNameForEntity(entity) {
   if (!sp || typeof sp.name !== "string" || !sp.name.startsWith("npc.name.")) return "";
   const name = tr(sp.name);
   return name && name !== sp.name ? name : "";
+}
+
+// Advance the host-owned dialogue on behalf of someone who isn't at this
+// keyboard: an online guest, whose interact intent the host routes here
+// (interact.tryInteractForSlot). The dialogue is modal for the whole
+// session — a guest who starts a chat has to be able to finish it, the
+// same way local co-op P2 can — and this is the host's own advance path,
+// so the resulting advance/close still broadcasts to every client.
+// Returns false when there's nothing of ours to advance (no dialogue, or
+// a mirrored one, which only the host's events may move).
+export function advanceOpenDialogue() {
+  if (!active || active.isNetwork) return false;
+  advance();
+  return true;
 }
 
 // Guest-side entry point. Driven by event:dialogueOpen from the host.

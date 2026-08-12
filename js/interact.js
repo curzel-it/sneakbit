@@ -5,7 +5,7 @@
 // Also draws an on-screen hint when an interactable is in front of the
 // player, so the action is discoverable without reading the README.
 
-import { showDialogue, resolveEntityDialogue, isDialogueOpen, speakerNameForEntity } from "./dialogue.js";
+import { showDialogue, resolveEntityDialogue, isDialogueOpen, speakerNameForEntity, advanceOpenDialogue } from "./dialogue.js";
 import { handleAfterDialogue } from "./afterDialogue.js";
 import { openShop, isShopOpen } from "./shop.js";
 import { matchesAction } from "./keyBindings.js";
@@ -72,7 +72,13 @@ export function installInteract(getState) {
 // both call this instead of synthesising a keydown for the slot's key.
 export function tryInteractForSlot(slot) {
   if (getNetRole() === "guest") return;
-  if (isDialogueOpen()) return;
+  // A dialogue is already up: this press is "next line", not "start a new
+  // conversation". Online co-op routes a guest's interact intent through
+  // here, and the modal is shared — without this only the host could page
+  // through a chat the guest had walked up and started. Local pads reach
+  // the dialogue through menuNav instead (a pad with a surface open never
+  // gets here), so this doesn't double-advance for them.
+  if (isDialogueOpen()) { advanceOpenDialogue(); return; }
   const state = stateRef?.();
   if (!state) return;
   const initiator = playerForSlot(state, slot);
