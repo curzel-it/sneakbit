@@ -14,7 +14,8 @@ import { getValue, setValue, keyMatches } from "./storage.js";
 import { addAmmo, getAmmo } from "./inventory.js";
 import { showToast } from "./toast.js";
 import { getSpecies } from "./species.js";
-import { matchesAction } from "./keyBindings.js";
+import { resolveAction } from "./keyBindings.js";
+import { localPlayerCount } from "./coopMode.js";
 import { registerMenuSurface } from "./menuNav.js";
 import { broadcastHostEvent } from "./hostEvents.js";
 import { parseRichText, richTextLength, richTextToHtml, formatBullets } from "./richText.js";
@@ -149,10 +150,10 @@ export function installDialogue() {
     // event:dialogueAdvance/Close, and the guest's local keypresses
     // would advance only their own copy, desyncing immediately.
     if (active.isNetwork) return;
-    // Always accept Space as a universal "advance" so the dialogue
-    // remains dismissable even if the player rebinds interact onto an
-    // unusual key. Otherwise the rebound interact key works too.
-    if (e.code === "Space" || matchesAction("interact", e.code)) {
+    // Space, or any active local player's interact key: the dialogue is
+    // modal for the whole shared screen, so whoever started it (often P2,
+    // talking to an NPC with their own key) has to be able to close it too.
+    if (isDialogueAdvanceKey(e.code)) {
       e.preventDefault();
       // Stop later window keydown listeners (notably interact.js) from
       // acting on this same press. Without this, closing the dialogue with
@@ -175,6 +176,18 @@ export function installDialogue() {
     priority: 20,
   });
   return root;
+}
+
+// True if `code` advances/closes an open dialogue: Space (the universal
+// fallback, so a wild rebind can never trap the player in a modal) or the
+// interact key of a local player who is actually in the session — P1
+// always, P2-P4 only once the local player count covers them, so a
+// single-player session doesn't act on P2's (still bound, but unused) key.
+export function isDialogueAdvanceKey(code) {
+  if (code === "Space") return true;
+  const r = resolveAction(code);
+  if (!r || r.action !== "interact") return false;
+  return r.playerIndex === 0 || r.playerIndex + 1 <= localPlayerCount();
 }
 
 export function isDialogueOpen() { return active !== null; }

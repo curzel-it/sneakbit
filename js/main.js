@@ -6,7 +6,7 @@ import { loadSpecies, loadStrings, loadZone } from "./data.js";
 import { loadStringsData, tr } from "./strings.js";
 import { installDialogue, isDialogueOpen } from "./dialogue.js";
 import { installInteract, tickInteract, tryInteractForSlot } from "./interact.js";
-import { loadSpeciesData } from "./species.js";
+import { loadSpeciesData, getSpecies } from "./species.js";
 import { composeBiomeSheet } from "./biomeSheet.js";
 import { buildZone, isTeleporterLocked } from "./zone.js";
 import { pickCoopSpawn } from "./coopSpawn.js";
@@ -33,13 +33,15 @@ import { installMelee, tickMelee, tryMelee, tryMeleeForSlot } from "./melee.js";
 import { installWeaponSelect, cycleWeapon } from "./weaponSelect.js";
 import { SLOT_RANGED, SLOT_MELEE } from "./equipment.js";
 import { setGamepadAction } from "./gamepad.js";
+import { installFullscreenRestore } from "./fullscreen.js";
 import { pollGuestGamepad } from "./guestInputForwarder.js";
 import { installActiveInputDevice } from "./activeInputDevice.js";
 import { installControllerPresence, isControllerPaused } from "./controllerPresence.js";
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js";
 import { installCoinHud, updateCoinHud } from "./coinHud.js";
 import { seedStartingCoins } from "./wallet.js";
-import { giftStarterWeaponIfNeeded } from "./starterGift.js";
+import { giftStarterWeaponIfNeeded, SWORD_WEAPON_ID } from "./starterGift.js";
+import { glyphForAction } from "./inputGlyphs.js";
 import { tickMobs } from "./mobs.js";
 import { tickMonsterFusion } from "./monsters.js";
 import { tickMinionSpawning } from "./minions.js";
@@ -96,6 +98,10 @@ async function main() {
   // Land the shared CSS variables before any feature stylesheet that
   // references them is injected.
   installUiTokens();
+  // Before anything that can reload the page (cloud restore, save mirror,
+  // legacy import — and later New game / Clear cache): a navigation drops
+  // fullscreen, so remember it and come back to it.
+  installFullscreenRestore();
   bootstrapOnline();             // seeds runtime role from URL; doesn't install role modules
   installPartyPanel();
   // Account UI is lazy + offline-tolerant: it installs here (so the pause
@@ -435,6 +441,19 @@ async function main() {
       handleCoopDeaths(state);
       handleHostState(state);
     } else {
+      // Overlay open: the sim is frozen, but every local pad still has to
+      // be scanned. gamepad.js routes a pad into menuNav while a surface is
+      // open, and P1's pad is polled unconditionally above — without this
+      // the P2-P4 pads go unread for as long as the overlay is up, so
+      // whoever opened a dialogue or the multiplayer panel from the second
+      // controller couldn't dismiss it (only P1 could). Polling also drains
+      // their press queues, so nothing bursts out on resume. Gated on
+      // `overlayOpen`, not `paused`: during a controller-disconnect pause
+      // there's no menu surface, so a scan would fire gameplay actions
+      // (shoot/melee) into a frozen world.
+      if (overlayOpen) {
+        for (let slot = 2; slot <= localPlayerCount(); slot++) pollInput(slot);
+      }
       // When paused, keep the camera tracking the player so on resume
       // there's no jolt, but don't bother re-running the visibility pass
       // (the entity ticks are gated by `paused` above and won't read it).
@@ -802,7 +821,16 @@ function ensureLocalExtra(slot, want) {
 // stacks duplicates.
 function setupNewLocalPlayer(playerIndex) {
   seedStartingCoins(playerIndex);
-  giftStarterWeaponIfNeeded(playerIndex);
+  // Say it out loud. The sword just appears in P2's hand otherwise, with no
+  // hint of where it came from or which button swings it — and the "Equipped:
+  // …" toast pickups show is deliberately P1-only.
+  if (giftStarterWeaponIfNeeded(playerIndex)) {
+    const name = tr(getSpecies(SWORD_WEAPON_ID)?.name) || "Sword";
+    showToast(
+      `Player ${(playerIndex | 0) + 1} equipped: ${name}\n${glyphForAction("melee", playerIndex)} to swing it`,
+      "longHint",
+    );
+  }
 }
 
 // Back-compat thin wrappers (party panel / any other callers).

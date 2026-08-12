@@ -1,7 +1,12 @@
 ## Can be done autonomously by a coding agent
 
-- [x] We need two new obstacles in world 1002 at x67 ~y58. there we can see a line of sand in teh grass (a dirt road), which we want to block off until the player has collected the key from aridreach desert
-- [x] in 1001, update the dialogue of the wizard so that it explicitly tells us to start looking for the keys of the dungeons, starting with aridreach
+- [x] New game, local co-op, il secondo giocatore parte con una spada, ma non si sa da dove cazzo arrivi, e non si riesce ad usare
+- [x] New game, local co-op, il secondo giocatore fa parrtire il dialogo con il mago al primo livello, ma non può chiuderlo, il primo giocatore si
+- [x] Mi posiziono in una cella adiacente alle scale, es subito sotto, e premo "su". cammino verso le scale e arrivo al piano successivo, di fronte alle scale, e se tengo premuto torno immediatametne sulee scale, e qunidi al piano precedente, in loop
+- [x] Fare new game disabilita il full screen
+- [x] Local co-op, se il secondo giocatore prende la spada, nessuno può usare la spada
+- [x] Menu multiplayer non si puo chiudere con controller
+- [x] Il secondo giocatore non può nemmeno sparare kunai (controller)
 
 ## Could be performed by Opus-level coding agent
 - [ ] world 1006 some houses are empty, we can probably fill them up

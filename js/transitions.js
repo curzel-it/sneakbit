@@ -284,6 +284,10 @@ function movePlayerTo(player, tileX, tileY, direction) {
   // player from immediately stepping off in whatever direction they
   // were sliding when they died.
   player._sliding = false;
+  // The player lands in front of the door they just walked through, which
+  // leads right back to where they came from. Whatever they were holding
+  // to get here must not carry them straight back in (player.handleIdle).
+  player._holdGate = true;
   if (direction && direction !== "None") {
     player.direction = direction.toLowerCase();
   }

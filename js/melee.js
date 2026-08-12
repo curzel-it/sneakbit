@@ -14,6 +14,7 @@ import { getNetRole } from "./onlineBootstrap.js";
 import { isPlayerDead } from "./playerHealth.js";
 import { isGiant } from "./giantMode.js";
 import { isIceActive } from "./iceMode.js";
+import { playerForSlot } from "./playerSlots.js";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -166,24 +167,16 @@ export function tryMelee() {
   swing(state, state.player);
 }
 
-// Network injection seam — see shooting.tryShootForSlot for the
-// motivation. dispatchActionForSlot calls this directly instead of
-// synthesising a KeyboardEvent.
+// Per-slot injection seam — see shooting.tryShootForSlot for the
+// motivation. Both a local pad (main.js) and dispatchActionForSlot call
+// this directly instead of synthesising a KeyboardEvent.
 export function tryMeleeForSlot(slot) {
   if (getNetRole() === "guest") return;
   const state = stateRef?.();
   if (!state) return;
-  const swinger = playerForSlotInState(state, slot);
+  const swinger = playerForSlot(state, slot);
   if (!swinger) return;
   swing(state, swinger);
-}
-
-function playerForSlotInState(state, slot) {
-  if (slot === 1) return state.player || null;
-  if (slot === 2) return (state.player2 && state.player2.playerId) ? state.player2 : null;
-  if (!Array.isArray(state.players)) return null;
-  const s = state.players.find((e) => e.slot === slot);
-  return s ? s.player : null;
 }
 
 function onKey(e) {
@@ -219,12 +212,6 @@ function pickSwinger(state, code) {
     }
   }
   return null;
-}
-
-function playerForSlot(state, slot) {
-  if (!Array.isArray(state.players)) return null;
-  const s = state.players.find((e) => e.slot === slot);
-  return s ? s.player : null;
 }
 
 // Spawns the cross-pattern bullets. Exported for unit tests.

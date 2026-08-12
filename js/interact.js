@@ -21,6 +21,7 @@ import { isVanishing } from "./vanishEffect.js";
 import { isWalkable } from "./zone.js";
 import { getSpecies } from "./species.js";
 import { el } from "./dom.js";
+import { playerForSlot } from "./playerSlots.js";
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -66,25 +67,17 @@ export function installInteract(getState) {
   });
 }
 
-// Network injection seam — see shooting.tryShootForSlot for the
-// motivation. hostGuests.dispatchActionForSlot calls this directly
-// instead of synthesising a KeyboardEvent for the slot's interact key.
+// Per-slot injection seam — see shooting.tryShootForSlot for the
+// motivation. A local pad (main.js) and hostGuests.dispatchActionForSlot
+// both call this instead of synthesising a keydown for the slot's key.
 export function tryInteractForSlot(slot) {
   if (getNetRole() === "guest") return;
   if (isDialogueOpen()) return;
   const state = stateRef?.();
   if (!state) return;
-  const initiator = playerForSlotInState(state, slot);
+  const initiator = playerForSlot(state, slot);
   if (!initiator) return;
   performInteract(state, initiator);
-}
-
-function playerForSlotInState(state, slot) {
-  if (slot === 1) return state.player || null;
-  if (slot === 2) return (state.player2 && state.player2.playerId) ? state.player2 : null;
-  if (!Array.isArray(state.players)) return null;
-  const s = state.players.find((e) => e.slot === slot);
-  return s ? s.player : null;
 }
 
 // Resolve the entity's dialogue, open it, run its after-dialogue behavior on
@@ -153,12 +146,6 @@ function pickInitiator(state, code) {
     }
   }
   return null;
-}
-
-function playerForSlot(state, slot) {
-  if (!Array.isArray(state.players)) return null;
-  const s = state.players.find((e) => e.slot === slot);
-  return s ? s.player : null;
 }
 
 // Per-frame interaction-prompt update. Returns the label the on-screen touch

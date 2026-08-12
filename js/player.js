@@ -100,6 +100,10 @@ export function createPlayer(opts = {}) {
     queuedDir: null,      // direction to commit at next snap
     pendingDir: null,     // direction whose press is being timed for commit
     pendingTimer: 0,
+    // Set on zone entry (transitions.movePlayerTo): ignore whatever is
+    // still held until it's released or a new direction is pressed. See
+    // handleIdle.
+    _holdGate: false,
     // Guest-authoritative movement (host side only): the seq of the
     // currently in-flight network step (acked at its snap) and the queue
     // of committed steps that arrived while this avatar was mid-step
@@ -226,6 +230,17 @@ function handleIdleOnIce(player, zone) {
 }
 
 function handleIdle(player, input, dt, zone) {
+  // Fresh-arrival hold gate. A transition drops the player one tile in
+  // front of the door/stairs they just came out of, and that door leads
+  // straight back where they came from — so a movement key still held from
+  // the walk in would re-enter it the very next frame, bouncing them
+  // between the two floors for as long as they held the key. After a zone
+  // entry the input has to be released (or a new direction pressed) before
+  // movement resumes; a deliberate second trip back is one keypress away.
+  if (player._holdGate) {
+    if (input.events.length === 0 && input.held.size > 0) return;
+    player._holdGate = false;
+  }
   if (isTileSlippery(zone, player.tileX, player.tileY) && handleIdleOnIce(player, zone)) return;
 
   for (const dir of input.events) {

@@ -21,6 +21,7 @@ import { rumble } from "./rumble.js";
 import { spawnLocalFlash } from "./localEffects.js";
 import { isIceActive } from "./iceMode.js";
 import { ANIMATIONS_FPS } from "./constants.js";
+import { playerForSlot } from "./playerSlots.js";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
@@ -120,23 +121,17 @@ export function tryShoot() {
   shoot(state, state.player);
 }
 
-// Host-side network injection seam. hostGuests.dispatchActionForSlot
-// used to round-trip through window.dispatchEvent(new KeyboardEvent),
-// which (a) couldn't run in a Node test without a DOM stub and (b)
-// stayed brittle whenever this module's bindings changed. The slot
-// directly resolves the actor in the host's local world:
-//   1 → state.player           (the host themselves; only fires here if
-//                                explicitly invoked, the keyboard handler
-//                                already covers normal play)
-//   2 → state.player2          (online guest slot 2, gated on playerId
-//                                so a local-coop P2 sentinel doesn't
-//                                accidentally claim the slot)
-//   3, 4 → state.players[]     (online guest slots 3/4)
+// Per-slot injection seam. hostGuests.dispatchActionForSlot used to
+// round-trip through window.dispatchEvent(new KeyboardEvent), which (a)
+// couldn't run in a Node test without a DOM stub and (b) stayed brittle
+// whenever this module's bindings changed. playerSlots resolves the actor
+// in the local world — the host's own avatar, a local co-op P2-P4 firing
+// from their own pad, or the guest holding that seat.
 export function tryShootForSlot(slot) {
   if (getNetRole() === "guest") return;
   const state = stateRef?.();
   if (!state) return;
-  const shooter = playerForSlotInState(state, slot);
+  const shooter = playerForSlot(state, slot);
   if (!shooter) return;
   shoot(state, shooter);
 }
@@ -196,14 +191,6 @@ export function predictGuestShoot(player) {
   });
 }
 
-function playerForSlotInState(state, slot) {
-  if (slot === 1) return state.player || null;
-  if (slot === 2) return (state.player2 && state.player2.playerId) ? state.player2 : null;
-  if (!Array.isArray(state.players)) return null;
-  const s = state.players.find((e) => e.slot === slot);
-  return s ? s.player : null;
-}
-
 function onKey(e) {
   if (e.repeat) return;
   // Guests must not drive the local sim — they forward the intent over
@@ -248,12 +235,6 @@ function pickShooter(state, code) {
     }
   }
   return null;
-}
-
-function playerForSlot(state, slot) {
-  if (!Array.isArray(state.players)) return null;
-  const s = state.players.find((e) => e.slot === slot);
-  return s ? s.player : null;
 }
 
 function shoot(state, shooter) {

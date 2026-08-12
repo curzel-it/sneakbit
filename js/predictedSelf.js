@@ -201,6 +201,12 @@ function hardReset(auth, lastSeq) {
   lastResolvedY = predicted.tileY;
   prevStepRef = null;
   lastEmittedDir = predicted.direction;
+  // A snapshot baseline is a zone change (or a resync) — the ground moved
+  // under this avatar. Arm the same hold gate the host arms on its own
+  // players (transitions.movePlayerTo): a key still held from walking into
+  // the door must not immediately step back into the one we came out of,
+  // which over the wire would drag the whole party back with it.
+  predicted._holdGate = true;
 }
 
 function reconcileDelta(auth, lastSeq) {

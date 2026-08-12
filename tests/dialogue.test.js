@@ -24,7 +24,7 @@ loadStringsData({
   "dialogue.reward_received": "You received `%s`!",
 });
 
-const { resolveEntityDialogue, handleReward } = await import("../js/dialogue.js");
+const { resolveEntityDialogue, handleReward, isDialogueAdvanceKey } = await import("../js/dialogue.js");
 const storage = await import("../js/storage.js");
 const inventory = await import("../js/inventory.js");
 
@@ -212,4 +212,29 @@ test("resolveEntityDialogue: progression chain via dialogue.answer keys", () => 
   assert.equal(resolveEntityDialogue(entity).text, "second");
   storage.setValue("dialogue.answer.second", 1);
   assert.equal(resolveEntityDialogue(entity).text, "third");
+});
+
+// --- Who can dismiss a dialogue -------------------------------------------
+// A local co-op P2 who walks up to an NPC and opens a dialogue with their own
+// interact key has to be able to close it as well. The advance listener used
+// to consult P1's bindings only, so P2 could open the mage's dialogue in the
+// first level and then sit there while only P1 could dismiss it.
+const coop = await import("../js/coopMode.js");
+const bindings = await import("../js/keyBindings.js");
+
+test("dialogue advance: Space and P1's interact key always work", () => {
+  bindings._resetBindingsForTesting();
+  coop._setCoopModeForTesting(false);
+  assert.equal(isDialogueAdvanceKey("Space"), true);
+  assert.equal(isDialogueAdvanceKey("KeyE"), true, "P1 interact (default)");
+  assert.equal(isDialogueAdvanceKey("KeyW"), false, "movement doesn't advance");
+});
+
+test("dialogue advance: P2's interact key works in local co-op only", () => {
+  bindings._resetBindingsForTesting();
+  coop._setCoopModeForTesting(false);
+  assert.equal(isDialogueAdvanceKey("KeyB"), false, "P2 isn't in the session yet");
+  coop._setCoopModeForTesting(true);
+  assert.equal(isDialogueAdvanceKey("KeyB"), true, "P2 can dismiss what they opened");
+  coop._setCoopModeForTesting(false);
 });
