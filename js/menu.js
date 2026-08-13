@@ -174,23 +174,15 @@ export function installMenu(stateGetter) {
     </div>
     <div class="menu-card" data-screen="credits">
       <h1>Credits</h1>
-      <p class="menu-credits">
-        <strong>SneakBit</strong> · web port of the
-        <a href="https://github.com/curzel-it/sneakbit/tree/rust-core-tip" target="_blank" rel="noopener">original Rust build</a>.
-      </p>
-      <p class="menu-credits">
-        Source:
-        <a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener">github.com/curzel-it/sneakbit</a>
-      </p>
-      <p class="menu-credits">
-        Music by <a href="https://www.filippovicarelli.com/8bit-game-background-music" target="_blank" rel="noopener">Filippo Vicarelli</a><br>
-        Sound effects by <a href="https://opengameart.org/content/512-sound-effects-8-bit-style" target="_blank" rel="noopener">SubspaceAudio</a><br>
-        Font by <a href="https://dl.dafont.com/dl/?f=pixel_operator" target="_blank" rel="noopener">HarvettFox96</a>
-      </p>
-      <p class="menu-credits">
-        <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> &middot;
-        <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a>
-      </p>
+      <ul class="menu-credits">
+        <li>Developed by <a href="https://curzel.it" target="_blank" rel="noopener">Federico Curzel</a></li>
+        <li>Music by <a href="https://www.filippovicarelli.com/8bit-game-background-music" target="_blank" rel="noopener">Filippo Vicarelli</a></li>
+        <li>Sound effects by <a href="https://opengameart.org/content/512-sound-effects-8-bit-style" target="_blank" rel="noopener">SubspaceAudio</a></li>
+        <li>Font by <a href="https://dl.dafont.com/dl/?f=pixel_operator" target="_blank" rel="noopener">HarvettFox96</a></li>
+        <li><a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener">github.com/curzel-it/sneakbit</a></li>
+        <li><a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a></li>
+        <li><a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a></li>
+      </ul>
       <div class="menu-row menu-controls">
         <button id="menu-credits-back">Back</button>
       </div>
@@ -629,7 +621,8 @@ function injectStyles() {
     #menu button:hover { background: #353535; }
     #menu .menu-hint { color: #888; font-size: 11px; margin: 14px 0 0; }
     #menu .menu-version { color: #555; font-size: 10px; margin: 10px 0 0; text-align: right; }
-    #menu .menu-credits { font-size: 12px; line-height: 1.5; color: #ccc; margin: 0 0 10px; }
+    #menu ul.menu-credits { list-style: none; padding: 0; margin: 0 0 10px; }
+    #menu .menu-credits { font-size: 12px; line-height: 1.9; color: #ccc; }
     #menu .menu-credits a { color: #9ab1ff; text-decoration: none; }
     #menu .menu-credits a:hover { text-decoration: underline; }
     #menu .inv-empty { color: #888; font-style: italic; margin: 0 0 12px; }
