@@ -3857,6 +3857,7 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1022,
+    "supports_bullet_piercing": true,
     "z_index": 14
   },
   {

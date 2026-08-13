@@ -98,6 +98,9 @@ function decorate(raw) {
     melee_attacks_hero: !!raw.melee_attacks_hero,
     supports_bullet_boomerang: !!raw.supports_bullet_boomerang,
     supports_bullet_catching:  !!raw.supports_bullet_catching,
+    // Piercing round (the cannonball): plows through every target it hits and
+    // never expires on lifespan — only a wall or the zone edge stops it.
+    supports_bullet_piercing:  !!raw.supports_bullet_piercing,
     bundle_contents: raw.bundle_contents ?? null,
     inventory_texture_offset: raw.inventory_texture_offset ?? null,
     bullet_species_id: raw.bullet_species_id ?? 0,

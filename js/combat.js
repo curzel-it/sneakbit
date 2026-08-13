@@ -143,8 +143,13 @@ function resolveBullets(zone, players, dt) {
             // Bullets hit briefly and pass through — treat them as a burst
             // (with invuln gate) rather than a sustained continuous tick.
             applyPlayerDamage(dps * damageMultiplier(b) * dt, victim);
-            if (!tryBounce(b, bsp)) ents.splice(i, 1);
-            continue;
+            // A piercing round (the cannon) doesn't stop on a body — it keeps
+            // flying until a wall or the zone edge, so fall through to the
+            // target loop and the wall check below.
+            if (!b._piercing) {
+              if (!tryBounce(b, bsp)) ents.splice(i, 1);
+              continue;
+            }
           }
         }
       }
@@ -196,7 +201,10 @@ function resolveBullets(zone, players, dt) {
         spawnDamageIndicator(zone, entityHittable(t, tsp), b.parent_id ?? b.id);
       }
     }
-    if (consumed) {
+    // A piercing round (the cannon) survives its own kills: it keeps mowing
+    // through whatever else is lined up behind the corpse and only the wall
+    // check below can stop it.
+    if (consumed && !b._piercing) {
       if (!tryBounce(b, bsp)) ents.splice(i, 1);
       continue;
     }

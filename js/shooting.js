@@ -6,7 +6,9 @@
 // Bullet/entity collision is handled in combat.js — here we only spawn
 // bullets and advance them through space. The bullet is removed when it
 // runs out of lifespan or leaves the zone bounds; combat.js removes
-// bullets that hit walls or kill targets.
+// bullets that hit walls or kill targets. Piercing bullets (the cannon)
+// are the exception: they ignore lifespan and kills, so only a wall or
+// the zone edge stops them.
 
 import { getSpecies } from "./species.js";
 import { getAmmo, removeAmmo } from "./inventory.js";
@@ -285,6 +287,11 @@ function shoot(state, shooter) {
     // aura (freeze.js / iceMode.js). Tagged at spawn so it stays icy for its
     // whole flight even if the buff lapses while it's in the air.
     _icy: isIceActive(shooter) || undefined,
+    // Piercing round (the cannonball): it never stops on a target and never
+    // times out — advanceBullets skips the lifespan cull below and combat.js
+    // keeps it alive through every kill. Only a wall or the zone edge ends it.
+    // Tagged at spawn, like _icy, so the flight is decided once.
+    _piercing: bulletSp.supports_bullet_piercing || undefined,
     species_id: bulletId,
     is_consumable: false,
     direction: capitalize(dir),
@@ -326,7 +333,7 @@ function advanceBullets(state, dt) {
     f.y += e._vy * dt;
     e._lifespan -= dt;
     if (
-      e._lifespan <= 0 ||
+      (e._lifespan <= 0 && !e._piercing) ||
       f.x < -1 || f.y < -1 ||
       f.x > zone.cols || f.y > zone.rows
     ) {

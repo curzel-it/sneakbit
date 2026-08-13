@@ -57,34 +57,34 @@ const SHOP_IDS        = new Set(buildingRow(3));
 // 7001 kunai x10, 1176 .223 x10, 1173 .223 x100, 1177 cannonball x10,
 // 1164 sword, 1172 shield, 1162 AR-15, 1168 cannon.
 const DEFAULT_SHOP_STOCK = [
-  { item: 2020, price: 30, stackable: true }, // health potion (+50 HP)
-  { item: 2021, price: 60, stackable: true }, // purple potion (full heal)
-  { item: 2024, price: 50, stackable: true }, // yellow potion (giant form)
-  { item: 2026, price: 55, stackable: true }, // silver potion (3x speed, 15s)
-  { item: 2025, price: 55, stackable: true }, // ice potion (freeze enemies, 10s)
-  { item: 7001, price: 10, stackable: true },
-  { item: 1176, price: 30, stackable: true },
-  { item: 1173, price: 250, stackable: true },
-  { item: 1177, price: 400, stackable: true },
-  { item: 1164, price: 99 },
-  { item: 1172, price: 150 },
-  { item: 1162, price: 450 },
-  { item: 1168, price: 999 },
+  { item: 2020, price: 15, stackable: true }, // health potion (+50 HP)
+  { item: 2021, price: 30, stackable: true }, // purple potion (full heal)
+  { item: 2024, price: 25, stackable: true }, // yellow potion (giant form)
+  { item: 2026, price: 25, stackable: true }, // silver potion (3x speed, 15s)
+  { item: 2025, price: 25, stackable: true }, // ice potion (freeze enemies, 10s)
+  { item: 7001, price: 5, stackable: true },
+  { item: 1176, price: 15, stackable: true },
+  { item: 1173, price: 125, stackable: true },
+  { item: 1177, price: 200, stackable: true },
+  { item: 1164, price: 50 },
+  { item: 1172, price: 75 },
+  { item: 1162, price: 225 },
+  { item: 1168, price: 500 },
   // Armour, priced against each piece's received_damage_reduction: iron is
   // the mid-game set, dark the late-game one.
-  { item: 1194, price: 120 },
-  { item: 1195, price: 250 },
-  { item: 1196, price: 150 },
-  { item: 1214, price: 300 },
-  { item: 1215, price: 550 },
-  { item: 1216, price: 300 },
+  { item: 1194, price: 60 },
+  { item: 1195, price: 125 },
+  { item: 1196, price: 75 },
+  { item: 1214, price: 150 },
+  { item: 1215, price: 275 },
+  { item: 1216, price: 150 },
   // Cosmetic skins (skins.js) — one-of-a-kind, equipped from the inventory Skin
-  // slot. Flat 1000 coins each: a long-game goal, not a rarity ladder.
-  { skin: "outfit_red", price: 1000 },
-  { skin: "outfit_yellow", price: 1000 },
-  { skin: "outfit_blue", price: 1000 },
-  { skin: "tracksuit_black", price: 1000 },
-  { skin: "ninja_black", price: 1000 },
+  // slot. Flat 500 coins each: a long-game goal, not a rarity ladder.
+  { skin: "outfit_red", price: 500 },
+  { skin: "outfit_yellow", price: 500 },
+  { skin: "outfit_blue", price: 500 },
+  { skin: "tracksuit_black", price: 500 },
+  { skin: "ninja_black", price: 500 },
   // The Knockback Aura skill (skills.js) is deliberately NOT stocked: it's a
   // playtest toy, not a shipped purchase.
 ];

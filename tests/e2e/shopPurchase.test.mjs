@@ -21,7 +21,7 @@ const SHOP_ZONE = 12900001;
 const CLERK_ID = 12900010;
 const KUNAI_BUNDLE = 7001; // expands to 10× kunai (7000)
 const KUNAI = 7000;
-const BUNDLE_PRICE = 10;
+const BUNDLE_PRICE = 5;
 
 test("shop: opens the shipped clerk stock and a kunai purchase moves coins → inventory", async (t) => {
   if (!skipIfNoChrome(t)) return;
@@ -57,7 +57,7 @@ test("shop: opens the shipped clerk stock and a kunai purchase moves coins → i
   assert.ok(Array.isArray(stock) && stock.length > 0, "the clerk carries shipped shop_stock");
   const kunaiIdx = stock.findIndex((e) => e.item === KUNAI_BUNDLE);
   assert.ok(kunaiIdx >= 0, "the kunai bundle is on sale");
-  assert.equal(stock[kunaiIdx].price, BUNDLE_PRICE, "kunai bundle priced at 10");
+  assert.equal(stock[kunaiIdx].price, BUNDLE_PRICE, "kunai bundle priced as expected");
 
   await waitFor(s, `(() => getComputedStyle(document.getElementById('shop')).display !== 'none')()`);
 
