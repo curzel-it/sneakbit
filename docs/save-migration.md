@@ -141,9 +141,11 @@ Settings are carried separately, as settings rather than progress
 toggles — which lived in `save.json` on desktop but in `UserDefaults` /
 `SharedPreferences` (`AudioSettings`, keys `kSoundEffectsEnabled` /
 `kMusicEnabled`) on mobile, which is why the envelope carries `legacy.audio`.
-A returning player with sound on is explicitly unmuted: this build starts muted
-and `firstLaunch.js` persists that, which is right for a new player and wrong
-for this one.
+A returning player with sound on is explicitly unmuted: off the desktop app
+this build starts muted and `firstLaunch.js` persists that, which is right for
+a new player and wrong for this one. (The desktop app starts unmuted anyway —
+`defaultMuted()` in `js/settings.js` — but the patch spells the answer out
+either way, so an import lands the same on every platform.)
 
 Hero position isn't in the old save at all — the Rust build only stored
 `latest_world` and respawned at the zone's spawn point. `js/main.js` does the

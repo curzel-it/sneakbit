@@ -102,6 +102,21 @@ instead of links, the bundle's seal no longer matches and Apple Silicon refuses 
 launch it, since arm64 requires a valid signature. The command above catches that in
 one line; a launch failure with no console output is the same symptom seen the hard way.
 
+## Desktop-only defaults
+
+The shell is thin, but two defaults key off it (both read `platform === "electron"`
+from `js/nativeBridge.js`, which is why they can't live in the web build):
+
+- **Audio is on.** A browser tab and both mobile shells start muted behind a
+  first-launch "Audio muted by default" toast; the desktop app starts audible and
+  says nothing (`defaultMuted()` in `js/settings.js`, `js/firstLaunch.js`). The
+  opening track plays without waiting for a keypress too — Electron runs with
+  `no-user-gesture-required`, so `js/music.js` skips the gesture gate here.
+  First launch only: a saved `muted` always wins, so an install that already
+  chose stays as it is.
+- **The pause menu offers "Exit game."** A tab can't close itself; the desktop app
+  has to (`js/exitGame.js`).
+
 ## Version numbers
 
 One string, two places, kept in sync by `tests/appVersion.test.js`:

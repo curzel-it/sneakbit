@@ -3,6 +3,7 @@
 
 import { setMuted, setSfxVolume } from "./audio.js";
 import { refreshMusicVolume } from "./music.js";
+import { getNativeState } from "./nativeBridge.js";
 
 const KEY = "sneakbit.settings.v1";
 
@@ -21,13 +22,13 @@ const DEFAULTS = {
   // of SUPPORTED_LANGUAGES. Changing it requires a reload (the string table
   // is fetched once at startup) — the settings panel handles that.
   language: "auto",
-  // Start muted by default. firstLaunch.js promotes this to a persisted
-  // `muted: true` on the very first visit, but applyFirstLaunch runs
-  // *after* loadAudio / installMusic / installToast — leaving a small
-  // window where any sound (a footstep from an early input, a music
-  // track that auto-starts) would play unmuted on mobile. Starting from
-  // `true` collapses that window. Returning visitors keep whatever
-  // they set in the settings panel.
+  // Start muted by default — see defaultMuted() for the desktop exception.
+  // firstLaunch.js promotes this to a persisted `muted` on the very first
+  // visit, but applyFirstLaunch runs *after* loadAudio / installMusic /
+  // installToast — leaving a small window where any sound (a footstep from
+  // an early input, a music track that auto-starts) would play unmuted on
+  // mobile. Starting from `true` collapses that window. Returning visitors
+  // keep whatever they set in the settings panel.
   muted: true,
   showFps: true,
   // Co-op friendly fire — off by default. When on, a bullet whose
@@ -45,14 +46,29 @@ const DEFAULTS = {
   touchControls: "joystick",
 };
 
+// Whether a fresh install should start muted. The desktop shell is the one
+// place it shouldn't: Steam launched the app deliberately, it owns its own
+// window rather than sharing a tab with whatever else the player has open,
+// and Electron's autoplay policy never blocks a sound — so a silent launch
+// reads as a broken game. A browser tab and both mobile shells still start
+// quiet. Only affects first launch; a saved `muted` always wins.
+//
+// Safe to call at loadSettings() time: main.js awaits initNativeBridge()
+// before it, so the platform is already known.
+export function defaultMuted() {
+  return getNativeState()?.platform !== "electron";
+}
+
 let current = { ...DEFAULTS };
 let firstLaunch = false;
 
 export function loadSettings() {
+  const defaults = { ...DEFAULTS, muted: defaultMuted() };
+  current = { ...defaults };
   let raw = null;
   try { raw = localStorage.getItem(KEY); } catch {}
   if (raw) {
-    try { current = { ...DEFAULTS, ...JSON.parse(raw) }; } catch {}
+    try { current = { ...defaults, ...JSON.parse(raw) }; } catch {}
   } else {
     firstLaunch = true;
   }

@@ -3,9 +3,11 @@
 // loops indefinitely.
 //
 // First playback waits for a user gesture (keypress / click) to satisfy
-// browser autoplay rules; we listen once and start whatever's queued.
+// browser autoplay rules; we listen once and start whatever's queued. The
+// desktop app is exempt — see installMusic.
 
 import { getSettings } from "./settings.js";
+import { getNativeState } from "./nativeBridge.js";
 
 const cache = new Map();
 let current = null;       // { name, audio }
@@ -14,6 +16,13 @@ let gestureReady = false;
 const FADE_MS = 600;
 
 export function installMusic() {
+  // Electron runs with `no-user-gesture-required`, and the desktop app starts
+  // unmuted (settings.js defaultMuted), so the opening track can play the
+  // moment the zone loads — a Steam game that stays silent until you happen to
+  // press a key reads as broken. The listeners below stay wired anyway: if a
+  // play() is refused after all, playTrack hands the track back to them.
+  if (getNativeState()?.platform === "electron") gestureReady = true;
+
   const start = () => {
     if (gestureReady) return;
     gestureReady = true;
@@ -43,7 +52,7 @@ export function playTrack(name) {
   // first track of a first-launch mobile visit. Hard-mute prevents it.
   next.muted = target === 0;
   next.volume = 0;
-  next.play().catch(() => {});
+  next.play().catch(() => requeueForGesture(name, next));
   fadeTo(next, target, FADE_MS);
 
   if (current) {
@@ -58,6 +67,17 @@ export function stopTrack() {
   const audio = current.audio;
   fadeTo(audio, 0, FADE_MS, () => { try { audio.pause(); } catch {} });
   current = null;
+}
+
+// A refused play() would otherwise leave `current` pointing at a track nobody
+// is playing, so nothing ever starts it again. Put it back in the queue and
+// re-arm the gesture path instead. Only reachable when a shell's autoplay
+// policy is stricter than installMusic assumed.
+function requeueForGesture(name, audio) {
+  if (current?.audio !== audio) return;
+  current = null;
+  pending = name;
+  gestureReady = false;
 }
 
 export function refreshMusicVolume() {

@@ -233,9 +233,10 @@ export function legacySettingsPatch(save, audio) {
   const musicEnabled = audio ? audio.music : Number(raw[LEGACY_MUSIC_DISABLED] ?? 0) === 0;
   if (!sfxEnabled) patch.sfxVolume = 0;
   if (!musicEnabled) patch.musicVolume = 0;
-  // This build starts muted and firstLaunch.js persists that — right for a new
-  // player, wrong for one who had sound on in the old game. Unmute unless they
-  // really had turned everything off.
+  // Off the desktop app this build starts muted and firstLaunch.js persists
+  // that — right for a new player, wrong for one who had sound on in the old
+  // game. Spell the answer out either way: unmute unless they really had
+  // turned everything off.
   patch.muted = !sfxEnabled && !musicEnabled;
 
   return patch;
