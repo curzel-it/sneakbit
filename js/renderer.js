@@ -3,7 +3,7 @@
 
 import { TILE_SIZE } from "./constants.js";
 import { drawEntities } from "./entities.js";
-import { getZoneCache } from "./zoneCache.js";
+import { getZoneChunk, chunkRangeFor, CHUNK_TILES } from "./zoneCache.js";
 import { drawCutscenes } from "./cutscenes.js";
 import { drawTrails } from "./trails.js";
 import { drawLocalEffects } from "./localEffects.js";
@@ -80,16 +80,22 @@ function drawDividers(ctx, canvas, viewports) {
   }
 }
 
-// Blit the pre-baked biome + construction layers. The cache is built
-// lazily on first render so we don't pay for it before assets are ready.
+// Blit the pre-baked tile chunks covering the camera. Chunks bake lazily on
+// first use, so nothing is paid for before assets are ready and nothing is
+// baked for parts of the map the player never reaches. Offsets stay
+// seam-free because chunk origins are a whole number of pixels apart, so the
+// rounding lands identically on every chunk in a row.
 function drawZoneLayers(ctx, zone, camera, frame) {
-  const cache = getZoneCache(zone);
-  if (!cache) return;
-  const ox = Math.round(-camera.x * TILE_SIZE);
-  const oy = Math.round(-camera.y * TILE_SIZE);
-  const biomeCanvas = cache.biomeFrames[frame % cache.biomeFrames.length];
-  ctx.drawImage(biomeCanvas, ox, oy);
-  ctx.drawImage(cache.construction, ox, oy);
+  const { cx0, cy0, cx1, cy1 } = chunkRangeFor(zone, camera);
+  for (let cy = cy0; cy <= cy1; cy++) {
+    for (let cx = cx0; cx <= cx1; cx++) {
+      const chunk = getZoneChunk(zone, cx, cy);
+      if (!chunk) continue;
+      const ox = Math.round((cx * CHUNK_TILES - camera.x) * TILE_SIZE);
+      const oy = Math.round((cy * CHUNK_TILES - camera.y) * TILE_SIZE);
+      ctx.drawImage(chunk.frames[frame % chunk.frames.length], ox, oy);
+    }
+  }
 }
 
 // Applies a per-zone light-condition overlay. Mirrors Rust's three

@@ -13,7 +13,6 @@ import { buildZone, isWalkable, isEntityBlocked, isTeleporterLocked } from "./zo
 import { el } from "./dom.js";
 import { playSfx } from "./audio.js";
 import { playTrack } from "./music.js";
-import { getZoneCache } from "./zoneCache.js";
 import { setupPuzzles } from "./puzzles.js";
 import { setupCutscenes } from "./cutscenes.js";
 import { isCreativeMode } from "./creativeMode.js";
@@ -124,9 +123,6 @@ export async function travelTo(state, destination, opts = {}) {
     const zone = buildZone(raw);
     setupPuzzles(zone);
     setupCutscenes(zone);
-    // Bake the static tile layers during the black-screen window so the
-    // first rendered frame is already cheap.
-    getZoneCache(zone);
     state.zone = zone;
     // Keep the raw JSON next to the built zone so the creative editor
     // can mutate it in place and re-run buildZone() to refresh derived

@@ -61,7 +61,6 @@ import { installMessage, isMessageOpen } from "./message.js";
 import { installFastTravel, isFastTravelOpen, tickFastTravel, markVisited } from "./fastTravel.js";
 import { applyFirstLaunch } from "./firstLaunch.js";
 import { loadProgress, saveProgress, clearProgress } from "./save.js";
-import { getZoneCache } from "./zoneCache.js";
 import { setupPuzzles, tickPuzzles } from "./puzzles.js";
 import { setupCutscenes, tickCutscenes } from "./cutscenes.js";
 import { tickTrails } from "./trails.js";
@@ -548,7 +547,6 @@ async function initOfflineState() {
   const zone = buildZone(zoneRaw);
   setupPuzzles(zone);
   setupCutscenes(zone);
-  getZoneCache(zone);
   const player = createPlayer();
   if (urlSpawn) {
     applySavedSpawn(player, zone, urlSpawn);

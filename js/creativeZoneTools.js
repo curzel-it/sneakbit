@@ -14,7 +14,6 @@ import { invalidateZoneCache, loadZone } from "./data.js";
 import { buildZone } from "./zone.js";
 import { setupPuzzles } from "./puzzles.js";
 import { setupCutscenes } from "./cutscenes.js";
-import { getZoneCache } from "./zoneCache.js";
 import { showMessage } from "./message.js";
 import { showConfirm } from "./confirmDialog.js";
 
@@ -99,7 +98,6 @@ export async function reloadZoneFromDisk() {
     setupPuzzles(next);
     setupCutscenes(next);
     if (st.zone?.spawnPoint) next.spawnPoint = st.zone.spawnPoint;
-    getZoneCache(next);
     st.rawZone = raw;
     st.zone = next;
     showMessage("Zone reloaded", `Reloaded zone ${id} from disk.`);
