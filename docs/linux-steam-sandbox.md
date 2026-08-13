@@ -3,13 +3,15 @@
 Investigation notes from a Linux box where SneakBit 2.0 launched fine from a shell
 but died instantly from the Steam client. Two independent faults were found.
 
-> **Status: faults 1 and 2 fixed in `16667d77` and confirmed by Linux smoketest.
-> A third, unrelated fault still blocks launching from the Steam client on the
-> test machine — it is upstream of the game and was misdiagnosed as fault 1.**
-> See [Resolution](#resolution) and then
-> [Linux smoketest](#linux-smoketest-of-16667d77--fault-1-fixed-fault-3-found).
+> **Status: RESOLVED. The game launches from the Steam client on Linux.**
+> Faults 1 and 2 were real and are fixed in `16667d77`. The "third fault" chased
+> during the smoketest was not a fault at all — a Steam client process that had
+> been running since before v2.0 was first installed was holding stale launch
+> state, and restarting the client fixed it. See
+> [Linux smoketest](#linux-smoketest-of-16667d77--fault-1-fixed-fault-3-found)
+> and [Resolution of the 255](#resolution-of-the-255--a-stale-steam-client-session).
 > The findings below are preserved as written; where they describe the old code
-> they are history.
+> or the 255 hunt they are history.
 
 Environment: Pop!\_OS (kernel 7.0.11), **Flatpak** Steam (`com.valvesoftware.Steam`),
 app 3360860 on the `smoketest` branch.
@@ -431,3 +433,68 @@ Steam uses. What is unproven is this machine's Steam client, so:
    `com.valvesoftware.Steam`. Valve does not support the Flatpak package.
 3. Always read the exit code first. 133 means Chromium aborted and the sandbox is
    implicated; 255 means the game never ran and nothing in this repo is.
+
+## Resolution of the 255 — a stale Steam client session
+
+**The game launches from Steam. Nothing further is wrong with the build.**
+
+The exit-255 hunt above chased a ghost. The Steam client process had been running
+since `16:39:59`, which is *before* the first v2.0 Electron build was installed at
+`17:10`. Every failing launch — all 15, across four different builds — happened
+inside that one client session. Restarting the client fixed it with no change to
+the depot, the binaries, or the configuration:
+
+```
+launches during the 16:39:59 client session          exit code 255   (never started)
+Steam client restarted                     23:18:42
+launch during the new client session       23:24:44  exit code 0     (ran, quit cleanly)
+```
+
+The install is byte-identical across that boundary: same depot gid
+`8166826410821997012`, same `sneakbit` / `sneakbit-bin`, same Flatpak. The only
+variable was the client process itself.
+
+A plausible reading is that the app's launch configuration changed under a
+running client — the app went from the Rust binary to an Electron build, and later
+to a launcher script plus a renamed executable — and the client kept resolving the
+launch against state it had cached at startup, failing before it reached the
+runtime. That is a guess about the mechanism; what is established is the
+before/after, which is unambiguous.
+
+### What was actually tried, and what it was worth
+
+A "reinstall Steam" attempt happened just before the restart and is worth
+recording because it *cannot* be the fix and nearly caused real damage:
+
+- `steam-launch-wrapper` is not part of the Flatpak package. It lives only in
+  `~/.var/app/com.valvesoftware.Steam/data/Steam/ubuntu12_32/`, the client's
+  self-updating bootstrap, so `flatpak uninstall && install` never replaces it.
+- Removing `ubuntu12_32/` and `ubuntu12_64/` to force a re-download **broke
+  Steam**: `steam.sh` reported `Unpack runtime failed, error code 1` and the
+  client would not start. Flatpak Steam's bootstrap cannot rebuild those
+  directories from nothing. They were restored byte-for-byte from a backup taken
+  before the move, which is the only reason this was recoverable.
+
+So the sequence that "fixed" it was: stop the client, fail to reinstall, restore
+the backup, start the client. Only the stop/start mattered.
+
+### The lesson worth keeping
+
+Restart the Steam client before believing a Linux launch failure — especially
+after a build changes its launch executable, and *especially* if the client has
+been running since before the current build was installed. It is free, and here
+it was the entire fix behind several hours of instrumenting Steam's wrapper chain.
+
+Read the exit code first, and read it from `logs/gameprocess_log.txt`:
+
+| Exit code | Meaning |
+|---|---|
+| `0` | the game ran and quit normally |
+| `133` | Chromium aborted — the sandbox is implicated, this repo's problem |
+| `255` | the game never ran — Steam's launch layer; restart the client first |
+
+Faults 1 and 2 were still genuine, and the fixes for them are still required: the
+`chrome-sandbox` abort reproduces on a direct run in the Flatpak runtime, and the
+stale-depot upload really did ship a Linux artifact without the fix twice. But
+neither was what the Steam client was reporting at the time, and the exit code
+said so from the first log line.
