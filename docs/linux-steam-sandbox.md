@@ -3,13 +3,9 @@
 Investigation notes from a Linux box where SneakBit 2.0 launched fine from a shell
 but died instantly from the Steam client. Two independent faults were found.
 
-> **Status: both fixed, pending a Linux smoketest.** Fault 1 → the Linux depot now
-> launches `electron/linuxLauncher.sh`, which puts `--no-sandbox` on argv; the
-> inert `electron/linuxSandbox.js` and its test are deleted, and the binary is
-> renamed `sneakbit-bin` so the existing `sneakbit` launch option keeps working
-> with no Steamworks change. Fault 2 → `tools/steam_upload.py` now refuses to
-> upload unless all three platforms' `app.asar` hashes match. The findings below
-> are preserved as written; where they describe the old code they are history.
+> **Status: both fixed in `16667d77`, pending a Linux smoketest.** See
+> [Resolution](#resolution) at the end. The findings below are preserved as
+> written; where they describe the old code they are history.
 
 Environment: Pop!\_OS (kernel 7.0.11), **Flatpak** Steam (`com.valvesoftware.Steam`),
 app 3360860 on the `smoketest` branch.
@@ -244,3 +240,81 @@ Useful files while debugging, under
 | `logs/content_log.txt` | which depots actually committed, with build id and gid |
 | `logs/appinfo_log.txt` | when the client learned about a new build |
 | `steamapps/appmanifest_3360860.acf` | installed vs branch gids — the fault-2 smoking gun |
+
+## Resolution
+
+Both faults fixed in `16667d77`. The diagnosis above was confirmed independently
+before anything was changed — Electron's own tracker says the same thing about
+the timing ([electron#20063](https://github.com/electron/electron/issues/20063)):
+"electron/node startup code runs after it is possible to make changes to chromium
+sandbox settings."
+
+### Fault 1 — the flag moved to argv
+
+The Linux depot's launch target is now `electron/linuxLauncher.sh`, a `/bin/sh`
+wrapper that decides the policy and then `exec`s the real binary with or without
+`--no-sandbox`. `package.json` sets `linux.executableName` to `sneakbit-bin` and
+ships the script as `sneakbit` via `extraFiles`, so the existing `sneakbit` launch
+option keeps working — no Steamworks change, which matters because the same
+mistake in that field is what produced the earlier *Missing game executable* on
+macOS.
+
+The policy is unchanged: sandbox only where a stat proves the helper is setuid
+*and* root-owned, `SNEAKBIT_SANDBOX` overriding either way, `"$@"` preserving
+`%command%` arguments.
+
+`electron/linuxSandbox.js` and `tests/linuxSandbox.test.js` were **deleted**,
+which is where this diverges from the suggestion above that they stay as the
+documented policy. Two implementations of one policy is the smell the repo's
+"one feature one file" rule exists to prevent, and only one of them can ever run.
+More to the point, a module that reads as load-bearing and is provably inert is
+what cost two rounds of debugging here — its comment was cited as evidence that
+the case was handled. The policy now lives only in the shell script, which is the
+one place it can take effect. `electron/main.js` keeps a short comment saying so,
+to stop the fallback being "helpfully" reintroduced there later.
+
+### Fault 2 — an exact upload guard
+
+`tools/steam_upload.py` now runs `assert_same_build()` before writing the VDF: it
+hashes each platform's `app.asar` and refuses to upload unless all three match. A
+single `npm run dist` packs identical asars across platforms, so equality is an
+exact invariant — no mtime heuristics, no thresholds. The failure message names
+the odd folder out.
+
+The check caught a real mismatch on its first run against a clean build, though
+not the one it was written for: `files: ["electron/**"]` was packing
+`linuxLauncher.sh` *into* the Windows and macOS asars, while `extraFiles` pulled
+it out to the depot root on Linux. Legitimate-looking, and it would have made
+every future upload fail the guard. Fixed by excluding the launcher from the app
+package (`!electron/linuxLauncher.sh`) — it is a depot-root file and belongs in
+no asar.
+
+### What is and isn't verified
+
+Checked on the macOS build host: the guard passes on a clean build and fires on a
+synthetic stale folder; `dist/linux-unpacked/` contains `sneakbit` (POSIX shell
+script, 0755) beside `sneakbit-bin` (ELF); the launcher is absent from all three
+asars; the script's branching and argument passthrough were exercised against a
+stub binary; the exec bit is tracked in git as `100755` so a fresh clone ships a
+runnable launcher; 1069 unit tests pass.
+
+Not verified, and only a Linux box can: that the game actually launches from the
+Steam client. Everything above is necessary, none of it is sufficient — that was
+the lesson of the first attempt.
+
+The gap the notes identified is still open: nothing tests that the flag reaches
+Chromium. That needs launching the packaged binary and asserting it stays alive,
+which the macOS build host cannot do for a Linux target. Until then this is
+covered by the smoketest, not by CI.
+
+### Debugging the launcher itself
+
+`sh -x` traces the decision and shows the exact argv it exec'd:
+
+```sh
+sh -x ~/.local/share/Steam/steamapps/common/SneakBit/sneakbit
+```
+
+If the launcher is reached at all, that output is unambiguous — which is the
+property the old JS fallback lacked, since it could not print before the process
+died.
