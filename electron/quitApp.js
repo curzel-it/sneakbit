@@ -8,7 +8,7 @@
 // the 204 a clean landing.
 //
 // `app` comes in as an argument (rather than imported from electron) so the
-// scheduling is testable from plain node — same trick as electron/linuxSandbox.js.
+// scheduling is testable from plain node.
 
 export const QUIT_DELAY_MS = 30;
 

@@ -1,8 +1,15 @@
 # Linux / Steam: why 2.0 silently fails to launch
 
 Investigation notes from a Linux box where SneakBit 2.0 launched fine from a shell
-but died instantly from the Steam client. Two independent faults were found. Both
-are still open at the time of writing.
+but died instantly from the Steam client. Two independent faults were found.
+
+> **Status: both fixed, pending a Linux smoketest.** Fault 1 → the Linux depot now
+> launches `electron/linuxLauncher.sh`, which puts `--no-sandbox` on argv; the
+> inert `electron/linuxSandbox.js` and its test are deleted, and the binary is
+> renamed `sneakbit-bin` so the existing `sneakbit` launch option keeps working
+> with no Steamworks change. Fault 2 → `tools/steam_upload.py` now refuses to
+> upload unless all three platforms' `app.asar` hashes match. The findings below
+> are preserved as written; where they describe the old code they are history.
 
 Environment: Pop!\_OS (kernel 7.0.11), **Flatpak** Steam (`com.valvesoftware.Steam`),
 app 3360860 on the `smoketest` branch.

@@ -24,6 +24,7 @@
 #                         stays a deliberate click in the Steamworks UI.
 
 import glob
+import hashlib
 import json
 import os
 import subprocess
@@ -101,6 +102,54 @@ def find_dist_dirs():
         os.path.relpath(mac_app, DIST_FOLDER),
         os.path.relpath(linux, DIST_FOLDER),
     )
+
+
+def find_asar(platform_dir):
+    """The app.asar inside a packaged platform folder, or None."""
+    direct = os.path.join(platform_dir, "resources", "app.asar")
+    if os.path.isfile(direct):
+        return direct
+    inside_bundle = glob.glob(
+        os.path.join(platform_dir, "*.app", "Contents", "Resources", "app.asar")
+    )
+    return inside_bundle[0] if inside_bundle else None
+
+
+def assert_same_build(win_rel, mac_rel, linux_rel):
+    """Refuse to upload platform folders that came from different builds.
+
+    A single `npm run dist` packs the same files into every platform's
+    app.asar, so all three are byte-identical. They diverge only when
+    electron-builder is run for a subset of platforms over an existing dist/,
+    which leaves the other platforms' folders behind from an earlier run for
+    this script to re-upload verbatim.
+
+    That failure is invisible without this check: the upload log reports
+    success for all three depots, and Steam dedupes the unchanged content away
+    rather than shipping anything, so a fix silently never reaches players. It
+    cost two rounds of debugging a binary that did not contain the fix under
+    test (see docs/linux-steam-sandbox.md).
+    """
+    digests = {}
+    for label, rel in (("windows", win_rel), ("macOS", mac_rel), ("linux", linux_rel)):
+        asar = find_asar(os.path.join(DIST_FOLDER, rel))
+        if not asar:
+            raise FileNotFoundError(
+                "No app.asar under dist/%s. Run `npm run dist` first." % rel
+            )
+        with open(asar, "rb") as f:
+            digests[label] = hashlib.sha256(f.read()).hexdigest()
+
+    if len(set(digests.values())) > 1:
+        detail = "\n".join(
+            "  %-8s %s  (dist/%s)" % (label, digests[label][:16], rel)
+            for label, rel in (("windows", win_rel), ("macOS", mac_rel), ("linux", linux_rel))
+        )
+        raise RuntimeError(
+            "Platform folders are from different builds — their app.asar files "
+            "disagree:\n%s\nRun `npm run dist` to rebuild all three from clean."
+            % detail
+        )
 
 
 def steam_upload_script(version, win_rel, mac_rel, linux_rel):
@@ -196,6 +245,7 @@ def is_login_issue(e):
 def main():
     version = get_version()
     win_rel, mac_rel, linux_rel = find_dist_dirs()
+    assert_same_build(win_rel, mac_rel, linux_rel)
     print(f"Uploading SneakBit {version} to Steam (AppID {APP_ID})")
     print(f"  windows: dist/{win_rel}")
     print(f"  macOS:   dist/{mac_rel}")

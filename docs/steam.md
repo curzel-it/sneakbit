@@ -139,11 +139,17 @@ before a release — the test fails if they disagree, so you can't forget one.
   in the `mac` target) is the fix if an Intel report comes in; it roughly doubles the
   depot size.
 - **Linux sandbox.** Steam depots drop the setuid bit from Chromium's `chrome-sandbox`
-  helper, which on distros that also block unprivileged user namespaces (Ubuntu 24.04)
-  would stop the app launching entirely. `electron/linuxSandbox.js` detects exactly
-  that case and falls back to `--no-sandbox`, keeping the sandbox everywhere it still
-  works. If a Linux tester reports the game not opening at all, ask for the terminal
-  output — `[sandbox]` in the log means the fallback fired and something else is wrong.
+  helper. Where unprivileged user namespaces are also unavailable — Flatpak Steam
+  (the default on Bazzite, Nobara and most Fedora/KDE software centres) can't nest
+  them, and Ubuntu 24.04+ restricts them via AppArmor — Chromium finds no usable
+  sandbox and aborts during startup: no window, no error, nothing in Steam's UI.
+  The Linux depot therefore launches `electron/linuxLauncher.sh`, not the binary;
+  it puts `--no-sandbox` on argv, which is the only place Chromium reads it in
+  time. Doing this from `main.js` cannot work — that file is evaluated long after
+  the decision — so an absent `[sandbox]`-style log line proves nothing either way.
+  If a Linux tester reports the game not opening, get stderr by launching from a
+  shell, and have them try `SNEAKBIT_SANDBOX=0 %command%` in Launch Options.
+  Full investigation: `docs/linux-steam-sandbox.md`.
 - **No Steamworks API integration** — no achievements, no cloud saves, no rich
   presence. Saves are local: `localStorage` plus a mirror in the app's userData
   directory (`electron/nativeState.js`).
