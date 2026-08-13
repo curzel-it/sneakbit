@@ -3,9 +3,13 @@
 Investigation notes from a Linux box where SneakBit 2.0 launched fine from a shell
 but died instantly from the Steam client. Two independent faults were found.
 
-> **Status: both fixed in `16667d77`, pending a Linux smoketest.** See
-> [Resolution](#resolution) at the end. The findings below are preserved as
-> written; where they describe the old code they are history.
+> **Status: faults 1 and 2 fixed in `16667d77` and confirmed by Linux smoketest.
+> A third, unrelated fault still blocks launching from the Steam client on the
+> test machine — it is upstream of the game and was misdiagnosed as fault 1.**
+> See [Resolution](#resolution) and then
+> [Linux smoketest](#linux-smoketest-of-16667d77--fault-1-fixed-fault-3-found).
+> The findings below are preserved as written; where they describe the old code
+> they are history.
 
 Environment: Pop!\_OS (kernel 7.0.11), **Flatpak** Steam (`com.valvesoftware.Steam`),
 app 3360860 on the `smoketest` branch.
@@ -318,3 +322,112 @@ sh -x ~/.local/share/Steam/steamapps/common/SneakBit/sneakbit
 If the launcher is reached at all, that output is unambiguous — which is the
 property the old JS fallback lacked, since it could not print before the process
 died.
+
+## Linux smoketest of `16667d77` — fault 1 fixed, fault 3 found
+
+Run on the Pop!\_OS / Flatpak Steam box described at the top, against depot
+`3360863` gid `8166826410821997012` (build `24718798`) — the first Linux depot
+that actually changed since `24716839`, so fault 2 is confirmed fixed too: the
+artifact was genuinely rebuilt and `app.asar` grew 9137213 → 9146192 bytes.
+
+**The launcher works.** `sneakbit` is the shell script, `sneakbit-bin` the ELF,
+and the policy branches correctly:
+
+| Invocation | Result |
+|---|---|
+| `./sneakbit` inside the Flatpak runtime | runs — `sneakbit-bin --no-sandbox` plus zygotes |
+| `SNEAKBIT_SANDBOX=1 ./sneakbit` | aborts with the setuid FATAL, i.e. the override still reaches Chromium |
+
+No `chrome-sandbox` FATAL on the default path, and the game survives indefinitely
+rather than dying in under a second. Fault 1 is fixed.
+
+**The game still does not launch from the Steam client**, for an unrelated reason
+that was present all along and that the sandbox diagnosis masked.
+
+### Steam never reaches the game
+
+Steam does not exec the binary directly. `logs/gameprocess_log.txt` — not
+`console-linux.txt`, which omits it — shows the real chain:
+
+```
+steam-launch-wrapper -- reaper SteamLaunch AppId=3360860 --
+  SteamLinuxRuntime_soldier/_v2-entry-point --verb=waitforexitandrun --
+  SteamLinuxRuntime/scout-on-soldier-entry-point-v2 -- SneakBit/sneakbit
+```
+
+Every launch of this app on this machine — all 15 recorded, from 17:11 onward,
+including builds with no fix, builds with `--no-sandbox` in Launch Options, and
+this one — exits **255 within one second**. Not 133, which is what the Chromium
+abort produces.
+
+Each layer was instrumented by swapping in a logging shell wrapper:
+
+| Layer | Reached under Steam? |
+|---|---|
+| `steam-launch-wrapper` | **yes** — logs argv and full env, then exits 255 |
+| `reaper` | no |
+| `_v2-entry-point` | no |
+| `SneakBit/sneakbit` | no |
+
+So Steam's launch dies inside its own wrapper chain, **before the game file is
+touched at all**. Bypassing `steam-launch-wrapper` and exec'ing the rest directly
+changes the code to 127 (command not found) — it fails to start the next stage
+either way.
+
+### It is not the argv, the environment, or the binaries
+
+Running the byte-identical chain by hand inside the same Flatpak — same argv,
+same working directory, and Steam's own 142-variable environment captured from a
+failing launch and replayed — the game **starts and runs**:
+
+```
+REPLAY_EXIT=124        # 124 = still alive when `timeout 10` killed it
+```
+
+Individually ruled out along the way:
+
+- **`LD_LIBRARY_PATH` pollution.** Steam appends the game install directory, and
+  Electron ships `libEGL.so`, `libGLESv2.so`, `libvulkan.so.1`, `libffmpeg.so`
+  there — a real difference from the Rust build, whose directory had no shared
+  objects. Plausible, and wrong: replaying with that path set still works.
+- **The overlay preload.** `reaper` runs fine with and without Steam's
+  `gameoverlayrenderer.so` on `LD_PRELOAD`; the `ELFCLASS32` warnings in the logs
+  are ignorable and appear on working runs too.
+- **A forced compatibility tool.** `config.vdf`'s `CompatToolMapping` is empty.
+- **A stale depot.** Installed gid matches the branch gid exactly.
+
+The only variable left is Steam being the parent process. That is not something
+the game can influence, and it is consistent with the Rust build having worked
+here: the difference is not in the payload, since the payload is never run.
+
+### Correction to the earlier notes
+
+The original write-up said the game "launches natively — there is no
+pressure-vessel wrapper in `console-linux.txt`" and used that to argue the
+blocked namespaces came from Flatpak rather than Steam's runtime. The first half
+is wrong: `console-linux.txt` simply does not log the wrapper chain, and
+`gameprocess_log.txt` shows the app has always run under the Steam Linux Runtime
+(scout-on-soldier). The Flatpak conclusion still holds for the sandbox itself —
+`unshare --user` fails inside the runtime — but the claim about how Steam invokes
+the game was drawn from the wrong log.
+
+More importantly: **the `chrome-sandbox` fault never explained the Steam
+symptom.** It is real, it is reproducible by running the binary directly, and the
+fix is correct and now verified — but Steam never got far enough to hit it. The
+two faults produced the same user-visible symptom (no window, no error, ~1s) and
+the first one found was assumed to be the cause. The exit code was the tell and
+it was sitting in `gameprocess_log.txt` the whole time: 255, never 133.
+
+### Where to take it next
+
+The build is good — verified running under the exact runtime and environment
+Steam uses. What is unproven is this machine's Steam client, so:
+
+1. **Smoketest elsewhere** — native (non-Flatpak) Steam, or another Linux box.
+   That distinguishes "the depot is broken" from "this install is broken", and
+   nothing so far points at the depot.
+2. On this box, worth trying: `flatpak update`, checking the Flatpak version is
+   ≥ 1.12 (pressure-vessel's documented minimum), and reinstalling
+   `com.valvesoftware.Steam`. Valve does not support the Flatpak package.
+3. Always read the exit code first. 133 means Chromium aborted and the sandbox is
+   implicated; 255 means the game never ran and nothing in this repo is.
