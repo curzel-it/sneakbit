@@ -310,6 +310,16 @@ function flush() {
   if (isSignedIn()) pushIfDirty({ keepalive: true }).catch(() => {});
 }
 
+// The awaitable counterpart to flush(), for the pause menu's "Exit game"
+// (js/exitGame.js). Quitting the desktop app kills the process outright, and
+// keepalive can't outlive that the way it outlives a page teardown — so there
+// we wait for the PUT instead of betting on it. Best-effort: signed out,
+// offline or mid-sync all resolve without a push.
+export async function flushCloudSave() {
+  if (bootRestorePending() || !isSignedIn()) return;
+  try { await pushIfDirty(); } catch { /* the next boot reconciles */ }
+}
+
 function adoptCloudMeta(cloud, localHash) {
   writeMeta({ rev: cloud.rev, updatedAt: cloud.updatedAt, lastHash: localHash, localUpdatedAt: cloud.updatedAt });
   prevHash = localHash;

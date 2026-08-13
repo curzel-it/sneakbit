@@ -31,6 +31,7 @@ import { isFastTravelOpen } from "./fastTravel.js";
 import { isMessageOpen } from "./message.js";
 import { isDialogueOpen } from "./dialogue.js";
 import { showConfirm, isConfirmOpen } from "./confirmDialog.js";
+import { canExitGame, exitGame } from "./exitGame.js";
 import { getRuntimeRole, onRoleChange } from "./onlineMode.js";
 import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js";
 import { setTouchControlStyle } from "./touch.js";
@@ -86,6 +87,7 @@ export function installMenu(stateGetter) {
         <button id="menu-open-creative" data-creative-only>Creative tools…</button>
         <button id="menu-open-credits">Credits</button>
         <button id="menu-new-game" data-guest-hidden>New game (wipe save)</button>
+        <button id="menu-exit-game">Exit game</button>
       </div>
       <p class="menu-hint" id="menu-pause-hint"></p>
       <p class="menu-version">v${APP_VERSION}</p>
@@ -446,6 +448,32 @@ function bindWidgets() {
     // reload back into the same zone at the same tile.
     location.replace(location.pathname);
   });
+  // Quitting the app is only the player's job on the desktop build — see
+  // js/exitGame.js. Everywhere else (web, iOS, Android) the button would be a
+  // dead end, so it isn't there at all. The shell is known by the time the
+  // menu is installed (main.js awaits initNativeBridge first) and can't change
+  // afterwards, so this is decided once.
+  const exitBtn = root.querySelector("#menu-exit-game");
+  if (!canExitGame()) {
+    exitBtn.style.display = "none";
+  } else {
+    exitBtn.addEventListener("click", async () => {
+      const ok = await showConfirm({
+        title: "Exit SneakBit?",
+        text: "Your progress is saved automatically.",
+        confirmLabel: "Exit",
+        cancelLabel: "Cancel",
+        danger: true,
+      });
+      if (!ok) return;
+      exitBtn.disabled = true;
+      // Leaves the menu up on the way out: the window is about to disappear,
+      // and if the shell somehow doesn't take the request the player is still
+      // looking at a working menu rather than a frozen game.
+      const quitting = await exitGame();
+      if (!quitting) exitBtn.disabled = false;
+    });
+  }
   // Carries a save over from the pre-rewrite (Rust) builds — the desktop /
   // iOS / Android save.json. The native shells import it automatically at boot;
   // this is the manual route for the web and for a save moved by hand. Owned by

@@ -19,9 +19,19 @@
 // WKURLSchemeHandler tasks, and Android's WebResourceRequest carries no body at
 // all, so only Electron can answer a POST. Each shell uses what it has and
 // writeMirror() hides the difference.
+//
+// Quit channel — Electron only:
+//
+//   POST /__native/quit -> 204, then the app goes down
+//
+// It's the one shell command the game sends, and it exists because the desktop
+// build is the only one where "leave the game" is the player's job: a browser
+// tab can't close itself and both mobile OSes treat a self-terminating app as
+// a crash. See js/exitGame.js.
 
 const STATE_URL = "/__native/state.json";
 const MIRROR_URL = "/__native/mirror";
+const QUIT_URL = "/__native/quit";
 
 const PLATFORMS = new Set(["ios", "android", "electron"]);
 
@@ -32,6 +42,11 @@ const BOOT_FETCH_TIMEOUT_MS = 2000;
 // Bounds the one mirror write anybody waits on (clearMirror, before New game
 // navigates away). The others are fire-and-forget and never reach it.
 const MIRROR_WRITE_TIMEOUT_MS = 3000;
+
+// The quit request answers off a local protocol handler and the app follows it
+// down, so this only ever fires when the shell is wedged — at which point the
+// menu has to come back to life rather than hang on "Exit game".
+const QUIT_REQUEST_TIMEOUT_MS = 3000;
 
 // Remembers a *definitive* "no shell here" so the web pays for the discovery
 // once per browser rather than once per page load. Safe to cache forever: an
@@ -168,6 +183,24 @@ export async function writeMirror(text, { keepalive = false } = {}) {
     return res.ok;
   } catch (e) {
     console.error("[nativeBridge] mirror write failed", e);
+    return false;
+  }
+}
+
+// Ask the shell to close the app. Electron only — the mobile shells have no
+// business quitting themselves, and on the web there's nothing to ask.
+// Resolves true once the shell has accepted; the window usually disappears a
+// beat later, so callers should treat this as the last thing they do.
+export async function requestShellQuit() {
+  if (state?.platform !== "electron") return false;
+  try {
+    const res = await fetch(QUIT_URL, {
+      method: "POST",
+      signal: AbortSignal.timeout(QUIT_REQUEST_TIMEOUT_MS),
+    });
+    return res.ok;
+  } catch (e) {
+    console.error("[nativeBridge] quit request failed", e);
     return false;
   }
 }

@@ -22,7 +22,7 @@ globalThis.fetch = async (...args) => { fetches++; return respond(...args); };
 globalThis.location = { protocol: "https:", host: "sneakbit.curzel.it" };
 const MEMO_KEY = "sneakbit.nativeShell.v1";
 
-const { parseNativeState, initNativeBridge, isNativeShell, _resetNativeBridgeForTesting } =
+const { parseNativeState, initNativeBridge, isNativeShell, requestShellQuit, _resetNativeBridgeForTesting } =
   await import("../js/nativeBridge.js");
 
 const FULL = {
@@ -136,6 +136,40 @@ test("a timeout is never remembered as 'no shell here'", async () => {
   await initNativeBridge();
   assert.equal(isNativeShell(), false);
   assert.equal(store.get(MEMO_KEY), undefined, "the next boot must try again");
+});
+
+// — the quit channel ————————————————————————————————————————————————————————
+
+test("only the desktop shell is ever asked to quit", async () => {
+  // The mobile shells have no business terminating themselves, and on the web
+  // there's nothing on the other end of the request.
+  for (const platform of ["ios", "android"]) {
+    reset();
+    _resetNativeBridgeForTesting({ platform, mirror: null, legacy: null });
+    assert.equal(await requestShellQuit(), false);
+    assert.equal(fetches, 0, `${platform} must not send the request`);
+  }
+  reset();
+  assert.equal(await requestShellQuit(), false, "the web has no shell to ask");
+  assert.equal(fetches, 0);
+});
+
+test("the desktop shell gets a POST and answers for it", async () => {
+  reset();
+  _resetNativeBridgeForTesting({ platform: "electron", mirror: null, legacy: null });
+  let seen = null;
+  respond = (url, init) => { seen = { url, method: init?.method }; return { ok: true, status: 204 }; };
+  assert.equal(await requestShellQuit(), true);
+  assert.deepEqual(seen, { url: "/__native/quit", method: "POST" });
+});
+
+test("a shell that doesn't answer reports back rather than hanging", async () => {
+  // The caller re-enables the menu button on false — pretending the app is
+  // closing would leave the player looking at a dead menu.
+  reset();
+  _resetNativeBridgeForTesting({ platform: "electron", mirror: null, legacy: null });
+  respond = () => { throw new Error("TimeoutError"); };
+  assert.equal(await requestShellQuit(), false);
 });
 
 test("a verdict from the web doesn't follow a save backup into a shell", async () => {

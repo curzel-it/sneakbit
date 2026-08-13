@@ -6,6 +6,8 @@
 //   GET  /__native/state.json  the envelope the caller supplied
 //   POST /__native/mirror      recorded, so a test can assert what the game
 //                              wrote back
+//   POST /__native/quit        counted — the real desktop shell answers this
+//                              and then dies, which a test server can't do
 //
 // In-process rather than spawned: the test needs to change the envelope
 // between page loads and read the mirror writes back out.
@@ -33,6 +35,7 @@ const TYPES = {
 
 export async function startFakeShell({ envelope = null } = {}) {
   const mirrorWrites = [];
+  const quits = [];
   let current = envelope;
 
   const server = createServer((req, res) => {
@@ -48,6 +51,13 @@ export async function startFakeShell({ envelope = null } = {}) {
       let body = "";
       req.on("data", (c) => { body += c; });
       req.on("end", () => { mirrorWrites.push(body); res.statusCode = 204; res.end(); });
+      return;
+    }
+    if (path === "/__native/quit" && req.method === "POST") {
+      // Order matters to the caller (the save has to be flushed before the
+      // app goes down), so record when this arrived relative to the writes.
+      quits.push({ mirrorWritesBefore: mirrorWrites.length });
+      res.statusCode = 204; res.end();
       return;
     }
 
@@ -71,6 +81,7 @@ export async function startFakeShell({ envelope = null } = {}) {
   return {
     appUrl: `http://127.0.0.1:${port}`,
     mirrorWrites,
+    quits,
     setEnvelope(next) { current = next; },
     stop() { server.close(); },
   };

@@ -100,6 +100,14 @@ function flush({ keepalive = false } = {}) {
   return write({ keepalive });
 }
 
+// Write the mirror now instead of on the debounce. Resolves once the shell has
+// the bytes, which is what the pause menu's "Exit game" waits on: there the
+// process is about to go away, so the usual keepalive-on-unload bet isn't one
+// worth taking. Resolves false when there was nothing new to write.
+export function flushMirror() {
+  return flush();
+}
+
 export function installSaveMirror() {
   if (installed || !isNativeShell()) return;
   installed = true;
@@ -113,7 +121,7 @@ export function installSaveMirror() {
     window.addEventListener("pagehide", () => flush({ keepalive: true }));
     window.addEventListener("beforeunload", () => flush({ keepalive: true }));
     // Debug / e2e hook, mirroring window.save and window.cloudSave.
-    window.saveMirror = { flush: () => flush(), clear: () => clearMirror() };
+    window.saveMirror = { flush: flushMirror, clear: () => clearMirror() };
   }
 }
 

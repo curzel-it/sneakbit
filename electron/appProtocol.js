@@ -12,6 +12,7 @@ import { readFile } from "node:fs/promises";
 import { join, normalize, sep, extname } from "node:path";
 import { app } from "electron";
 import { buildNativeState, writeMirrorFile } from "./nativeState.js";
+import { scheduleQuit } from "./quitApp.js";
 
 // Extension → MIME. ES modules and JSON must carry the right Content-Type or
 // the browser refuses to execute / parse them; the rest keep asset loads sane.
@@ -69,8 +70,9 @@ function siteRoot() {
 }
 
 // Reserved namespace that isn't part of the bundled site: the save bridge the
-// renderer talks to (js/nativeBridge.js). Routed before the file lookup, so
-// nothing under _site/ can shadow it.
+// renderer talks to (js/nativeBridge.js), plus the quit request behind the
+// pause menu's "Exit game". Routed before the file lookup, so nothing under
+// _site/ can shadow it.
 //
 // The POST is why this lives on the protocol handler rather than an IPC
 // channel: protocol.handle() hands us the request body, so the renderer keeps
@@ -90,6 +92,12 @@ async function handleNativeRequest(request, pathname) {
   if (pathname === "/__native/mirror" && request.method === "POST") {
     const ok = await writeMirrorFile(await request.text());
     return new Response(null, { status: ok ? 204 : 400 });
+  }
+  if (pathname === "/__native/quit" && request.method === "POST") {
+    // The renderer has already flushed its saves and had the player confirm
+    // (js/exitGame.js) — all that's left is to go down.
+    scheduleQuit(app);
+    return new Response(null, { status: 204 });
   }
   return new Response("Not found", { status: 404 });
 }
