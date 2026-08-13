@@ -308,6 +308,11 @@ Not verified, and only a Linux box can: that the game actually launches from the
 Steam client. Everything above is necessary, none of it is sufficient — that was
 the lesson of the first attempt.
 
+> Since resolved, and the caveat turned out to be the important part. The
+> smoketest below confirmed the launcher works and that fault 2 was really fixed
+> — and then found that the Steam client had never been reaching the game at all.
+> Necessary, not sufficient, twice over.
+
 The gap the notes identified is still open: nothing tests that the flag reaches
 Chromium. That needs launching the packaged binary and asserting it stays alive,
 which the macOS build host cannot do for a Linux target. Until then this is

@@ -147,9 +147,24 @@ before a release — the test fails if they disagree, so you can't forget one.
   it puts `--no-sandbox` on argv, which is the only place Chromium reads it in
   time. Doing this from `main.js` cannot work — that file is evaluated long after
   the decision — so an absent `[sandbox]`-style log line proves nothing either way.
-  If a Linux tester reports the game not opening, get stderr by launching from a
-  shell, and have them try `SNEAKBIT_SANDBOX=0 %command%` in Launch Options.
   Full investigation: `docs/linux-steam-sandbox.md`.
+
+  **Triage a Linux "it doesn't launch" report by exit code first**, from
+  `logs/gameprocess_log.txt` (not `console-linux.txt`, which omits the wrapper
+  chain). Several hours went into instrumenting Steam's launcher before anyone
+  read it:
+
+  | Exit code | Meaning |
+  |---|---|
+  | `0` | the game ran and quit normally |
+  | `133` | Chromium aborted — the sandbox is implicated, our problem; get stderr from a shell launch and try `SNEAKBIT_SANDBOX=0 %command%` |
+  | `255` | the game never ran — Steam's own launch layer, nothing in this repo |
+
+  For `255`, **restart the Steam client before believing anything else**. A client
+  session that predates the installed build can hold stale launch state and fail
+  before reaching the game — especially after a build changes its launch
+  executable, which ours did twice (Rust binary → Electron, then → launcher
+  script + renamed binary). It is free and it was the entire fix once already.
 - **No Steamworks API integration** — no achievements, no cloud saves, no rich
   presence. Saves are local: `localStorage` plus a mirror in the app's userData
   directory (`electron/nativeState.js`).
