@@ -79,10 +79,18 @@
         text-shadow: 0 1px 0 #000;
       }
       .hud-row { white-space: nowrap; }
-      /* On touch there's no keyboard, so the "WASD / arrows · Esc" hint is
-         noise — and it sits right where the mobile HUD panels stack, bleeding
-         through them. Drop the whole overlay on touch. */
-      body.touch-mode #hud { display: none; }
+      /* On touch the coordinate row is developer noise, and it sits right
+         where the mobile HUD panels stack, bleeding through them — so it
+         goes. The meta row stays: it carries the fps readout (hud.js trims
+         it to just the number on touch), which is the only way to tell a
+         frame-rate problem from input latency on a device. Park it in the
+         bottom-left, clear of the top bar and the action buttons. */
+      body.touch-mode #hud {
+        top: auto;
+        bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+        left: calc(12px + env(safe-area-inset-left, 0px));
+      }
+      body.touch-mode #hud-controls { display: none; }
     </style>
   </head>
   <body>
