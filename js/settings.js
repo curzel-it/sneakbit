@@ -11,8 +11,12 @@ const KEY = "sneakbit.settings.v1";
 export const SUPPORTED_LANGUAGES = ["en", "it"];
 
 const DEFAULTS = {
-  sfxVolume: 0.6,
-  musicVolume: 0.45,
+  // The old (Rust) builds had no volume sliders at all — only on/off toggles —
+  // so an update that migrates their settings has no level to port and lands
+  // here (legacySave.js only patches a volume in to say "this channel was
+  // off"). These are the levels a fresh install starts at too.
+  sfxVolume: 0.65,
+  musicVolume: 0.4,
   // UI / content language. "auto" follows navigator.language; otherwise one
   // of SUPPORTED_LANGUAGES. Changing it requires a reload (the string table
   // is fetched once at startup) — the settings panel handles that.

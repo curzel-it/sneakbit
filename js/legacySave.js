@@ -226,7 +226,9 @@ export function legacySettingsPatch(save, audio) {
   if (Number.isFinite(lang) && LEGACY_LANGUAGES[lang]) patch.language = LEGACY_LANGUAGES[lang];
 
   // Absent means enabled — the old build defaulted both to on and only wrote a
-  // key once the player toggled it off.
+  // key once the player toggled it off. There is no *level* to port: the old
+  // build had toggles, not sliders, so an enabled channel is left out of the
+  // patch and lands on this build's default (settings.js DEFAULTS).
   const sfxEnabled = audio ? audio.sfx : Number(raw[LEGACY_SFX_DISABLED] ?? 0) === 0;
   const musicEnabled = audio ? audio.music : Number(raw[LEGACY_MUSIC_DISABLED] ?? 0) === 0;
   if (!sfxEnabled) patch.sfxVolume = 0;
