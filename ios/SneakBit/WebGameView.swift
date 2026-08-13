@@ -98,7 +98,11 @@ struct WebGameView: UIViewRepresentable {
 
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = context.coordinator
-        webView.isOpaque = false
+        // Opaque on purpose: the game paints every pixel and the background
+        // below is black anyway, so there's nothing to blend against. Leaving
+        // it transparent makes the compositor blend the whole web view every
+        // frame for no benefit — pure cost on a game that redraws constantly.
+        webView.isOpaque = true
         webView.backgroundColor = .black
         webView.scrollView.backgroundColor = .black
 
