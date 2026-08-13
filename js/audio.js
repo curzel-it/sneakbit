@@ -27,8 +27,9 @@ const SOURCES = {
 // Per-sound default volume, matching volume_for_sound_effect in the original.
 const VOLUMES = {
   // Except footsteps: the original desktop build played these at 0.1 and they
-  // sit too loud here (the mobile builds went all the way down to 0.01).
-  stepTaken: 0.075,
+  // sit far too loud here. The Rust mobile builds ran the same effect at 0.01,
+  // which is the direction this is headed.
+  stepTaken: 0.03,
   knifeThrown: 0.3,
   gunShot: 0.8,
   loudGunShot: 1.0,
