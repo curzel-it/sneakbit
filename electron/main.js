@@ -7,10 +7,18 @@
 
 import { app, BrowserWindow, Menu, protocol } from "electron";
 import { handleAppRequest } from "./appProtocol.js";
+import { applyLinuxSandboxFallback } from "./linuxSandbox.js";
 
 // The game shell is the site root. Load the shell file directly; its
 // <base href="/"> keeps asset/data loads resolving to the app:// root.
 const APP_URL = "app://sneakbit.curzel.it/index.html";
+
+// Also before app is ready: a Steam install strips the setuid bit off
+// Chromium's sandbox helper, which on some distros leaves no usable sandbox
+// and stops the app from launching at all (see electron/linuxSandbox.js).
+if (applyLinuxSandboxFallback(app.commandLine)) {
+  console.warn("[sandbox] no usable Chromium sandbox on this system — running with --no-sandbox");
+}
 
 // Must run before app is ready. `standard` makes Chromium parse the host (so
 // location.hostname === "sneakbit.curzel.it"); `secure` lets it run in a
