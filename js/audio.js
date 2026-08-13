@@ -26,7 +26,9 @@ const SOURCES = {
 
 // Per-sound default volume, matching volume_for_sound_effect in the original.
 const VOLUMES = {
-  stepTaken: 0.1,
+  // Except footsteps: the original desktop build played these at 0.1 and they
+  // sit too loud here (the mobile builds went all the way down to 0.01).
+  stepTaken: 0.075,
   knifeThrown: 0.3,
   gunShot: 0.8,
   loudGunShot: 1.0,
@@ -38,7 +40,7 @@ const DEFAULT_VOLUME = 0.8;
 
 const buffers = new Map();
 let muted = false;
-let sfxVolume = 0.6;
+let sfxVolume = 0.65;
 
 export function loadAudio() {
   for (const [name, src] of Object.entries(SOURCES)) {
