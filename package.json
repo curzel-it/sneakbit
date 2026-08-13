@@ -22,7 +22,7 @@
     "serve": "node tools/serve.mjs",
     "dev": "node tools/serve.mjs",
     "electron": "npm run build && electron .",
-    "dist": "npm run build && electron-builder --mac --win --linux --x64",
+    "dist": "rm -rf dist && npm run build && electron-builder --mac --win --linux",
     "steam": "python3 tools/steam_upload.py"
   },
   "build": {
@@ -38,14 +38,15 @@
     ],
     "asar": true,
     "mac": {
-      "target": "dir",
-      "category": "public.app-category.games"
+      "target": [{ "target": "dir", "arch": ["arm64"] }],
+      "category": "public.app-category.games",
+      "identity": "-"
     },
     "win": {
-      "target": "dir"
+      "target": [{ "target": "dir", "arch": ["x64"] }]
     },
     "linux": {
-      "target": "dir",
+      "target": [{ "target": "dir", "arch": ["x64"] }],
       "category": "Game"
     }
   },

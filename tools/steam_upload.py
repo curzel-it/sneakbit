@@ -62,14 +62,23 @@ def find_dist_dirs():
     win = os.path.join(DIST_FOLDER, "win-unpacked")
     linux = os.path.join(DIST_FOLDER, "linux-unpacked")
 
-    # mac dir is arch-suffixed (mac, mac-arm64, mac-universal). Find the one
-    # that holds the .app bundle.
-    mac_app = None
-    for candidate in sorted(glob.glob(os.path.join(DIST_FOLDER, "mac*"))):
-        apps = glob.glob(os.path.join(candidate, "*.app"))
-        if apps:
-            mac_app = candidate  # the dir containing the .app
-            break
+    # mac dir is arch-suffixed (mac, mac-arm64, mac-universal). Take the most
+    # recently built one: switching arch leaves the previous arch's folder
+    # sitting in dist/, and picking it would silently ship a stale build.
+    mac_candidates = [
+        d
+        for d in glob.glob(os.path.join(DIST_FOLDER, "mac*"))
+        if os.path.isdir(d) and glob.glob(os.path.join(d, "*.app"))
+    ]
+    mac_candidates.sort(key=os.path.getmtime, reverse=True)
+    mac_app = mac_candidates[0] if mac_candidates else None
+    if len(mac_candidates) > 1:
+        others = ", ".join(os.path.basename(d) for d in mac_candidates[1:])
+        print(
+            "Warning: several mac build folders in dist/. Using the newest "
+            "(%s), ignoring: %s. Run `npm run dist` to rebuild from clean."
+            % (os.path.basename(mac_app), others)
+        )
 
     missing = []
     if not os.path.isdir(win):
