@@ -88,6 +88,20 @@ None of this is in the repo — it's partner-site configuration:
 3. **Set the build live** on the beta branch, then verify by installing through the
    Steam client rather than trusting the upload log.
 
+### First install from the branch — check the macOS bundle
+
+Do this once per macOS depot change, on the copy Steam installed (not `dist/`):
+
+```bash
+codesign --verify --deep --strict "~/Library/Application Support/Steam/steamapps/common/SneakBit/SneakBit.app"
+```
+
+The `.app` contains 14 symlinks — the `Versions/Current` and top-level aliases inside
+`Electron Framework.framework` and friends. If SteamPipe ever delivers those as copies
+instead of links, the bundle's seal no longer matches and Apple Silicon refuses to
+launch it, since arm64 requires a valid signature. The command above catches that in
+one line; a launch failure with no console output is the same symptom seen the hard way.
+
 ## Version numbers
 
 One string, two places, kept in sync by `tests/appVersion.test.js`:
