@@ -15,6 +15,7 @@ import { applyPlayerContinuousDamage, applyPlayerDamage, isPlayerDead } from "./
 import { hasPiercingKnifeSkill, hasBoomerangSkill, hasBulletCatcherSkill } from "./skills.js";
 import { addAmmo } from "./inventory.js";
 import { isExplosive } from "./explosives.js";
+import { isMonsterSpecies } from "./monsters.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { getSettings } from "./settings.js";
 import { startDeathAnimation, tickDeathAnimations } from "./deathAnimation.js";
@@ -68,10 +69,18 @@ function tickDamageIndicators(zone, dt) {
   }
 }
 
-// Spawned at the target's hittable frame — for a 1×2 monster or barrel that
-// is the inset bottom-tile box, so the 1×1 indicator sprite (sheet 1012)
-// renders as a single spark over the foot of the target. Mirrors Rust
+// Spawned at the target's hittable frame — for a 1×2 monster that is the
+// inset bottom-tile box, so the 1×1 indicator sprite (sheet 1012) renders as
+// a single spark over the foot of the target. Mirrors Rust
 // hits_handling_use_case.rs: `damage_indicator.frame = target.hittable_frame()`.
+//
+// Monsters only, matching that same use case's
+// `!did_kill && is_monster(target.species_id)`. Barrels are the reason the
+// gate matters: they're the one non-monster bullets can damage, they come in
+// roomfuls, and the JS damage model is continuous (dps × dt while
+// overlapping) rather than Rust's discrete hit events — so an ungated barrel
+// spawned one indicator per bullet per frame. A melee cross in a packed room
+// measured ~156 spawns over four seconds, all stacked on the same tiles.
 function spawnDamageIndicator(zone, hittable, parentId) {
   zone.entities.push({
     id: nextIndicatorId--,
@@ -183,7 +192,7 @@ function resolveBullets(zone, players, dt) {
         // different odds.
         maybeDropLoot(zone, t, b._playerIndex | 0);
         consumed = true;
-      } else {
+      } else if (isMonsterSpecies(t.species_id)) {
         spawnDamageIndicator(zone, entityHittable(t, tsp), b.parent_id ?? b.id);
       }
     }

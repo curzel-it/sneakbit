@@ -156,6 +156,40 @@ test("point-blank kunai passes through a barrel over many small frames and kills
   assert.ok(killed, "barrel destroyed by a single point-blank pass");
 });
 
+test("a non-fatal hit spawns a damage indicator for a monster but not for a barrel", () => {
+  // Rust hits_handling_use_case.rs gates the indicator on
+  // `!did_kill && is_monster(target.species_id)`. The JS damage model is
+  // continuous (dps × dt every overlapping frame) rather than Rust's discrete
+  // hit events, so an ungated barrel spawned one indicator per bullet per
+  // frame — a melee cross in a barrel-packed room piled up scores of them.
+  const dt = 1 / 60; // dps 1800 × dt = 30 damage: non-fatal against either
+  const indicators = (zone) => zone.entities.filter((e) => e._damageIndicator).length;
+
+  const monsterZone = makeZone();
+  const monster = {
+    species_id: 4004, frame: { x: 5, y: 5, w: 1, h: 2 }, direction: "Down",
+  };
+  monsterZone.entities.push(monster, {
+    species_id: 7000, _spawned: true, _vx: 0, _vy: 0, _lifespan: 1.0,
+    frame: { x: 5, y: 6, w: 1, h: 1 }, direction: "Right",
+  });
+  combat.tickCombat(monsterZone, { x: 1, y: 1, tileX: 1, tileY: 1 }, dt);
+  assert.ok(!monster._dying, "monster survives the tick");
+  assert.equal(indicators(monsterZone), 1, "monster hit shows a damage indicator");
+
+  const barrelZone = makeZone();
+  const barrel = {
+    species_id: 1038, frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Down",
+  };
+  barrelZone.entities.push(barrel, {
+    species_id: 7000, _spawned: true, _vx: 0, _vy: 0, _lifespan: 1.0,
+    frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Right",
+  });
+  combat.tickCombat(barrelZone, { x: 1, y: 1, tileX: 1, tileY: 1 }, dt);
+  assert.ok(!barrel._dying, "barrel survives the tick");
+  assert.equal(indicators(barrelZone), 0, "barrel hit shows no damage indicator");
+});
+
 test("bullet hitting a wall is consumed without applying damage", () => {
   const zone = makeZone();
   zone.construction[5][5] = CONSTRUCTION.STONE_WALL; // solid wall at (5,5)
