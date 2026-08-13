@@ -41,6 +41,21 @@ let composed = null;
 
 const CACHE_KEY = "sneakbit.biomeSheet.v2";
 
+// The composed sheet is only ever a *source*: zoneCache.js samples 16×16 tiles
+// out of it to bake chunks, and nothing ever composites it to the screen. Keep
+// it in CPU memory rather than as a GPU texture.
+//
+// Left GPU-backed, this canvas is 4096×1088 — right at the GL texture limit —
+// and Android WebView charges a full source readback per chunk flush. Measured
+// on a Moto G14 (Mali-G57): baking one chunk from this sheet costs 3694 ms
+// GPU-backed vs 2 ms with willReadFrequently, and the cost scaled with source
+// area (2048 wide → 2056 ms, 1024 wide → 1193 ms), which is what a whole-texture
+// readback looks like. Boot draws ~15 chunks, so that was ~27 s of blocked main
+// thread before the first frame — the game came up frozen, ate no touch input,
+// and then ran in slow motion because gameLoop.js clamps dt. ImageBitmap does
+// not help (3692 ms); the backing store is what matters.
+const SHEET_CTX_OPTS = { willReadFrequently: true };
+
 // Each animation frame is a 5-column block (base + 4 rotation sources) packed
 // horizontally in the raw sheet, so frame f starts at column f·FRAME_COLS.
 const FRAME_COLS = 5;
@@ -61,7 +76,7 @@ export async function composeBiomeSheet() {
   const canvas = document.createElement("canvas");
   canvas.width = cols * TILE_SIZE;
   canvas.height = rows * TILE_SIZE;
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d", SHEET_CTX_OPTS);
   ctx.imageSmoothingEnabled = false;
 
   for (let f = 0; f < NUM_BIOME_FRAMES; f++) {
@@ -109,7 +124,7 @@ function tryReadCache() {
       const canvas = document.createElement("canvas");
       canvas.width = img.naturalWidth;
       canvas.height = img.naturalHeight;
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext("2d", SHEET_CTX_OPTS);
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(img, 0, 0);
       resolve(canvas);
