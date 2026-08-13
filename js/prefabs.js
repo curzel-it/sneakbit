@@ -57,19 +57,17 @@ const SHOP_IDS        = new Set(buildingRow(3));
 // 7001 kunai x10, 1176 .223 x10, 1173 .223 x100, 1177 cannonball x10,
 // 1164 sword, 1172 shield, 1162 AR-15, 1168 cannon.
 const DEFAULT_SHOP_STOCK = [
-  { item: 2020, price: 15, stackable: true }, // health potion (+50 HP)
-  { item: 2021, price: 30, stackable: true }, // purple potion (full heal)
-  { item: 2024, price: 25, stackable: true }, // yellow potion (giant form)
-  { item: 2026, price: 25, stackable: true }, // silver potion (3x speed, 15s)
-  { item: 2025, price: 25, stackable: true }, // ice potion (freeze enemies, 10s)
-  { item: 7001, price: 5, stackable: true },
+  // Health potion is the only consumable on the shelf — the purple/yellow/
+  // silver/ice potions still exist (consumables.js), they're loot-only.
+  { item: 2020, price: 30, stackable: true }, // health potion (+50 HP)
+  { item: 7001, price: 25, stackable: true },
   { item: 1176, price: 15, stackable: true },
   { item: 1173, price: 125, stackable: true },
   { item: 1177, price: 200, stackable: true },
-  { item: 1164, price: 50 },
-  { item: 1172, price: 75 },
+  { item: 1164, price: 100 },
+  { item: 1172, price: 125 },
   { item: 1162, price: 225 },
-  { item: 1168, price: 500 },
+  { item: 1168, price: 350 },
   // Armour, priced against each piece's received_damage_reduction: iron is
   // the mid-game set, dark the late-game one.
   { item: 1194, price: 60 },
@@ -79,12 +77,12 @@ const DEFAULT_SHOP_STOCK = [
   { item: 1215, price: 275 },
   { item: 1216, price: 150 },
   // Cosmetic skins (skins.js) — one-of-a-kind, equipped from the inventory Skin
-  // slot. Flat 500 coins each: a long-game goal, not a rarity ladder.
-  { skin: "outfit_red", price: 500 },
-  { skin: "outfit_yellow", price: 500 },
-  { skin: "outfit_blue", price: 500 },
-  { skin: "tracksuit_black", price: 500 },
-  { skin: "ninja_black", price: 500 },
+  // slot. Flat 199 coins each: a mid-game treat, not a rarity ladder.
+  { skin: "outfit_red", price: 199 },
+  { skin: "outfit_yellow", price: 199 },
+  { skin: "outfit_blue", price: 199 },
+  { skin: "tracksuit_black", price: 199 },
+  { skin: "ninja_black", price: 199 },
   // The Knockback Aura skill (skills.js) is deliberately NOT stocked: it's a
   // playtest toy, not a shipped purchase.
 ];

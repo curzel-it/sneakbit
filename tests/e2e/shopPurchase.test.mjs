@@ -21,7 +21,7 @@ const SHOP_ZONE = 12900001;
 const CLERK_ID = 12900010;
 const KUNAI_BUNDLE = 7001; // expands to 10× kunai (7000)
 const KUNAI = 7000;
-const BUNDLE_PRICE = 5;
+const BUNDLE_PRICE = 25;
 
 test("shop: opens the shipped clerk stock and a kunai purchase moves coins → inventory", async (t) => {
   if (!skipIfNoChrome(t)) return;
@@ -71,7 +71,7 @@ test("shop: opens the shipped clerk stock and a kunai purchase moves coins → i
   // — Drive the real DOM: open the kunai row, then click Buy ————————————————
   await evalExpr(s, `document.querySelector('#shop .shop-row[data-i="${kunaiIdx}"]').click()`);
   await waitFor(s, `(() => !!document.querySelector('#shop .shop-buy'))()`);
-  // Default quantity for a 10-coin bundle on the starting purse is 1 → +10 kunai.
+  // Quantity always opens at 1, whatever the starting purse affords → +10 kunai.
   const qty = await evalExpr(s, "Number(document.querySelector('#shop .shop-qty-val').textContent)");
   assert.equal(qty, 1, "quantity defaults to 1");
   await evalExpr(s, `document.querySelector('#shop .shop-buy').click()`);

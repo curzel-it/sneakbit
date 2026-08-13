@@ -193,32 +193,12 @@
       "shop_stock": [
         {
           "item": 2020,
-          "price": 15,
-          "stackable": true
-        },
-        {
-          "item": 2021,
           "price": 30,
           "stackable": true
         },
         {
-          "item": 2024,
-          "price": 25,
-          "stackable": true
-        },
-        {
-          "item": 2026,
-          "price": 25,
-          "stackable": true
-        },
-        {
-          "item": 2025,
-          "price": 25,
-          "stackable": true
-        },
-        {
           "item": 7001,
-          "price": 5,
+          "price": 25,
           "stackable": true
         },
         {
@@ -238,11 +218,11 @@
         },
         {
           "item": 1164,
-          "price": 50
+          "price": 100
         },
         {
           "item": 1172,
-          "price": 75
+          "price": 125
         },
         {
           "item": 1162,
@@ -250,7 +230,7 @@
         },
         {
           "item": 1168,
-          "price": 500
+          "price": 350
         },
         {
           "item": 1194,
@@ -277,23 +257,23 @@
           "price": 150
         },
         {
-          "price": 500,
+          "price": 199,
           "skin": "outfit_red"
         },
         {
-          "price": 500,
+          "price": 199,
           "skin": "outfit_yellow"
         },
         {
-          "price": 500,
+          "price": 199,
           "skin": "outfit_blue"
         },
         {
-          "price": 500,
+          "price": 199,
           "skin": "tracksuit_black"
         },
         {
-          "price": 500,
+          "price": 199,
           "skin": "ninja_black"
         }
       ],
