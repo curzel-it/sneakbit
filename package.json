@@ -23,7 +23,8 @@
     "dev": "node tools/serve.mjs",
     "electron": "npm run build && electron .",
     "dist": "rm -rf dist && npm run build && electron-builder --mac --win --linux",
-    "steam": "python3 tools/steam_upload.py"
+    "steam": "python3 tools/steam_upload.py",
+    "steam:smoketest": "STEAM_BRANCH=smoketest python3 tools/steam_upload.py"
   },
   "build": {
     "appId": "it.curzel.sneakbit",

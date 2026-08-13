@@ -11,13 +11,17 @@
 #      dist` first), with the per-platform unpacked folders auto-detected.
 #
 # Usage:
-#   npm run dist          # produces dist/{win-unpacked,linux-unpacked,mac*/SneakBit.app}
-#   npm run steam         # this script
+#   npm run dist            # produces dist/{win-unpacked,linux-unpacked,mac*/SneakBit.app}
+#   npm run steam           # this script — uploads, promotes nothing
+#   npm run steam:smoketest # uploads and sets it live on the smoketest branch
 #
 # Env overrides:
 #   STEAMWORKS_BUILDER    path to steamworks-sdk ContentBuilder/builder_osx
 #   STEAM_BRANCH          set-live branch (default: none — leaves build unset,
-#                         so you promote it manually from the Steamworks UI)
+#                         so you promote it manually from the Steamworks UI).
+#                         Steam rejects SetLive on the default branch, so this
+#                         only ever targets a beta branch; shipping to everyone
+#                         stays a deliberate click in the Steamworks UI.
 
 import glob
 import json
