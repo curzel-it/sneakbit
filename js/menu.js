@@ -179,7 +179,6 @@ export function installMenu(stateGetter) {
         <li>Music by <a href="https://www.filippovicarelli.com/8bit-game-background-music" target="_blank" rel="noopener">Filippo Vicarelli</a></li>
         <li>Sound effects by <a href="https://opengameart.org/content/512-sound-effects-8-bit-style" target="_blank" rel="noopener">SubspaceAudio</a></li>
         <li>Font by <a href="https://dl.dafont.com/dl/?f=pixel_operator" target="_blank" rel="noopener">HarvettFox96</a></li>
-        <li><a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener">github.com/curzel-it/sneakbit</a></li>
         <li><a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a></li>
         <li><a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a></li>
       </ul>
