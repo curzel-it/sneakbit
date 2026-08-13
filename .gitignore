@@ -16,6 +16,9 @@ dist/
 # inside the native apps. Regenerated before every native build, never committed.
 ios/web/
 android/app/src/main/assets/web/
+# Signed release bundle from `gradlew bundleRelease`. Uploaded to Play, never
+# committed — it's ~11 MB of build output that every clone would pay for.
+android/app/release/
 # Xcode per-user state.
 **/xcuserdata/
 *.xcuserstate
