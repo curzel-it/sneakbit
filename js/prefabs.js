@@ -35,7 +35,7 @@ const HOUSE_INTERIOR_ROWS = 6;
 const HOUSE_INTERIOR_COLUMNS = 10;
 // Interior zone tile grid. Rust's bounds = 30×10; the HTML port only
 // needs a grid big enough to hold the walls + door cutouts + 1 row of
-// margin below the back door so stepOutOf has somewhere to walk to.
+// margin below the back door so tileInFrontOf has somewhere to walk to.
 const INTERIOR_GRID_COLS = 30;
 const INTERIOR_GRID_ROWS = 10;
 

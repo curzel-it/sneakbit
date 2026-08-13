@@ -23,7 +23,7 @@ import { installHud, updateHud } from "./hud.js";
 import { loadAudio } from "./audio.js";
 import { loadSettings, getSettings, resolveLanguage } from "./settings.js";
 import { installMenu, isMenuOpen } from "./menu.js";
-import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js";
+import { installTransitions, findTeleporterAt, travelTo, tileInFrontOf } from "./transitions.js";
 import { checkPickup } from "./pickups.js";
 import { installMusic, playTrack } from "./music.js";
 import { installTouchControls, setInteractPrompt, updateTouchCombat } from "./touch.js";
@@ -856,9 +856,8 @@ export function enableLocalCoop() { setLocalPlayers(2); }
 export function disableLocalCoop() { setLocalPlayers(1); }
 
 function snapToEntry(player, zone) {
-  const tele = (zone.entities || []).find(e => e.species_id === 1019 && e.frame);
-  let x = tele?.frame.x ?? 0;
-  let y = tele?.frame.y ?? 0;
+  const entry = computeEntryTile(zone);
+  let { x, y } = entry;
   if (!Number.isFinite(x) || !Number.isFinite(y)) { x = 1; y = 1; }
   x = Math.max(0, Math.min(zone.cols - 1, x));
   y = Math.max(0, Math.min(zone.rows - 1, y));
@@ -869,13 +868,27 @@ function snapToEntry(player, zone) {
 // Mirrors Rust world_setup::destination_x_y with source=0 (no back-link):
 // 1001 has a hard-coded entry tile, every other zone falls back to any
 // teleporter, then to the zone centre. Used to seed zone.spawnPoint
-// when there's no incoming travelTo to derive it from.
+// when there's no incoming travelTo to derive it from, and to place the
+// player when the save names a zone but no tile.
+//
+// The tile is the one *in front of* that teleporter, not the teleporter
+// itself: standing on the exit means the first step in the wrong direction
+// warps the player straight back out of the zone they just loaded into.
+// Rust saves carry no player tile at all, so every migrated save boots
+// through here.
 function computeEntryTile(zone) {
   if (zone.id === STARTING_ZONE_ID) {
     return { x: STARTING_SPAWN.x, y: STARTING_SPAWN.y };
   }
   const tele = (zone.entities || []).find(e => e.species_id === 1019 && e.frame);
-  if (tele) return { x: tele.frame.x, y: tele.frame.y };
+  if (tele) {
+    // No direction hint: the teleporter's own destination.direction is the
+    // facing for the *other* zone, so it says nothing about which side of
+    // this door is the inside. tileInFrontOf defaults to "below the door",
+    // then tries the remaining sides for a walkable one.
+    const [x, y] = tileInFrontOf(zone, tele.frame);
+    return { x, y };
+  }
   return {
     x: Math.max(0, Math.floor(zone.cols / 2)),
     y: Math.max(0, Math.floor(zone.rows / 2)),

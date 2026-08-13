@@ -202,7 +202,7 @@ function resolveSpawn(zone, destination, sourceZoneId) {
   const oy = destination.y ?? 0;
   if (ox === 0 && oy === 0) {
     const back = findTeleporterBack(zone, sourceZoneId) ?? findAnyTeleporter(zone);
-    if (back) return stepOutOf(zone, back, destination.direction);
+    if (back) return tileInFrontOf(zone, back, destination.direction);
     return [Math.floor(zone.cols / 2), Math.floor(zone.rows / 2)];
   }
   return [
@@ -215,7 +215,12 @@ function resolveSpawn(zone, destination, sourceZoneId) {
 // can stand on. Tries the destination's stated direction first (or down
 // as the natural "out of the door" default), then falls back to other
 // directions, finally to the teleporter tile itself.
-function stepOutOf(zone, frame, direction) {
+//
+// Exported because the boot path needs the same rule: a save that names a
+// zone but no tile (every save migrated from the Rust builds — those only
+// stored `latest_world`) is placed relative to a teleporter, and standing
+// *on* the exit means the player's first step can warp them back out.
+export function tileInFrontOf(zone, frame, direction) {
   const preferred = direction && direction !== "None"
     ? direction.toLowerCase()
     : "down";
