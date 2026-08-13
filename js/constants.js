@@ -29,4 +29,7 @@ export const SPRITE_SHEET_ARMOR = 1025;
 export const STARTING_ZONE_ID = 1001;
 export const STARTING_SPAWN = { x: 68, y: 23 };
 
-export const APP_VERSION = "0.4.0";
+// Shown in the main menu (js/menu.js) and quoted in bug reports, so it has to
+// be the same number the store pages and the Steam build description carry —
+// tests/appVersion.test.js pins it to package.json's `version`.
+export const APP_VERSION = "2.0.0";
