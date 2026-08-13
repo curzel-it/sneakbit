@@ -9,6 +9,18 @@ The game was initially written in Rust, but has now fully been ported to HTML5 a
 
 <img src="docs/screenshots/1.png"/>
 
+## What's new in 2.0
+
+* **Complete JavaScript rewrite** - the Rust core is gone; the whole game is now
+  vanilla ES modules and Canvas 2D, running in the browser with no build step for
+  development. (The old sources are still in this repo's history, at the
+  `rust-core-tip` tag.)
+* **Multiplayer** - host a match and share the invite code, or join a friend's.
+  Online co-op runs peer-to-peer over WebRTC for up to four players; offline
+  co-op puts up to four players on one machine, one controller each.
+
+<img src="docs/screenshots/multiplayer.jpeg"/>
+
 ## Features
 
 * Adventure-action gameplay with melee (sword) and ranged (kunai) combat
