@@ -23,12 +23,19 @@ the same store page:
 - **Steamworks SDK** with ContentBuilder, expected at
   `~/dev/steamworks-sdk/tools/ContentBuilder/builder_osx`. Override with
   `STEAMWORKS_BUILDER=/path/to/builder_osx`.
-- **Steam partner credentials** with upload rights on the app. `tools/steam_upload.py`
-  stores them in the macOS Keychain on first use (`python3 -m pip install keyring`
-  if the prompt says it's missing). Steam Guard is asked for on the terminal, so
-  the upload has to be run by a human on a real tty.
-- Everything else is already in the repo: `npm ci` gets electron + electron-builder,
-  and the icons live in `build/icon.{icns,ico,png}`.
+- **Steam partner credentials** with upload rights on the app. Run
+  `steamcmd +login <user>` by hand once and answer the Steam Guard prompt — steamcmd
+  caches a sentinel, and every upload after that needs only `STEAM_USERNAME` in
+  `.env`. No password passes through this repo. (`STEAM_PASSWORD` is honoured if you
+  set it, but the sentinel is the path that doesn't put one in a file.)
+- Everything else is already in the repo: `npm ci` gets electron, electron-builder and
+  `@curzel-it/steam-tools`, and the icons live in `build/icon.{icns,ico,png}`.
+
+The upload and the Linux launcher both live in
+[`@curzel-it/steam-tools`](https://github.com/curzel-it/steam-tools), a devDependency,
+because they are the same in every project — see its README for the argument behind each
+guard. What stays here is `steam.config.json`: the AppID, the three depot ids, and the
+mac architecture. Ids are not secrets and are committed; the credential is not.
 
 ## Release procedure
 
@@ -59,16 +66,33 @@ game starts and is playable, and quitting/relaunching restores the save.
 
 ### Uploading
 
-`npm run steam` (i.e. `tools/steam_upload.py`) writes `temp/build.vdf` and hands it
-to `steamcmd`. The build description is `Build <version from package.json>`.
+`npm run steam` writes `temp/build.vdf` and hands it to `steamcmd`. The build
+description is `SneakBit <version> (<git sha>)` — the commit is the part worth having
+six builds later, when the version has not moved.
 
 By default it leaves the build **unset** — nothing changes for players until you go
 to Steamworks → *SneakBit* → *Builds* and set the new build live on a branch. That's
 deliberate: promote to a beta branch from the UI, where you can see what you're
 overwriting.
 
-To promote automatically instead, `STEAM_BRANCH=beta npm run steam`. The branch must
-already exist in Steamworks or steamcmd fails the build.
+To promote automatically instead, `npm run steam:smoketest`, or
+`npx steam-upload --live beta` for any other branch. The branch must already exist in
+Steamworks or steamcmd fails the build, and Steam rejects `SetLive` on the default
+branch, so shipping to everyone stays a deliberate click.
+
+`npx steam-upload --print` shows the exact `build.vdf` and the steamcmd invocation
+without connecting to anything. Call it directly rather than through
+`npm run steam -- --print`: npm's PowerShell shim drops arguments after `--`, and
+losing `--print` means doing the upload for real.
+
+**It refuses to upload platform folders from different builds.** The three packages are
+compared file by file inside their `app.asar` first. Running electron-builder for a
+subset over an existing `dist/` leaves the other platforms' folders behind, and that
+failure is invisible otherwise: steamcmd reports success on every depot and Steam
+dedupes the unchanged content away, so the fix never reaches the players on the stale
+one. That is the fault that cost two rounds of debugging in
+`docs/linux-steam-sandbox.md`. Uploading a subset on purpose is still fine — the
+platforms left out are named on the way past, and their depots keep what they have.
 
 ## Steamworks-side setup (once per branch/platform)
 
@@ -83,7 +107,7 @@ None of this is in the repo — it's partner-site configuration:
    |---|---|---|
    | Windows | `SneakBit.exe` | |
    | macOS | `SneakBit.app` | |
-   | Linux | `sneakbit` | lowercase — electron-builder derives it from package `name` |
+   | Linux | `sneakbit` | **the launcher script, not the binary** — it ships under this name so this field never had to change; the Electron binary beside it is `sneakbit-bin` |
 
 3. **Set the build live** on the beta branch, then verify by installing through the
    Steam client rather than trusting the upload log.
@@ -143,11 +167,19 @@ before a release — the test fails if they disagree, so you can't forget one.
   (the default on Bazzite, Nobara and most Fedora/KDE software centres) can't nest
   them, and Ubuntu 24.04+ restricts them via AppArmor — Chromium finds no usable
   sandbox and aborts during startup: no window, no error, nothing in Steam's UI.
-  The Linux depot therefore launches `electron/linuxLauncher.sh`, not the binary;
-  it puts `--no-sandbox` on argv, which is the only place Chromium reads it in
-  time. Doing this from `main.js` cannot work — that file is evaluated long after
-  the decision — so an absent `[sandbox]`-style log line proves nothing either way.
-  Full investigation: `docs/linux-steam-sandbox.md`.
+  The Linux depot therefore launches a shell script, not the binary: it ships from
+  `@curzel-it/steam-tools` as `sneakbit`, beside the `sneakbit-bin` it exec's, and
+  puts the flag on argv — the only place Chromium reads it in time. Doing this from
+  `main.js` cannot work — that file is evaluated long after the decision — so an
+  absent `[sandbox]`-style log line proves nothing either way. Full investigation:
+  `docs/linux-steam-sandbox.md`.
+
+  It now picks the flag from what the machine can actually do rather than always
+  dropping the sandbox: the setuid helper if it is genuinely setuid and root-owned,
+  else `--disable-setuid-sandbox` if an `unshare` proves user namespaces work, else
+  `--no-sandbox`. The middle rung is where a normal Linux Steam install lands, and it
+  keeps the renderer confined; the bottom rung is Flatpak and Ubuntu 24.04, where the
+  alternative is a build that shows nothing.
 
   **Triage a Linux "it doesn't launch" report by exit code first**, from
   `logs/gameprocess_log.txt` (not `console-linux.txt`, which omits the wrapper
@@ -157,7 +189,7 @@ before a release — the test fails if they disagree, so you can't forget one.
   | Exit code | Meaning |
   |---|---|
   | `0` | the game ran and quit normally |
-  | `133` | Chromium aborted — the sandbox is implicated, our problem; get stderr from a shell launch and try `SNEAKBIT_SANDBOX=0 %command%` |
+  | `133` | Chromium aborted — the sandbox is implicated, our problem; get stderr from a shell launch and try `STEAM_TOOLS_SANDBOX=0 %command%` |
   | `255` | the game never ran — Steam's own launch layer, nothing in this repo |
 
   For `255`, **restart the Steam client before believing anything else**. A client

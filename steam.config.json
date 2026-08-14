@@ -1,0 +1,10 @@
+{
+  "appId": "3360860",
+  "name": "SneakBit",
+  "depots": {
+    "win": "3360861",
+    "mac": "3360862",
+    "linux": "3360863"
+  },
+  "macArch": "arm64"
+}

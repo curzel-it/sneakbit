@@ -14,8 +14,10 @@ const APP_URL = "app://sneakbit.curzel.it/index.html";
 
 // Nothing here decides the Linux sandbox. Chromium settles that during early
 // startup, before this file is evaluated, so appendSwitch("no-sandbox") from
-// here is inert — see electron/linuxLauncher.sh, which is the Linux depot's
-// launch target and puts the flag on argv where it counts.
+// here is inert. The Linux depot's launch target is a shell script that puts
+// the flag on argv where it counts — it ships from @curzel-it/steam-tools via
+// the `extraFiles` entry in package.json, and lands in the depot as `sneakbit`
+// beside the `sneakbit-bin` this file runs in.
 
 // Must run before app is ready. `standard` makes Chromium parse the host (so
 // location.hostname === "sneakbit.curzel.it"); `secure` lets it run in a

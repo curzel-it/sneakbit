@@ -39,6 +39,12 @@ const DENYLIST = new Set([
   "ios", "android",
   // Build scratch + Steam packaging scratch — never runtime assets.
   "temp", "build",
+  // The depot ids @curzel-it/steam-tools uploads with. Not a secret, and not a
+  // runtime asset either: copying it here published it at the site root and packed
+  // it into app.asar, where it made the three platforms' archives differ by
+  // whenever each was last built — which is exactly what the upload's same-build
+  // guard is watching for.
+  "steam.config.json",
 ]);
 
 function isDenied(name) {

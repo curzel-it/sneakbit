@@ -12,6 +12,19 @@ but died instantly from the Steam client. Two independent faults were found.
 > and [Resolution of the 255](#resolution-of-the-255--a-stale-steam-client-session).
 > The findings below are preserved as written; where they describe the old code
 > or the 255 hunt they are history.
+>
+> **Where the fixes live now:** both moved to
+> [`@curzel-it/steam-tools`](https://github.com/curzel-it/steam-tools), because the
+> same two faults are waiting in every Electron game shipped this way.
+> `electron/linuxLauncher.sh` is now that package's `launch-linux.sh`, still shipped
+> into the depot as `sneakbit` by `extraFiles`, and `tools/steam_upload.py` is now
+> `npx steam-upload`. Two things changed in the move and both are improvements: the
+> launcher keeps the namespace sandbox where an `unshare` proves it works, instead of
+> dropping to `--no-sandbox` on every install; and the same-build guard compares
+> asars **file by file** rather than whole-archive, since a launcher that is an
+> `extraFiles` entry on Linux and only there makes a correct build's archives differ
+> by design. The override is spelled `STEAM_TOOLS_SANDBOX` now — `SNEAKBIT_SANDBOX`
+> below is the old name.
 
 Environment: Pop!\_OS (kernel 7.0.11), **Flatpak** Steam (`com.valvesoftware.Steam`),
 app 3360860 on the `smoketest` branch.
