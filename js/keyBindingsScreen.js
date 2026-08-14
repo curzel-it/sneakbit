@@ -13,7 +13,7 @@ import { el } from "./dom.js";
 import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings } from "./keyBindings.js";
 import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, resetGamepadBindings } from "./gamepadBindings.js";
 import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js";
-import { formatKeyCode, formatPadButton } from "./inputGlyphs.js";
+import { formatKeyCode, formatPadButton, padKindForPlayer } from "./inputGlyphs.js";
 import { localPlayerCount } from "./coopMode.js";
 import { showConfirm } from "./confirmDialog.js";
 
@@ -124,11 +124,14 @@ function renderControllerList() {
   const list = root.querySelector("#menu-controls-list");
   if (!list) return;
   const actions = controlsPlayer === 0 ? GAMEPAD_ACTIONS : GAMEPAD_ACTIONS_P2;
+  // Named for the pad THIS player is holding — in local co-op the two
+  // lists can legitimately disagree about what button 0 is called.
+  const kind = padKindForPlayer(controlsPlayer);
   list.replaceChildren(...actions.map((a) => {
     const idx = buttonFor(a.id, controlsPlayer);
     return el("li", {}, [
       el("span", { class: "menu-controls-label", text: a.label }),
-      el("button", { class: "menu-controls-key", dataset: { action: a.id }, text: formatPadButton(idx) }),
+      el("button", { class: "menu-controls-key", dataset: { action: a.id }, text: formatPadButton(idx, kind) }),
     ]);
   }));
   for (const btn of list.querySelectorAll(".menu-controls-key")) {

@@ -80,6 +80,14 @@ export function getPadIndexForSlot(slot) {
   return pad ? pad.index : -1;
 }
 
+// The Gamepad.id string of the pad driving `slot`, or "" when the slot has
+// no pad. inputGlyphs turns this into a manufacturer so prompts name the
+// button that's actually printed on that player's controller.
+export function getPadIdForSlot(slot) {
+  const pad = connectedPadsByIndex()[slot - 1];
+  return pad && typeof pad.id === "string" ? pad.id : "";
+}
+
 // Reverse of getPadIndexForSlot: which 1-based slot a hardware pad.index
 // currently drives (by connection order), or -1 if it isn't connected.
 // Used by controllerPresence to name the player on connect/disconnect.
