@@ -15,6 +15,7 @@
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildSite, stageRuntime } from "./stageWebRuntime.mjs";
+import { bumpBuildNumber } from "./buildNumber.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, "..");
@@ -23,5 +24,6 @@ const ANDROID_WEB = join(REPO_ROOT, "android", "app", "src", "main", "assets", "
 buildSite();
 const mb = stageRuntime(ANDROID_WEB);
 console.log(`build-android: staged web bundle into android/app/src/main/assets/web/ (${mb} MB)`);
+console.log(`build-android: build number ${bumpBuildNumber(REPO_ROOT)}`);
 console.log("build-android: done — open the android/ project in Android Studio and Run,");
 console.log("               or run `cd android && ./gradlew assembleDebug`.");

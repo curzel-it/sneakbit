@@ -11,6 +11,7 @@
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildSite, stageRuntime } from "./stageWebRuntime.mjs";
+import { bumpBuildNumber } from "./buildNumber.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, "..");
@@ -21,4 +22,5 @@ buildSite();
 const iosMb = stageRuntime(IOS_WEB);
 const androidMb = stageRuntime(ANDROID_WEB);
 console.log(`build-apps: staged web bundle into ios/web/ (${iosMb} MB) and android/app/src/main/assets/web/ (${androidMb} MB)`);
+console.log(`build-apps: build number ${bumpBuildNumber(REPO_ROOT)}`);
 console.log("build-apps: done — open ios/SneakBit.xcodeproj or the android/ project and Run.");
