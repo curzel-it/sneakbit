@@ -37,7 +37,8 @@ No build step for development - serve the folder with any static HTTP server
 from `js/`:
 
 ```bash
-npm run serve            # node tools/serve.mjs (port 8000)
+npm run serve            # node tools/serve.mjs (port 8000) - always the source tree
+npm run serve -- --build # the _site/ bundle instead, when that is the point
 # or
 npx http-server -p 8000
 ```

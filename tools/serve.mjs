@@ -2,13 +2,31 @@
 // only depends on Node (already required by engines.node). Vanilla node:http,
 // no deps — serves the repo root straight from disk so the raw ES modules in
 // js/ load without a build step.
+//
+// The bundle `npm run build` leaves in _site/ is never what a plain run serves,
+// not even through its own path: pass --build to serve it, so a stale bundle
+// can only ever be looked at on purpose.
 import { createServer } from "node:http";
+import { existsSync } from "node:fs";
 import { readFile, stat } from "node:fs/promises";
-import { extname, join, normalize, resolve, sep } from "node:path";
+import { extname, join, normalize, relative, resolve, sep } from "node:path";
 
 const PORT = Number(process.env.PORT) || 8000;
 const HOST = process.env.HOST || "127.0.0.1";
-const ROOT = resolve(process.cwd());
+const REPO = resolve(process.cwd());
+const SITE = join(REPO, "_site");
+const BUILD = process.argv.slice(2).includes("--build");
+if (BUILD && !existsSync(join(SITE, "index.html"))) {
+  console.error("--build was asked for but _site/index.html is missing; run npm run build");
+  process.exit(1);
+}
+const ROOT = BUILD ? SITE : REPO;
+
+function shadowed(path) {
+  if (BUILD) return false;
+  const inner = relative(SITE, path);
+  return inner !== "" && !inner.startsWith("..") && !inner.startsWith(sep);
+}
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -49,6 +67,9 @@ const server = createServer(async (req, res) => {
     if (filePath !== ROOT && !filePath.startsWith(ROOT + sep)) {
       return send(res, 403, "Forbidden");
     }
+    if (shadowed(filePath)) {
+      return send(res, 403, "Forbidden — the build is only served with --build");
+    }
 
     let info;
     try {
@@ -67,5 +88,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`Serving ${ROOT}\n  http://${HOST}:${PORT}/`);
+  console.log(`Serving ${BUILD ? "the _site/ build" : "source"} from ${ROOT}\n  http://${HOST}:${PORT}/`);
 });
