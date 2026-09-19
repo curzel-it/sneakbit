@@ -1,11 +1,23 @@
 <img src="assets/logo.png" alt="SneakBit" style="width: 324px; height: auto; image-rendering: pixelated;">
 
-### [Play it now, no install](https://sneakbit.curzel.it)
+SneakBit is a top-down adventure-action game with close- and long-range combat, a hand-drawn Gameboy-style world, and a story to wander through. 
 
-SneakBit is a top-down adventure-action game with close- and long-range combat, a
-hand-drawn Gameboy-style world, and a story to wander through. 
 
-The game was initially written in Rust, but has now fully been ported to HTML5 and JS.\
+<div class="download-links noprint">
+    <a href="https://sneakbit.curzel.it/">
+        <img src="docs/browser_game_badge.png" alt="Play SneakBit in the browser" width="120px">
+    </a>
+    <a href="https://store.steampowered.com/app/3360860/SneakBit/">
+        <img src="docs/steam_badge.webp" alt="SneakBit on Steam"  width="120px">
+    </a>
+    <a href="https://apps.apple.com/app/sneakbit/id6737452377">
+        <img src="docs/appstore_badge.webp" alt="SneakBit on  the App Store" width="120px">
+    </a>
+    <a href="https://play.google.com/store/apps/details?id=it.curzel.bitscape">
+        <img src="docs/playstore_badge.webp" alt="SneakBit on the Play Store"  width="120px">
+    </a>    
+</div>
+<br>
 
 <img src="docs/screenshots/1.png"/>
 
