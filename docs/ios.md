@@ -11,6 +11,9 @@ server round-trip.
 - `npm run build-ios` runs the normal web build (`tools/build.mjs` → `_site/`),
   then `tools/buildIos.mjs` stages the runtime subset (the game shell, the
   hashed JS bundle + chunks, `assets/`, `data/`) into `ios/web/`.
+- Every run also sets `CURRENT_PROJECT_VERSION` here and `versionCode` in
+  `android/app/build.gradle.kts` to one past the higher of the two
+  (`tools/buildNumber.mjs`), so both project files change with each build.
 - `ios/web/` is a **folder reference** in the Xcode project, so the whole tree
   is copied verbatim into the `.app` bundle (structure preserved — important,
   since `data/`/`assets/` rely on their paths).
@@ -27,7 +30,7 @@ server round-trip.
 ## Build & run
 
 ```bash
-npm run build-ios            # stage the web bundle into ios/web/
+npm run build-ios            # stage the web bundle into ios/web/, bump the build number
 open ios/SneakBit.xcodeproj  # then Run on a simulator or device
 ```
 

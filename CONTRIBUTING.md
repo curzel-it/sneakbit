@@ -14,12 +14,12 @@ npx http-server -p 8000
 
 Open <http://localhost:8000>. It loads the raw ES modules from `js/` — no install needed.
 
-Production is bundled with esbuild (`npm run build` → `_site/`); that's the only
-devDependency and you only need it to build a deploy, not to develop or run tests.
+Production is bundled with esbuild (`npm run build` → `_site/`). Run `npm ci` before
+building or running the tests; development itself needs no install.
 
 ## Architecture
 
-One feature, one file. Vanilla ES modules, named exports only, camelCase filenames. See [CLAUDE.md](./CLAUDE.md) for the full guide.
+One feature, one file. Vanilla ES modules, named exports only, camelCase filenames. See [AGENTS.md](./AGENTS.md) for the full guide.
 
 ## Tests
 

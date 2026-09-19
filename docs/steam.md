@@ -143,10 +143,16 @@ from `js/nativeBridge.js`, which is why they can't live in the web build):
 
 ## Version numbers
 
-One string, two places, kept in sync by `tests/appVersion.test.js`:
-`package.json` `version` (Steam build description, Electron app version, the mobile
-shells) and `APP_VERSION` in `js/constants.js` (rendered in the main menu). Bump both
-before a release — the test fails if they disagree, so you can't forget one.
+The release version lives in four places. `package.json` `version` (Steam build
+description, Electron app version) and `APP_VERSION` in `js/constants.js` (rendered in
+the main menu) are kept equal by `tests/appVersion.test.js`. `MARKETING_VERSION` in
+`ios/SneakBit.xcodeproj/project.pbxproj` and `versionName` in
+`android/app/build.gradle.kts` are not checked by anything. Bump all four before a
+release.
+
+Build numbers are not edited by hand: `npm run build-ios`, `build-android` and
+`build-apps` set the iOS `CURRENT_PROJECT_VERSION` and the Android `versionCode` to one
+past the higher of the two.
 
 ## Known gaps
 

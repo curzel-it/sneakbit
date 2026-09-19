@@ -5,7 +5,7 @@
 > menu. The pipeline below still works and is kept for reference; point
 > `STREAM_URL` at something worth watching before deploying it again.
 
-Streams the game — played by the autoplay AI — to YouTube and Twitch, 24/7,
+Streams the game to YouTube and Twitch, 24/7,
 from the same Ubuntu VPS that serves `sneakbit.curzel.it`.
 
 Pipeline (one `master` process + N `relay` processes, each its own systemd
@@ -72,16 +72,9 @@ ffprobe /tmp/sneakbit-stream-debug.flv     # expect one video + one aac audio st
 ```
 
 ## Notes / gotchas
-- **Bot dependency.** `?autoplay=1` only does something once the in-page
-  autoplay bot ships (phases 2–3). Until then the stream shows the normal game
-  (menu/idle) and the master's freezedetect watchdog (90s of unchanging frames
-  → restart) may loop. That's expected; it self-heals once the bot keeps the
-  canvas moving. Use `debug` mode (no watchdog) to verify the pipeline before
-  the bot exists.
-- **Build dependency.** The autoplay module must be reachable at the site root
-  in the deployed `_site`. The plan is a *computed* dynamic import from
-  `main.js` so esbuild leaves it as a separate file — that wiring is part of
-  phase 2; confirm `npm run build` ships it before relying on `?autoplay=1`.
+- **No bot.** With nothing playing, the stream shows the idle menu and the
+  master's freezedetect watchdog (90s of unchanging frames → restart) will
+  loop. Use `debug` mode (no watchdog) to verify the pipeline.
 - **VPS headroom.** 720p30 libx264 `veryfast` is ~1 core; Chrome + Xvfb add
   more. The box also runs the game server + node API + nginx. Check
   `systemd-cgtop` / `htop` after first deploy; drop to 720p `ultrafast` or a

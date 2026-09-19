@@ -12,8 +12,11 @@ launch**, with no server round-trip.
   `_site/`), then `tools/buildAndroid.mjs` stages the runtime subset (the game
   shell, the hashed JS bundle + chunks, `assets/`, `data/`) into
   `android/app/src/main/assets/web/`. Everything under `src/main/assets/` is
-  packed into the APK automatically — no Gradle edit needed.
+  packed into the APK automatically — no Gradle change is needed to pack them.
   (Both native wrappers share the staging logic in `tools/stageWebRuntime.mjs`.)
+- Every run also sets `versionCode` in `app/build.gradle.kts` and the iOS
+  `CURRENT_PROJECT_VERSION` to one past the higher of the two
+  (`tools/buildNumber.mjs`), so both project files change with each build.
 - `MainActivity.kt` serves that tree over `https://appassets.androidplatform.net`
   via `WebViewClient.shouldInterceptRequest` — the Android mirror of the iOS
   `app://` scheme (`BundleSchemeHandler`). A real **https** origin gives the page
@@ -31,7 +34,7 @@ launch**, with no server round-trip.
 ## Build & run
 
 ```bash
-npm run build-android            # stage the web bundle into android/app/src/main/assets/web/
+npm run build-android            # stage the web bundle into android/app/src/main/assets/web/, bump the build number
 # then open android/ in Android Studio and Run, or:
 cd android && ./gradlew assembleDebug   # -> app/build/outputs/apk/debug/app-debug.apk
 ```

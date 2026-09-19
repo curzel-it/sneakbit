@@ -45,11 +45,11 @@ npx http-server -p 8000
 
 Then open <http://localhost:8000>.
 
-Production *is* bundled: `npm run build` (esbuild, the only devDependency) writes
-a content-hashed single-file bundle into `_site/`. That's what ships - the public
-build at <https://sneakbit.curzel.it> is deployed from the VPS via
-`npm run deploy`. Dev and the e2e harness never touch the bundle; only deploys
-do.
+Production *is* bundled: `npm run build` (esbuild) writes content-hashed,
+code-split bundles into `_site/`. That's what ships - the public build at
+<https://sneakbit.curzel.it> is deployed from the VPS via `npm run deploy`, and the
+desktop and mobile builds package the same `_site/`. Plain dev runs and the e2e
+harness never touch the bundle.
 
 ## Tests
 
@@ -59,10 +59,10 @@ npm run test:e2e         # full e2e suite (~26 s; needs Chrome)
 npm test                 # both, sequential
 ```
 
-Tests have no dependencies of their own - unit tests use Node's built-in test
-runner. E2E tests drive headless Chrome via raw CDP and self-skip if Chrome isn't
-on the path. (The repo's one devDependency, esbuild, is for the production build
-only - `npm ci` is needed to build, not to test.)
+Unit tests use Node's built-in test runner. E2E tests drive headless Chrome via raw
+CDP and self-skip if Chrome isn't on the path. Run `npm ci` first:
+`tests/steamPackaging.test.js` checks the Linux launcher installed from
+`@curzel-it/steam-tools`.
 
 ## Credits
 

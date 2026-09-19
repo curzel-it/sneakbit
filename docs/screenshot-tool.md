@@ -32,10 +32,11 @@ Two facts in the current code make this a seed-and-snap job, not an automation j
 
 ```json
 {
-  "defaults": { "w": 30, "h": 20, "direction": "down", "settle": 600 },
+  "defaults": { "w": 30, "h": 20, "direction": "down", "settle": 700 },
   "shots": [
-    { "out": "overworld.png",  "zone": 1001, "x": 30, "y": 24 },
-    { "out": "caves-lava.png", "zone": 12,   "x": 40, "y": 30, "w": 34, "h": 22 }
+    { "out": "overworld.png", "zone": 1001, "x": 68, "y": 23 },
+    { "out": "duskwood.png", "zone": 1011, "x": 40, "y": 40 },
+    { "out": "farmland.png", "zone": 1012, "x": 50, "y": 40 }
   ]
 }
 ```
@@ -50,9 +51,10 @@ Two facts in the current code make this a seed-and-snap job, not an automation j
 | `settle` | ms to wait after spawn before capturing (lets the zone cache bake + a couple of frames run) |
 | `kv` | extra storage.js keys to seed, unprefixed — e.g. `{"player.0.inventory.amount.2000": 1}` captures a spot as it looks once the yellow key is held |
 
-**Constraint from auto-zoom:** `w` is clamped to `[16, 36]` and `h ≥ 10` by
-`zoom.js` (`MIN_TILES_W`/`MAX_TILES_W`). Asking for fewer/more tiles silently snaps
-to the clamp — the driver should warn when a requested `w`/`h` is out of range.
+**Constraint from auto-zoom:** the driver clamps `w` to `[16, 36]` and `h ≥ 10`
+(`MIN_W`/`MAX_W`/`MIN_H` in `tools/screenshot.mjs`) and warns when a requested
+`w`/`h` is out of range. Past `MAX_TILES_W` (36) tiles across, `zoom.js` raises
+`scale`, so a wider window would no longer render one tile per 32 px.
 
 ## Mechanism — `tools/screenshot.mjs` (Node driver, zero deps)
 
@@ -79,9 +81,10 @@ Per run:
       | `sneakbit.kv.v1.player.0.spawn.direction` | `0`=down `1`=up `2`=left `3`=right |
       | `sneakbit.kv.v1.<k>` for each entry of `kv` | that entry's value |
 
-      Seed it on the page origin *before* the ES modules run — navigate to a blank
-      doc on the same origin, `localStorage.setItem(...)`, then `navigate` to
-      `index.html`. (Equivalently `Page.addScriptToEvaluateOnNewDocument`.)
+      Seed it *before* the ES modules run: register a
+      `Page.addScriptToEvaluateOnNewDocument` script that clears `localStorage` and
+      sets the keys, `navigate` to the static server's root, then remove the script
+      so it can't leak into the next shot.
 
       Also seed two more keys in the same step, for a clean boot:
       | localStorage key | value | why |
@@ -90,19 +93,17 @@ Per run:
       | `sneakbit.kv.v1.build_number` | `3` (= `BUILD_NUMBER`) | belt-and-braces: makes `runMigrations()` a no-op so the migration ladder can never touch the seeded `latest_zone`/spawn keys. (Even unseeded it's safe — a null `build_number` just stamps the version and runs nothing — but seeding it is explicit.) |
    3. **Wait for the spot to be live.** Poll the existing debug hook:
       `window.coop.positions()[0]` exists and its `tileX/tileY` equal the seeded
-      `x/y` — confirms the seeded spawn landed and the zone is built. Then wait
-      `settle` ms for the lazy `getZoneCache` bake and a couple of rendered frames.
+      `x/y` — confirms the seeded spawn landed and the zone is built.
       **Verify the achieved tile count** before capturing: `zoom.js` writes the live
       `tilesW×tilesH` it computed into `document.getElementById('hud').dataset.tiles`
       (e.g. `"30×20 2× dpr=1.00"`). Assert it matches the request — this catches the
       case below where a headless build's `visualViewport` disagrees with the device
       metrics override, instead of silently producing an off-size capture.
-   4. **Hide debug chrome** for a clean frame: hide the `#hud` element (zone id /
-      coords / fps overlay) via `document.getElementById('hud').style.display='none'`.
-      The `sneakbit.settings.v1` seed above already disables the FPS text and skips
-      the first-launch toast — so no overlay should be open at capture time. (If any
-      toast still sneaks in, it lives in its own DOM node and can be hidden the same
-      way.)
+   4. **Hide DOM overlays** for a clean frame: inject a `<style id="shot-hide">`
+      with `body > *:not(#game){display:none !important}`, which hides `#hud`, the
+      HP/ammo cards, toasts and menus and leaves only the game canvas. Then wait
+      `settle` ms for the zone cache to bake its chunks (`getZoneChunk` bakes on
+      first use) and a couple of rendered frames.
    5. **Capture** with CDP `Page.captureScreenshot` (`format:"png"`, clip the
       `w·32 × h·32` viewport). The PNG is a clean 2× of the native backing store —
       crisp pixel art, no smoothing (`imageSmoothingEnabled=false` in the renderer).
@@ -129,7 +130,8 @@ isn't on the path (`findChrome()`); set `CHROME_PATH` for a non-default install.
   device-metrics override. The `dataset.tiles` assertion in step 3 turns any drift
   into a hard failure rather than a wrong-size PNG. The capture is a clean 2× of the
   native backing store (integer scale, smoothing off) — fine for docs; true 1:1
-  pixels would need a post-capture downscale (auto-zoom never picks `scale=1`).
+  pixels would need a post-capture downscale (at the driver's clamped sizes auto-zoom
+  always picks `scale=2`).
 - **File layout** (one feature, one file): `tools/screenshot.mjs` (driver) +
   `tools/screenshots.json` (spec). No game code changes required — the seed-and-size
   approach uses only existing boot behavior and the existing `window.coop` readback.
@@ -138,9 +140,9 @@ isn't on the path (`findChrome()`); set `CHROME_PATH` for a non-default install.
 
 Implemented as `tools/screenshot.mjs` (driver) + `tools/screenshots.json` (spec),
 runnable via `npm run shots`. The seed-and-size approach worked as designed: no game
-code changed, no new deps. The README's three placeholder Rust-release captures were
-replaced with real HTML-build captures (`overworld.png`, `duskwood.png`,
-`farmland.png`) and the Screenshots note now links here.
+code changed, no new deps. The spec writes `overworld.png`, `duskwood.png` and
+`farmland.png`; the README shows `1.png`–`5.png` and `multiplayer.jpeg`, which the
+spec does not produce.
 
 Tuning the shots is a matter of editing `tools/screenshots.json` — pick a `zone`,
 a player tile `x`/`y`, and a viewport `w`/`h` in tiles. (The starter spec uses
