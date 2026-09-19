@@ -4,17 +4,17 @@ SneakBit is a top-down adventure-action game with close- and long-range combat, 
 
 
 <div class="download-links noprint">
-    <a href="https://sneakbit.curzel.it/">
-        <img src="docs/browser_game_badge.png" alt="Play SneakBit in the browser" width="120px">
+    <a href="https://sneakbit.curzel.it/" style="margin-right: 8px">
+        <img src="docs/browser_game_badge.png" alt="Play SneakBit in the browser" width="160px">
     </a>
-    <a href="https://store.steampowered.com/app/3360860/SneakBit/">
-        <img src="docs/steam_badge.webp" alt="SneakBit on Steam"  width="120px">
+    <a href="https://store.steampowered.com/app/3360860/SneakBit/" style="margin-right: 8px">
+        <img src="docs/steam_badge.webp" alt="SneakBit on Steam"  width="160px">
     </a>
-    <a href="https://apps.apple.com/app/sneakbit/id6737452377">
-        <img src="docs/appstore_badge.webp" alt="SneakBit on  the App Store" width="120px">
+    <a href="https://apps.apple.com/app/sneakbit/id6737452377" style="margin-right: 8px">
+        <img src="docs/appstore_badge.webp" alt="SneakBit on  the App Store" width="160px">
     </a>
     <a href="https://play.google.com/store/apps/details?id=it.curzel.bitscape">
-        <img src="docs/playstore_badge.webp" alt="SneakBit on the Play Store"  width="120px">
+        <img src="docs/playstore_badge.webp" alt="SneakBit on the Play Store"  width="160px">
     </a>    
 </div>
 <br>
