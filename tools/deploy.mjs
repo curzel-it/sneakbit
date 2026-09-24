@@ -63,8 +63,8 @@ const WEBROOT = "/var/www/sneakbit";
 // Rollback snapshots, taken just before the destructive client/server pushes.
 // A failed health check restores from these so a broken build never stays
 // live. WEBROOT_BAK mirrors the previous static client; SERVER_BAK_TAR holds
-// the previous managed server code (data.db / editing/ excluded — they're
-// runtime data, preserved across deploys regardless).
+// the previous managed server code (data.db excluded — it's runtime data,
+// preserved across deploys regardless).
 const WEBROOT_BAK = WEBROOT + ".bak";
 const SERVER_BAK_TAR = `${REMOTE_DIR}/.rollback-server.tgz`;
 
@@ -96,12 +96,6 @@ const SERVER_SYNC_PATHS = [
   // Ships alongside package.json so `npm ci` on the VPS is reproducible (and
   // prunes any dependency this server no longer declares).
   "package-lock.json",
-  // Creative-mode edited worlds (editor-only). The editing/ dir is created at
-  // runtime under REMOTE_DIR and is NOT whitelisted here, so it survives
-  // deploys the same way data.db does.
-  "editors.js",
-  "editingStore.js",
-  "editingRoutes.js",
 ];
 
 // node:sqlite (used by db.js) is stable/unflagged only on Node 24+. A redeploy
@@ -145,10 +139,6 @@ const SERVER_ENV_KEYS = [
   "SMTP_FROM",
   "TURN_SECRET",
   "TURN_URLS",
-  // Optional comma-separated extension of the editor allowlist. The hard-coded
-  // default (editors.js) already includes federico; this lets the set grow
-  // from the VPS .env without a code change.
-  "EDITOR_EMAILS",
 ];
 
 function renderSystemdUnit(gitSha) {
@@ -172,7 +162,6 @@ Environment=LOG_LEVEL=info
 Environment=GIT_SHA=${gitSha}
 Environment=DATABASE_PATH=${REMOTE_DIR}/data.db
 Environment=APP_BASE_URL=https://${SERVER_NAME}
-Environment=EDITING_DIR=${REMOTE_DIR}/editing
 EnvironmentFile=-${TURN_ENV_FILE}
 ExecStart=/usr/bin/node ${REMOTE_DIR}/index.js
 Restart=on-failure
@@ -579,7 +568,7 @@ async function stepUser(env) {
 async function stepBackupRelease(env) {
   // Snapshot the currently-live client + server code BEFORE the destructive
   // pushes, so a failed health check can roll back to the last known-good
-  // release. data.db and editing/ are runtime data (preserved across deploys),
+  // release. data.db is runtime data (preserved across deploys),
   // so the server snapshot covers only the managed code files. On a first-ever
   // deploy there's nothing to snapshot — handled gracefully.
   console.log("[*] snapshot current release (for rollback)");
