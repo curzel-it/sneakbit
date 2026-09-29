@@ -24,7 +24,8 @@
     "electron": "npm run build && electron .",
     "dist": "rm -rf dist && npm run build && electron-builder --mac --win --linux",
     "steam": "steam-upload",
-    "steam:smoketest": "steam-upload --live smoketest"
+    "steam:smoketest": "steam-upload --live smoketest",
+    "itch": "node tools/itch.mjs"
   },
   "build": {
     "appId": "it.curzel.sneakbit",
