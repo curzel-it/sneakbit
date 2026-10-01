@@ -1,6 +1,6 @@
 import { join } from "node:path";
 
-export const ITCH_TARGET = "curzel/sneakbit";
+export const ITCH_TARGET = "hiddenmugs/sneakbit";
 
 const PLATFORMS = {
   win: { dir: "win-unpacked", channel: "windows" },

@@ -17,7 +17,8 @@ This is SNEAKBIT, a top-down adventure-action game with close- and long-range co
 - `npm run shots` - captures browser screenshots
 - `npm run build` - creates the production `_site/` bundle; development must keep using raw modules
 - `npm run deploy` - builds and deploys the client and relay server to `sneakbit.curzel.it`
-- `npm run dist`, `npm run build-apps`, `npm run build-ios`, `npm run build-android`, `npm run steam`, `npm run steam:smoketest`, and `npm run itch` are packaging or publishing operations; never run them unless explicitly asked
+- `npm run testflight` stages and bumps like `build-ios`, archives, uploads, and adds the build to both TestFlight groups; `npm run playstore` stages and bumps like `build-android`, builds a signed AAB, and releases it to Play internal testing. Credentials come from `.env` and the gitignored `play-service-account.json`; `-- --check` only signs in and lists the latest builds or tracks
+- `npm run dist`, `npm run build-apps`, `npm run build-ios`, `npm run build-android`, `npm run testflight`, `npm run playstore`, `npm run steam`, `npm run steam:smoketest`, and `npm run itch` are packaging or publishing operations; never run them unless explicitly asked
 - Run `npm run test:e2e` before pushing changes to `onlineBootstrap.js`, `webrtcTransport.js`, `webrtcChannel.js`, `predictedSelf.js`, `mirrorWorld.js`, or `snapshotBroadcaster.js`
 
 ## Server (`server/`)

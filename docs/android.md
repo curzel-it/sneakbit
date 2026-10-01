@@ -39,6 +39,9 @@ npm run build-android            # stage the web bundle into android/app/src/mai
 cd android && ./gradlew assembleDebug   # -> app/build/outputs/apk/debug/app-debug.apk
 ```
 
+`npm run playstore` stages and bumps the same way, then builds a signed AAB and releases it to
+Play internal testing.
+
 `android/app/src/main/assets/web/` is generated and git-ignored — **run
 `npm run build-android` before the first Gradle build** (and after any change to
 the game) or the bundle will be empty/stale.

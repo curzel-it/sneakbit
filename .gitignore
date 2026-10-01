@@ -1,5 +1,6 @@
 .env
 .env*
+play-service-account.json
 .deploy_known_hosts
 .DS_Store
 *.log

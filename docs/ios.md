@@ -32,6 +32,7 @@ server round-trip.
 ```bash
 npm run build-ios            # stage the web bundle into ios/web/, bump the build number
 open ios/SneakBit.xcodeproj  # then Run on a simulator or device
+npm run testflight           # stage, bump, archive, upload, and hand the build to both TestFlight groups
 ```
 
 `ios/web/` is generated and git-ignored — **run `npm run build-ios` before the

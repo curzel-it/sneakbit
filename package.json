@@ -17,6 +17,8 @@
     "build-apps": "node tools/buildApps.mjs",
     "build-ios": "node tools/buildIos.mjs",
     "build-android": "node tools/buildAndroid.mjs",
+    "testflight": "node tools/testflight.mjs",
+    "playstore": "node tools/playStore.mjs",
     "deploy": "node tools/deploy.mjs",
     "stream:deploy": "node tools/stream/deploy.mjs",
     "serve": "node tools/serve.mjs",

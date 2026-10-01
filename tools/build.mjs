@@ -45,6 +45,8 @@ const DENYLIST = new Set([
   // whenever each was last built — which is exactly what the upload's same-build
   // guard is watching for.
   "steam.config.json",
+  // Google Play release credentials for npm run playstore.
+  "play-service-account.json",
 ]);
 
 function isDenied(name) {
