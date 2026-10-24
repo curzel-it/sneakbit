@@ -494,9 +494,20 @@ export function createRelay({
       from: ctx.playerId,
       melee: typeof msg.melee === "number" ? msg.melee : null,
       ranged: typeof msg.ranged === "number" ? msg.ranged : null,
+      armor: loadoutArmor(msg.armor),
+      skin: typeof msg.skin === "number" ? msg.skin : null,
     };
     session.hostConn.sendJSON(out);
     metrics.frameRelayed("guest.loadout", jsonByteLength(out));
+  }
+
+  function loadoutArmor(armor) {
+    const out = { helmet: null, chest: null, legs: null };
+    if (!armor || typeof armor !== "object") return out;
+    for (const slot of Object.keys(out)) {
+      if (typeof armor[slot] === "number") out[slot] = armor[slot];
+    }
+    return out;
   }
 
   // Guest tells the host what it just bought from a clerk (a list of granted

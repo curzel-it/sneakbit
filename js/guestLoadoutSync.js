@@ -24,7 +24,7 @@ import {
 } from "./sessionLoadouts.js";
 import { setSessionSkin, clearSessionSkins } from "./sessionSkins.js";
 import { getSelected, onSkinChange } from "./skins.js";
-import { giftStarterWeaponIfNeeded } from "./starterGift.js";
+import { giveCoopStarterKit } from "./starterGift.js";
 
 let unsubs = [];
 let installed = false;
@@ -36,15 +36,17 @@ export function installGuestLoadoutSync(opts = {}) {
   if (!net) return false;
   installed = true;
 
-  // A guest arriving with under 5 kunai and no melee would be defenceless in
-  // the host's world — hand them a sword before the first loadout goes out, so
-  // the gifted melee rides the initial guest.loadout to the host. Runs before
-  // the onEquipmentChange listener below is wired, so it doesn't echo an extra
-  // send; idempotent, so a reconnecting guest who already holds the sword is
-  // left alone.
-  giftStarterWeaponIfNeeded(0);
+  // Every co-op player gets the starter kit (sword + kunai) before the first
+  // loadout goes out, so the sword rides the initial guest.loadout to the
+  // host. Runs before the onEquipmentChange listener below is wired, so it
+  // doesn't echo an extra send.
+  giveCoopStarterKit(0);
 
   sendSelfLoadout(net);
+  // The relay drops guest.loadout until this guest has joined the session, so
+  // the send above is usually lost: repeat it once the join (or a rejoin after
+  // a reconnect) lands.
+  unsubs.push(net.on("guest.joined", () => sendSelfLoadout(net)));
 
   unsubs.push(onEquipmentChange((_slot, _id, idx) => {
     // Only self-driven local changes — defensive against a future caller

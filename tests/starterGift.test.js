@@ -1,13 +1,11 @@
-// Starter-weapon gift rule: a co-op player joining with under 5 kunai and no
-// melee weapon is handed a sword (item lands in inventory + weapon equipped).
+// Co-op starter kit: every co-op player ends up owning a sword (equipped when
+// the melee slot is empty) and at least KUNAI_STARTER_COUNT kunai.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { loadSpeciesData } = await import("../js/species.js");
 
-// Sword weapon (1159, WeaponMelee), its granting pickup item (1164), and the
-// kunai bullet (7000) — the minimum species the gift logic touches.
 loadSpeciesData([
   { id: 1159, entity_type: "WeaponMelee", sprite_sheet_id: 1022,
     sprite_frame: { x: 49, y: 1, w: 4, h: 4 } },
@@ -21,56 +19,69 @@ const inventory = await import("../js/inventory.js");
 const equipment = await import("../js/equipment.js");
 const storage = await import("../js/storage.js");
 const {
-  giftStarterWeaponIfNeeded, SWORD_ITEM_ID, SWORD_WEAPON_ID, KUNAI_SPECIES_ID,
+  giveCoopStarterKit, SWORD_ITEM_ID, SWORD_WEAPON_ID, KUNAI_SPECIES_ID, KUNAI_STARTER_COUNT,
 } = await import("../js/starterGift.js");
+
+const OTHER_MELEE_ID = 1170;
 
 function fresh() {
   storage._resetStorageForTesting();
   inventory.clearInventory();
 }
 
-test("under 5 kunai and no melee → gifts the sword (item + equipped weapon)", () => {
+test("empty-handed player gets the sword (item + equipped) and the kunai", () => {
   fresh();
-  const gifted = giftStarterWeaponIfNeeded(0);
-  assert.equal(gifted, true);
-  assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 0), 1, "sword item in inventory");
-  assert.equal(equipment.getEquipped(equipment.SLOT_MELEE, 0), SWORD_WEAPON_ID, "sword equipped");
+  assert.equal(giveCoopStarterKit(0), true);
+  assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 0), 1);
+  assert.equal(equipment.getEquipped(equipment.SLOT_MELEE, 0), SWORD_WEAPON_ID);
+  assert.equal(inventory.getAmmo(KUNAI_SPECIES_ID, 0), KUNAI_STARTER_COUNT);
 });
 
-test("5+ kunai → no gift (player is armed enough)", () => {
+test("plenty of kunai still gets the sword, and keeps every kunai", () => {
   fresh();
-  inventory.addAmmo(KUNAI_SPECIES_ID, 5, 0);
-  assert.equal(giftStarterWeaponIfNeeded(0), false);
+  inventory.addAmmo(KUNAI_SPECIES_ID, 50, 0);
+  assert.equal(giveCoopStarterKit(0), true);
+  assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 0), 1);
+  assert.equal(inventory.getAmmo(KUNAI_SPECIES_ID, 0), 50);
+});
+
+test("a few kunai are topped up to the starter count", () => {
+  fresh();
+  inventory.addAmmo(KUNAI_SPECIES_ID, 3, 0);
+  giveCoopStarterKit(0);
+  assert.equal(inventory.getAmmo(KUNAI_SPECIES_ID, 0), KUNAI_STARTER_COUNT);
+});
+
+test("another melee weapon equipped → sword added but not swapped in", () => {
+  fresh();
+  equipment.setEquipped(equipment.SLOT_MELEE, OTHER_MELEE_ID, 0);
+  assert.equal(giveCoopStarterKit(0), true);
+  assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 0), 1);
+  assert.equal(equipment.getEquipped(equipment.SLOT_MELEE, 0), OTHER_MELEE_ID);
+});
+
+test("owned but unequipped sword → equipped, no duplicate item", () => {
+  fresh();
+  inventory.addAmmo(SWORD_ITEM_ID, 1, 0);
+  assert.equal(giveCoopStarterKit(0), false);
+  assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 0), 1);
+  assert.equal(equipment.getEquipped(equipment.SLOT_MELEE, 0), SWORD_WEAPON_ID);
+});
+
+test("idempotent: a second call changes nothing", () => {
+  fresh();
+  assert.equal(giveCoopStarterKit(0), true);
+  assert.equal(giveCoopStarterKit(0), false);
+  assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 0), 1);
+  assert.equal(inventory.getAmmo(KUNAI_SPECIES_ID, 0), KUNAI_STARTER_COUNT);
+});
+
+test("per-player: kitting index 2 leaves index 0 untouched", () => {
+  fresh();
+  giveCoopStarterKit(2);
+  assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 2), 1);
+  assert.equal(equipment.getEquipped(equipment.SLOT_MELEE, 2), SWORD_WEAPON_ID);
+  assert.equal(inventory.getAmmo(KUNAI_SPECIES_ID, 2), KUNAI_STARTER_COUNT);
   assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 0), 0);
   assert.equal(equipment.getEquipped(equipment.SLOT_MELEE, 0), null);
-});
-
-test("already holds a melee weapon → no gift", () => {
-  fresh();
-  // Owns a sword item but hasn't equipped it — still counts as having a melee.
-  inventory.addAmmo(SWORD_ITEM_ID, 1, 0);
-  assert.equal(giftStarterWeaponIfNeeded(0), false);
-  assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 0), 1, "no duplicate sword item added");
-});
-
-test("melee equipped (no item) → no gift", () => {
-  fresh();
-  equipment.setEquipped(equipment.SLOT_MELEE, SWORD_WEAPON_ID, 0);
-  assert.equal(giftStarterWeaponIfNeeded(0), false);
-});
-
-test("idempotent: a second call after gifting does nothing", () => {
-  fresh();
-  assert.equal(giftStarterWeaponIfNeeded(0), true);
-  assert.equal(giftStarterWeaponIfNeeded(0), false, "second call is a no-op");
-  assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 0), 1, "still just one sword");
-});
-
-test("per-player: gifting a guest at index 1 leaves index 0 untouched", () => {
-  fresh();
-  giftStarterWeaponIfNeeded(1);
-  assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 1), 1);
-  assert.equal(equipment.getEquipped(equipment.SLOT_MELEE, 1), SWORD_WEAPON_ID);
-  assert.equal(inventory.getAmmo(SWORD_ITEM_ID, 0), 0, "P1 inventory untouched");
-  assert.equal(equipment.getEquipped(equipment.SLOT_MELEE, 0), null, "P1 melee untouched");
 });

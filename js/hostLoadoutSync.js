@@ -36,6 +36,7 @@ import {
   clearSessionSkins,
 } from "./sessionSkins.js";
 import { getSelected, onSkinChange } from "./skins.js";
+import { giveCoopStarterKit } from "./starterGift.js";
 
 let unsubs = [];
 let installed = false;
@@ -47,6 +48,7 @@ export function installHostLoadoutSync(opts = {}) {
   if (!net) return false;
   installed = true;
 
+  giveCoopStarterKit(0);
   seedSelfFromLocal();
 
   // Local equipment writes for self → push to session map + broadcast.

@@ -40,7 +40,7 @@ import { installControllerPresence, isControllerPaused } from "./controllerPrese
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js";
 import { installCoinHud, updateCoinHud } from "./coinHud.js";
 import { seedStartingCoins } from "./wallet.js";
-import { giftStarterWeaponIfNeeded, SWORD_WEAPON_ID } from "./starterGift.js";
+import { giveCoopStarterKit, SWORD_WEAPON_ID } from "./starterGift.js";
 import { glyphForAction } from "./inputGlyphs.js";
 import { tickMobs } from "./mobs.js";
 import { tickMonsterFusion } from "./monsters.js";
@@ -789,6 +789,7 @@ export function setLocalPlayers(n) {
   if (!state?.zone || !state.player) return;
   n = Math.min(4, Math.max(1, n | 0));
   setLocalPlayerCount(n);
+  if (n >= 2) giveCoopStarterKit(0);
 
   if (n >= 2 && !state.player2) {
     state.player2 = makeCoopP2(state.player, state.zone, { index: 1 });
@@ -830,17 +831,16 @@ function ensureLocalExtra(slot, want) {
 
 // First-time setup for a freshly spawned local co-op player (P2..P4). Each
 // owns a dedicated wallet + inventory now (no folding onto P1), so seed the
-// same starting purse a fresh single-player save gets and — if they'd be
-// defenceless (under 5 kunai, no melee) — hand them a sword, the same gift an
-// online guest receives on join. seedStartingCoins / giftStarterWeaponIfNeeded
-// are both idempotent, so re-spawning a slot (party-panel toggling) never
-// stacks duplicates.
+// same starting purse a fresh single-player save gets and hand them the co-op
+// starter kit (sword + kunai), the same one an online guest receives on join.
+// seedStartingCoins / giveCoopStarterKit are both idempotent, so re-spawning a
+// slot (party-panel toggling) never stacks duplicates.
 function setupNewLocalPlayer(playerIndex) {
   seedStartingCoins(playerIndex);
   // Say it out loud. The sword just appears in P2's hand otherwise, with no
   // hint of where it came from or which button swings it — and the "Equipped:
   // …" toast pickups show is deliberately P1-only.
-  if (giftStarterWeaponIfNeeded(playerIndex)) {
+  if (giveCoopStarterKit(playerIndex)) {
     const name = tr(getSpecies(SWORD_WEAPON_ID)?.name) || "Sword";
     showToast(
       `Player ${(playerIndex | 0) + 1} equipped: ${name}\n${glyphForAction("melee", playerIndex)} to swing it`,

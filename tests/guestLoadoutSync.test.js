@@ -87,6 +87,15 @@ test("a local equipment change re-sends guest.loadout with the new ids", () => {
   teardown();
 });
 
+test("guest.joined re-sends the loadout the relay dropped before the join", () => {
+  const { net } = setupGuest();
+  net.emit("guest.joined", { op: "guest.joined", selfPlayerId: "p_self", slot: 3, peers: [] });
+  const sends = loadoutSends(net);
+  assert.equal(sends.length, 2, "install send + post-join send");
+  assert.equal(sends[1].melee, 1159, "starter sword rides the post-join send");
+  teardown();
+});
+
 test("event:loadout from host writes the matching entry into the session map", () => {
   const { net } = setupGuest();
   net.emit("event", { op: "event", kind: "loadout", playerId: "p_peer", melee: 1159, ranged: null });

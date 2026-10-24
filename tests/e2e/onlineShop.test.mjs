@@ -63,6 +63,14 @@ test("guest opens the clerk shop on its own client and a purchase credits the ho
   `);
   assert.equal(frozen, true);
 
+  // Every co-op player starts with the starter kit's kunai, so measure the
+  // purchase against the pools as they stand before it.
+  const ammoAt = (target, idx) => evalExpr(target, `
+    (async () => (await import('./js/inventory.js')).getAmmo(${KUNAI}, ${idx}))()
+  `);
+  const guestPoolBefore = await ammoAt(session.host, 1);
+  const hostPoolBefore = await ammoAt(session.host, 0);
+
   // Guest completes a purchase — this is the exact frame the buy screen's
   // onPurchase hook emits after granting the goods locally.
   await evalExpr(session.guest, `
@@ -78,7 +86,7 @@ test("guest opens the clerk shop on its own client and a purchase credits the ho
   await waitFor(session.host, `
     (async () => {
       const inv = await import('./js/inventory.js');
-      return inv.getAmmo(${KUNAI}, 1) === 7 || null;
+      return inv.getAmmo(${KUNAI}, 1) === ${guestPoolBefore + 7} || null;
     })()
   `, { timeoutMs: 10000 });
 
@@ -86,12 +94,10 @@ test("guest opens the clerk shop on its own client and a purchase credits the ho
   await waitFor(session.guest, `
     (async () => {
       const inv = await import('./js/inventory.js');
-      return inv.getAmmo(${KUNAI}, 0) === 7 || null;
+      return inv.getAmmo(${KUNAI}, 0) === ${guestPoolBefore + 7} || null;
     })()
   `, { timeoutMs: 10000 });
 
   // The host's own pool (index 0) is untouched — per-player inventory.
-  assert.equal(await evalExpr(session.host, `
-    (async () => (await import('./js/inventory.js')).getAmmo(${KUNAI}, 0))()
-  `), 0, "host's own kunai pool is not credited by the guest's purchase");
+  assert.equal(await ammoAt(session.host, 0), hostPoolBefore, "host's own kunai pool is not credited by the guest's purchase");
 });

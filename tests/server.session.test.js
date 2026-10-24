@@ -781,3 +781,35 @@ test("shop.bought frame is forwarded with from=playerId and a bounded item list"
     h.close(); g.close();
   });
 });
+
+test("guest.loadout is forwarded with from=playerId and whitelisted gear, armour and skin", async () => {
+  await withServer(async ({ host, port }) => {
+    const h = await openWsClient(host, port);
+    await hello(h, "u-loadout-h");
+    h.send({ op: "host.open" });
+    const opened = await h.recv();
+
+    const g = await openWsClient(host, port);
+    const gw = await hello(g, "u-loadout-g");
+    g.send({ op: "guest.join", code: opened.code });
+    await g.recv(); await h.recv();
+
+    g.send({
+      op: "guest.loadout",
+      melee: 1159,
+      ranged: "1160",
+      armor: { helmet: 1200, chest: "x", legs: null, cape: 9 },
+      skin: 3,
+      payload: "x".repeat(1000),
+    });
+    const fwd = await h.recv();
+    assert.equal(fwd.op, "guest.loadout");
+    assert.equal(fwd.from, gw.playerId);
+    assert.equal(fwd.melee, 1159);
+    assert.equal(fwd.ranged, null);
+    assert.deepEqual(fwd.armor, { helmet: 1200, chest: null, legs: null });
+    assert.equal(fwd.skin, 3);
+    assert.equal(fwd.payload, undefined);
+    h.close(); g.close();
+  });
+});

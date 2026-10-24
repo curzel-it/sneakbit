@@ -352,7 +352,7 @@ test("E2E: after pickup the guest can reverse direction and walk back up", () =>
 
 // --- 4. guest fires a kunai -------------------------------------------------
 //
-// With 10 kunai picked up, a single "shoot" intent should consume one
+// With the starter kit's 10 kunai plus the 10 picked up, a single "shoot" intent should consume one
 // ammo and spawn a bullet in state.zone.entities. The bullet inherits
 // the guest's facing direction and is tagged _spawned so pickups don't
 // auto-collect it.
@@ -363,7 +363,7 @@ test("E2E: shoot intent from the guest spawns a bullet at the guest's tile and d
     fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest", slot: 2 });
 
     walk(state, fn, "p_guest", "down", 3);
-    assert.equal(getAmmo(KUNAI, 1), 10, "precondition: 10 kunai available in the guest's slot");
+    assert.equal(getAmmo(KUNAI, 1), 20, "precondition: starter 10 + bundle 10 kunai in the guest's slot");
     const expectedDir = "down";
     assert.equal(state.player2.direction, expectedDir);
 
@@ -373,7 +373,7 @@ test("E2E: shoot intent from the guest spawns a bullet at the guest's tile and d
     // No tick needed — host's onInput dispatch is synchronous through
     // tryShootForSlot, which immediately mutates state.zone.entities.
 
-    assert.equal(getAmmo(KUNAI, 1), 9, "shoot must consume one kunai from the guest's slot");
+    assert.equal(getAmmo(KUNAI, 1), 19, "shoot must consume one kunai from the guest's slot");
     assert.equal(
       state.zone.entities.length, entitiesBefore + 1,
       "shoot must spawn exactly one new entity",

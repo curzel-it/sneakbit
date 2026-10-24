@@ -18,6 +18,7 @@ import { tryMeleeForSlot } from "./melee.js";
 import { tryInteractForSlot } from "./interact.js";
 import { isPlayerDead } from "./playerHealth.js";
 import { applyNetStep, setGuestAckSink } from "./player.js";
+import { giveCoopStarterKit } from "./starterGift.js";
 
 let stateGetter = null;
 let p2Factory = null;
@@ -112,6 +113,9 @@ function onPeerJoined(m, _isRejoin) {
   if (slot < 2 || slot > 4) return;
   guestSlotByPlayerId.set(m.playerId, slot);
   setNetworkGuestCount(guestSlotByPlayerId.size);
+  // The host owns each guest's ammo pool at index slot-1, so the kit's kunai
+  // must land here too, not only in the guest's own save.
+  giveCoopStarterKit(slot - 1);
   if (slot === 2) { spawnSlot2(state, m); return; }
   spawnExtraSlot(state, m, slot);
 }
