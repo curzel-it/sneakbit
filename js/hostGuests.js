@@ -243,6 +243,10 @@ function onMove(m) {
 
 function onStep(avatar, m, from, zone) {
   const { fx, fy, tx, ty, d, seq } = m;
+  // Queued commits only make sense behind an in-flight step. A zone change or
+  // respawn drops the step without draining the queue, which would leave the
+  // chain tip on a stale tile and reject every later commit for good.
+  if (!avatar.step && avatar.netQueuedSteps.length) dropQueuedSteps(avatar, from);
   // From-tile check: the commit must originate at the avatar's chain tip
   // (its current tile when idle, or the target of the last in-flight/queued
   // step). After a host displacement the guest commits from a stale tile
@@ -268,6 +272,11 @@ function onStep(avatar, m, from, zone) {
     avatar.step = null;
     ackStep(from, seq);
   }
+}
+
+function dropQueuedSteps(avatar, from) {
+  for (const q of avatar.netQueuedSteps) ackStep(from, q.seq);
+  avatar.netQueuedSteps.length = 0;
 }
 
 // The avatar's chain tip — where its next committed step must start from.

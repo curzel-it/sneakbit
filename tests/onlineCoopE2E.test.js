@@ -431,3 +431,56 @@ test("E2E: outgoing snapshot reflects the seq of the guest's most recently resol
     assert.equal(snap.lastSeq["p_guest"], 42, "lastSeq advances to the step's seq at its snap");
   } finally { teardown(); }
 });
+
+// --- 7. a zone change mid-chain must not strand the guest -------------------
+//
+// travelTo / respawn drop a guest avatar's in-flight step and place it on a new
+// tile. Steps the guest had queued behind that step belong to the old path; if
+// they survive, the chain tip stays on a stale tile and every later commit is
+// rejected — the guest can turn but never walk again, even through doors.
+
+test("E2E: after a teleport drops a queued chain, the guest's next step is accepted", () => {
+  const { state, fn } = setupHostWorld();
+  try {
+    fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest3", slot: 3 });
+    const a = avatarFor(state, "p_guest3");
+    const fx = a.tileX, fy = a.tileY;
+    fn.emit("move", { op: "move", seq: 100, from: "p_guest3", k: "step", fx, fy, tx: fx, ty: fy + 1, d: "down" });
+    fn.emit("move", { op: "move", seq: 101, from: "p_guest3", k: "step", fx, fy: fy + 1, tx: fx, ty: fy + 2, d: "down" });
+    assert.equal(a.netQueuedSteps.length, 1, "precondition: second step queued behind the first");
+
+    // What transitions.movePlayerTo does to every co-op avatar on zone entry.
+    a.tileX = 10; a.tileY = 10; a.x = 10; a.y = 10;
+    a.step = null;
+
+    fn.emit("move", { op: "move", seq: 102, from: "p_guest3", k: "step", fx: 10, fy: 10, tx: 11, ty: 10, d: "right" });
+    assert.ok(a.step, "the first commit from the new tile must start a step");
+    for (let i = 0; i < 30 && a.step; i++) tick(state);
+    assert.deepEqual([a.tileX, a.tileY], [11, 10]);
+  } finally { teardown(); }
+});
+
+test("E2E: a rejected queued step drops the rest of the chain instead of stranding it", () => {
+  const { state, fn } = setupHostWorld();
+  try {
+    fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest3", slot: 3 });
+    const a = avatarFor(state, "p_guest3");
+    const fx = a.tileX, fy = a.tileY;
+    fn.emit("move", { op: "move", seq: 200, from: "p_guest3", k: "step", fx, fy, tx: fx, ty: fy + 1, d: "down" });
+    fn.emit("move", { op: "move", seq: 201, from: "p_guest3", k: "step", fx, fy: fy + 1, tx: fx, ty: fy + 2, d: "down" });
+    fn.emit("move", { op: "move", seq: 202, from: "p_guest3", k: "step", fx, fy: fy + 2, tx: fx, ty: fy + 3, d: "down" });
+    assert.equal(a.netQueuedSteps.length, 2, "precondition: two steps queued behind the first");
+
+    // Something walks into the next tile before the queued step runs.
+    state.zone.collision[fy + 2][fx] = true;
+    state.zone.biome[fy + 2][fx] = 2;
+    for (let i = 0; i < 30 && a.step; i++) tick(state);
+    assert.deepEqual([a.tileX, a.tileY], [fx, fy + 1]);
+    assert.equal(a.step, null);
+    assert.equal(a.netQueuedSteps.length, 0, "the chain behind the rejected step is dropped");
+    assert.equal(_snapshotForTesting(state).lastSeq["p_guest3"], 202, "dropped steps are acked so the guest reconciles");
+
+    fn.emit("move", { op: "move", seq: 203, from: "p_guest3", k: "step", fx, fy: fy + 1, tx: fx + 1, ty: fy + 1, d: "right" });
+    assert.ok(a.step, "the guest can keep walking from where it actually stands");
+  } finally { teardown(); }
+});

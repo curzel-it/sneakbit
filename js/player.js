@@ -206,8 +206,11 @@ function consumeQueuedStep(player, zone) {
     // A gate/pushable disagreement that emerged since the step was queued.
     // Drop any partial step and ack immediately: the unchanged tile +
     // advanced lastSeq makes the guest reconcile (snap), per the contract.
+    // The rest of the queue chained off the rejected tile, so it goes too.
     player.step = null;
     ackGuestStep(player, next.seq);
+    for (const rest of q) ackGuestStep(player, rest.seq);
+    q.length = 0;
   }
 }
 

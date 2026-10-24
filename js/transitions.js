@@ -278,6 +278,7 @@ function movePlayerTo(player, tileX, tileY, direction) {
   player.x = tileX;
   player.y = tileY;
   player.step = null;
+  player.netQueuedSteps = [];
   player.queuedDir = null;
   player.pendingDir = null;
   player.pendingTimer = 0;
