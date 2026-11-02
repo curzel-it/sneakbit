@@ -232,15 +232,17 @@ async function main() {
         for (const s of state.players) add(s.player);
         return out;
       },
-      // Single-tile tap: hold the direction until the avatar has walked about
-      // one tile (or a short timeout when blocked), then release it.
+      // Tap: a direction the avatar isn't facing just turns it; the faced
+      // direction is held until the avatar has walked about one tile (or a
+      // short timeout when blocked), then released.
       tap: (slot, dir) => {
         const p = [state.player, state.player2, ...state.players.map((e) => e.player)]
           .find((q) => q && (q.index | 0) === slot - 1);
-        const sx = p?.x ?? 0, sy = p?.y ?? 0, started = performance.now();
         pushInputPress(slot, dir);
+        if (!p || p.direction !== dir) { releaseInputHeld(slot, dir); return; }
+        const sx = p.x, sy = p.y, started = performance.now();
         const check = () => {
-          const far = p && Math.hypot(p.x - sx, p.y - sy) >= 0.95;
+          const far = Math.hypot(p.x - sx, p.y - sy) >= 0.95;
           if (far || performance.now() - started > 400) { releaseInputHeld(slot, dir); return; }
           setTimeout(check, 8);
         };
@@ -775,7 +777,8 @@ function liveGuestCameraPlayers(renderPlayers) {
 // heroes sheet so P2 is visually distinct from P1.
 function makeCoopP2(p1, zone, opts = {}) {
   const p2 = createPlayer({ index: opts.index ?? 1 });
-  const { x: sx, y: sy } = pickCoopSpawn(p1, zone);
+  const others = state ? [state.player, state.player2, ...(state.players || []).map((e) => e.player)] : [];
+  const { x: sx, y: sy } = pickCoopSpawn(p1, zone, others);
   p2.tileX = sx;
   p2.tileY = sy;
   p2.x = sx;

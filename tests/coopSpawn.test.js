@@ -88,3 +88,15 @@ test("treats out-of-bounds neighbours as blocked", () => {
   // visits down → (0,1) is walkable and wins.
   assert.deepEqual(pickCoopSpawn(ref, zone), { x: 0, y: 1 });
 });
+
+test("tiles already taken by other players are skipped", () => {
+  const zone = {
+    cols: 5, rows: 5, entities: [],
+    collision: Array.from({ length: 5 }, () => Array(5).fill(false)),
+  };
+  const ref = { tileX: 2, tileY: 2, direction: "down" };
+  const first = pickCoopSpawn(ref, zone);
+  const second = pickCoopSpawn(ref, zone, [ref, { tileX: first.x, tileY: first.y }]);
+  assert.notDeepEqual(second, first);
+  assert.notDeepEqual(second, { x: 2, y: 2 });
+});

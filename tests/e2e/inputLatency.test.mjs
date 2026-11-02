@@ -60,13 +60,12 @@ function median(arr) {
 // "transport latency" sample (first change) plus several "steady-state
 // step duration" samples — both useful when comparing transports.
 async function measureRoundTrips(session, label) {
-  // Jog onto row 25's open stretch: east one tile (→69,24), then exactly
-  // one tile south (→69,25). The eastward jog is a single brief press; the
-  // southward step has to be precise — holding ArrowDown chains straight to
-  // row 26 (whose eastern neighbour is a wall), so we release the key the
-  // instant the *predicted self* (which moves locally with no round-trip)
-  // is mid-step. Releasing during the step lands a single tile on row 25
-  // instead of chaining; cadence-independent, unlike a fixed-duration tap.
+  // Jog onto row 25's open stretch: east until the wall stops the guest on
+  // column 69, then exactly one tile south (→ row 25). The southward walk
+  // has to be precise — row 26's eastern neighbour is a wall — so we release
+  // the key the instant the *predicted self* (which moves locally with no
+  // round-trip) has covered a full tile; cadence-independent, unlike a
+  // fixed-duration press.
   await evalExpr(session.guest, dispatchKey("keydown", KEYS.ArrowRight.key, KEYS.ArrowRight.code, KEYS.ArrowRight.vk));
   await new Promise((r) => setTimeout(r, 400));
   await evalExpr(session.guest, dispatchKey("keyup", KEYS.ArrowRight.key, KEYS.ArrowRight.code, KEYS.ArrowRight.vk));
@@ -79,7 +78,7 @@ async function measureRoundTrips(session, label) {
       const deadline = performance.now() + 2000;
       while (performance.now() < deadline) {
         const ps = p.getPredictedSelf();
-        if (ps && ps.y >= startY + 0.4) break;
+        if (ps && ps.y >= startY + 1) break;
         await new Promise((r) => setTimeout(r, 8));
       }
       return true;

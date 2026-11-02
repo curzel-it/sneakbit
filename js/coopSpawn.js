@@ -25,7 +25,12 @@ const DIRS = ["up", "down", "left", "right"];
 // whole grid before returning the fallback).
 const MAX_VISITED = 4096;
 
-export function pickCoopSpawn(reference, zone) {
+/**
+ * @param {any} reference
+ * @param {any} zone
+ * @param {{ tileX: number, tileY: number }[]} [others] players whose tiles are taken
+ */
+export function pickCoopSpawn(reference, zone, others = []) {
   if (!zone || !reference) {
     return { x: reference?.tileX ?? 0, y: reference?.tileY ?? 0 };
   }
@@ -42,7 +47,7 @@ export function pickCoopSpawn(reference, zone) {
   }
   while (queue.length > 0 && visited.size < MAX_VISITED) {
     const { x, y } = queue.shift();
-    if (isSpawnableTile(zone, x, y)) return { x, y };
+    if (isSpawnableTile(zone, x, y) && !others.some((o) => o && o.tileX === x && o.tileY === y)) return { x, y };
     for (const d of order) {
       const [dx, dy] = DIR_DELTA[d];
       enqueue(queue, visited, x + dx, y + dy, zone);
