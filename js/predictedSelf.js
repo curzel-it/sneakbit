@@ -1,41 +1,37 @@
-// Guest-side authority for the guest's own avatar (guest-authoritative-
-// movement.md). An in-process copy of the avatar consumes local input every
-// frame via the real player model, so movement feels instant. Crucially it
-// is also the *source of truth* for the avatar's tile path: after each tick
-// it streams committed tile-steps + facing to the host (forwardMove), which
-// validates + executes them. The host no longer guesses the path between
-// input edges, so the old junction / late-stop / multi-key races are gone.
+// Guest-side authority for the guest's own avatar. An in-process copy of the
+// avatar consumes local input every frame via the real player model, so
+// movement feels instant. It is also the source of truth for the avatar's
+// position: after each tick it streams position updates to the host
+// (forwardMove), which validates and applies them.
 //
-// Reconciliation is exact, not a fuzzy tolerance: the host echoes, per guest,
-// `lastSeq` alongside the authoritative tile. We keep a committed-step log
-// and compare the host's tile to the result of step #lastSeq — match means
-// lockstep (any gap is just unacked in-flight steps), mismatch means a real
-// divergence (rejection / knockback / host displacement) and we hard-snap.
+// Reconciliation: the host echoes, per guest, `lastSeq` alongside the
+// authoritative position. We keep a log of sent positions and compare the
+// host's position to entry #lastSeq — equal means lockstep (any gap is just
+// unacked in-flight updates), different means a real divergence (rejection,
+// host displacement) and we hard-snap. Updates sent before a snap are not
+// compared, as the host may still be applying them.
 
-import { createPlayer, updatePlayer } from "./player.js";
+import { createPlayer, updatePlayer, placePlayer } from "./player.js";
 import { pollInput } from "./input.js";
 import { getSelfPlayerId } from "./onlineBootstrap.js";
 import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js";
-import { getStepLog, dropAckedSteps, clearStepLog, forwardMove } from "./guestInputForwarder.js";
+import { getStepLog, dropAckedSteps, clearStepLog, forwardMove, positionMove, getSeq } from "./guestInputForwarder.js";
 import { getSpecies } from "./species.js";
+
+const EMIT_INTERVAL = 0.033;
+const RECONCILE_EPS = 0.01;
 
 let predicted = null;
 let installed = false;
 let unsubs = [];
 
-// Highest step seq the host has resolved for us (echoed in lastSeq).
 let lastAckedSeq = 0;
-// Anchor for reconciliation: the result tile of step #lastAckedSeq — where
-// the host's authoritative tile *should* be. Compared against each delta's
-// auth tile. Initialised to the join/snap tile (lastSeq 0 has no step).
 let lastResolvedX = null;
 let lastResolvedY = null;
+let snapSeq = 0;
 
-// Emit-transition tracking. prevStepRef is the step object we last saw on
-// the predicted avatar; a new object means a fresh committed step (chained
-// steps each get a distinct object, so this catches chains too).
-let prevStepRef = null;
-let lastEmittedDir = null;
+let lastSent = null;
+let emitTimer = 0;
 
 export function installPredictedSelf(net) {
   if (installed) return;
@@ -55,8 +51,9 @@ export function uninstallPredictedSelf() {
   lastAckedSeq = 0;
   lastResolvedX = null;
   lastResolvedY = null;
-  prevStepRef = null;
-  lastEmittedDir = null;
+  snapSeq = 0;
+  lastSent = null;
+  emitTimer = 0;
 }
 
 export const _uninstallPredictedSelfForTesting = uninstallPredictedSelf;
@@ -95,46 +92,36 @@ function predictionZone(zone) {
 
 export const _predictionZoneForTesting = predictionZone;
 
-// Each render frame. Drains local input, advances predicted via the existing
-// player model (so it stays bit-for-bit identical to what the host computes),
-// then emits any movement transition as a committed step / face to the host.
+// Each render frame. Drains local input, advances predicted via the shared
+// player model, then streams the new position to the host when it changed.
 export function tickPredictedSelf(dt) {
   const zone = getMirrorZone();
   if (!zone) return;
   if (!predicted) {
     predicted = makeFromMirror();
     if (!predicted) return;
-    prevStepRef = predicted.step;
-    lastEmittedDir = predicted.direction;
+    lastSent = sentState(predicted);
   }
   const input = pollInput(1);
   updatePlayer(predicted, input, dt, predictionZone(zone));
-  emitTransitions();
+  emitTimer += dt;
+  emitPosition();
 }
 
-// Detects predicted-avatar transitions since the last tick and streams them.
-//   * step null→non-null (or a chained new step) → emit a committed step.
-//   * step→idle (stopped) or an idle direction change → emit a face.
-function emitTransitions() {
-  const step = predicted.step;
-  if (step) {
-    if (step !== prevStepRef) {
-      forwardMove({
-        k: "step",
-        fx: step.fromX, fy: step.fromY,
-        tx: step.toX, ty: step.toY,
-        d: predicted.direction,
-      });
-    }
-  } else if (prevStepRef) {
-    // A step just ended without chaining → stopped.
-    forwardMove({ k: "face", x: predicted.tileX, y: predicted.tileY, d: predicted.direction });
-  } else if (predicted.direction !== lastEmittedDir) {
-    // Idle direction change (pure rotate, no step).
-    forwardMove({ k: "face", x: predicted.tileX, y: predicted.tileY, d: predicted.direction });
-  }
-  prevStepRef = step || null;
-  lastEmittedDir = predicted.direction;
+function sentState(p) {
+  return { x: p.x, y: p.y, d: p.direction, m: !!p.moving };
+}
+
+function emitPosition() {
+  const now = sentState(predicted);
+  const prev = lastSent;
+  const moved = !prev || now.x !== prev.x || now.y !== prev.y;
+  const turned = !prev || now.d !== prev.d || now.m !== prev.m;
+  if (!moved && !turned && !predicted._pushed) return;
+  if (!turned && !predicted._pushed && emitTimer < EMIT_INTERVAL) return;
+  if (forwardMove(positionMove(predicted)) == null) return;
+  lastSent = now;
+  emitTimer = 0;
 }
 
 function makeFromMirror() {
@@ -145,10 +132,8 @@ function makeFromMirror() {
   const p = createPlayer({ index: mp.index | 0 });
   p.playerId = selfId;
   p.slot = mp.slot;
-  p.tileX = mp.tileX; p.tileY = mp.tileY;
-  p.x = mp.x; p.y = mp.y;
+  placePlayer(p, mp.x ?? mp.tileX, mp.y ?? mp.tileY);
   p.direction = mp.direction || "down";
-  p.step = null;
   return p;
 }
 
@@ -163,14 +148,10 @@ function playerFromAuth(auth) {
 // Overwrite a predicted avatar's position/facing from an authoritative
 // payload and clear all in-flight movement state.
 function snapPredictedTo(auth, p = predicted) {
-  p.tileX = auth.tileX; p.tileY = auth.tileY;
-  p.x = auth.x ?? auth.tileX; p.y = auth.y ?? auth.tileY;
+  placePlayer(p, auth.x ?? auth.tileX, auth.y ?? auth.tileY);
   p.direction = auth.direction || p.direction;
-  p.step = null;
-  p.queuedDir = null;
-  p.pendingDir = null;
-  p.pendingTimer = 0;
-  p._sliding = false;
+  p.moving = false;
+  p._pushed = null;
 }
 
 function onAuth(msg) {
@@ -197,38 +178,37 @@ function hardReset(auth, lastSeq) {
   } else if (auth) {
     snapPredictedTo(auth);
   }
-  lastResolvedX = predicted.tileX;
-  lastResolvedY = predicted.tileY;
-  prevStepRef = null;
-  lastEmittedDir = predicted.direction;
+  markSnapped();
   // A snapshot baseline is a zone change (or a resync) — the ground moved
   // under this avatar. Arm the same hold gate the host arms on its own
   // players (transitions.movePlayerTo): a key still held from walking into
-  // the door must not immediately step back into the one we came out of,
+  // the door must not immediately walk back into the one we came out of,
   // which over the wire would drag the whole party back with it.
   predicted._holdGate = true;
+}
+
+function markSnapped() {
+  lastResolvedX = predicted.x;
+  lastResolvedY = predicted.y;
+  snapSeq = getSeq();
+  lastSent = sentState(predicted);
 }
 
 function reconcileDelta(auth, lastSeq) {
   if (!predicted) { predicted = makeFromMirror(); return; }
   if (typeof lastSeq === "number" && lastSeq > lastAckedSeq) {
-    // Re-anchor to the result tile of the newest resolved step BEFORE
-    // dropping it from the log.
     const entry = findStep(lastSeq);
-    if (entry) { lastResolvedX = entry.tx; lastResolvedY = entry.ty; }
+    if (entry) { lastResolvedX = entry.x; lastResolvedY = entry.y; }
     lastAckedSeq = lastSeq;
     dropAckedSteps(lastAckedSeq);
   }
+  if (lastAckedSeq <= snapSeq && lastAckedSeq < getSeq()) return;
   if (lastResolvedX == null) {
-    // No anchor yet (no step resolved + never snapped) — adopt auth.
-    lastResolvedX = auth.tileX;
-    lastResolvedY = auth.tileY;
+    lastResolvedX = auth.x;
+    lastResolvedY = auth.y;
   }
-  // Exact reconciliation: the host's authoritative tile must equal the
-  // result of step #lastSeq. Equal → lockstep (any predicted/auth gap is
-  // just unacked in-flight steps; no snap). Different → real divergence
-  // (no-displacement rejection, knockback, host-driven move) → hard snap.
-  if (auth.tileX !== lastResolvedX || auth.tileY !== lastResolvedY) {
+  const ax = auth.x ?? auth.tileX, ay = auth.y ?? auth.tileY;
+  if (Math.abs(ax - lastResolvedX) > RECONCILE_EPS || Math.abs(ay - lastResolvedY) > RECONCILE_EPS) {
     snapToAuth(auth);
   }
 }
@@ -236,12 +216,7 @@ function reconcileDelta(auth, lastSeq) {
 function snapToAuth(auth) {
   snapPredictedTo(auth);
   clearStepLog();
-  lastResolvedX = predicted.tileX;
-  lastResolvedY = predicted.tileY;
-  prevStepRef = null;
-  lastEmittedDir = predicted.direction;
-  // The next frames re-commit from currently-held keys (updatePlayer reads
-  // input.js slot 1), so a snap doesn't undo a key the user is still holding.
+  markSnapped();
 }
 
 function findStep(seq) {

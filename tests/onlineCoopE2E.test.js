@@ -49,6 +49,7 @@ const {
   _broadcastDeltaForTesting,
 } = await import("../js/snapshotBroadcaster.js");
 const { createPlayer, updatePlayer, updateGuestAvatar } = await import("../js/player.js");
+const { getLastSeqMap } = await import("../js/hostGuests.js");
 const { installShooting, tickShooting, tryShootForSlot } = await import("../js/shooting.js");
 const { checkPickup } = await import("../js/pickups.js");
 const { loadSpeciesData } = await import("../js/species.js");
@@ -150,20 +151,23 @@ function avatarFor(state, fromId) {
   return state.players.find((s) => s.playerId === fromId)?.player ?? null;
 }
 
-// Walk a guest `tiles` whole tiles in `dir` by streaming committed steps —
-// exactly what predictedSelf does on a real guest. Each step is emitted from
-// the avatar's current tile, then animated to its snap (pickups resolve in
-// the snap tick via tick()'s checkPickup).
+// Walk a guest `tiles` tiles in `dir` by streaming position updates in
+// small increments, exactly what predictedSelf does on a real guest, ticking
+// the host between updates so pickups resolve as the avatar crosses tiles.
 let seqCounter = 1;
+const WALK_INCREMENT = 0.1;
 function walk(state, fn, fromId, dir, tiles, dt = 0.02) {
   const a = avatarFor(state, fromId);
   const [dx, dy] = DIR_DELTA[dir];
-  for (let t = 0; t < tiles; t++) {
-    const fx = a.tileX, fy = a.tileY;
-    fn.emit("move", { op: "move", seq: seqCounter++, from: fromId, k: "step", fx, fy, tx: fx + dx, ty: fy + dy, d: dir });
-    for (let i = 0; i < 30 && a.step; i++) tick(state, dt);
-    tick(state, dt); // settle: pickups on the landed tile
+  const sx = a.x, sy = a.y;
+  const n = Math.round(tiles / WALK_INCREMENT);
+  for (let i = 1; i <= n; i++) {
+    const x = Math.round((sx + dx * WALK_INCREMENT * i) * 1000) / 1000;
+    const y = Math.round((sy + dy * WALK_INCREMENT * i) * 1000) / 1000;
+    fn.emit("move", { op: "move", seq: seqCounter++, from: fromId, k: "pos", x, y, d: dir, m: i < n ? 1 : 0 });
+    tick(state, dt);
   }
+  tick(state, dt);
 }
 
 function setupHostWorld({ bundleAt = { x: 5, y: 8 } } = {}) {
@@ -300,8 +304,6 @@ test("E2E: guest walks down onto a 10× kunai bundle → host credits 10 kunai t
 
     const ammoBefore = getAmmo(KUNAI, 1);
 
-    // Hold moveDown for 3 tile-steps — the avatar's chained stepping
-    // (HOLD_PRIORITY) walks tile-by-tile while the key is held.
     walk(state, fn, "p_guest", "down", 3);
 
     assert.equal(
@@ -413,74 +415,61 @@ test("E2E: after the guest steps, the host's outgoing delta includes the guest's
 
 // --- 6. lastSeq feedback to the guest --------------------------------------
 //
-// Reconciliation on the guest side reads delta.lastSeq[selfId] to anchor the
-// committed-step log. Pin that a resolved step's seq comes back in the
-// outgoing snapshot — and only at the snap (not at receipt).
+// Reconciliation on the guest side reads delta.lastSeq[selfId] to anchor its
+// position log. Pin that an applied update's seq comes back in the outgoing
+// snapshot together with the position it produced.
 
-test("E2E: outgoing snapshot reflects the seq of the guest's most recently resolved step", () => {
+test("E2E: outgoing snapshot pairs the guest's latest update seq with its position", () => {
   const { state, fn } = setupHostWorld();
   try {
     fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest", slot: 2 });
     const a = state.player2;
-    const fx = a.tileX, fy = a.tileY;
-    fn.emit("move", { op: "move", seq: 42, from: "p_guest", k: "step", fx, fy, tx: fx, ty: fy + 1, d: "down" });
-    // Mid-step the step isn't acked yet.
-    assert.notEqual(_snapshotForTesting(state).lastSeq["p_guest"], 42);
-    for (let i = 0; i < 30 && a.step; i++) tick(state);
+    fn.emit("move", { op: "move", seq: 42, from: "p_guest", k: "pos", x: a.x, y: a.y + 0.3, d: "down", m: 1 });
     const snap = _snapshotForTesting(state);
-    assert.equal(snap.lastSeq["p_guest"], 42, "lastSeq advances to the step's seq at its snap");
+    assert.equal(snap.lastSeq["p_guest"], 42);
+    const guest = snap.players.find((p) => p.playerId === "p_guest");
+    assert.equal(guest.y, 5.3);
   } finally { teardown(); }
 });
 
-// --- 7. a zone change mid-chain must not strand the guest -------------------
+// --- 7. a zone change must not strand the guest ------------------------------
 //
-// travelTo / respawn drop a guest avatar's in-flight step and place it on a new
-// tile. Steps the guest had queued behind that step belong to the old path; if
-// they survive, the chain tip stays on a stale tile and every later commit is
-// rejected — the guest can turn but never walk again, even through doors.
+// travelTo / respawn place a guest avatar on a new spot. Updates the guest
+// sent from its old spot are rejected (too far), and the first update from
+// the new spot (after the snapshot snaps the guest) is accepted.
 
-test("E2E: after a teleport drops a queued chain, the guest's next step is accepted", () => {
+test("E2E: after a teleport, stale updates bounce and the guest walks on from the new spot", () => {
   const { state, fn } = setupHostWorld();
   try {
     fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest3", slot: 3 });
     const a = avatarFor(state, "p_guest3");
-    const fx = a.tileX, fy = a.tileY;
-    fn.emit("move", { op: "move", seq: 100, from: "p_guest3", k: "step", fx, fy, tx: fx, ty: fy + 1, d: "down" });
-    fn.emit("move", { op: "move", seq: 101, from: "p_guest3", k: "step", fx, fy: fy + 1, tx: fx, ty: fy + 2, d: "down" });
-    assert.equal(a.netQueuedSteps.length, 1, "precondition: second step queued behind the first");
+    const sx = a.x, sy = a.y;
 
     // What transitions.movePlayerTo does to every co-op avatar on zone entry.
-    a.tileX = 10; a.tileY = 10; a.x = 10; a.y = 10;
-    a.step = null;
+    a.tileX = 15; a.tileY = 15; a.x = 15; a.y = 15;
 
-    fn.emit("move", { op: "move", seq: 102, from: "p_guest3", k: "step", fx: 10, fy: 10, tx: 11, ty: 10, d: "right" });
-    assert.ok(a.step, "the first commit from the new tile must start a step");
-    for (let i = 0; i < 30 && a.step; i++) tick(state);
-    assert.deepEqual([a.tileX, a.tileY], [11, 10]);
+    fn.emit("move", { op: "move", seq: 100, from: "p_guest3", k: "pos", x: sx, y: sy + 0.2, d: "down", m: 1 });
+    assert.deepEqual([a.x, a.y], [15, 15], "a stale update from the old spot is rejected");
+    assert.equal(getLastSeqMap()["p_guest3"], 100, "and acked so the guest reconciles");
+
+    fn.emit("move", { op: "move", seq: 101, from: "p_guest3", k: "pos", x: 15.2, y: 15, d: "right", m: 1 });
+    assert.deepEqual([a.x, a.y], [15.2, 15]);
   } finally { teardown(); }
 });
 
-test("E2E: a rejected queued step drops the rest of the chain instead of stranding it", () => {
+test("E2E: an update into a wall is rejected and the guest walks on from where it stands", () => {
   const { state, fn } = setupHostWorld();
   try {
     fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest3", slot: 3 });
     const a = avatarFor(state, "p_guest3");
     const fx = a.tileX, fy = a.tileY;
-    fn.emit("move", { op: "move", seq: 200, from: "p_guest3", k: "step", fx, fy, tx: fx, ty: fy + 1, d: "down" });
-    fn.emit("move", { op: "move", seq: 201, from: "p_guest3", k: "step", fx, fy: fy + 1, tx: fx, ty: fy + 2, d: "down" });
-    fn.emit("move", { op: "move", seq: 202, from: "p_guest3", k: "step", fx, fy: fy + 2, tx: fx, ty: fy + 3, d: "down" });
-    assert.equal(a.netQueuedSteps.length, 2, "precondition: two steps queued behind the first");
+    state.zone.collision[fy + 1][fx] = true;
+    state.zone.biome[fy + 1][fx] = 2;
+    fn.emit("move", { op: "move", seq: 200, from: "p_guest3", k: "pos", x: fx, y: fy + 0.6, d: "down", m: 1 });
+    assert.deepEqual([a.x, a.y], [fx, fy]);
+    assert.equal(_snapshotForTesting(state).lastSeq["p_guest3"], 200);
 
-    // Something walks into the next tile before the queued step runs.
-    state.zone.collision[fy + 2][fx] = true;
-    state.zone.biome[fy + 2][fx] = 2;
-    for (let i = 0; i < 30 && a.step; i++) tick(state);
-    assert.deepEqual([a.tileX, a.tileY], [fx, fy + 1]);
-    assert.equal(a.step, null);
-    assert.equal(a.netQueuedSteps.length, 0, "the chain behind the rejected step is dropped");
-    assert.equal(_snapshotForTesting(state).lastSeq["p_guest3"], 202, "dropped steps are acked so the guest reconciles");
-
-    fn.emit("move", { op: "move", seq: 203, from: "p_guest3", k: "step", fx, fy: fy + 1, tx: fx + 1, ty: fy + 1, d: "right" });
-    assert.ok(a.step, "the guest can keep walking from where it actually stands");
+    fn.emit("move", { op: "move", seq: 201, from: "p_guest3", k: "pos", x: fx + 0.3, y: fy, d: "right", m: 1 });
+    assert.deepEqual([a.x, a.y], [fx + 0.3, fy]);
   } finally { teardown(); }
 });

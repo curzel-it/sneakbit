@@ -17,7 +17,9 @@ import { tryShootForSlot } from "./shooting.js";
 import { tryMeleeForSlot } from "./melee.js";
 import { tryInteractForSlot } from "./interact.js";
 import { isPlayerDead } from "./playerHealth.js";
-import { applyNetStep, setGuestAckSink } from "./player.js";
+import { syncTile } from "./player.js";
+import { canHeroSweep } from "./heroCollision.js";
+import { findPushableAt, pushOneTile } from "./pushables.js";
 import { giveCoopStarterKit } from "./starterGift.js";
 
 let stateGetter = null;
@@ -43,15 +45,13 @@ const ACTION_COOLDOWN_MS = {
   melee:    180,
   interact: 250,
 };
-// Hard cap on a guest's pending step queue. The host consumes one queued
-// step per snap (~STEP_DURATION cadence) and an honest guest commits at the
-// same rate, so the queue normally holds 0–1 entries. A buggy or tampered
-// client streaming steps faster than the host drains them would otherwise
-// grow netQueuedSteps without bound — unbounded memory plus seconds of
-// "autopilot" replaying queued moves that ignore host displacement. Past
-// the cap we reject (ack so the guest's lastSeq advances and it resyncs)
-// instead of queueing.
-const MAX_NET_QUEUED_STEPS = 6;
+// Largest jump a single position update may make, in tiles. Updates stream
+// at ~30 Hz, so an honest guest moves a fraction of a tile per update; the
+// slack covers frame hitches. Anything further is rejected (acked unchanged,
+// so the guest snaps back).
+const MAX_POS_JUMP = 2;
+// How far a guest's push claim may sit from its avatar centre, in tiles.
+const MAX_PUSH_REACH = 1.6;
 // playerId → { intent → lastAppliedMs }
 const lastActionAtByGuest = new Map();
 
@@ -80,10 +80,6 @@ export function installHostGuests(getState, opts = {}) {
   unsubs.push(net.on("peer.ghosted", onPeerGhosted));
   unsubs.push(net.on("input", onInput));
   unsubs.push(net.on("move", onMove));
-  // Resolved guest steps advance the per-guest lastSeq through this sink,
-  // fired by player.updateGuestAvatar at the exact snap (and on a queued-
-  // step reject) so (tile, seq) stay a consistent pair for the broadcaster.
-  setGuestAckSink(ackStep);
   return true;
 }
 
@@ -94,7 +90,6 @@ export function installHostGuests(getState, opts = {}) {
 export function uninstallHostGuests() {
   for (const u of unsubs) { try { u(); } catch { /* ignore */ } }
   unsubs = [];
-  setGuestAckSink(null);
   stateGetter = null;
   p2Factory = null;
   guestSlotByPlayerId.clear();
@@ -183,14 +178,14 @@ function onPeerGhosted(m) {
   // disconnected" hitch even though the other peers were fine.
   if (!m || !m.playerId) return;
   const slot = guestSlotByPlayerId.get(m.playerId);
-  if (slot) clearInputHeld(slot);
+  if (!slot) return;
+  clearInputHeld(slot);
+  const avatar = playerForSlot(stateGetter?.(), slot);
+  if (avatar) avatar.moving = false;
 }
 
-// Action intents only (movement is now op:"move" — see onMove). The
-// blanket lastSeq advance that used to live here is gone: under guest-
-// authoritative movement only a *resolved step* touches lastSeq (accept at
-// snap, reject immediately), so actions/faces share the seq counter but
-// must not bump the ack.
+// Action intents only (movement is op:"move" — see onMove). Only position
+// updates touch lastSeq; actions share the seq counter but never ack.
 function onInput(m) {
   if (!m || typeof m.intent !== "string") return;
   const from = m.from;
@@ -216,12 +211,13 @@ function applyIntent(slot, intent, from, msg) {
   dispatchActionForSlot(slot, intent);
 }
 
-// Guest committed tile-step / face update. The host validates legality
-// (adjacency from-tile + canEnter via applyNetStep) and executes; it no
-// longer runs movement decisions for guest avatars. See
-// docs/multiplayer.md.
+// Guest position update. The host validates it (alive, a plausible jump, a
+// clear straight line through its own zone) and applies it, acking the seq
+// in the same call so the broadcaster always reads a consistent
+// (position, seq) pair. A rejected update is acked with the avatar left in
+// place, which makes the guest snap back. See docs/multiplayer.md.
 function onMove(m) {
-  if (!m || typeof m.k !== "string") return;
+  if (!m || m.k !== "pos") return;
   const from = m.from;
   if (!from) return;
   const slot = guestSlotByPlayerId.get(from);
@@ -230,66 +226,33 @@ function onMove(m) {
   if (!state) return;
   const avatar = playerForSlot(state, slot);
   if (!avatar) return;
-  const dead = isPlayerDead(avatar.index | 0);
-  if (m.k === "face") {
-    // Faces never touch lastSeq (not reconciled). A dead guest doesn't turn.
-    if (!dead && !avatar.step && typeof m.d === "string") avatar.direction = m.d;
-    return;
-  }
-  if (m.k !== "step") return;
-  if (dead) { ackStep(from, m.seq); return; }   // reject: tile unchanged, lastSeq advances
-  onStep(avatar, m, from, state.zone);
-}
-
-function onStep(avatar, m, from, zone) {
-  const { fx, fy, tx, ty, d, seq } = m;
-  // Queued commits only make sense behind an in-flight step. A zone change or
-  // respawn drops the step without draining the queue, which would leave the
-  // chain tip on a stale tile and reject every later commit for good.
-  if (!avatar.step && avatar.netQueuedSteps.length) dropQueuedSteps(avatar, from);
-  // From-tile check: the commit must originate at the avatar's chain tip
-  // (its current tile when idle, or the target of the last in-flight/queued
-  // step). After a host displacement the guest commits from a stale tile
-  // for ~1 RTT; those reject until the next delta snaps it.
-  const tip = chainTip(avatar);
-  if (fx !== tip.x || fy !== tip.y) { ackStep(from, seq); return; }   // reject
-  if (avatar.step) {
-    // Mid-step: queue for consumption at the snap. lastSeq waits until it
-    // resolves (accept→snap, or reject) in updateGuestAvatar.
-    if (avatar.netQueuedSteps.length >= MAX_NET_QUEUED_STEPS) {
-      ackStep(from, seq);   // reject: queue full (flood) — don't grow unbounded
-      return;
-    }
-    avatar.netQueuedSteps.push({ d, tx, ty, seq });
-    return;
-  }
-  // Idle: execute now. Accept iff a step was produced and its target is the
-  // tile the guest claimed; ack waits for the snap. Otherwise reject.
-  if (applyNetStep(avatar, d, zone)
-      && avatar.step.toX === tx && avatar.step.toY === ty) {
-    avatar.netStepSeq = seq;
+  if (isPlayerDead(avatar.index | 0)) { ackStep(from, m.seq); return; }
+  const { x, y } = m;
+  if (!Number.isFinite(x) || !Number.isFinite(y)) { ackStep(from, m.seq); return; }
+  if (m.push) applyGuestPush(avatar, m.push, state.zone);
+  const ok = Math.hypot(x - avatar.x, y - avatar.y) <= MAX_POS_JUMP
+    && canHeroSweep(state.zone, avatar.x, avatar.y, x, y);
+  if (ok) {
+    avatar.x = x;
+    avatar.y = y;
+    syncTile(avatar);
+    if (typeof m.d === "string") avatar.direction = m.d;
+    avatar.moving = !!m.m;
   } else {
-    avatar.step = null;
-    ackStep(from, seq);
+    avatar.moving = false;
   }
+  ackStep(from, m.seq);
 }
 
-function dropQueuedSteps(avatar, from) {
-  for (const q of avatar.netQueuedSteps) ackStep(from, q.seq);
-  avatar.netQueuedSteps.length = 0;
+function applyGuestPush(avatar, push, zone) {
+  if (!zone || !Number.isInteger(push.x) || !Number.isInteger(push.y)) return;
+  if (Math.hypot(push.x - avatar.x, push.y - avatar.y) > MAX_PUSH_REACH) return;
+  const pushable = findPushableAt(zone, push.x, push.y);
+  if (!pushable || pushable._slide) return;
+  pushOneTile(zone, pushable, push.d);
 }
 
-// The avatar's chain tip — where its next committed step must start from.
-function chainTip(avatar) {
-  const q = avatar.netQueuedSteps;
-  if (q && q.length) { const t = q[q.length - 1]; return { x: t.tx, y: t.ty }; }
-  if (avatar.step) return { x: avatar.step.toX, y: avatar.step.toY };
-  return { x: avatar.tileX, y: avatar.tileY };
-}
-
-// Advance a guest's lastSeq to a resolved step's seq (monotonic). Shared by
-// the reject paths here and player.updateGuestAvatar's accept/queued-reject
-// snaps via setGuestAckSink.
+// Advance a guest's lastSeq to a resolved update's seq (monotonic).
 function ackStep(from, seq) {
   if (typeof seq !== "number") return;
   const prev = lastSeqOut[from] ?? 0;
@@ -328,6 +291,7 @@ function actionRangeOk(slot) {
 }
 
 function playerForSlot(state, slot) {
+  if (!state) return null;
   if (slot === 2) return state.player2 || null;
   if (slot < 2 || slot > 4) return null;
   if (!Array.isArray(state.players)) return null;

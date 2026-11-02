@@ -5,15 +5,15 @@
 //     facing the action fires in (read from the predicted self) so the host
 //     can't reorder a shoot against a separate face update.
 //
-//   * Committed tile-steps + facing — emitted by predictedSelf via
-//     forwardMove() as `{ op:"move", seq, k:"step"|"face", … }`. The guest
-//     owns its own tile path; the host validates + executes each step. See
+//   * Position updates — emitted by predictedSelf via forwardMove() as
+//     `{ op:"move", seq, k:"pos", x, y, d, m }`. The guest owns its own
+//     position; the host validates + applies each update. See
 //     docs/multiplayer.md.
 //
 // Movement is NOT watched here: local motion reaches predictedSelf through
 // input.js's slot-1 keyboard listeners and pollInput(1) (which folds in the
 // guest's gamepad). predictedSelf is the single place that turns that into
-// committed steps on the wire.
+// position updates on the wire.
 
 import { actionForCode } from "./keyBindings.js";
 import { readPadSnapshotForSlot } from "./gamepad.js";
@@ -31,10 +31,10 @@ let seq = 0;
 let installed = false;
 let onVisibilityHandler = null;
 
-// Committed-step log: one entry per emitted step, used by predictedSelf for
-// exact reconciliation (compare the host's authoritative tile to
-// stepLog[lastSeq].result). Bounded so a wedged ack-stream can't grow it
-// without limit. `tx`/`ty` are the resulting tile of the step.
+// Position log: one entry per emitted update, used by predictedSelf for
+// reconciliation (compare the host's authoritative position to
+// stepLog[lastSeq]). Bounded so a wedged ack-stream can't grow it without
+// limit.
 const STEP_LOG_CAP = 256;
 const stepLog = [];
 
@@ -94,10 +94,7 @@ export function flushOnReconnect(now = Date.now()) {
     net.send({ op: "input", seq, t: now, intent: entry.intent, d: currentFacing() });
   }
   const p = getPredictedSelf();
-  if (p) {
-    seq++;
-    net.send({ op: "move", seq, k: "face", x: p.tileX, y: p.tileY, d: p.direction });
-  }
+  if (p) forwardMove(positionMove(p));
 }
 
 export function _getPendingActionsForTesting() { return pendingActions.slice(); }
@@ -117,20 +114,28 @@ export function dropAckedSteps(ackedSeq) {
 // Clears the committed-step log outright (zone change / resync hard reset).
 export function clearStepLog() { stepLog.length = 0; }
 
-// Emit a movement transition produced by predictedSelf. `move` is either
-//   { k:"step", fx, fy, tx, ty, d }  — predicted.step went null→non-null
-//   { k:"face", x, y, d }            — idle direction change, or step→idle
-// Assigns the next seq, appends step commits to the step-log, and ships it.
-// No-op while disconnected: movement is state-derived and resynced from the
-// next snapshot + held keys on reconnect, so a dropped step is never a
-// phantom move. Returns the assigned seq (or null when dropped).
+/** Wire shape of a predicted avatar's position update. */
+export function positionMove(p) {
+  const move = { k: "pos", x: round3(p.x), y: round3(p.y), d: p.direction, m: p.moving ? 1 : 0 };
+  if (p._pushed) {
+    move.push = p._pushed;
+    p._pushed = null;
+  }
+  return move;
+}
+
+function round3(n) { return Math.round(n * 1000) / 1000; }
+
+// Emit a position update produced by predictedSelf:
+//   { k:"pos", x, y, d, m, push? }
+// Assigns the next seq, appends it to the log, and ships it. No-op while
+// disconnected: movement is state-derived and resynced from the next
+// snapshot on reconnect. Returns the assigned seq (or null when dropped).
 export function forwardMove(move) {
   if (!net?.isConnected?.()) return null;
   seq++;
-  if (move.k === "step") {
-    stepLog.push({ seq, tx: move.tx, ty: move.ty });
-    if (stepLog.length > STEP_LOG_CAP) stepLog.shift();
-  }
+  stepLog.push({ seq, x: move.x, y: move.y });
+  if (stepLog.length > STEP_LOG_CAP) stepLog.shift();
   net.send({ op: "move", seq, ...move });
   return seq;
 }

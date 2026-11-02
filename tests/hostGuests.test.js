@@ -1,8 +1,7 @@
 // Host-side guest plumbing under guest-authoritative movement: peer.joined
-// spawns avatars, op:"move" commits are validated + executed against the
-// host's own zone, actions dispatch with facing, and lastSeq advances only
-// on resolved steps (accept→snap, reject→immediately). See
-// docs/multiplayer.md.
+// spawns avatars, op:"move" position updates are validated + applied against
+// the host's own zone, actions dispatch with facing, and lastSeq advances on
+// every resolved update (accepted or rejected). See docs/multiplayer.md.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -13,7 +12,7 @@ const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
   await import("../js/onlineBootstrap.js");
 const { installHostGuests, _uninstallHostGuestsForTesting, getLastSeqMap } =
   await import("../js/hostGuests.js");
-const { createPlayer, updateGuestAvatar } = await import("../js/player.js");
+const { createPlayer } = await import("../js/player.js");
 const { loadSpeciesData } = await import("../js/species.js");
 const inputModule = await import("../js/input.js");
 
@@ -87,25 +86,9 @@ function teardown() {
   for (const s of [2, 3, 4]) inputModule.clearInputState(s);
 }
 
-// Drive all in-flight + chained steps to completion (avatar fully idle).
-function finishStep(avatar, zone) {
-  for (let i = 0; i < 60 && avatar.step; i++) updateGuestAvatar(avatar, 0.05, zone);
-}
-// Drive exactly the current step to its snap (a chained next step may start).
-function finishOneStep(avatar, zone) {
-  const start = avatar.step;
-  if (!start) return;
-  for (let i = 0; i < 30; i++) {
-    updateGuestAvatar(avatar, 0.05, zone);
-    if (avatar.step !== start) break;
-  }
-}
-// One animation frame.
-function frame(avatar, zone, dt = 0.02) { updateGuestAvatar(avatar, dt, zone); }
-
 let seq = 0;
-function stepMsg(from, fx, fy, tx, ty, d) {
-  return { op: "move", seq: ++seq, from, k: "step", fx, fy, tx, ty, d };
+function posMsg(from, x, y, d = "down", m = 1, extra = {}) {
+  return { op: "move", seq: ++seq, from, k: "pos", x, y, d, m, ...extra };
 }
 
 // --- spawn / lifecycle ------------------------------------------------------
@@ -152,159 +135,90 @@ test("slot 3 + slot 4 spawn into state.players with the right indices", () => {
   teardown();
 });
 
-// --- onMove: validate + execute ---------------------------------------------
+// --- onMove: validate + apply ----------------------------------------------
 
-test("an idle avatar executes a legal committed step and lands on the target tile", () => {
+test("a plausible position update is applied and acked at once", () => {
   const { fakeNet, state } = setup();
   fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
-  const avatar = state.player2; // at (6,5)
-  fakeNet.emit("move", stepMsg("p_g1", 6, 5, 6, 6, "down"));
-  assert.ok(avatar.step, "a legal step starts immediately on an idle avatar");
-  // lastSeq must NOT advance mid-step (tileX is still the from tile).
-  assert.equal(getLastSeqMap()["p_g1"] ?? 0, 0);
-  finishStep(avatar, state.zone);
-  assert.deepEqual({ x: avatar.tileX, y: avatar.tileY }, { x: 6, y: 6 });
-  assert.equal(getLastSeqMap()["p_g1"], seq, "lastSeq advances at the snap");
+  const a = state.player2; // at (6,5)
+  seq = 0;
+  fakeNet.emit("move", posMsg("p_g1", 6.3, 5.6, "right", 1));
+  assert.deepEqual({ x: a.x, y: a.y }, { x: 6.3, y: 5.6 });
+  assert.deepEqual({ x: a.tileX, y: a.tileY }, { x: 6, y: 6 });
+  assert.equal(a.direction, "right");
+  assert.equal(a.moving, true);
+  assert.equal(getLastSeqMap()["p_g1"], 1, "acked with the position, a consistent pair");
+  fakeNet.emit("move", posMsg("p_g1", 6.3, 5.6, "right", 0));
+  assert.equal(a.moving, false, "a stop update clears the walk animation");
   teardown();
 });
 
-test("junction repro: a left commit at tile 3 lands on 4, regardless of delivery timing", () => {
-  // Road: (5,5)→(5,4)→(5,3 = junction); up continues to (5,2) dead end,
-  // left goes (5,3)→(4,3). Under the old re-sim model the host over-stepped
-  // to (5,2) when the left arrived late. Now the guest ships the committed
-  // left step, so the avatar always lands on (4,3).
-  for (const lateLeft of [false, true]) {
-    const { fakeNet, state } = setup();
-    fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
-    const a = state.player2;
-    a.tileX = 5; a.tileY = 5; a.x = 5; a.y = 5;
-    seq = 0;
-
-    fakeNet.emit("move", stepMsg("p_g1", 5, 5, 5, 4, "up"));   // seq 1
-    finishStep(a, state.zone);                                  // → (5,4)
-    fakeNet.emit("move", stepMsg("p_g1", 5, 4, 5, 3, "up"));   // seq 2
-
-    if (lateLeft) {
-      // Deliver the left WHILE the up-to-3 step is mid-flight → it queues.
-      frame(a, state.zone); // advance a little; still mid-step
-      fakeNet.emit("move", stepMsg("p_g1", 5, 3, 4, 3, "left")); // seq 3, queued
-      finishStep(a, state.zone); // snaps to (5,3), consumes queued left
-      finishStep(a, state.zone); // completes the left step
-    } else {
-      finishStep(a, state.zone); // → (5,3) idle
-      fakeNet.emit("move", stepMsg("p_g1", 5, 3, 4, 3, "left")); // seq 3, idle
-      finishStep(a, state.zone); // → (4,3)
-    }
-
-    assert.deepEqual({ x: a.tileX, y: a.tileY }, { x: 4, y: 3 },
-      `lateLeft=${lateLeft}: must land on the junction's left exit, never the dead end`);
-    teardown();
-  }
-});
-
-test("queued step: a commit arriving mid-step is consumed at the snap, acked then not at receipt", () => {
+test("an update through a wall is rejected: lastSeq advances, the avatar stays put", () => {
   const { fakeNet, state } = setup();
   fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
   const a = state.player2; a.tileX = 5; a.tileY = 5; a.x = 5; a.y = 5;
   seq = 0;
-
-  fakeNet.emit("move", stepMsg("p_g1", 5, 5, 5, 6, "down")); // seq 1, idle → executes
-  frame(a, state.zone); // mid-step
-  fakeNet.emit("move", stepMsg("p_g1", 5, 6, 5, 7, "down")); // seq 2, queued
-  assert.equal(getLastSeqMap()["p_g1"] ?? 0, 0, "neither step acked while the first is mid-flight");
-  assert.equal(a.netQueuedSteps.length, 1, "second commit is queued");
-
-  finishOneStep(a, state.zone); // first step snaps → (5,6), acks seq1, consumes queued
-  assert.deepEqual({ x: a.tileX, y: a.tileY }, { x: 5, y: 6 });
-  assert.equal(getLastSeqMap()["p_g1"], 1, "lastSeq advances at the snap, not at receipt");
-  assert.ok(a.step, "queued step is now in flight");
-
-  finishStep(a, state.zone); // second step snaps → (5,7)
-  assert.deepEqual({ x: a.tileX, y: a.tileY }, { x: 5, y: 7 });
-  assert.equal(getLastSeqMap()["p_g1"], 2);
+  state.zone.collision[5][6] = true;
+  fakeNet.emit("move", posMsg("p_g1", 7, 5, "right"));
+  assert.deepEqual({ x: a.x, y: a.y }, { x: 5, y: 5 }, "position unchanged");
+  assert.equal(getLastSeqMap()["p_g1"], 1, "lastSeq still advances so the guest snaps back");
   teardown();
 });
 
-test("netQueuedSteps is capped: a flood past the cap is rejected, not queued unbounded", () => {
+test("an implausible jump is rejected", () => {
   const { fakeNet, state } = setup();
   fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
-  const a = state.player2; a.tileX = 5; a.tileY = 5; a.x = 5; a.y = 5;
+  const a = state.player2; a.tileX = 6; a.tileY = 5; a.x = 6; a.y = 5;
   seq = 0;
-
-  // First step executes (idle), then everything else queues mid-flight.
-  fakeNet.emit("move", stepMsg("p_g1", 5, 5, 5, 6, "down")); // seq 1, in flight
-  frame(a, state.zone); // mid-step so subsequent commits queue
-
-  // Stream a long chain of legal-but-undrained steps, each from the prior
-  // target. The queue should saturate at the cap and stop growing.
-  let fy = 6;
-  for (let i = 0; i < 20; i++, fy++) {
-    fakeNet.emit("move", stepMsg("p_g1", 5, fy, 5, fy + 1, "down"));
-  }
-  assert.ok(a.netQueuedSteps.length <= 6, "queue is bounded by the cap, not the flood length");
-  assert.equal(a.netQueuedSteps.length, 6, "queue saturates exactly at the cap");
-  // The rejected (over-cap) commits still advanced lastSeq so the guest
-  // reconciles via the next snap instead of walking a phantom corridor.
-  assert.equal(getLastSeqMap()["p_g1"], seq, "the last over-cap commit was acked (rejected)");
-  teardown();
-});
-
-test("no-displacement rejection: an illegal step advances lastSeq but leaves the tile put", () => {
-  const { fakeNet, state } = setup();
-  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
-  const a = state.player2; a.tileX = 5; a.tileY = 5; a.x = 5; a.y = 5;
-  seq = 0;
-  state.zone.collision[5][6] = true; // wall to the east — host rejects the step
-
-  fakeNet.emit("move", stepMsg("p_g1", 5, 5, 6, 5, "right")); // seq 1
-  assert.equal(a.step, null, "rejected step produces no movement");
-  assert.deepEqual({ x: a.tileX, y: a.tileY }, { x: 5, y: 5 }, "tile unchanged");
-  assert.equal(getLastSeqMap()["p_g1"], 1,
-    "lastSeq still advances so the guest reconciles (snap) instead of walking a phantom corridor");
-  teardown();
-});
-
-test("stale from-tile is rejected (post-displacement commits bounce until a delta snaps)", () => {
-  const { fakeNet, state } = setup();
-  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
-  const a = state.player2; a.tileX = 6; a.tileY = 5;
-  seq = 0;
-  // Guest commits from (8,8) but the host's avatar is at (6,5).
-  fakeNet.emit("move", stepMsg("p_g1", 8, 8, 8, 9, "down"));
-  assert.equal(a.step, null);
-  assert.deepEqual({ x: a.tileX, y: a.tileY }, { x: 6, y: 5 });
+  fakeNet.emit("move", posMsg("p_g1", 12, 12));
+  assert.deepEqual({ x: a.x, y: a.y }, { x: 6, y: 5 });
   assert.equal(getLastSeqMap()["p_g1"], seq);
   teardown();
 });
 
-test("tile sharing: two avatars commit onto the same tile and both are accepted", () => {
+test("non-numeric positions are rejected", () => {
+  const { fakeNet, state } = setup();
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
+  const a = state.player2;
+  seq = 0;
+  fakeNet.emit("move", posMsg("p_g1", "6", null));
+  assert.deepEqual({ x: a.x, y: a.y }, { x: 6, y: 5 });
+  assert.equal(getLastSeqMap()["p_g1"], seq);
+  teardown();
+});
+
+test("two guests may stand on the same spot; the host never pushes them", () => {
   const { fakeNet, state } = setup();
   fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g2", slot: 2 });
   fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g3", slot: 3 });
   const a2 = state.player2;
   const a3 = state.players.find((s) => s.slot === 3).player;
-  a2.tileX = 6; a2.tileY = 5; a2.x = 6; a2.y = 5;
-  a3.tileX = 4; a3.tileY = 5; a3.x = 4; a3.y = 5;
+  a2.x = 6; a2.y = 5; a3.x = 5; a3.y = 5;
   seq = 0;
-
-  fakeNet.emit("move", stepMsg("p_g2", 6, 5, 5, 5, "left"));
-  fakeNet.emit("move", stepMsg("p_g3", 4, 5, 5, 5, "right"));
-  assert.ok(a2.step && a3.step, "both steps accepted — no player-vs-player collision");
-  finishStep(a2, state.zone);
-  finishStep(a3, state.zone);
-  assert.deepEqual({ x: a2.tileX, y: a2.tileY }, { x: 5, y: 5 });
-  assert.deepEqual({ x: a3.tileX, y: a3.tileY }, { x: 5, y: 5 });
+  fakeNet.emit("move", posMsg("p_g2", 5.5, 5, "left"));
+  fakeNet.emit("move", posMsg("p_g3", 5.5, 5, "right"));
+  assert.equal(a2.x, 5.5);
+  assert.equal(a3.x, 5.5);
   teardown();
 });
 
-test("face commit turns an idle avatar without touching lastSeq", () => {
+test("a guest push claim next to its avatar shoves the rock on the host", () => {
+  loadSpeciesData([
+    { id: 1001, entity_type: "Hero", z_index: 15 },
+    { id: 7000, entity_type: "PushableObject", is_rigid: true, sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
+  ]);
   const { fakeNet, state } = setup();
   fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
-  const a = state.player2; a.tileX = 6; a.tileY = 5;
+  const a = state.player2; a.x = 6.2; a.y = 5;
+  const rock = { id: 9, species_id: 7000, frame: { x: 7, y: 5, w: 1, h: 1 } };
+  const far = { id: 10, species_id: 7000, frame: { x: 15, y: 5, w: 1, h: 1 } };
+  state.zone.entities.push(rock, far);
   seq = 0;
-  fakeNet.emit("move", { op: "move", seq: 1, from: "p_g1", k: "face", x: 6, y: 5, d: "left" });
-  assert.equal(a.direction, "left");
-  assert.equal(getLastSeqMap()["p_g1"] ?? 0, 0, "faces are not reconciled — they never advance lastSeq");
+  fakeNet.emit("move", posMsg("p_g1", 6.2, 5, "right", 1, { push: { x: 7, y: 5, d: "right" } }));
+  assert.equal(rock.frame.x, 8, "the adjacent rock moved");
+  fakeNet.emit("move", posMsg("p_g1", 6.2, 5, "right", 1, { push: { x: 15, y: 5, d: "right" } }));
+  assert.equal(far.frame.x, 15, "a rock out of reach does not");
+  loadSpeciesData([{ id: 1001, entity_type: "Hero", z_index: 15 }]);
   teardown();
 });
 
@@ -312,15 +226,17 @@ test("dead guard: moves for a dead avatar are rejected", async () => {
   const { applyPlayerDamage, resetPlayerHealth } = await import("../js/playerHealth.js");
   const { fakeNet, state } = setup();
   fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
-  const a = state.player2; a.tileX = 6; a.tileY = 5;
+  const a = state.player2;
   seq = 0;
   applyPlayerDamage(9999, 1); // slot-2 avatar has index 1
-  fakeNet.emit("move", stepMsg("p_g1", 6, 5, 6, 6, "down"));
-  assert.equal(a.step, null, "a dead avatar does not move");
-  assert.deepEqual({ x: a.tileX, y: a.tileY }, { x: 6, y: 5 });
-  assert.equal(getLastSeqMap()["p_g1"], seq, "rejected step still advances lastSeq");
-  resetPlayerHealth(1);
-  teardown();
+  try {
+    fakeNet.emit("move", posMsg("p_g1", 6, 5.5));
+    assert.deepEqual({ x: a.x, y: a.y }, { x: 6, y: 5 }, "a dead avatar does not move");
+    assert.equal(getLastSeqMap()["p_g1"], seq, "rejected update still advances lastSeq");
+  } finally {
+    resetPlayerHealth(1);
+    teardown();
+  }
 });
 
 // --- action dispatch + cheat resistance -------------------------------------

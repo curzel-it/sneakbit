@@ -435,7 +435,7 @@ function serializeEntity(e) {
   const out = { id: e.id };
   if (e.species_id != null) out.species_id = e.species_id;
   if (e.frame) {
-    out.frame = { x: e.frame.x, y: e.frame.y, w: e.frame.w, h: e.frame.h };
+    out.frame = { x: round3(e.frame.x), y: round3(e.frame.y), w: e.frame.w, h: e.frame.h };
   }
   if (e.hp != null) out.hp = e.hp;
   if (e._open != null) out._open = !!e._open;
@@ -447,10 +447,10 @@ function serializeEntity(e) {
   if (e._spawned) out._spawned = true;
   if (e.direction) out.direction = e.direction;
   // Mobs animate their walk cycle from a `moving` flag the guest can't
-  // derive (the host's `_ai.step` never crosses the wire). Ship an
-  // explicit boolean for AI entities — always present so a stop clears
-  // the previous merged `moving:true` rather than leaving it stale.
-  if (e._ai) out.moving = !!e._ai.step;
+  // derive (the host's `_ai` never crosses the wire). Ship an explicit
+  // boolean for AI entities — always present so a stop clears the previous
+  // merged `moving:true` rather than leaving it stale.
+  if (e._ai) out.moving = !!(e._ai.step || e.moving);
   // Ice buff: a frozen monster renders a frost overlay on the guest (freeze.js).
   // Always present for AI entities (like `moving`) so a thaw clears the
   // previous merged `frozen:true` rather than leaving it stuck.
@@ -462,20 +462,11 @@ function serializeEntity(e) {
 }
 
 // Per-player change signature. Drives whether a player goes into the
-// outbound delta. We deliberately omit x/y here even though they're in
-// the payload — during a tile step the floats change every tick but
-// tileX/tileY/direction/moving stay put, so signing on x/y would emit
-// ~5 records per step (one per BROADCAST_INTERVAL_MS at the host's
-// 20 Hz). With x/y dropped, the only sig changes during a step are the
-// endpoints: moving=true at step start, tileX/tileY change at step
-// end. The mirror's lerp between those two payloads still reconstructs
-// the float path — receive-time interval ≈ step duration, and lerp
-// across (oldTile→newTile) over that interval gives the same visual
-// result as today, with ~80 records/sec less traffic in a four-player
-// session.
+// outbound delta. Positions are free floats, so x/y are part of it: a
+// moving avatar ships every broadcast tick, an idle one stays quiet.
 function sigPlayer(p) {
   return [
-    p.tileX, p.tileY,
+    p.x, p.y,
     p.direction,
     p.moving ? 1 : 0,
     p.hp,
@@ -503,7 +494,7 @@ function sigEntity(e) {
     e._dying ? 1 : 0,
     e._spawned ? 1 : 0,
     e.direction ?? "",
-    e._ai?.step ? 1 : 0,
+    e._ai?.step || e.moving ? 1 : 0,
     e.frozen ? 1 : 0,
     e._icy ? 1 : 0,
   ].join("|");

@@ -230,7 +230,6 @@ test("repeated identical-position deltas (keepalive-carried stuck avatar) don't 
     assert.equal(p.x, 67, `x must stay pinned, got ${p.x} at +${dt}`);
     assert.equal(p.y, 25, `y must stay pinned, got ${p.y} at +${dt}`);
     assert.equal(p.moving, false, "a stuck avatar must not render as moving");
-    assert.equal(p.step, null, "a stuck avatar must have no step");
   }
   reset();
 });
@@ -283,28 +282,23 @@ test("endpoint-only step lerp: tile A → tile B over the receive interval recon
   reset();
 });
 
-test("extrapolation: moving=true past currAt advances at step speed up to one tile", async () => {
+test("extrapolation: moving=true past currAt continues at the last velocity, briefly", async () => {
   reset();
   await applySnapshot({
     op: "snapshot", zoneId: 1001,
-    players: [{ playerId: "p_e", slot: 1, index: 0, x: 5, y: 3, tileX: 5, tileY: 3, direction: "right", moving: false }],
+    players: [{ playerId: "p_e", slot: 1, index: 0, x: 5, y: 3, tileX: 5, tileY: 3, direction: "right", moving: true }],
     entities: [],
-  });
+  }, { at: 1000 });
+  // 0.25 tiles right and 0.25 down in 50 ms: 5 tiles/s on each axis.
   handleDelta({
     op: "delta", zoneId: 1001,
-    players: [{ playerId: "p_e", x: 5, y: 3, tileX: 5, tileY: 3, direction: "right", moving: true }],
-  });
-  const t0 = performance.now();
-  // Render 100 ms past currAt (renderTime = currAt + 100). getMirrorPlayerById
-  // back-dates by INTERP_DELAY_MS, so at = currAt + 100 + INTERP_DELAY_MS.
-  // At STEP_DURATION 220 ms/tile that's ~0.45 tiles forward.
-  const e = getMirrorPlayerById("p_e", t0 + 100 + INTERP_DELAY_MS);
-  assert.ok(e.x > 5.3 && e.x < 5.6,
-    `expected ~0.45 tiles of forward extrapolation, got ${e.x}`);
-  // Render way past currAt (~1 s out) — extrapolation caps at the next
-  // tile (6), it doesn't run away.
-  const capped = getMirrorPlayerById("p_e", t0 + 1000 + INTERP_DELAY_MS);
-  assert.equal(capped.x, 6, `extrapolation must cap at next tile, got ${capped.x}`);
+    players: [{ playerId: "p_e", x: 5.25, y: 3.25, tileX: 5, tileY: 3, direction: "right", moving: true }],
+  }, { at: 1050 });
+  const e = getMirrorPlayerById("p_e", 1050 + 40 + INTERP_DELAY_MS);
+  assert.ok(Math.abs(e.x - 5.45) < 1e-6, `40 ms ahead at 5 tiles/s, got ${e.x}`);
+  assert.ok(Math.abs(e.y - 3.45) < 1e-6, `diagonal velocity carries, got ${e.y}`);
+  const capped = getMirrorPlayerById("p_e", 1050 + 1000 + INTERP_DELAY_MS);
+  assert.ok(Math.abs(capped.x - 5.75) < 1e-6, `extrapolation caps at 100 ms, got ${capped.x}`);
   reset();
 });
 

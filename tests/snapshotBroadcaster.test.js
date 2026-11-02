@@ -160,33 +160,16 @@ test("delta carries the player when position changes", () => {
   stopSnapshotBroadcaster();
 });
 
-test("mid-step x/y drift does NOT produce a delta (sigPlayer is tile-locked)", () => {
-  // The whole point of the sigPlayer tightening: between tile changes,
-  // the floats slide every host tick but tileX/tileY/direction/moving
-  // stay put. If we signed on x/y we'd emit ~5 deltas per step (one
-  // every BROADCAST_INTERVAL_MS = 50 ms). Now we emit only at the
-  // endpoints and the mirror's lerp handles the float path.
+test("free x/y movement within a tile produces a delta", () => {
   setupBootstrapWithFakeNet();
   const state = makeState();
   _snapshotForTesting(state);
-  // Player is mid-step: x has drifted from the tile but tileX hasn't
-  // committed yet (this is exactly what player.js does during step
-  // advancement). With the new signature, no delta should fire.
   state.player.x = 7.45;
-  state.player.y = 8.0;
   const d1 = _broadcastDeltaForTesting(null, state);
-  assert.equal(d1, null, "x/y drift alone must not produce a delta");
-  // A bit later, more drift — still nothing.
-  state.player.x = 7.7;
+  assert.ok(d1, "x/y drift must reach the guests");
+  assert.equal(d1.players[0].x, 7.45);
   const d2 = _broadcastDeltaForTesting(null, state);
-  assert.equal(d2, null, "consecutive mid-step x drifts must remain silent");
-  // Step completes: tileX snaps. Now a delta fires.
-  state.player.tileX = 8;
-  state.player.x = 8;
-  const d3 = _broadcastDeltaForTesting(null, state);
-  assert.ok(d3, "tile change must produce a delta");
-  assert.equal(d3.players.length, 1);
-  assert.equal(d3.players[0].tileX, 8);
+  assert.equal(d2, null, "an unchanged position stays quiet");
   stopSnapshotBroadcaster();
 });
 

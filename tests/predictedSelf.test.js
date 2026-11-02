@@ -1,9 +1,8 @@
-// Predicted-self: local prediction, committed-step emission, and the exact
-// reconciliation contract (docs/multiplayer.md). The renderer
-// side is validated by the integration in main.js; here we check that local
-// input advances the avatar, that transitions stream as op:"move" commits,
-// and that deltas reconcile by comparing the host's tile to the result of
-// step #lastSeq (match = lockstep, mismatch = snap).
+// Predicted-self: local prediction, position streaming, and the
+// reconciliation contract (docs/multiplayer.md). Local input advances the
+// avatar, its position streams as op:"move" k:"pos" updates, and deltas
+// reconcile by comparing the host's position to update #lastSeq
+// (match = lockstep, mismatch = snap).
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -93,14 +92,15 @@ function teardown() {
   inputModule.clearInputState(1);
 }
 
-// Walk the predicted self down `tiles` whole tiles (held key, then release
-// so it idles cleanly on the final tile).
+// Walk the predicted self down for about `tiles` tiles, then release.
 function walkDown(tiles) {
   inputModule.pushInputPress(1, "down");
-  for (let i = 0; i < tiles * 16 + 4; i++) tickPredictedSelf(0.016);
+  for (let i = 0; i < tiles * 14; i++) tickPredictedSelf(0.016);
   inputModule.clearInputHeld(1);
-  for (let i = 0; i < 20 && getPredictedSelf().step; i++) tickPredictedSelf(0.016);
+  tickPredictedSelf(0.016);
 }
+
+const moves = (net) => net.sent.filter((m) => m.op === "move");
 
 test("predictedSelf is initialised from the mirror on first tick", async () => {
   await setup();
@@ -121,108 +121,117 @@ test("local input advances predictedSelf within a few ticks", async () => {
   teardown();
 });
 
-// --- step emission ----------------------------------------------------------
+// --- position streaming ----------------------------------------------------
 
-test("a committed step is streamed to the host as op:move k:step", async () => {
+test("walking streams op:move k:pos updates, throttled, ending with a stop", async () => {
   const net = await setup();
   tickPredictedSelf(0.016);
   net.sent.length = 0;
   walkDown(1);
-  const steps = net.sent.filter((m) => m.op === "move" && m.k === "step");
-  assert.ok(steps.length >= 1, "at least one step commit should be emitted");
-  const first = steps[0];
-  assert.deepEqual({ fx: first.fx, fy: first.fy }, { fx: 5, fy: 5 });
-  assert.deepEqual({ tx: first.tx, ty: first.ty }, { tx: 5, ty: 6 });
-  assert.equal(first.d, "down");
-  // The step-log mirrors what went on the wire.
-  assert.equal(getStepLog()[0].seq, first.seq);
+  const sent = moves(net);
+  assert.ok(sent.length >= 3, `several updates while walking, got ${sent.length}`);
+  assert.ok(sent.length <= 10, `throttled below the frame rate, got ${sent.length}`);
+  for (const m of sent) assert.equal(m.k, "pos");
+  assert.equal(sent[0].d, "down");
+  assert.equal(sent[0].m, 1);
+  const last = sent[sent.length - 1];
+  assert.equal(last.m, 0, "the stop is sent at once");
+  const p = getPredictedSelf();
+  assert.equal(last.y, Math.round(p.y * 1000) / 1000, "the final update is where the avatar stands");
+  assert.equal(getStepLog()[getStepLog().length - 1].seq, last.seq);
   teardown();
 });
 
-test("a pure idle rotation streams a face, not a step", async () => {
+test("a pure turn streams a position update with the new facing", async () => {
   const net = await setup();
   tickPredictedSelf(0.016);
   net.sent.length = 0;
-  // Tap left for a single tick then release before the commit delay → rotate
-  // only, no step.
   inputModule.pushInputPress(1, "left");
-  tickPredictedSelf(0.016);
   inputModule.clearInputHeld(1);
   tickPredictedSelf(0.016);
-  const faces = net.sent.filter((m) => m.op === "move" && m.k === "face");
-  const steps = net.sent.filter((m) => m.op === "move" && m.k === "step");
-  assert.ok(faces.length >= 1, "rotation should emit a face");
-  assert.equal(steps.length, 0, "no step should be committed for a pure rotation");
-  assert.equal(faces[faces.length - 1].d, "left");
+  const sent = moves(net);
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].d, "left");
+  assert.deepEqual({ x: sent[0].x, y: sent[0].y }, { x: 5, y: 5 });
   teardown();
 });
 
-// --- exact reconciliation ---------------------------------------------------
+test("an idle avatar sends nothing", async () => {
+  const net = await setup();
+  tickPredictedSelf(0.016);
+  net.sent.length = 0;
+  for (let i = 0; i < 30; i++) tickPredictedSelf(0.016);
+  assert.equal(moves(net).length, 0);
+  teardown();
+});
+
+// --- reconciliation ---------------------------------------------------------
+
+function delta(net, x, y, lastSeq, direction = "down") {
+  net.emit("delta", {
+    op: "delta", zoneId: 1001,
+    players: [{ playerId: "p_g1", slot: 2, index: 1, x, y, tileX: Math.round(x), tileY: Math.round(y), direction }],
+    entities: [],
+    lastSeq: { "p_g1": lastSeq },
+  });
+}
 
 test("a matching delta keeps predicted ahead (lockstep, no snap)", async () => {
   const net = await setup();
   walkDown(3);
   const p = getPredictedSelf();
-  const aheadY = p.tileY;
+  const aheadY = p.y;
   const log = getStepLog();
   assert.ok(log.length >= 2);
-  // Host acks the first step only; its result tile is the authoritative tile.
   const acked = log[0];
-  net.emit("delta", {
-    op: "delta", zoneId: 1001,
-    players: [{ playerId: "p_g1", slot: 2, index: 1, x: acked.tx, y: acked.ty, tileX: acked.tx, tileY: acked.ty, direction: "down" }],
-    entities: [],
-    lastSeq: { "p_g1": acked.seq },
-  });
-  // Predicted is unacked-steps ahead of auth — that gap is expected, no snap.
-  assert.equal(getPredictedSelf().tileY, aheadY, "predicted must not snap back on a matching ack");
+  delta(net, acked.x, acked.y, acked.seq);
+  assert.equal(getPredictedSelf().y, aheadY, "predicted must not snap back on a matching ack");
   assert.equal(getLastAckedSeq(), acked.seq);
   teardown();
 });
 
-test("no-displacement rejection snaps predicted and stops the phantom walk", async () => {
+test("a rejected update snaps predicted back to the authoritative position", async () => {
   const net = await setup();
   walkDown(3);
   const log = getStepLog();
   assert.ok(log.length >= 3);
-  // Host accepted up to step[len-2] (auth sits on its result) but REJECTED
-  // the latest step (lastSeq advanced to it, tile unchanged). anchor =
-  // result of the rejected step ≠ auth tile → snap.
   const accepted = log[log.length - 2];
   const rejected = log[log.length - 1];
-  net.emit("delta", {
-    op: "delta", zoneId: 1001,
-    players: [{ playerId: "p_g1", slot: 2, index: 1, x: accepted.tx, y: accepted.ty, tileX: accepted.tx, tileY: accepted.ty, direction: "down" }],
-    entities: [],
-    lastSeq: { "p_g1": rejected.seq },
-  });
+  delta(net, accepted.x, accepted.y, rejected.seq);
   const p = getPredictedSelf();
-  assert.deepEqual({ x: p.tileX, y: p.tileY }, { x: accepted.tx, y: accepted.ty },
-    "predicted must snap to the authoritative tile, not keep walking the phantom corridor");
-  assert.equal(p.step, null);
-  assert.deepEqual(getStepLog(), [], "step-log cleared on snap");
+  assert.deepEqual({ x: p.x, y: p.y }, { x: accepted.x, y: accepted.y });
+  assert.deepEqual(getStepLog(), [], "log cleared on snap");
   teardown();
 });
 
-test("a host displacement (knockback) snaps predicted to the authoritative tile", async () => {
+test("updates sent before a snap are not compared again", async () => {
+  const net = await setup();
+  walkDown(3);
+  const log = getStepLog();
+  const first = log[0];
+  const latest = log[log.length - 1];
+  delta(net, 12, 3, first.seq);
+  assert.deepEqual({ x: getPredictedSelf().x, y: getPredictedSelf().y }, { x: 12, y: 3 }, "snapped");
+  // The host still applies updates that were in flight before the snap;
+  // their echoes must not snap the guest a second time.
+  delta(net, latest.x, latest.y, latest.seq - 1);
+  assert.deepEqual({ x: getPredictedSelf().x, y: getPredictedSelf().y }, { x: 12, y: 3 });
+  teardown();
+});
+
+test("a host displacement while idle snaps predicted to the authoritative position", async () => {
   const net = await setup();
   walkDown(2);
   const log = getStepLog();
   const latest = log[log.length - 1];
-  // lastSeq points at the latest step but auth is somewhere unrelated → the
-  // host moved us (knockback / warp). Snap exactly.
-  net.emit("delta", {
-    op: "delta", zoneId: 1001,
-    players: [{ playerId: "p_g1", slot: 2, index: 1, x: 12, y: 3, tileX: 12, tileY: 3, direction: "left" }],
-    entities: [],
-    lastSeq: { "p_g1": latest.seq },
-  });
+  delta(net, latest.x, latest.y, latest.seq);
+  delta(net, 12, 3, latest.seq, "left");
   const p = getPredictedSelf();
   assert.deepEqual({ x: p.tileX, y: p.tileY }, { x: 12, y: 3 });
   teardown();
 });
 
-test("a fresh snapshot hard-resets predicted and clears the step-log", async () => {
+test("a fresh snapshot hard-resets predicted and clears the log", async () => {
   const net = await setup();
   walkDown(3);
   assert.ok(getStepLog().length >= 1);
@@ -233,9 +242,9 @@ test("a fresh snapshot hard-resets predicted and clears the step-log", async () 
     lastSeq: { "p_g1": 0 },
   });
   const p = getPredictedSelf();
-  assert.deepEqual({ x: p.tileX, y: p.tileY }, { x: 1, y: 1 });
+  assert.deepEqual({ x: p.x, y: p.y }, { x: 1, y: 1 });
   assert.equal(p.direction, "up");
-  assert.equal(p.step, null);
+  assert.equal(p._holdGate, true);
   assert.deepEqual(getStepLog(), []);
   teardown();
 });
