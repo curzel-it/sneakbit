@@ -12,12 +12,10 @@
 // own client, so only slots 1–2 are ever assigned here.
 //
 // Stick layout: left stick OR d-pad. Either source counts as held; a
-// transition from neutral → direction emits a press event. The left
-// stick maps to a single cardinal direction by 90° sector (whichever
-// axis is dominant), so it reads as a clean 4-way pad with no ambiguous
-// diagonals — the right fit for tile-locked movement. A small rest gate
-// (STICK_DEADZONE) only decides "is the stick being pushed at all" so a
-// thumb resting on a noisy stick doesn't drift the hero.
+// transition from neutral → direction emits a press event. The left stick
+// also maps to one cardinal direction by 90° sector for menus and press
+// edges, and reports its analog vector (ax, ay), rescaled past the rest gate
+// (STICK_DEADZONE), which drives free movement.
 //
 // Action buttons (interact / shoot / melee) and the menu button are
 // rebindable per player — gamepadBindings.js owns the action→button map
@@ -101,7 +99,7 @@ export function slotForPadIndex(padIndex) {
 // is assigned to the slot.
 export function pollGamepadForSlot(slot) {
   const pad = connectedPadsByIndex()[slot - 1];
-  if (!pad) return { events: [], held: new Set() };
+  if (!pad) return { events: [], held: new Set(), ax: 0, ay: 0 };
   return scanPad(pad, slot);
 }
 
@@ -162,6 +160,14 @@ function buildHeld(pad) {
   return held;
 }
 
+/** Left-stick vector rescaled so the deadzone edge reads as zero, or zeros. */
+export function stickVector(ax, ay, deadzone = STICK_DEADZONE) {
+  const mag = Math.hypot(ax, ay);
+  if (mag < deadzone) return { x: 0, y: 0 };
+  const scaled = Math.min(1, (mag - deadzone) / (1 - deadzone));
+  return { x: (ax / mag) * scaled, y: (ay / mag) * scaled };
+}
+
 function scanPad(pad, slot) {
   let st = padState.get(pad.index);
   if (!st) { st = { prevHeld: new Set(), prevButtons: new Map() }; padState.set(pad.index, st); }
@@ -220,7 +226,9 @@ function scanPad(pad, slot) {
   // prompts switch to controller glyphs (idle pads with centered sticks
   // and no buttons don't hijack a keyboard player).
   if (held.size > 0 || pad.buttons.some((b) => b?.pressed)) markInputDevice("gamepad");
-  return { events, held: new Set(held) };
+  const [ax, ay] = readAxes(pad);
+  const stick = stickVector(ax, ay);
+  return { events, held: new Set(held), ax: stick.x, ay: stick.y };
 }
 
 function readAxes(pad) {

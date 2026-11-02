@@ -1,12 +1,11 @@
-// Keyboard input. Exposes two things per tick:
+// Keyboard input. Exposes per tick:
 //   - a queue of "press" events (transient, drained on poll)
 //   - the set of directions currently held (state)
-// The player module needs both: presses to distinguish tap-vs-hold and
-// to queue inputs mid-step; held to keep stepping while a key is down.
-//
-// pollInput() also folds in gamepad input (gamepad.js) — left stick /
-// d-pad fan into the same directional channel; action buttons go
-// through their own callback registry (see gamepad.setGamepadAction).
+//   - an analog movement vector (ax, ay) from a gamepad stick or the touch
+//     joystick, zero when neither is pushed
+// Held directions combine into 8-way movement; the analog vector wins when
+// present. pollInput() also folds in gamepad input (gamepad.js); action
+// buttons go through their own callback registry (gamepad.setGamepadAction).
 
 import { pollGamepadForSlot } from "./gamepad.js";
 import { resolveAction } from "./keyBindings.js";
@@ -92,6 +91,14 @@ function resolveDirection(code) {
   return null;
 }
 
+const touchVector = { x: 0, y: 0 };
+
+/** Analog vector from the touch joystick, driving slot 1. */
+export function setTouchVector(x, y) {
+  touchVector.x = x;
+  touchVector.y = y;
+}
+
 function pushPress(idx, dir) {
   const s = state[idx];
   if (!s.held.has(dir)) s.pressEvents.push(dir);
@@ -99,6 +106,8 @@ function pushPress(idx, dir) {
 }
 
 function clearAll() {
+  touchVector.x = 0;
+  touchVector.y = 0;
   for (const idx of [1, 2, 3, 4]) {
     state[idx].held.clear();
     state[idx].pressEvents.length = 0;
@@ -133,7 +142,7 @@ export function initInput() {
 const pollBuffers = {};
 function pollBufferFor(idx) {
   let b = pollBuffers[idx];
-  if (!b) { b = { events: [], held: new Set() }; pollBuffers[idx] = b; }
+  if (!b) { b = { events: [], held: new Set(), ax: 0, ay: 0 }; pollBuffers[idx] = b; }
   return b;
 }
 
@@ -155,10 +164,17 @@ export function pollInput(playerIndex = 1) {
   const held = out.held;
   held.clear();
   for (const d of s.held) held.add(d);
+  out.ax = 0;
+  out.ay = 0;
+  if (playerIndex === 1 && (touchVector.x || touchVector.y)) {
+    out.ax = touchVector.x;
+    out.ay = touchVector.y;
+  }
   if (playerIndex <= localPlayerCount()) {
     const gp = pollGamepadForSlot(playerIndex);
     for (const e of gp.events) events.push(e);
     for (const d of gp.held) held.add(d);
+    if (gp.ax || gp.ay) { out.ax = gp.ax; out.ay = gp.ay; }
   }
   return out;
 }

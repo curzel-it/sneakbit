@@ -1,9 +1,8 @@
 // Player melee attack: press G (or the on-screen melee button) to swing
-// the equipped melee weapon. Mirrors Rust equipment/melee.rs: spawns five
-// short-lived bullet entities in a cross pattern around the hero (center
-// + four cardinals). Each bullet deals bullet_species.dps *
-// weapon.melee_dps_multiplier, applied via combat.js's normal bullet
-// resolution path.
+// the equipped melee weapon. Spawns short-lived bullet entities in an arc in
+// front of the hero, anchored on its free position. Each bullet deals
+// bullet_species.dps * weapon.melee_dps_multiplier, applied via combat.js's
+// normal bullet resolution path.
 
 import { getSpecies } from "./species.js";
 import { resolveLoadout } from "./sessionLoadouts.js";
@@ -20,32 +19,22 @@ const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
 const MAX_PLAYERS = 4;
 
-// Bullet offsets around the hero, mirroring Rust bullet_offsets():
-// center + 4 cardinals. Built per-swing (crossOffsets) so the arm pointing
-// BEHIND the hero can be shortened — see BACK_REACH.
-const BULLET_OFFSETS = [
-  [ 0,  0],
-  [ 0, -1],
-  [ 1,  0],
-  [-1,  0],
-  [ 0,  1],
+// The swing arc as (forward, lateral) pairs in tiles: the hero's own spot,
+// a full tile ahead, the two forward diagonals and both flanks. Nothing
+// reaches behind the hero.
+const ARC = [
+  [0,    0],
+  [1,    0],
+  [0.8,  0.8],
+  [0.8, -0.8],
+  [0.2,  0.9],
+  [0.2, -0.9],
 ];
+const BULLET_OFFSETS = ARC;
 
-// How far behind the hero the rear arm of the cross reaches, in tiles. The
-// sword is meant to catch someone right on your back, but a full tile of
-// backward reach anchored on the *rendered* position let a mid-step swing
-// (hero at x.6, rear bullet at x-0.4) still overlap the tile two behind the
-// hero's apparent position. Half a tile keeps the standing-still back hit and
-// drops the mid-step overreach.
-const BACK_REACH = 0.5;
-
-// The cross for a swing facing (dx, dy): centre, the two laterals and the
-// forward arm at a full tile, the rear arm pulled in to BACK_REACH.
-function crossOffsets(dx, dy) {
-  return BULLET_OFFSETS.map(([ox, oy]) => {
-    const isRear = ox === -dx && oy === -dy && (ox !== 0 || oy !== 0);
-    return isRear ? [ox * BACK_REACH, oy * BACK_REACH] : [ox, oy];
-  });
+// The arc for a swing facing (dx, dy), as world offsets.
+function arcOffsets(dx, dy) {
+  return ARC.map(([f, l]) => [dx * f - dy * l, dy * f + dx * l]);
 }
 
 // Giant melee: while transformed (giantMode) the hero fights bare-handed.
@@ -232,17 +221,12 @@ export function performMeleeSwing(state, opts = {}) {
 
   const dir = swinger.direction;
   const [vx, vy] = DIR_DELTA[dir] ?? [0, 1];
-  const cross = offsets === BULLET_OFFSETS ? crossOffsets(vx, vy) : offsets;
+  const cross = offsets === BULLET_OFFSETS ? arcOffsets(vx, vy) : offsets;
   // Ice buff: tag the swing's cross-bullets so they freeze the monsters they
   // hit and render a frost aura (freeze.js / iceMode.js). Resolved once per
   // swing so every bullet in the cross shares the swinger's buff state.
   const icy = isIceActive(swinger) || undefined;
 
-  // Anchor the cross on the *rendered* position, not tileX/tileY: during a
-  // step tileX/tileY still hold the from-tile, so anchoring there dragged the
-  // whole cross a tile backwards — the rear bullet then reached ~2 tiles
-  // behind the visible hero. Rendered position keeps the backward reach at
-  // the one tile it's meant to be.
   const baseX = swinger.x ?? swinger.tileX;
   const baseY = swinger.y ?? swinger.tileY;
 

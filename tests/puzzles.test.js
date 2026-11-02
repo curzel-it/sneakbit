@@ -67,18 +67,14 @@ test("pushable: refuses to move into a wall", () => {
   assert.equal(box.frame.x, 2);
 });
 
-test("pushable: dead-end carry-back keeps following the player on every step", () => {
-  // Regression: the carry-back used to only trigger when the tile opposite
-  // the player's move direction was blocked. After one step away from the
-  // dead end the rock was no longer pinned, the check failed, and the rock
-  // got left behind. It should follow as long as the player keeps standing
-  // on it.
-  //
+test("pushable: walking into a rock pushes it along a corridor until it hits the dead end", () => {
   // Layout (row y=1 is the corridor, walls above and below; column 7 is
   // also a wall so the dead end is at column 6):
   //   row 0: X X X X X X X X
-  //   row 1: . . . . . . . X     ← player will be placed at (4, 1), rock at (5, 1)
+  //   row 1: . . . . . . . X     ← player at (3, 1), rock at (5, 1)
   //   row 2: X X X X X X X X
+  // Free movement has no carry-back: a rock shoved into a dead end stays
+  // there, and the hero stops against it.
   const cols = 8, rows = 3;
   const collision = [];
   const biome = [];
@@ -88,57 +84,22 @@ test("pushable: dead-end carry-back keeps following the player on every step", (
     collision.push(crow);
     biome.push(brow);
   }
-  collision[1][7] = true; // dead-end wall
+  collision[1][7] = true;
   const zone = { id: 1, rows, cols, entities: [], collision, biome };
   const rock = { species_id: 1030, lock_type: "None", frame: { x: 5, y: 1, w: 1, h: 1 } };
   zone.entities.push(rock);
 
   const player = createPlayer();
-  player.x = 4; player.y = 1; player.tileX = 4; player.tileY = 1;
+  player.x = 3; player.y = 1; player.tileX = 3; player.tileY = 1;
   player.direction = "right";
-
-  // Drive updatePlayer enough that one full step completes. STEP_DURATION
-  // is 0.22s — one big dt overshoots into the chain path, so use a single
-  // tick larger than that and let the test loop until the next idle.
-  function stepUntilIdle(dir, held = false) {
-    const heldSet = new Set(held ? [dir] : []);
-    // First call: queue the press; the player is already facing dir so it
-    // commits immediately and starts a step.
-    updatePlayer(player, { events: [dir], held: heldSet }, 0.001, zone);
-    // Then advance time until the step lands.
-    let guard = 100;
-    while (player.step && guard-- > 0) {
-      updatePlayer(player, { events: [], held: heldSet }, 0.05, zone);
-    }
+  const held = { events: [], held: new Set(["right"]) };
+  for (let i = 0; i < 120; i++) {
+    updatePlayer(player, held, 0.016, zone);
+    if (rock._slide) { rock._slide.t = 1; delete rock._slide; }
   }
-
-  // Push rock right twice — first push moves it from 5→6, second push
-  // fails (column 7 is a wall) so the player walks onto the rock's tile.
-  stepUntilIdle("right");
+  assert.equal(rock.frame.x, 6, "rock pinned against the dead-end wall");
+  assert.ok(player.x < 5.25, `hero stops against the rock, x=${player.x}`);
   assert.equal(player.tileX, 5);
-  assert.equal(rock.frame.x, 6);
-
-  stepUntilIdle("right");
-  assert.equal(player.tileX, 6, "player should walk onto the stuck rock");
-  assert.equal(rock.frame.x, 6, "rock pinned against the wall");
-
-  // Now walk back. The first step off the stuck rock holds the player in
-  // place and slides the rock a single tile into the tile ahead, popping it
-  // out of the dead end one tile at a time instead of jumping two. After
-  // that the rock sits in front of the player and subsequent steps are
-  // normal pushes.
-  player.direction = "left";
-  stepUntilIdle("left");
-  assert.equal(player.tileX, 6, "player holds its tile while the rock pops out");
-  assert.equal(rock.frame.x, 5, "rock slides one tile ahead, escaping the dead end");
-
-  stepUntilIdle("left");
-  assert.equal(player.tileX, 5);
-  assert.equal(rock.frame.x, 4, "rock is now pushed normally one tile ahead");
-
-  stepUntilIdle("left");
-  assert.equal(player.tileX, 4);
-  assert.equal(rock.frame.x, 3, "rock continues to be pushed one tile ahead of the player");
 });
 
 test("pushable: blocks player as a rigid entity", () => {

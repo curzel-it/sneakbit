@@ -1,5 +1,5 @@
 // Player interaction: press E (or Enter) to start a dialogue with the
-// entity directly in front of the player. Pauses player updates while
+// entity in front of the player (proximity + facing, see findFacingEntity). Pauses player updates while
 // the dialogue is open via the same isDialogueOpen() gate that main uses.
 //
 // Also draws an on-screen hint when an interactable is in front of the
@@ -211,30 +211,36 @@ function makeHint() {
   return node;
 }
 
-// How far the interact ray reaches past the player. The tile directly in
-// front is always probed; each further tile is only reached if the tile
-// before it is non-walkable — i.e. you can talk to a clerk across a counter
-// but not across open floor. Mirrors the Rust core's "reach over the
-// counter" behaviour (is_around_and_pointed_at over a blocked tile).
+// Interaction is proximity + facing: a probe point sits PROBE_REACH tiles in
+// front of the hero's centre, and any talkable entity whose frame (grown by
+// PROBE_SLACK) contains it is in range, the closest winning. The probe keeps
+// walking up to MAX_REACH tiles only across non-walkable tiles, so you can
+// talk to a clerk across a counter but not across open floor (Rust's
+// is_around_and_pointed_at over a blocked tile).
 const MAX_REACH = 3;
+const PROBE_REACH = 0.8;
+const PROBE_SLACK = 0.35;
 
 export function findFacingEntity(zone, player) {
   const [dx, dy] = DIR_DELTA[player.direction] ?? [0, 1];
+  const cx = (player.x ?? player.tileX) + 0.5;
+  const cy = (player.y ?? player.tileY) + 0.5;
   for (let step = 1; step <= MAX_REACH; step++) {
-    const tx = player.tileX + dx * step;
-    const ty = player.tileY + dy * step;
-    const hit = dialogueEntityAt(zone, tx, ty);
+    const px = cx + dx * (step - 1 + PROBE_REACH);
+    const py = cy + dy * (step - 1 + PROBE_REACH);
+    const hit = dialogueEntityNear(zone, px, py);
     if (hit) return hit;
-    // Stop reaching once we hit walkable ground: an empty floor tile means
-    // there's nothing to reach over, so a clerk further down isn't in range.
-    if (isWalkable(zone, tx, ty)) break;
+    if (isWalkable(zone, Math.floor(px), Math.floor(py))) break;
   }
   return null;
 }
 
-function dialogueEntityAt(zone, tx, ty) {
+function dialogueEntityNear(zone, px, py) {
+  let best = null;
+  let bestDist = Infinity;
   for (const e of zone.entities) {
     if (!e.frame) continue;
+    if (!(e.dialogues || []).length) continue;
     if (!shouldBeVisible(e)) continue;
     // An NPC mid-vanish (death-anim effect, or fading vanish strip) or
     // walking to an exit shouldn't re-open its dialogue if the player faces
@@ -245,9 +251,10 @@ function dialogueEntityAt(zone, tx, ty) {
     // no talk affordance, so they must not light up the interact prompt.
     if (getSpecies(e.species_id)?.entity_type === "Hint") continue;
     const { x, y, w, h } = e.frame;
-    if (tx >= x && tx < x + w && ty >= y && ty < y + h) {
-      if ((e.dialogues || []).length > 0) return e;
-    }
+    if (px < x - PROBE_SLACK || px > x + w + PROBE_SLACK) continue;
+    if (py < y - PROBE_SLACK || py > y + h + PROBE_SLACK) continue;
+    const dist = Math.hypot(x + w / 2 - px, y + h / 2 - py);
+    if (dist < bestDist) { best = e; bestDist = dist; }
   }
-  return null;
+  return best;
 }

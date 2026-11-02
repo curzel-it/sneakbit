@@ -277,18 +277,14 @@ function movePlayerTo(player, tileX, tileY, direction) {
   player.tileY = tileY;
   player.x = tileX;
   player.y = tileY;
-  player.step = null;
-  player.netQueuedSteps = [];
-  player.queuedDir = null;
-  player.pendingDir = null;
-  player.pendingTimer = 0;
+  player.moving = false;
   // Strip any in-flight slide momentum from ice — keeps the respawned
-  // player from immediately stepping off in whatever direction they
-  // were sliding when they died.
-  player._sliding = false;
+  // player from immediately sliding off in whatever direction they were
+  // sliding when they died.
+  player._slide = null;
   // The player lands in front of the door they just walked through, which
   // leads right back to where they came from. Whatever they were holding
-  // to get here must not carry them straight back in (player.handleIdle).
+  // to get here must not carry them straight back in (player.updatePlayer).
   player._holdGate = true;
   if (direction && direction !== "None") {
     player.direction = direction.toLowerCase();

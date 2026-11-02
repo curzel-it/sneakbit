@@ -2,15 +2,15 @@
 // 4-button d-pad in touch.js. Ported from the original Rust game's iOS /
 // Android JoystickView: the stick appears wherever the thumb first lands in
 // the capture zone (left 75% of the screen), follows the finger when it drags
-// past the edge (auto-pan),
-// and maps the thumb angle to one of four cardinal directions. Like the
-// d-pad it synthesises the same Arrow keydown/keyup events input.js already
-// listens for, so nothing downstream knows the input came from a joystick.
+// past the edge (auto-pan). The thumb offset drives free movement as an
+// analog vector (input.setTouchVector); it also synthesises the Arrow
+// keydown/keyup of the dominant direction, like the d-pad, for press edges.
 //
 // Importable in Node (the geometry helper is pure and DOM-free at module
 // load) so directionForVector can be unit-tested without a browser.
 
 import { el } from "./dom.js";
+import { setTouchVector } from "./input.js";
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 
@@ -25,6 +25,14 @@ const MAX_KNOB_DIST = 26;    // how far the knob travels from the centre.
                              // of spilling outside it.
 const MAX_FINGER_DIST = 70;  // beyond this the stick centre follows the finger
 const DEADZONE = 16;         // no direction until the thumb leaves this radius
+
+/** Analog vector for a thumb offset: zero inside the dead zone, length ≤ 1. */
+export function vectorForOffset(dx, dy, deadzone = DEADZONE, max = MAX_KNOB_DIST) {
+  const dist = Math.hypot(dx, dy);
+  if (dist < deadzone) return { x: 0, y: 0 };
+  const mag = Math.min(1, dist / max);
+  return { x: (dx / dist) * mag, y: (dy / dist) * mag };
+}
 
 // Pure direction mapping: dominant axis wins, with a dead zone around the
 // centre. Screen space, so +y points down. On an exact diagonal tie the
@@ -119,6 +127,8 @@ function onPointerMove(e) {
   const angle = Math.atan2(dy, dx);
   const knobDist = Math.min(dist, MAX_KNOB_DIST);
   placeAt(knob, center.x + Math.cos(angle) * knobDist, center.y + Math.sin(angle) * knobDist);
+  const v = vectorForOffset(dx, dy);
+  setTouchVector(v.x, v.y);
   setDir(directionForVector(dx, dy));
 }
 
@@ -140,6 +150,7 @@ function setDir(dir) {
 }
 
 function releaseDir() {
+  setTouchVector(0, 0);
   if (!heldDir) return;
   dispatchKey("keyup", KEY_FOR_DIR[heldDir]);
   heldDir = null;

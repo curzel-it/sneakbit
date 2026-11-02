@@ -187,8 +187,8 @@ export function predictGuestShoot(player) {
   const [dx, dy] = DIR_DELTA[player.direction] ?? DIR_DELTA.down;
   spawnLocalFlash({
     speciesId: bulletId,
-    x: player.tileX + dx,
-    y: player.tileY + dy,
+    x: (player.x ?? player.tileX) + dx,
+    y: (player.y ?? player.tileY) + dy,
     direction: player.direction,
   });
 }
@@ -296,8 +296,8 @@ function shoot(state, shooter) {
     is_consumable: false,
     direction: capitalize(dir),
     frame: {
-      x: shooter.tileX + dx,
-      y: shooter.tileY + dy,
+      x: (shooter.x ?? shooter.tileX) + dx,
+      y: (shooter.y ?? shooter.tileY) + dy,
       w: 1,
       h: 1,
     },

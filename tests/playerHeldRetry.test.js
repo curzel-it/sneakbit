@@ -28,36 +28,29 @@ function facingRightAt(tileX) {
   return p;
 }
 
-test("holding into a blocked tile resumes stepping once the blocker is gone", () => {
+test("holding into a blocked tile resumes walking once the blocker is gone", () => {
   const zone = makeZone(1);
   const p = facingRightAt(0);
   const held = new Set(["right"]);
 
-  // Initial press into the barrel: blocked, no step.
   updatePlayer(p, { events: ["right"], held }, 0.016, zone);
-  assert.equal(p.step, null, "should not step into the barrel");
+  for (let i = 0; i < 20; i++) updatePlayer(p, { events: [], held }, 0.016, zone);
+  assert.ok(p.x < 0.25, `stopped against the barrel, x=${p.x}`);
+  assert.equal(p.tileX, 0);
 
-  // Key stays down; no new press events (OS key repeat produces none).
-  updatePlayer(p, { events: [], held }, 0.016, zone);
-  assert.equal(p.step, null, "still blocked");
-
-  // Barrel blows up.
   zone.collision[0][1] = 0;
 
-  updatePlayer(p, { events: [], held }, 0.016, zone);
-  assert.ok(p.step, "should start stepping now the tile is free");
-  assert.equal(p.step.toX, 1);
+  for (let i = 0; i < 6; i++) updatePlayer(p, { events: [], held }, 0.016, zone);
+  assert.ok(p.x > 0.5, `walks on once the tile is free, x=${p.x}`);
+  assert.equal(p.tileX, 1);
 });
 
-test("a tap in a new direction still only rotates (commit delay preserved)", () => {
+test("a one-frame tap in a new direction turns without moving", () => {
   const zone = makeZone();
   const p = facingRightAt(1);
 
-  updatePlayer(p, { events: ["down"], held: new Set(["down"]) }, 0.001, zone);
+  updatePlayer(p, { events: ["down"], held: new Set() }, 0.016, zone);
   assert.equal(p.direction, "down");
-  assert.equal(p.step, null, "rotate should not commit a step immediately");
-
-  // Released before the commit delay → rotation only.
-  updatePlayer(p, { events: [], held: new Set() }, 0.001, zone);
-  assert.equal(p.step, null, "tap must not step");
+  assert.equal(p.x, 1);
+  assert.equal(p.y, 0);
 });
