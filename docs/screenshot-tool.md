@@ -50,6 +50,10 @@ Two facts in the current code make this a seed-and-snap job, not an automation j
 | `direction` | facing: `down`/`up`/`left`/`right` (cosmetic) |
 | `settle` | ms to wait after spawn before capturing (lets the zone cache bake + a couple of frames run) |
 | `kv` | extra storage.js keys to seed, unprefixed — e.g. `{"player.0.inventory.amount.2000": 1}` captures a spot as it looks once the yellow key is held |
+| `query` | appended to the page URL, e.g. `"?canvas"` to capture the Canvas 2D renderer instead of WebGL |
+| `light` | overrides the zone's light condition (`"Night"`, `"CantSeeShit"`, `"Day"`) |
+| `freezeFrame` | seeds `Math.random` and steps the clock 1/60 s per frame, stopping after this many frames, so two runs (e.g. WebGL and `?canvas`) capture the same instant and can be pixel-diffed |
+| `script` | page expression evaluated before the settle wait, e.g. `"window.coop.setLocalPlayers(2)"` |
 
 **Constraint from auto-zoom:** the driver clamps `w` to `[16, 36]` and `h ≥ 10`
 (`MIN_W`/`MAX_W`/`MIN_H` in `tools/screenshot.mjs`) and warns when a requested
@@ -110,7 +114,7 @@ Per run:
    6. Base64-decode and write `docs/screenshots/<out>`.
 3. Close Chrome and the static server.
 
-Wire as `npm run shots` (`node tools/screenshot.mjs [path/to/spec.json]`,
+Wire as `npm run shots` (`node tools/screenshot.mjs [path/to/spec.json] [outDir]`,
 defaulting to `tools/screenshots.json`). Like `test:e2e`, it self-skips when Chrome
 isn't on the path (`findChrome()`); set `CHROME_PATH` for a non-default install.
 

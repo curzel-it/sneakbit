@@ -24,7 +24,7 @@ SneakBit is a top-down adventure-action game with close- and long-range combat, 
 ## What's new in 2.0
 
 * **Complete JavaScript rewrite** - the Rust core is gone; the whole game is now
-  vanilla ES modules and Canvas 2D, running in the browser with no build step for
+  vanilla ES modules and WebGL 2, running in the browser with no build step for
   development. (The old sources are still in this repo's history, at the
   `rust-core-tip` tag.)
 * **Multiplayer** - host a match and share the invite code, or join a friend's.

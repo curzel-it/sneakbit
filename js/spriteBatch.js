@@ -8,7 +8,7 @@
 const MAX_QUADS = 4096;
 const FLOATS_PER_VERTEX = 9;
 const MAX_TEXTURES = 320;
-const TEXTURE_IDLE_FRAMES = 120;
+const TEXTURE_IDLE_FRAMES = 600;
 
 const VERTEX_SHADER = `#version 300 es
 in vec2 aPos;

@@ -21,6 +21,7 @@ import { getSettings } from "./settings.js";
 import { startDeathAnimation, tickDeathAnimations } from "./deathAnimation.js";
 import { maybeDropLoot } from "./lootDrops.js";
 import { freezeEntity, isFrozen } from "./freeze.js";
+import { markHit, tickHitFlashes } from "./hitFlash.js";
 
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;
@@ -49,6 +50,7 @@ export function tickCombat(zone, player, dt) {
   resolveMeleeMonsters(zone, players, dt);
   tickDamageIndicators(zone, dt);
   tickDeathAnimations(zone, dt);
+  tickHitFlashes(zone, dt);
 }
 
 function toLivePlayers(player) {
@@ -181,6 +183,7 @@ function resolveBullets(zone, players, dt) {
 
       const dps = (b._dpsOverride != null ? b._dpsOverride : bsp.dps) || 0;
       t._hp = (t._hp ?? tsp.hp ?? 100) - dps * dmgMul * dt;
+      markHit(t);
       // Ice buff: an icy bullet briefly freezes the monster it hits (freeze.js).
       // Only CloseCombatMonsters of a known footprint freeze — barrels and
       // odd-sized targets are immune. Refreshed every overlapping frame.

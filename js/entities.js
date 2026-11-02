@@ -30,6 +30,7 @@ import { isGiant } from "./giantMode.js";
 import { isIceActive, ICE_AURA_SPECIES_ID } from "./iceMode.js";
 import { isFrozen, freezeOverlayId, BULLET_AURA_SPECIES_ID } from "./freeze.js";
 import { hasUnlocked as fastTravelUnlocked } from "./fastTravel.js";
+import { hitFlashAmount } from "./hitFlash.js";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
@@ -504,7 +505,10 @@ function draw(ctx, e, camera) {
     drawVanishOverlay(ctx, e, camera);
     return;
   }
+  const flash = "flash" in ctx ? hitFlashAmount(e) : 0;
+  if (flash) ctx.flash = flash;
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+  if (flash) ctx.flash = 0;
   // Ice buff: a frost overlay sits on top of a frozen monster (freeze.js).
   drawFreezeOverlay(ctx, e, camera);
 }

@@ -13,6 +13,7 @@
 // `light` ("Night", "CantSeeShit", "Day") to override the zone's light condition.
 // `freezeFrame: N` seeds Math.random and steps the clock 1/60 s per frame, then
 // stops it after N frames, so two runs capture the same instant for diffing.
+// `script` is a page expression evaluated just before the settle wait.
 //
 // Self-skips (exit 0) when no Chrome is found; set CHROME_PATH for a
 // non-default install.
@@ -177,6 +178,8 @@ async function captureShot(s, shot) {
     if (!st) { st = document.createElement('style'); st.id = 'shot-hide'; document.head.appendChild(st); }
     st.textContent = 'body > *:not(#game){display:none !important}';
   })()`);
+
+  if (shot.script) await evalExpr(s, shot.script);
 
   // Let the lazy zone-cache bake and a couple of frames settle.
   await sleep(shot.settle ?? 600);

@@ -2,7 +2,7 @@
 
 This is SNEAKBIT, a top-down adventure-action game with close- and long-range combat in a hand-drawn Game Boy-style world.
 
-- HTML5 Canvas and vanilla JavaScript, with ES modules for the browser client
+- WebGL 2 and vanilla JavaScript, with ES modules for the browser client
 - The original Rust-core game is preserved at the read-only `rust-core-tip` tag; this repository's current code is the HTML build
 - Online co-op is peer-to-peer over WebRTC for up to four players; local split-screen supports up to four controllers
 - We also ship Electron desktop builds, Steam builds, and native iOS and Android wrappers
@@ -36,8 +36,9 @@ This is SNEAKBIT, a top-down adventure-action game with close- and long-range co
 - JSDoc type annotations are appreciated
 - Keep comments to a bare minimum: no headers, dangling facts, or empty openers; use clean, simple prose only when necessary
 - World space is measured in tile floats; screen space is pixel coordinates. Convert world positions to pixels in the renderer
-- No external runtime libraries and no WebGL. Canvas 2D is sufficient; esbuild, Electron, and packaging tools are development-only exceptions
-- Preserve crisp pixel art: disable canvas image smoothing and round blit positions to integer pixels
+- No external runtime libraries; esbuild, Electron, and packaging tools are development-only exceptions
+- The world is drawn with WebGL 2 (`renderer.js`, `spriteBatch.js`, `darknessPass.js`), no fallback needed (it still drops to Canvas 2D when WebGL 2 is unavailable); `?canvas` keeps the old Canvas 2D path for screenshot diffs. World drawers only call `drawImage` and `globalAlpha`, which both provide. Zone chunk bakes, menus and previews stay Canvas 2D
+- Preserve crisp pixel art: NEAREST sampling and no canvas image smoothing, blit positions rounded to integer pixels
 - Files in `js/` are camelCase and match the feature name. Exports are named, never default
 - Implement interface elements such as buttons, counters, menus, and dialogue with HTML and CSS, not in the game canvas
 
