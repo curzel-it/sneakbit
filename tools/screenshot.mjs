@@ -20,7 +20,7 @@
 
 import { spawn } from "node:child_process";
 import { createServer } from "node:net";
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -213,10 +213,11 @@ async function main() {
     [join(REPO_ROOT, "tests", "e2e", "fixtures", "nodeStaticServer.mjs"), String(staticPort), REPO_ROOT],
     { stdio: "ignore" },
   );
+  const dataDir = `/tmp/sb-screenshots-${process.pid}`;
   let chrome, s;
   try {
     await waitForPort(staticPort);
-    chrome = await launchChrome({ dataDir: `/tmp/sb-screenshots-${process.pid}` });
+    chrome = await launchChrome({ dataDir });
     const targets = await getTargets(chrome.port);
     const page = targets.find((x) => x.type === "page");
     s = await connectSession(page.webSocketDebuggerUrl);
@@ -233,6 +234,7 @@ async function main() {
     try { s?.close(); } catch { /* ignore */ }
     try { chrome?.kill(); } catch { /* ignore */ }
     try { staticProc.kill("SIGTERM"); } catch { /* ignore */ }
+    await rm(dataDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }).catch(() => {});
   }
 }
 
