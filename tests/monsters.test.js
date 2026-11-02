@@ -74,3 +74,11 @@ test("non-monster entities are ignored", () => {
   tickMonsterFusion(zone);
   assert.equal(zone.entities.length, 2);
 });
+
+test("monsters brushing past each other don't fuse", () => {
+  const a = { id: 1, species_id: 4004, frame: { x: 5, y: 5, w: 1, h: 2 } };
+  const b = { id: 2, species_id: 4004, frame: { x: 5.65, y: 5.65, w: 1, h: 2 } };
+  const zone = makeZone([a, b]);
+  tickMonsterFusion(zone);
+  assert.equal(zone.entities.length, 2);
+});

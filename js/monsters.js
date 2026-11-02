@@ -80,13 +80,16 @@ function findCompatiblePartner(entities, selfIdx, self) {
   return null;
 }
 
+// Monsters move freely, so brushing past each other isn't a fusion: they
+// fuse when at least half of the smaller frame lies inside the other.
+const FUSION_OVERLAP = 0.5;
+
 function framesOverlap(a, b) {
   if (!a || !b) return false;
-  if (a.x + a.w <= b.x) return false;
-  if (b.x + b.w <= a.x) return false;
-  if (a.y + a.h <= b.y) return false;
-  if (b.y + b.h <= a.y) return false;
-  return true;
+  const w = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+  const h = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+  if (w <= 0 || h <= 0) return false;
+  return w * h >= FUSION_OVERLAP * Math.min(a.w * a.h, b.w * b.h);
 }
 
 function promoteSpecies(entity, newSpeciesId) {
