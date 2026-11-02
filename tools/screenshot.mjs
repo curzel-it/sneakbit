@@ -7,7 +7,12 @@
 // exactly the requested tile count, then let Chrome screenshot the live
 // canvas. Zero new game code, zero deps — reuses the e2e CDP harness.
 //
-//   node tools/screenshot.mjs [path/to/spec.json]   # default: tools/screenshots.json
+//   node tools/screenshot.mjs [path/to/spec.json] [outDir]   # default: tools/screenshots.json
+//
+// A shot may add `query` (e.g. "?canvas" for the Canvas 2D renderer) and
+// `light` ("Night", "CantSeeShit", "Day") to override the zone's light condition.
+// `freezeFrame: N` seeds Math.random and steps the clock 1/60 s per frame, then
+// stops it after N frames, so two runs capture the same instant for diffing.
 //
 // Self-skips (exit 0) when no Chrome is found; set CHROME_PATH for a
 // non-default install.
@@ -24,7 +29,7 @@ import {
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, "..");
-const OUT_DIR = join(REPO_ROOT, "docs", "screenshots");
+let OUT_DIR = join(REPO_ROOT, "docs", "screenshots");
 
 // js/zoom.js resolves `scale` to 2 at deviceScaleFactor=1, so a window of
 // (w·32 × h·32) physical px renders exactly w×h tiles. Auto-zoom clamps
@@ -94,6 +99,37 @@ function seedScript(shot) {
       localStorage.setItem("sneakbit.settings.v1", '{"showFps":false,"muted":true}');
       ${extra}
     } catch (e) {}
+    ${lightOverride(shot)}
+    ${freezeClock(shot)}
+  `;
+}
+
+function freezeClock(shot) {
+  if (!shot.freezeFrame) return "";
+  return `
+    let seed = 1;
+    Math.random = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
+    let frames = 0;
+    const rafOrig = window.requestAnimationFrame.bind(window);
+    window.requestAnimationFrame = (cb) => rafOrig(() => {
+      if (frames < ${shot.freezeFrame | 0}) frames++;
+      cb(frames * 1000 / 60);
+    });
+    performance.now = () => 0;
+  `;
+}
+
+function lightOverride(shot) {
+  if (!shot.light) return "";
+  return `
+    const fetchOrig = window.fetch;
+    window.fetch = async (url, opts) => {
+      const res = await fetchOrig(url, opts);
+      if (!String(url).includes("data/${shot.zone}.json")) return res;
+      const json = await res.json();
+      json.light_conditions = ${JSON.stringify(shot.light)};
+      return new Response(JSON.stringify(json), { status: res.status, headers: res.headers });
+    };
   `;
 }
 
@@ -112,7 +148,7 @@ async function captureShot(s, shot) {
   // Seed before boot, navigate, then drop the injected script so it can't
   // leak into the next shot.
   const { identifier } = await s.send("Page.addScriptToEvaluateOnNewDocument", { source: seedScript(shot) });
-  await navigate(s, `http://127.0.0.1:${staticPort}/`);
+  await navigate(s, `http://127.0.0.1:${staticPort}/${shot.query ?? ""}`);
   await s.send("Page.removeScriptToEvaluateOnNewDocument", { identifier });
 
   // Confirm the seeded spawn landed (proves the zone built and the player
@@ -163,6 +199,7 @@ async function main() {
   const spec = JSON.parse(await readFile(specPath, "utf8"));
   const defaults = spec.defaults || {};
   const shots = (spec.shots || []).map((s) => ({ ...defaults, ...s }));
+  if (process.argv[3]) OUT_DIR = resolve(process.argv[3]);
   if (!shots.length) { console.log("no shots in spec"); return; }
 
   await mkdir(OUT_DIR, { recursive: true });
@@ -176,7 +213,7 @@ async function main() {
   let chrome, s;
   try {
     await waitForPort(staticPort);
-    chrome = await launchChrome({ dataDir: "/tmp/sb-screenshots" });
+    chrome = await launchChrome({ dataDir: `/tmp/sb-screenshots-${process.pid}` });
     const targets = await getTargets(chrome.port);
     const page = targets.find((x) => x.type === "page");
     s = await connectSession(page.webSocketDebuggerUrl);

@@ -91,6 +91,7 @@ export async function launchChrome({ dataDir }) {
     "--remote-debugging-port=0",
     `--user-data-dir=${dataDir}`,
     "--disable-gpu",
+    "--enable-unsafe-swiftshader",
     "--no-first-run",
     "--no-default-browser-check",
     "about:blank",
