@@ -219,7 +219,7 @@ function makeHint() {
 // is_around_and_pointed_at over a blocked tile).
 const MAX_REACH = 3;
 const PROBE_REACH = 0.8;
-const PROBE_SLACK = 0.35;
+const PROBE_SLACK = 0.15;
 
 export function findFacingEntity(zone, player) {
   const [dx, dy] = DIR_DELTA[player.direction] ?? [0, 1];

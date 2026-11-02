@@ -226,7 +226,7 @@ async function main() {
       count: () => localPlayerCount(),
       positions: () => {
         const out = [];
-        const add = (p) => p && out.push({ index: p.index | 0, tileX: p.tileX, tileY: p.tileY, direction: p.direction });
+        const add = (p) => p && out.push({ index: p.index | 0, x: p.x, y: p.y, tileX: p.tileX, tileY: p.tileY, direction: p.direction });
         add(state.player);
         add(state.player2);
         for (const s of state.players) add(s.player);

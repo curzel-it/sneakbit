@@ -1,6 +1,8 @@
 // Mob AI. FindHero monsters that see a player steer straight at it at their
 // species speed, sliding along walls, and fall back to a grid path
-// (pathfinding.js) when something solid is in the way. Anything else, and a
+// (pathfinding.js) when something solid is in the way. On reaching the
+// player they bump: a short recoil and a breather, so contact damage comes
+// in hits rather than a steady drain. Anything else, and a
 // FindHero mob that sees nobody, wanders one tile at a time. Positions are
 // floats; `_ai.tileX/tileY` is the nearest tile.
 
@@ -19,6 +21,7 @@ const WANDER_PAUSE = 0.9;
 const TILE_RATE_PER_BASE_SPEED = 1.6;
 const FALLBACK_BASE_SPEED = 1.4;
 const CHASE_STOP = 0.65;
+const REST_AFTER_BUMP = 0.6;
 const WAYPOINT_REACHED = 0.12;
 const STUCK_RATIO = 0.3;
 const STUCK_BEFORE_PATH = 0.2;
@@ -86,6 +89,7 @@ function ensureAi(e) {
     path: null,
     repath: 0,
     stuck: 0,
+    rest: 0,
   };
 }
 
@@ -108,6 +112,12 @@ function chase(e, sp, zone, target, dt) {
   const feet = mobFeetCentre(e);
   const tx = target.x + 0.5, ty = target.y + 0.5;
   ai.repath -= dt;
+  if (ai.rest > 0) {
+    ai.rest -= dt;
+    e.moving = false;
+    e.direction = capitalize(facing(tx - feet.x, ty - feet.y));
+    return;
+  }
   let gx = tx, gy = ty;
   if (ai.path) {
     while (ai.path.length && Math.hypot(ai.path[0].x + 0.5 - feet.x, ai.path[0].y + 0.5 - feet.y) < WAYPOINT_REACHED) {
@@ -118,7 +128,8 @@ function chase(e, sp, zone, target, dt) {
   }
   if (!ai.path && Math.hypot(tx - feet.x, ty - feet.y) <= CHASE_STOP) {
     e.moving = false;
-    e.direction = capitalize(facing(tx - feet.x, ty - feet.y));
+    recoil(zone, e, feet, tx, ty);
+    ai.rest = REST_AFTER_BUMP;
     return;
   }
   const dx = gx - feet.x, dy = gy - feet.y;
@@ -135,6 +146,16 @@ function chase(e, sp, zone, target, dt) {
     ai.stuck = 0;
     const path = findPathToNearest(zone, Math.floor(feet.x - (ai.w - 1) / 2), Math.floor(feet.y), [{ x: target.tileX, y: target.tileY }]);
     ai.path = path && path.length <= MAX_PATH ? path : null;
+  }
+}
+
+// Hop one tile away from the bumped player, or sideways when cornered.
+function recoil(zone, e, feet, tx, ty) {
+  const ax = feet.x - tx, ay = feet.y - ty;
+  const sources = [[tx, ty], [feet.x + ay, feet.y - ax], [feet.x - ay, feet.y + ax]];
+  for (const [sx, sy] of sources) {
+    knockbackEntity(zone, e, sx, sy, 1);
+    if (e._ai.step) return;
   }
 }
 

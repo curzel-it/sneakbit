@@ -45,8 +45,8 @@ test("chaseDirections targets the longer-axis direction first", () => {
   assert.deepEqual(chaseDirections(e, up), ["up", "left"]);
 });
 
-function tickFor(zone, players, seconds, dt = 1 / 60) {
-  for (let t = 0; t < seconds; t += dt) tickMobs(zone, players, dt);
+function tickFor(zone, players, seconds, dt = 1 / 60, each = () => {}) {
+  for (let t = 0; t < seconds; t += dt) { tickMobs(zone, players, dt); each(); }
 }
 
 const feetDist = (mob, p) => Math.hypot(mob.frame.x + 0.5 - (p.x + 0.5), mob.frame.y + 1.5 - (p.y + 0.5));
@@ -63,9 +63,14 @@ test("FindHero mob steers smoothly toward the player", () => {
   assert.ok(mob.frame.x > 5 && mob.frame.y > 5, "moved diagonally toward the player");
   assert.ok(mob.frame.x % 1 !== 0, "off the grid");
   assert.equal(mob.direction, "Right");
-  tickFor(zone, player, 3);
-  assert.ok(feetDist(mob, player) <= 0.9, `in melee range, dist=${feetDist(mob, player)}`);
-  assert.equal(mob.moving, false, "stops once in reach");
+  let reached = false, bumped = false;
+  tickFor(zone, player, 3, 1 / 60, () => {
+    const d = feetDist(mob, player);
+    if (d <= 0.9) reached = true;
+    else if (reached && mob._ai.step?.hop) bumped = true;
+  });
+  assert.ok(reached, "got into melee range");
+  assert.ok(bumped, "recoils after the bump");
 });
 
 test("FindHero mob wanders when the player is out of vision range", () => {
@@ -173,6 +178,7 @@ test("FindHero mob gets around a wall between it and the player", () => {
   const mob = { species_id: 4004, frame: { x: 6, y: 4, w: 1, h: 2 } };
   zone.entities.push(mob);
   const player = { tileX: 10, tileY: 5, x: 10, y: 5 };
-  tickFor(zone, player, 8);
-  assert.ok(feetDist(mob, player) <= 0.9, `reached the player, dist=${feetDist(mob, player)} at ${mob.frame.x},${mob.frame.y}`);
+  let best = Infinity;
+  tickFor(zone, player, 8, 1 / 60, () => { best = Math.min(best, feetDist(mob, player)); });
+  assert.ok(best <= 0.9, `reached the player, closest=${best} at ${mob.frame.x},${mob.frame.y}`);
 });
