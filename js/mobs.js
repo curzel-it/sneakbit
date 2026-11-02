@@ -1,14 +1,8 @@
-// Mob AI — tile-locked, Gameboy-style stepping.
-//
-// Two movement modes match the original Rust core:
-//   * FindHero chases the player when within vision range; otherwise it
-//     wanders, matching `move_chasing_player`'s fall-through to
-//     `move_around_free` in the Rust core.
-//   * Free just wanders at random.
-//
-// Each mob carries a small `_ai` state with its own step (from→to, with
-// progress 0..1) so its sprite slides smoothly between integer tiles,
-// matching the player's movement model in player.js.
+// Mob AI. FindHero monsters that see a player steer straight at it at their
+// species speed, sliding along walls, and fall back to a grid path
+// (pathfinding.js) when something solid is in the way. Anything else, and a
+// FindHero mob that sees nobody, wanders one tile at a time. Positions are
+// floats; `_ai.tileX/tileY` is the nearest tile.
 
 import { getSpecies } from "./species.js";
 import { isWalkable } from "./zone.js";
@@ -16,17 +10,24 @@ import { entityHittableFrame, rectOverlapsTile } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { isFrozen } from "./freeze.js";
 import { TILE_SIZE } from "./constants.js";
+import { findPathToNearest } from "./pathfinding.js";
 
-const VISION_TILES = 6;            // chase trigger range (Manhattan)
-const WANDER_PAUSE = 0.9;          // sec idle between wander steps
+const VISION_TILES = 6;
+const WANDER_PAUSE = 0.9;
 // Mirrors Rust config().base_entity_speed = TILE_SIZE * 1.6 (so the
-// effective movement rate is `base_speed × 1.6` tiles/sec). Used to
-// derive a per-species step duration from species.base_speed instead
-// of fixed CHASE / WANDER constants. The two flat constants were too
-// fast for slow critters (slime, 1.0) and too slow for fast ones (cat,
-// 2.0), which is what bug #4 in todo.md was about.
+// effective movement rate is `base_speed × 1.6` tiles/sec).
 const TILE_RATE_PER_BASE_SPEED = 1.6;
-const FALLBACK_BASE_SPEED = 1.4;   // ~Rust grapevine boss speed
+const FALLBACK_BASE_SPEED = 1.4;
+const CHASE_STOP = 0.65;
+const WAYPOINT_REACHED = 0.12;
+const STUCK_RATIO = 0.3;
+const STUCK_BEFORE_PATH = 0.2;
+const REPATH_INTERVAL = 0.5;
+const MAX_PATH = 40;
+const FEET_INSET_X = 0.2;
+const FEET_TOP = 0.8;
+const FEET_BOTTOM = 0.2;
+const EDGE_EPS = 1e-4;
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -44,15 +45,10 @@ export function tickMobs(zone, player, dt) {
   if (!zone?.entities) return;
   // Creative mode freezes every AI-driven entity in place so the level
   // designer can lay out monsters / NPCs without them wandering off.
-  // Mirrors Rust movement/movement_directions.rs::perform_movement
-  // short-circuiting in creative.
   if (isCreativeMode()) return;
   const players = Array.isArray(player) ? player.filter(Boolean) : (player ? [player] : []);
-  // Only tick mobs whose frame overlaps the viewport this frame. Mirrors
-  // Rust's update_hitmaps gating: a monster that has wandered off-screen
-  // freezes in place. This is gameplay, not just perf — it stops monsters
-  // from merging behind the camera and lets the player time kunai launches
-  // against a stable layout.
+  // Only tick mobs whose frame overlaps a viewport this frame, mirroring
+  // Rust's update_hitmaps gating: a monster off-screen freezes in place.
   const list = zone.visibleEntities ?? zone.entities;
   for (const e of list) {
     if (e._spawned) continue;
@@ -60,17 +56,21 @@ export function tickMobs(zone, player, dt) {
     const sp = getSpecies(e.species_id);
     if (!sp) continue;
     if (!isMobAi(sp)) continue;
-    // A frozen monster (ice buff, freeze.js) holds in place: any in-flight step
-    // pauses and resumes when the freeze lapses, and it makes no new decisions.
-    if (isFrozen(e)) continue;
+    if (isFrozen(e)) { e.moving = false; continue; }
     ensureAi(e);
-    if (e._ai.step) advanceStep(e, dt);
-    else decideStep(e, sp, zone, players, dt);
+    if (e._ai.step) { advanceStep(e, dt); continue; }
+    if (sp.movement_directions === "FindHero") {
+      const target = pickClosestVisible(e, players);
+      if (target) { chase(e, sp, zone, target, dt); continue; }
+    }
+    e.moving = false;
+    e._ai.path = null;
+    decideStep(e, sp, zone, dt);
   }
 }
 
-function isMobAi(sp) {
-  return sp.movement_directions === "FindHero" || sp.movement_directions === "Free";
+export function isMobAi(sp) {
+  return !!sp && (sp.movement_directions === "FindHero" || sp.movement_directions === "Free");
 }
 
 function ensureAi(e) {
@@ -79,30 +79,119 @@ function ensureAi(e) {
   e._ai = {
     step: null,
     decideTimer: 0,
-    tileX: Math.floor(f.x),
-    tileY: Math.floor(f.y),
+    tileX: Math.round(f.x),
+    tileY: Math.round(f.y),
     w: Math.max(1, f.w || 1),
     h: Math.max(1, f.h || 1),
+    path: null,
+    repath: 0,
+    stuck: 0,
   };
-  e.frame.x = e._ai.tileX;
-  e.frame.y = e._ai.tileY;
 }
 
-function decideStep(e, sp, zone, players, dt) {
-  e._ai.decideTimer -= dt;
-  if (e._ai.decideTimer > 0) return;
+function syncAiTile(e) {
+  e._ai.tileX = Math.round(e.frame.x);
+  e._ai.tileY = Math.round(e.frame.y);
+}
 
-  const stepDuration = stepDurationFor(sp);
-  if (sp.movement_directions === "FindHero") {
-    const target = pickClosestVisible(e, players);
-    if (target) {
-      for (const dir of chaseDirections(e, target)) {
-        if (tryStartStep(e, dir, zone, stepDuration)) return;
-      }
+/** Centre of a mob's feet row, in tile units. */
+export function mobFeetCentre(e) {
+  const f = e.frame;
+  const h = e._ai?.h ?? Math.max(1, f.h || 1);
+  const w = e._ai?.w ?? Math.max(1, f.w || 1);
+  return { x: f.x + w / 2, y: f.y + h - 0.5 };
+}
+
+function chase(e, sp, zone, target, dt) {
+  const ai = e._ai;
+  const speed = speedFor(sp);
+  const feet = mobFeetCentre(e);
+  const tx = target.x + 0.5, ty = target.y + 0.5;
+  ai.repath -= dt;
+  let gx = tx, gy = ty;
+  if (ai.path) {
+    while (ai.path.length && Math.hypot(ai.path[0].x + 0.5 - feet.x, ai.path[0].y + 0.5 - feet.y) < WAYPOINT_REACHED) {
+      ai.path.shift();
+    }
+    if (ai.path.length) { gx = ai.path[0].x + 0.5; gy = ai.path[0].y + 0.5; }
+    else ai.path = null;
+  }
+  if (!ai.path && Math.hypot(tx - feet.x, ty - feet.y) <= CHASE_STOP) {
+    e.moving = false;
+    e.direction = capitalize(facing(tx - feet.x, ty - feet.y));
+    return;
+  }
+  const dx = gx - feet.x, dy = gy - feet.y;
+  const dist = Math.hypot(dx, dy);
+  if (dist < 1e-6) { e.moving = false; return; }
+  const want = Math.min(speed * dt, dist);
+  const moved = moveMob(zone, e, (dx / dist) * want, (dy / dist) * want);
+  e.moving = moved > 1e-6;
+  e.direction = capitalize(facing(dx, dy));
+  syncAiTile(e);
+  ai.stuck = moved < want * STUCK_RATIO ? ai.stuck + dt : 0;
+  if (ai.stuck >= STUCK_BEFORE_PATH && ai.repath <= 0) {
+    ai.repath = REPATH_INTERVAL;
+    ai.stuck = 0;
+    const path = findPathToNearest(zone, Math.floor(feet.x - (ai.w - 1) / 2), Math.floor(feet.y), [{ x: target.tileX, y: target.tileY }]);
+    ai.path = path && path.length <= MAX_PATH ? path : null;
+  }
+}
+
+function facing(dx, dy) {
+  if (Math.abs(dx) >= Math.abs(dy)) return dx >= 0 ? "right" : "left";
+  return dy >= 0 ? "down" : "up";
+}
+
+/** Moves a mob by (dx, dy) with axis-separated collision; returns distance moved. */
+export function moveMob(zone, e, dx, dy) {
+  const f = e.frame;
+  const x0 = f.x, y0 = f.y;
+  if (dx && canMobOccupy(zone, e, f.x + dx, f.y)) f.x += dx;
+  if (dy && canMobOccupy(zone, e, f.x, f.y + dy)) f.y += dy;
+  return Math.hypot(f.x - x0, f.y - y0);
+}
+
+function feetBox(e, x, y) {
+  const w = e._ai?.w ?? Math.max(1, e.frame.w || 1);
+  const h = e._ai?.h ?? Math.max(1, e.frame.h || 1);
+  return { x: x + FEET_INSET_X, y: y + h - FEET_TOP, w: w - FEET_INSET_X * 2, h: FEET_TOP - FEET_BOTTOM };
+}
+
+function boxBlockers(zone, e, box) {
+  const out = [];
+  const l = Math.floor(box.x), r = Math.floor(box.x + box.w - EDGE_EPS);
+  const t = Math.floor(box.y), b = Math.floor(box.y + box.h - EDGE_EPS);
+  for (let ty = t; ty <= b; ty++) {
+    for (let tx = l; tx <= r; tx++) {
+      if (!isWalkable(zone, tx, ty)) out.push(`${tx},${ty}`);
     }
   }
-  // Wander — also the fallback for FindHero mobs that can't see/reach
-  // the player, so monsters keep moving even out of line of sight.
+  for (const other of zone.entities) {
+    if (other === e || other._spawned || other._dying) continue;
+    const sp = getSpecies(other.species_id);
+    if (!sp || !sp.is_rigid || isMobAi(sp)) continue;
+    if ((sp.entity_type === "Gate" || sp.entity_type === "InverseGate") && other._open) continue;
+    if (sp.entity_type === "Teleporter") continue;
+    const hit = entityHittableFrame(other, sp);
+    if (!hit) continue;
+    if (box.x < hit.x + hit.w && box.x + box.w > hit.x && box.y < hit.y + hit.h && box.y + box.h > hit.y) out.push(other);
+  }
+  return out;
+}
+
+/** True if a mob at its current frame may move its frame to (x, y). */
+export function canMobOccupy(zone, e, x, y) {
+  const now = boxBlockers(zone, e, feetBox(e, x, y));
+  if (!now.length) return true;
+  const was = boxBlockers(zone, e, feetBox(e, e.frame.x, e.frame.y));
+  return now.every((k) => was.includes(k));
+}
+
+function decideStep(e, sp, zone, dt) {
+  e._ai.decideTimer -= dt;
+  if (e._ai.decideTimer > 0) return;
+  const stepDuration = 1 / speedFor(sp);
   const dirs = ALL_DIRS.slice();
   shuffle(dirs);
   for (const dir of dirs) {
@@ -113,13 +202,14 @@ function decideStep(e, sp, zone, players, dt) {
 
 function tryStartStep(e, dir, zone, duration) {
   const [dx, dy] = DIR_DELTA[dir];
+  syncAiTile(e);
   const toX = e._ai.tileX + dx;
   const toY = e._ai.tileY + dy;
   if (!canEnter(zone, e, toX, toY)) return false;
   e.direction = capitalize(dir);
   e._ai.step = {
-    fromX: e._ai.tileX,
-    fromY: e._ai.tileY,
+    fromX: e.frame.x,
+    fromY: e.frame.y,
     toX, toY,
     progress: 0,
     duration,
@@ -127,14 +217,12 @@ function tryStartStep(e, dir, zone, duration) {
   return true;
 }
 
-// Per-species step duration mirrors Rust's straight-movement math
-// (current_speed × 1.6 tiles/sec, derived from base_entity_speed =
-// TILE_SIZE × 1.6 set in game/src/main.rs). Clamped so an extreme
-// species data value can't produce a sub-frame step or freeze a mob.
-function stepDurationFor(sp) {
+// Tiles per second, clamped so an extreme species value can't produce a
+// sub-frame step or freeze a mob.
+function speedFor(sp) {
   const base = sp.base_speed > 0 ? sp.base_speed : FALLBACK_BASE_SPEED;
   const tilesPerSec = base * TILE_RATE_PER_BASE_SPEED;
-  return Math.max(0.12, Math.min(1.5, 1 / tilesPerSec));
+  return Math.max(1 / 1.5, Math.min(1 / 0.12, tilesPerSec));
 }
 
 function advanceStep(e, dt) {
@@ -171,12 +259,8 @@ export function knockbackEntity(zone, e, fromX, fromY, tiles = 1) {
   const sp = getSpecies(e.species_id);
   if (!sp || !isMobAi(sp)) return;
   ensureAi(e);
-  // Start from where the mob visually is, snapped to the grid, so an in-flight
-  // step doesn't make the shove jump from a stale from-tile.
-  e._ai.tileX = Math.round(e.frame.x);
-  e._ai.tileY = Math.round(e.frame.y);
-  e.frame.x = e._ai.tileX;
-  e.frame.y = e._ai.tileY;
+  e._ai.path = null;
+  syncAiTile(e);
 
   const cx = e._ai.tileX + 0.5;
   const cy = e._ai.tileY + e._ai.h - 0.5;
@@ -196,8 +280,8 @@ export function knockbackEntity(zone, e, fromX, fromY, tiles = 1) {
 
   e.direction = capitalize(dx > 0 ? "right" : dx < 0 ? "left" : dy > 0 ? "down" : "up");
   e._ai.step = {
-    fromX: e._ai.tileX,
-    fromY: e._ai.tileY,
+    fromX: e.frame.x,
+    fromY: e.frame.y,
     toX: tx, toY: ty,
     progress: 0,
     duration: Math.max(KNOCKBACK_MIN_DURATION, steps * KNOCKBACK_DURATION_PER_TILE),
@@ -217,20 +301,16 @@ export function knockbackHopOffset(e) {
   return Math.sin(p * Math.PI) * KNOCKBACK_HOP_TILES;
 }
 
-// Picks the closest live player whose Manhattan distance from the mob's
-// feet tile is within VISION_TILES. Used by FindHero mobs so co-op mobs
-// switch targets when P2 gets in close range, instead of locking onto
-// P1 forever (mobs.js only knew about state.player before).
+// Picks the closest live player within VISION_TILES of the mob's feet, so
+// co-op mobs switch targets when another player gets closer.
 function pickClosestVisible(e, players) {
-  const feetY = e._ai.tileY + e._ai.h - 1;
+  const feet = mobFeetCentre(e);
   let best = null;
   let bestDist = Infinity;
   for (const p of players) {
     if (!p) continue;
-    const dx = p.tileX - e._ai.tileX;
-    const dy = p.tileY - feetY;
-    const dist = Math.abs(dx) + Math.abs(dy);
-    if (dist === 0 || dist > VISION_TILES) continue;
+    const dist = Math.hypot(p.x + 0.5 - feet.x, p.y + 0.5 - feet.y);
+    if (dist > VISION_TILES) continue;
     if (dist < bestDist) { best = p; bestDist = dist; }
   }
   return best;

@@ -10,7 +10,7 @@ import { loadSpeciesData, getSpecies } from "./species.js";
 import { composeBiomeSheet } from "./biomeSheet.js";
 import { buildZone, isTeleporterLocked } from "./zone.js";
 import { pickCoopSpawn } from "./coopSpawn.js";
-import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress } from "./input.js";
+import { initInput, pollInput, clearInputState, pushInputPress, releaseInputHeld } from "./input.js";
 import { createPlayer, updatePlayer, updateGuestAvatar } from "./player.js";
 import { createCamera, updateCamera, cameraRectFor } from "./camera.js";
 import { createRenderer, render, renderViewports } from "./renderer.js";
@@ -43,6 +43,7 @@ import { seedStartingCoins } from "./wallet.js";
 import { giveCoopStarterKit, SWORD_WEAPON_ID } from "./starterGift.js";
 import { glyphForAction } from "./inputGlyphs.js";
 import { tickMobs } from "./mobs.js";
+import { tickSeparation } from "./separation.js";
 import { tickMonsterFusion } from "./monsters.js";
 import { tickMinionSpawning } from "./minions.js";
 import { tickCombat } from "./combat.js";
@@ -231,9 +232,20 @@ async function main() {
         for (const s of state.players) add(s.player);
         return out;
       },
-      // Single-tile tap: queue one press then drop the held set, so the
-      // avatar takes exactly one step (no continuous walk).
-      tap: (slot, dir) => { pushInputPress(slot, dir); clearInputHeld(slot); },
+      // Single-tile tap: hold the direction until the avatar has walked about
+      // one tile (or a short timeout when blocked), then release it.
+      tap: (slot, dir) => {
+        const p = [state.player, state.player2, ...state.players.map((e) => e.player)]
+          .find((q) => q && (q.index | 0) === slot - 1);
+        const sx = p?.x ?? 0, sy = p?.y ?? 0, started = performance.now();
+        pushInputPress(slot, dir);
+        const check = () => {
+          const far = p && Math.hypot(p.x - sx, p.y - sy) >= 0.95;
+          if (far || performance.now() - started > 400) { releaseInputHeld(slot, dir); return; }
+          setTimeout(check, 8);
+        };
+        setTimeout(check, 8);
+      },
       // Live split-screen geometry: one entry per slice with its backing-pixel
       // rect and its camera's tile dimensions. Lets e2e assert the layout
       // (count + arrangement) for a given window size + player count.
@@ -391,9 +403,9 @@ async function main() {
       // player on revive. Without this gate a "dead-but-waiting" host
       // would silently walk around invisibly while spectating guests.
       if (!isPlayerDead(0)) updatePlayer(state.player, hostInput, dt, state.zone);
-      // Network-guest avatars (playerId set) own their own tile path: the
-      // host only animates committed steps via updateGuestAvatar — never
-      // runs movement decisions for them (docs/multiplayer.md).
+      // Network-guest avatars (playerId set) own their own position: the
+      // host applies their validated updates (hostGuests.js) and only
+      // animates them here (docs/multiplayer.md).
       // Local-coop slots (playerId null) still run the full input-driven
       // updatePlayer.
       if (state.player2) {
@@ -428,6 +440,7 @@ async function main() {
       tickShooting(dt);
       tickMelee(dt);
       tickMobs(state.zone, allPlayers(state), dt);
+      tickSeparation(state.zone, allPlayers(state), dt, (p) => !!p.playerId && p !== state.player);
       tickMonsterFusion(state.zone);
       tickMinionSpawning(state.zone, state.player, dt);
       // Combat now iterates every live player for melee monster damage

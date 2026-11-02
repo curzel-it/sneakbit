@@ -3,7 +3,8 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadSpeciesData } from "../js/species.js";
+import { loadSpeciesData, getSpecies } from "../js/species.js";
+import { entityHittableFrame } from "../js/entityVisibility.js";
 import { tickMobs, chaseDirections, canEnter } from "../js/mobs.js";
 
 // Minimal species table: one chase monster, one wandering NPC, one wall.
@@ -44,22 +45,27 @@ test("chaseDirections targets the longer-axis direction first", () => {
   assert.deepEqual(chaseDirections(e, up), ["up", "left"]);
 });
 
-test("FindHero mob takes a step toward the player on tick", () => {
+function tickFor(zone, players, seconds, dt = 1 / 60) {
+  for (let t = 0; t < seconds; t += dt) tickMobs(zone, players, dt);
+}
+
+const feetDist = (mob, p) => Math.hypot(mob.frame.x + 0.5 - (p.x + 0.5), mob.frame.y + 1.5 - (p.y + 0.5));
+
+test("FindHero mob steers smoothly toward the player", () => {
   const zone = makeZone();
   const mob = { species_id: 4004, frame: { x: 5, y: 5, w: 1, h: 2 }, direction: "Down" };
   zone.entities.push(mob);
-  const player = { tileX: 8, tileY: 6, x: 8, y: 6 };
-  // First tick: AI bootstraps + starts a chase step.
-  tickMobs(zone, player, 0.02);
+  const player = { tileX: 8, tileY: 7, x: 8.3, y: 7.4 };
+  tickMobs(zone, player, 0.05);
   assert.ok(mob._ai, "ai state created");
-  assert.ok(mob._ai.step, "chase step started");
-  assert.equal(mob._ai.step.toX, 6); // stepped right
-  assert.equal(mob._ai.step.toY, 5);
-  // After enough dt to complete the step, the mob snaps to the new tile.
-  tickMobs(zone, player, 1.0);
-  assert.equal(mob._ai.tileX, 6);
-  assert.equal(mob._ai.tileY, 5);
-  assert.equal(mob._ai.step, null);
+  assert.equal(mob._ai.step, null, "no tile step while chasing");
+  assert.equal(mob.moving, true);
+  assert.ok(mob.frame.x > 5 && mob.frame.y > 5, "moved diagonally toward the player");
+  assert.ok(mob.frame.x % 1 !== 0, "off the grid");
+  assert.equal(mob.direction, "Right");
+  tickFor(zone, player, 3);
+  assert.ok(feetDist(mob, player) <= 0.9, `in melee range, dist=${feetDist(mob, player)}`);
+  assert.equal(mob.moving, false, "stops once in reach");
 });
 
 test("FindHero mob wanders when the player is out of vision range", () => {
@@ -67,7 +73,7 @@ test("FindHero mob wanders when the player is out of vision range", () => {
   const mob = { species_id: 4004, frame: { x: 5, y: 5, w: 1, h: 2 } };
   zone.entities.push(mob);
   // Player far away (Manhattan distance > VISION_TILES=6).
-  const player = { tileX: 19, tileY: 19 };
+  const player = { tileX: 19, tileY: 19, x: 19, y: 19 };
   tickMobs(zone, player, 0.02);
   assert.ok(mob._ai.step, "wander step started even though player is out of vision");
 });
@@ -90,11 +96,10 @@ test("FindHero mob is blocked across the full width of a tall obstacle's base", 
   zone.entities.push(mob);
   // Player is two tiles west — chase wants 'left' onto the building's base
   // row (13, 13). That tile is inside the feet rect and must be blocked.
-  const player = { tileX: 12, tileY: 13 };
-  tickMobs(zone, player, 0.02);
-  if (mob._ai.step) {
-    assert.notEqual(mob._ai.step.toX, 13, "mob stepped into the building base");
-  }
+  const player = { tileX: 12, tileY: 13, x: 12, y: 13 };
+  tickFor(zone, player, 0.5);
+  const base = entityHittableFrame(zone.entities[0], getSpecies(1100));
+  assert.ok(mob.frame.x + 0.2 >= base.x + base.w - 1e-6, `mob clipped into the building base, x=${mob.frame.x}`);
 });
 
 test("a tall obstacle's top row does not block a mover (walk-behind)", () => {
@@ -152,26 +157,22 @@ test("FindHero mob targets the closest live player in co-op", () => {
   const zone = makeZone();
   const mob = { species_id: 4004, frame: { x: 5, y: 5, w: 1, h: 2 } };
   zone.entities.push(mob);
-  // P1 is far (out of vision), P2 is right next door. The mob should
-  // chase P2, not stand around because the old code only saw P1.
-  const p1 = { tileX: 18, tileY: 18 };
-  const p2 = { tileX: 7, tileY: 6 };
-  tickMobs(zone, [p1, p2], 0.02);
-  assert.ok(mob._ai.step, "chase step started");
-  // Moves toward P2's tile (dx=+2, dy=+1 → 'right' first).
-  assert.equal(mob._ai.step.toX, 6);
-  assert.equal(mob._ai.step.toY, 5);
+  // P1 is far (out of vision), P2 is close: the mob chases P2.
+  const p1 = { tileX: 18, tileY: 18, x: 18, y: 18 };
+  const p2 = { tileX: 9, tileY: 6, x: 9, y: 6 };
+  tickMobs(zone, [p1, p2], 0.05);
+  assert.equal(mob._ai.step, null);
+  assert.ok(mob.frame.x > 5, "heading for P2");
+  assert.ok(mob.frame.y === 5, "P2 is level with the mob's feet");
 });
 
-test("FindHero mob falls back to the secondary direction when primary is blocked", () => {
-  // Wall directly to the right of the mob's feet tile.
-  const zone = makeZone((c, r) => !(c === 6 && r === 6));
-  const mob = { species_id: 4004, frame: { x: 5, y: 5, w: 1, h: 2 } };
+test("FindHero mob gets around a wall between it and the player", () => {
+  // A wall at column 8 from row 0 to row 9, open below. The mob starts west
+  // of it, the player east: steering alone would pin the mob on the wall.
+  const zone = makeZone((c, r) => !(c === 8 && r <= 9));
+  const mob = { species_id: 4004, frame: { x: 6, y: 4, w: 1, h: 2 } };
   zone.entities.push(mob);
-  // Player to the lower-right: primary 'right' is blocked, secondary
-  // 'down' should be picked instead.
-  const player = { tileX: 8, tileY: 7 };
-  tickMobs(zone, player, 0.02);
-  assert.equal(mob._ai.step.toX, 5);
-  assert.equal(mob._ai.step.toY, 6);
+  const player = { tileX: 10, tileY: 5, x: 10, y: 5 };
+  tickFor(zone, player, 8);
+  assert.ok(feetDist(mob, player) <= 0.9, `reached the player, dist=${feetDist(mob, player)} at ${mob.frame.x},${mob.frame.y}`);
 });
