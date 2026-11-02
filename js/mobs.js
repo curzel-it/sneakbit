@@ -263,8 +263,8 @@ function advanceStep(e, dt) {
 
 // Knockback: shove a mob away from a point (the player's tile centre),
 // sliding it up to `tiles` tiles in the dominant cardinal direction. Reuses
-// the AI's tile-locked step so the push reads as a fast slide and the mob
-// resumes normal movement afterwards. No-op if the mob can't be stepped (no
+// the AI's tile step so the push reads as a fast slide and the mob resumes
+// normal movement afterwards. No-op if the mob can't be stepped (no
 // AI species) or every tile behind it is blocked. Owned here so all `_ai`
 // manipulation stays in one file; knockbackAura.js calls it.
 //

@@ -25,8 +25,9 @@ the WebRTC transport, and the guest-authoritative movement model. If `README.md`
 
 Everyone shares one keyboard / a set of controllers on one machine. No relay, no
 prediction, no snapshots — the single game loop simulates every player directly.
-Player-vs-player tile collision is **NONE** in every mode (players may share a
-tile); this is uniform across offline and online.
+Players don't collide with each other. A soft separation (`separation.js`) pushes
+overlapping players apart and shoves monsters out of players; it never moves a
+network guest's avatar, whose own client owns its position.
 
 ## Local split-screen co-op
 
@@ -117,14 +118,14 @@ the session — is acceptable for "invite my friend for an hour."
 - **Snapshot** — host-broadcast full world state; **delta** — per-tick sparse
   change set.
 - **Seq** — monotonic per-guest sequence number. The host echoes the last-resolved
-  step seq per guest (`lastSeq`) in every snapshot/delta.
+  position-update seq per guest (`lastSeq`) in every snapshot/delta.
 
 ## Architecture at a glance
 
 ```
 host (browser)               relay                guest (browser)
 ─────────────                ─────                ──────────────
-existing local tick   ◄───WS/DC───  fan-out  ◄──── committed steps + actions (seq-stamped)
+existing local tick   ◄───WS/DC───  fan-out  ◄──── positions + actions (seq-stamped)
    (unchanged)        ────WS/DC───► fan-out  ────► snapshots / deltas (20 Hz)
                                                     │
                                                     ├──► render host's state (interpolated)
@@ -143,7 +144,7 @@ existing local tick   ◄───WS/DC───  fan-out  ◄──── commi
 | Concern | Owner |
 |---|---|
 | World state, NPCs, mobs, combat, pickups, gates, puzzles, dialogue, cutscenes, zone transitions | **Host** (always) |
-| Guest's own avatar **tile path** | **Guest** commits steps; **host** validates legality + executes (see *Guest-authoritative movement*) |
+| Guest's own avatar **position** | **Guest** streams positions; **host** validates + applies (see *Guest-authoritative movement*) |
 | Guest's HP, inventory, damage outcomes | **Host** is authoritative; guest predicts visuals |
 | Guest's action intents (shoot/melee/interact) | **Guest** sends; host applies |
 | Camera, zoom, animation interpolation, audio, HUD, menus, settings, key bindings | Each client locally |
@@ -166,16 +167,15 @@ Every input must produce a visible response within one frame (≤16 ms), even on
 - **a) Client-side prediction (own avatar).** `predictedSelf` is an in-process
   copy of the guest's avatar that consumes local input every frame via the real
   `player.js` model, so movement feels instant. It is *also the source of truth*
-  for the avatar's tile path — it streams committed tile-steps to the host. See
+  for the avatar's position — it streams position updates to the host. See
   *Guest-authoritative movement*.
-- **b) Exact reconciliation.** Every snapshot/delta echoes `lastSeq[selfId]` and
-  the guest's authoritative tile. The guest compares the host's tile to the result
-  of its own step #`lastSeq`: match → lockstep, mismatch → hard snap. (Not a fuzzy
-  tolerance — exact, because the tile grid is discrete and the guest already ran
-  the decision.)
+- **b) Reconciliation.** Every snapshot/delta echoes `lastSeq[selfId]` and the
+  guest's authoritative position. The guest compares it to the position it sent
+  as update #`lastSeq`: equal → lockstep, different → hard snap.
 - **c) Entity interpolation (everything else).** Other players, NPCs, mobs,
   pushables, projectiles render by interpolating between the last two
-  snapshots/deltas, with forward-extrapolation while a step is in flight. Render
+  snapshots/deltas, extrapolating a moving avatar at its last velocity for up
+  to 100 ms past the newest sample. Render
   at `now − INTERP_DELAY_MS` (60 ms). `> STALE_MS` (300 ms) with no frame →
   freeze + "Host lagging…"; `> 1 s` → the guest fires `guest.resync`; ~5 s →
   auto-fallback to offline.
@@ -233,8 +233,8 @@ When the client enters host mode it:
    split inventory/equipment/HP per slot).
 4. Runs the 20 Hz broadcaster (`snapshotBroadcaster.js`): a fresh full snapshot on
    join/zone-change/resync, sparse deltas otherwise.
-5. On each received `move` (committed step), validates legality and executes step
-   animation; on each `input` action, injects it into the per-slot pipeline.
+5. On each received `move` (position update), validates and applies it; on each
+   `input` action, injects it into the per-slot pipeline.
 6. On `peer.left`, despawns the guest's avatar and frees the slot (after grace if a
    disconnect).
 
@@ -250,7 +250,7 @@ When the client enters guest mode it:
    `guest.joined` and a full `snapshot`.
 4. Maintains: a **mirror world** (`mirrorWorld.js`, from snapshots/deltas), a
    **predicted self** (`predictedSelf.js`), a mirror interpolation buffer, and a
-   committed-step log (`guestInputForwarder.js`).
+   log of sent positions (`guestInputForwarder.js`).
 5. Renders `predictedSelf` for its own avatar, interpolated mirror for everyone
    else; reconciles on every snapshot/delta.
 
@@ -294,11 +294,11 @@ when entities leave.
   `hp` doubles as the guest's liveness check — a player at 0 drops out of the
   render list (`isMirrorPlayerDead`), the way the host drops its own dead
   avatars. Whether a delta *fires* is gated by a per-player change signature
-  (`sigPlayer`: tile/direction/moving/hp/slot/swing-edge/aura — deliberately
-  **not** x/y), but when anything fires the payload is always *all* players. This
-  is load-bearing: an avatar jammed on a blocker has a frozen signature and would
-  otherwise be filtered out, leaving the guest's predicted self to run away
-  unbounded.
+  (`sigPlayer`: x/y/direction/moving/hp/slot/swing-edge/aura), so a walking
+  avatar ships every tick; when anything fires the payload is always *all*
+  players. This is load-bearing: an avatar jammed on a blocker has a frozen
+  signature and would otherwise be filtered out, leaving the guest's predicted
+  self to run away unbounded.
 - **Entities** keep **changed-only** treatment (they're the bandwidth bulk):
   `id`, `species_id`, `frame{x,y,w,h}`, plus optional `hp`, `_open`, `_dead`,
   `_dying`, `_spawned`, `direction`, `_icy` (frost-aura bullets), and `moving` +
@@ -341,117 +341,90 @@ No host migration.
 Out of scope, but for the record:
 - A guest can lie about seq, send garbage, or flood — mitigated by per-connection
   rate limits at the relay, an action cooldown + range check on the host
-  (`hostGuests.js`), and a bounded queued-step cap.
+  (`hostGuests.js`), and a cap on how far one position update may move.
 - A guest cannot write world state — only the host's simulation can. A guest's
-  illegal committed step is rejected and snapped back.
+  illegal position update is rejected and snapped back.
 - The relay sees JSON over TLS — same trust model as any WS app.
 
 ---
 
 # Guest-authoritative movement
 
-This is how movement stays smooth and rubber-band-free. It replaced an earlier
-"host re-simulates the guest from forwarded key edges" model that lost junction
-races (the host guessed the path between input edges and sometimes guessed wrong).
+**Each player is authoritative for its own avatar's position. The host validates
+each update against its own zone and applies it; it never runs movement
+decisions for guest avatars, only their walk animation.**
 
-## Model
-
-**Each player is authoritative for its own avatar's tile path. The host validates
-legality; it no longer runs movement *decisions* for guest avatars — only step
-animation.**
-
-The tile grid is **discrete** and the guest already runs an authoritative copy of
-its own avatar (`predictedSelf`). A committed tile-step is an *already-made
-decision*, not a sampled input the host must re-time — so the guest ships
-decisions, not inputs, and the host stops guessing the path between edges. This
-deletes the whole speculation-race bug class (junctions, late stops, multi-key
-holds) and makes reconciliation exact. (Uniform path; the host can reject illegal
-moves but cannot stop pure lag-timing —
-accepted tradeoff).
+Movement is free (see the README's *Movement model*): positions are floats and
+the guest already runs an authoritative copy of its avatar (`predictedSelf`), so
+it ships results, not inputs, and the host never guesses the path between key
+edges. The host can reject an illegal move but cannot stop pure lag-timing — an
+accepted tradeoff.
 
 ## Wire format (guest → host)
 
 `predictedSelf` ticks every frame via the real `player.js` model (against a
 `predictionZone` — the mirror with self-driven mobs stripped, so a lagged mob the
-host already walked past doesn't freeze the guest for an RTT). On each transition it
-emits via `forwardMove`:
+host already walked past doesn't block the guest for an RTT). After each tick it
+emits via `forwardMove` when the avatar moved (at most every 33 ms) or turned,
+stopped or started (at once):
 
-| Message | Shape | When |
-|---|---|---|
-| Step commit | `{ op:"move", seq, k:"step", fx, fy, tx, ty, d }` | `predicted.step` goes null→non-null (chained steps each get a new object). `(fx,fy)` = source tile, `(tx,ty)` = target tile, `d` = direction. |
-| Face / stop | `{ op:"move", seq, k:"face", x, y, d }` | idle direction change, or step→idle (stopped). |
+| Message | Shape |
+|---|---|
+| Position | `{ op:"move", seq, k:"pos", x, y, d, m, push? }` — `x`/`y` rounded to 3dp, `d` facing, `m` walking (1/0), `push` `{x, y, d}` when the guest just shoved a rock |
 
-Action intents carry facing so the host fires the right way and ordering vs a face
-update can't matter:
+Action intents carry facing so the host fires the right way and ordering vs a
+position update can't matter:
 
 ```
 { op:"input", seq, t, intent:"shoot"|"melee"|"interact", d }
 ```
 
-Movement intents (`moveUp/moveDown/moveLeft/moveRight/stopMove/holdSync`) **no
-longer exist** — this was a clean break (one `npm run deploy` flips host and guest
-together; a stale cached client breaks until reload, acceptable for opt-in co-op).
-
-## Exact reconciliation contract
+## Reconciliation contract
 
 The host ships, per guest, `lastSeq[guestId]` alongside the guest's authoritative
-tile in every delta/keepalive. The guest keeps a **committed-step log**
-(`{seq, tx, ty}` per emitted step). On each incoming snapshot/delta
-(`predictedSelf.onAuth`):
+position in every delta/keepalive. The guest keeps a log of sent positions
+(`{seq, x, y}` per update). On each incoming snapshot/delta (`predictedSelf.onAuth`):
 
 - **`snapshot`** (join / resync / zone change) → hard reset: snap predicted to
-  auth, clear the step-log unconditionally.
-- **`delta`** → re-anchor to the result tile of the newest resolved step, drop
-  acked entries, then compare:
-  - **Match** (`auth.tile == stepLog[lastSeq].result`) → lockstep; any gap between
-    predicted and auth is just unacked in-flight steps. No snap.
-  - **Mismatch** → real divergence (rejection / knockback / host displacement) →
-    hard snap predicted to auth, clear the step-log; the next frames re-commit from
-    currently-held keys (so the snap doesn't undo a key the user is still holding).
-
-There is no fuzzy tolerance and no input replay — both deleted with the old model.
+  auth, clear the log, arm the hold gate.
+- **`delta`** → re-anchor to the logged position of update #`lastSeq`, drop acked
+  entries, then compare:
+  - **Equal** (within 0.01 tiles) → lockstep; any gap between predicted and auth
+    is just unacked in-flight updates. No snap.
+  - **Different** → real divergence (rejection / host displacement) → hard snap
+    predicted to auth and clear the log.
+- Updates sent before a snap are still in flight and the host may still apply
+  them, so their echoes are not compared; comparison resumes with the first
+  update sent after the snap, or as soon as nothing is in flight.
 
 ### `lastSeq` definition (host side)
 
-`lastSeq[guest]` = the seq of the most recent step whose outcome is final and
-reflected in the avatar's current `tileX/tileY`:
+`lastSeq[guest]` = the seq of the latest position update the host has resolved.
+Every update resolves the moment it arrives: accepted → the avatar moves there;
+rejected → the avatar stays put. Both advance `lastSeq` in the same synchronous
+call that sets the position, so the broadcaster always reads a consistent
+`(position, seq)` pair. A rejection with no displacement (a gate the guest's
+mirror shows open but the host has closed) still snaps the guest, because its
+logged position for that seq differs from where the host left it. Action seqs
+share the counter but never touch `lastSeq`.
 
-- **Accepted step** → advance `lastSeq` **at the snap** (when `tileX` becomes the
-  result tile), not at `startStep` — acking mid-step would read as a false
-  mismatch.
-- **Rejected step** → advance `lastSeq` **immediately**, tile unchanged. *Load-
-  bearing:* a no-displacement rejection (a gate the guest's mirror shows open but
-  the host has closed) must still snap the guest — `lastSeq` advances while the tile
-  stays put, so the guest sees `auth.tile ≠ stepLog[seq].result` → snap. Without
-  this, and with the tolerance gone, the guest would walk a phantom corridor
-  forever.
-- **Queued step** (arrived mid-step) → do **not** advance until it resolves.
-- Action/face seqs share the counter but **never** touch `lastSeq`.
+## Host validate / apply
 
-`tileX/tileY` and `lastSeq` update inside the same synchronous `updateGuestAvatar`
-call, so the broadcaster always reads a consistent `(tile, seq)` pair.
+`hostGuests.onMove` routes by slot:
+- **Dead guard** — reject every update for a dead avatar.
+- **Push claim** — a `push` within 1.6 tiles of the avatar shoves that rock on the
+  host too (`pushables.pushOneTile`).
+- **Plausibility** — reject a jump over 2 tiles, or any update whose straight line
+  from the avatar's current position crosses a tile the hero can't enter
+  (`heroCollision.canHeroSweep`: walls, rigid entities, closed gates).
+- **Apply** — set `x/y`, `tileX/tileY` (the tile under the hitbox centre),
+  facing and the walk flag; ack.
 
-## Host validate / execute
-
-`hostGuests.onMove` routes by slot. For `k:"step"`:
-- **Dead guard** first — reject all moves for a dead avatar.
-- **From-tile check** — the commit must originate at the avatar's *chain tip* (its
-  current tile when idle, or the target of the last in-flight/queued step). After a
-  host displacement the guest commits from a stale tile for ~1 RTT; those reject
-  until the next delta snaps it.
-- **Idle** → `applyNetStep(avatar, d, zone)` (wraps `player.startStep`, preserving
-  pushable carry-back + gate side effects + `canEnter`); accept iff a step was
-  produced and its target == `(tx,ty)`, else reject.
-- **Mid-step** → stash in `avatar.netQueuedSteps` (consumed at the snap), capped at
-  `MAX_NET_QUEUED_STEPS` (6) — past the cap, reject (ack so the guest resyncs)
-  rather than grow unbounded.
-
-Validation uses the host's own authoritative zone + `canEnter`, with **no mob
-special-casing**: all moving mobs are `is_rigid:false`, so they never block heroes;
-the only blockers are static geometry (identical on both ends) or host-owned
-dynamic state (gate `_open`, pushable position), where a disagreement is a real
-divergence resolved by reject→snap. **No player-vs-player collision** (players may
-share a tile, uniformly across all modes).
+Validation uses the host's own authoritative zone with **no mob special-casing**:
+moving mobs are `is_rigid:false`, so they never block heroes; the only blockers
+are static geometry (identical on both ends) or host-owned dynamic state (gate
+`_open`, pushable position), where a disagreement is a real divergence resolved by
+reject→snap.
 
 Actions get a light cheat-resistance pass on the host: a per-guest, per-intent
 cooldown (`ACTION_COOLDOWN_MS`: shoot/melee 180 ms, interact 250 ms) and a
@@ -470,23 +443,22 @@ shop) keeps the shared world ticking, as before.
 
 ## Edge cases
 
-- **Knockback / host displacement** — auth tile ≠ `stepLog[lastSeq].result` → exact
-  snap.
-- **Ice / slippery** — each slide tile is a committed step, emitted + validated
-  individually.
-- **Pushables / gates** — executed via `startStep` reuse → authority preserved.
-- **Zone change** — full snapshot resets mirror + predicted-self; step-log cleared.
-- **Reconnect** — on `welcome`, `flushOnReconnect` re-sends the current `face`
+- **Knockback / host displacement** — auth position ≠ the logged update → snap.
+- **Ice / slippery** — the guest slides locally; the host just sees positions.
+- **Pushables** — the guest pushes its mirror copy and ships a `push` claim; the
+  host pushes the authoritative rock, which the next delta brings back.
+- **Zone change** — full snapshot resets mirror + predicted-self; the log is
+  cleared; stale updates from the old zone are rejected as implausible jumps.
+- **Reconnect** — on `welcome`, `flushOnReconnect` re-sends the current position
   from `getPredictedSelf()` and flushes pending action intents younger than 5 s;
-  the step-log is cleared by the full snapshot the host sends when the guest
-  re-joins (`peer.joined`/`peer.rejoined`).
+  the full snapshot the host sends when the guest re-joins resets the rest.
 - **Dead guest** — host rejects moves; predicted-self frozen while dead; respawn
   reposition is a host displacement → caught by reconcile.
 
 Code anchors: `js/predictedSelf.js` (emit + reconcile), `js/guestInputForwarder.js`
-(step-log + action/reconnect send), `js/hostGuests.js` (`onMove`/`onStep`/`ackStep`),
-`js/player.js` (`applyNetStep`, `updateGuestAvatar`, `setGuestAckSink`),
-`js/snapshotBroadcaster.js` (ships tile + `lastSeq`).
+(position log + action/reconnect send), `js/hostGuests.js` (`onMove`/`ackStep`),
+`js/heroCollision.js` (`canHeroSweep`), `js/snapshotBroadcaster.js` (ships
+positions + `lastSeq`).
 
 ---
 
@@ -639,10 +611,11 @@ The relay stamps `from:<guestPlayerId>`. `t` is the guest's wall-clock (host use
 it for telemetry only — there is no clock sync). Movement is **not** here (see
 `move`).
 
-### `move` (C guest → S → host) — committed tile-steps
+### `move` (C guest → S → host) — position updates
 ```jsonc
-{ "op":"move", "seq":12346, "k":"step", "fx":3,"fy":5, "tx":3,"ty":6, "d":"down" }
-{ "op":"move", "seq":12347, "k":"face", "x":3,"y":6, "d":"right" }
+{ "op":"move", "seq":12346, "k":"pos", "x":3.25,"y":5.6, "d":"down", "m":1 }
+{ "op":"move", "seq":12347, "k":"pos", "x":3.25,"y":5.6, "d":"right", "m":0,
+  "push":{ "x":4,"y":6,"d":"right" } }
 ```
 See *Guest-authoritative movement*. The relay stamps `from` and routes host-bound,
 identical to `input`.

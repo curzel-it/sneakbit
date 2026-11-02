@@ -1,8 +1,7 @@
-// Pushable objects (boulders, crates). Tile-locked: the player attempts a
-// step into the object's tile; if the tile beyond it is clear, the object
-// slides one tile in the same direction and the player follows. The slide
-// is interpolated by tickPushables so the rock visually keeps pace with
-// the player's step animation instead of teleporting one tile per press.
+// Pushable objects (boulders, crates). They stay on the tile grid: a hero
+// walking into one (player.js) shoves it one tile along the walk if the tile
+// beyond is clear. The slide is interpolated by tickPushables so the rock
+// glides instead of teleporting.
 
 import { getSpecies } from "./species.js";
 import { isWalkable, isEntityBlocked } from "./zone.js";

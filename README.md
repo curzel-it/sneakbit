@@ -37,10 +37,36 @@ SneakBit is a top-down adventure-action game with close- and long-range combat, 
 
 * Adventure-action gameplay with melee (sword) and ranged (kunai) combat
 * Pre-rendered dual-layer tiling system - biomes, constructions, animated objects
-* Tile-locked, Gameboy-style movement (see [Movement model](#movement-model))
+* Free 8-way movement over a tile-based world (see [Movement model](#movement-model))
 * **Online co-op** - up to four players share one world over WebRTC ([docs/multiplayer.md](docs/multiplayer.md))
 * **Local Split Screen** - up to four players on one machine, one controller each
 * Keyboard and gamepad/controller support
+
+## Movement model
+
+The world is tile-based — terrain, buildings, spawn points, pushable rocks and
+the pathfinding grid all live on tiles — but bodies move freely over it.
+
+* **Heroes** walk continuously in 8 directions at their species speed
+  (`base_speed` × 1.125 tiles/s): held keys combine and diagonals are normalised,
+  a gamepad stick or the touch joystick give analog speed. Positions are floats
+  in tile units; `tileX/tileY` is the tile under the hitbox centre, which is what
+  teleporters, pickups and cutscene triggers read. Sprites keep 4-way facing.
+* **Collision** (`js/heroCollision.js`): a 0.6-tile hitbox against the tile grid
+  (biome/construction obstacles, rigid entities, closed gates), resolved per axis
+  so the hero slides along walls and is nudged around corners it only clips.
+  Walking into a rock shoves it one tile. On ice the hero slides in a straight
+  line until it hits something or leaves the ice.
+* **Monsters** (`js/mobs.js`) that see a hero steer straight at it, slide along
+  walls and follow a grid path when blocked; on contact they bump and recoil.
+  Wandering stays tile-stepped.
+* **Separation** (`js/separation.js`): players drift apart and monsters are
+  shoved out of players, so a crowd can surround one target.
+* **Combat and interaction**: the sword hits an arc in front of the hero, kunai
+  fly from the hero's position in its facing, and talking works by proximity and
+  facing.
+* **Online co-op**: each guest streams its own position; the host validates and
+  applies it ([docs/multiplayer.md](docs/multiplayer.md)).
 
 ## Running it
 

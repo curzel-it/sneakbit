@@ -1,14 +1,12 @@
-// Speed mode — a timed movement buff. While active the hero takes tile-steps
-// SPEED_MULTIPLIER× faster (player.stepDuration divides by the multiplier), so
-// it covers more ground per second without changing the tile-locked model.
+// Speed mode — a timed movement buff. While active the hero walks
+// SPEED_MULTIPLIER× faster (player.heroSpeed multiplies by it).
 //
 // Triggered by the Silver Potion consumable (consumables.js). Unlike giant mode
-// this is LOCAL-ONLY and never networked: changing step cadence is unsafe for
-// online peers (the host throttles a guest to ~1 step/snap, so a sped-up guest
-// would rubber-band — the same reason creative-mode's speed multiplier is
-// single-player-only). The consumable's canUse gate blocks it online, so the
-// buff is only ever armed in single-player or local co-op, where per-index
-// timing is harmless. See [[creative-mode-singleplayer-only]].
+// this is LOCAL-ONLY and never networked: the host bounds how far a guest may
+// move per update, so a sped-up guest could rubber-band — the same reason
+// creative-mode's speed multiplier is single-player-only. The consumable's
+// canUse gate blocks it online, so the buff is only ever armed in
+// single-player or local co-op, where per-index speed is harmless. See [[creative-mode-singleplayer-only]].
 //
 // Keyed by `local:<index>` so a local co-op partner (index 1) buffs
 // independently of the host self (index 0).

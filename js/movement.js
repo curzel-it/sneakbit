@@ -4,8 +4,7 @@
 // Used as a building block by features that need ballistic, non-tile-locked
 // motion: knockback on hit, ranged-monster projectiles, the minion-ejection
 // animation, and (eventually) projectile trail spawning. The hero's own
-// movement stays tile-locked in player.js — knockback callers temporarily
-// take the hero out of step state and drive it through this primitive.
+// movement lives in player.js.
 //
 // Speed is in tiles-per-second (matches how species.base_speed is stored).
 // `direction` accepts both Rust-style "Up"/"Down"/... and lowercase.
