@@ -134,7 +134,7 @@ export function createSpriteBatch(canvas) {
       const tex = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, tex);
       gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);
+      upload(src, w, h);
       setNearest(gl);
       entry = { tex, w, h, used: frame };
       textures.set(src, entry);
@@ -142,6 +142,17 @@ export function createSpriteBatch(canvas) {
     }
     entry.used = frame;
     return entry;
+  }
+
+  /** iOS WebKit can upload a 2D canvas to WebGL as blank pixels, so canvases go up as their bytes. */
+  function upload(src, w, h) {
+    const ctx2d = typeof HTMLCanvasElement !== "undefined" && src instanceof HTMLCanvasElement ? src.getContext("2d") : null;
+    if (!ctx2d) {
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);
+      return;
+    }
+    const pixels = new Uint8Array(ctx2d.getImageData(0, 0, w, h).data.buffer);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
   }
 
   function evictIdleTextures() {
