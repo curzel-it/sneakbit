@@ -32,6 +32,7 @@ This is SNEAKBIT, a top-down adventure-action game with close- and long-range co
 
 ## Coding Style and Guidelines
 
+- Work on main; use git worktrees only for parallel subagents, merge each into main as soon as it is done and remove it, never leave one orphaned
 - One feature, one file
 - JSDoc type annotations are appreciated
 - Keep comments to a bare minimum: no headers, dangling facts, or empty openers; use clean, simple prose only when necessary
