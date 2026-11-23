@@ -14,11 +14,15 @@
 // release on ended, and they mix without an instance ceiling.
 //
 // The first-gesture handshake is why HTMLAudioElement was picked originally.
-// It costs one listener (same idiom as music.js): the context is created
-// suspended and resumed on the first keypress / pointerdown.
+// On the web the clips are fetched at boot but the context is only created,
+// and the clips decoded, on the first keypress / pointerdown / touchend: one
+// made earlier is held suspended and the browser complains. The native shells
+// allow audio without a gesture and decode at boot.
 //
 // Music stays on HTMLAudioElement (music.js) — that's a single streaming
 // element, which is exactly what media elements are good at.
+
+import { isNativeShell } from "./nativeBridge.js";
 
 const SOURCES = {
   stepTaken:         "./assets/audio/sfx_movement_footsteps1a.mp3",
@@ -66,18 +70,33 @@ let sfxVolume = 0.65;
 // same as the old element-based version before `preload` finished.
 export function loadAudio() {
   if (loading) return loading;
-  const context = ensureContext();
-  if (!context) return Promise.resolve();
-  installGestureResume();
+  if (!(globalThis.AudioContext || globalThis.webkitAudioContext)) return Promise.resolve();
+  const unlocked = isNativeShell() ? Promise.resolve() : firstGesture();
   loading = Promise.all(Object.entries(SOURCES).map(async ([name, src]) => {
     try {
-      const res = await fetch(src);
-      buffers.set(name, await decode(context, await res.arrayBuffer()));
+      const bytes = await (await fetch(src)).arrayBuffer();
+      await unlocked;
+      const context = ensureContext();
+      if (context) buffers.set(name, await decode(context, bytes));
     } catch {
       // A clip that won't load stays silent rather than breaking the boot.
     }
   }));
   return loading;
+}
+
+/** @returns {Promise<void>} */
+function firstGesture() {
+  if (typeof window === "undefined") return Promise.resolve();
+  const events = ["keydown", "pointerdown", "touchend"];
+  return new Promise((resolve) => {
+    const done = () => {
+      for (const ev of events) window.removeEventListener(ev, done, true);
+      ensureContext();
+      resolve();
+    };
+    for (const ev of events) window.addEventListener(ev, done, true);
+  });
 }
 
 export function playSfx(name, opts = {}) {
@@ -111,8 +130,8 @@ export function setSfxVolume(v) {
 }
 export function getSfxVolume() { return sfxVolume; }
 
-// Created on first loadAudio() rather than at import time so the module stays
-// importable under node (the unit tests pull it in transitively via combat.js).
+// Created lazily rather than at import time so the module stays importable
+// under node (the unit tests pull it in transitively via combat.js).
 function ensureContext() {
   if (ctx) return ctx;
   const Ctor = globalThis.AudioContext || globalThis.webkitAudioContext;
@@ -121,6 +140,7 @@ function ensureContext() {
   master = ctx.createGain();
   master.gain.value = sfxVolume;
   master.connect(ctx.destination);
+  installGestureResume();
   return ctx;
 }
 
