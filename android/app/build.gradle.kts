@@ -20,8 +20,8 @@ android {
         applicationId = "it.curzel.bitscape"
         minSdk = 24
         targetSdk = 36
-        versionCode = 75
-        versionName = "2.0.0"
+        versionCode = 78
+        versionName = "2.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
